@@ -61,6 +61,6 @@ async function bootstrap() {
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
 
   //서버 시작
-  await app.listen(EnvEnum.PORT);
+  await app.listen(envService.get(EnvEnum.PORT));
 }
 bootstrap();

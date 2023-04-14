@@ -4,7 +4,7 @@ import { ApiTags } from '@nestjs/swagger';
 type RouterProps = {
   path?: string;
   tag: {
-    category: 'public' | 'private' | 'virtual';
+    category?: 'public' | 'private' | 'virtual';
     title: string;
   };
 };
@@ -20,16 +20,18 @@ export const RouteTable = ({ path = '', tag }: RouterProps) => {
     ...conditionDecorator,
     Controller(path),
     ApiTags(
-      `[${(() => {
-        switch (tag.category) {
+      `${(() => {
+        switch (tag?.category) {
           case 'private':
-            return '비공개';
+            return '[비공개]';
           case 'public':
-            return '공개';
+            return '[공개]';
           case 'virtual':
-            return '개발자';
+            return '[개발용]';
+          default:
+            return '';
         }
-      })()}] ${tag.title}`,
+      })()} ${tag.title}`,
     ),
   );
 };

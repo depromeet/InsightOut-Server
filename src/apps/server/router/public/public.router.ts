@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
+import { PublicController } from './public.controller';
 
 @Module({
   imports: [],
-  controllers: [],
+  controllers: [PublicController],
 })
 export class PublicRouter {}

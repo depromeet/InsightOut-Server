@@ -1,6 +1,9 @@
-import { Controller, Get } from '@nestjs/common';
+import { Get } from '@nestjs/common';
+import { RouteTable } from '../decorators/router/route-table.decorator';
 
-@Controller()
+@RouteTable({
+  tag: { title: '인덱스' },
+})
 export class IndexController {
   @Get()
   async index() {
