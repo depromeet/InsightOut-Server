@@ -15,8 +15,10 @@ import { EnvService } from 'src/modules/env/env.service';
             envFiles.unshift(`.env.${NodeEnvEnum.Stage}`);
           case NodeEnvEnum.Test:
             envFiles.unshift(`.env.${NodeEnvEnum.Test}`);
-          default:
+          case NodeEnvEnum.Dev:
             envFiles.unshift(`.env.${NodeEnvEnum.Dev}`);
+          default:
+            envFiles.unshift(`.env`);
         }
         return envFiles;
       })(),
