@@ -15,31 +15,29 @@ async function bootstrap() {
 
   //Swagger
   switch (NODE_ENV) {
-    case NodeEnvEnum.Develop:
+    case NodeEnvEnum.Dev:
       (() => {
         const config = new DocumentBuilder()
           .setTitle('13기 4팀 서버')
-          .setDescription('Daljin Dev Moon Description')
+          .setDescription('자기소개서 관리 시스템')
           .addServer(
-            `${envService.get(EnvEnum.LOCAL_SERVER)}:${envService.get(
-              EnvEnum.PORT,
-            )}`,
+            `http://localhost:${envService.get(EnvEnum.PORT)}`,
             '로컬서버',
           )
           .addServer(
-            `${envService.get(EnvEnum.DEVELOPMENT_SERVER)}:${envService.get(
+            `${envService.get(EnvEnum.DEV_SERVER)}:${envService.get(
               EnvEnum.PORT,
             )}`,
             '개발서버',
           )
           .addServer(
-            `${envService.get(EnvEnum.RELEASE_SERVER)}:${envService.get(
+            `${envService.get(EnvEnum.STAGE_SERVER)}:${envService.get(
               EnvEnum.PORT,
             )}`,
-            '릴리즈서버',
+            '스테이트서버',
           )
           .addServer(
-            `${envService.get(EnvEnum.PRODUCTION_SERVER)}:${envService.get(
+            `${envService.get(EnvEnum.MAIN_SERVER)}:${envService.get(
               EnvEnum.PORT,
             )}`,
             '운영서버',
@@ -53,7 +51,7 @@ async function bootstrap() {
       })();
       break;
     case NodeEnvEnum.Test:
-    case NodeEnvEnum.Production:
+    case NodeEnvEnum.Main:
       break;
   }
 
