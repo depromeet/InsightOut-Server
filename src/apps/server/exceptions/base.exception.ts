@@ -19,5 +19,16 @@ export class BaseException extends HttpException {
     properties: Pick<BaseException, 'statusCode' | 'title' | 'message' | 'raw'>,
   ) {
     super(properties.message, properties.statusCode);
+    this.title = properties.title;
+    this.statusCode = properties.statusCode;
+    this.raw = properties.raw;
+  }
+
+  getResponse() {
+    return {
+      statusCode: this.statusCode,
+      title: this.title,
+      message: this.message,
+    };
   }
 }

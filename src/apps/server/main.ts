@@ -5,6 +5,7 @@ import { NodeEnvEnum } from 'src/enums/node-env.enum';
 import { EnvEnum } from 'src/modules/env/env.enum';
 import { EnvService } from 'src/modules/env/env.service';
 import { AppModule } from './app.module';
+import { PrismaService } from '../../modules/database/prisma.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,34 +13,33 @@ async function bootstrap() {
   //환경변수 가져오기
   const envService = app.get(EnvService);
   const NODE_ENV = envService.get<NodeEnvEnum>(EnvEnum.NODE_ENV);
+  const PORT = +envService.get(EnvEnum.PORT);
 
   //Swagger
   switch (NODE_ENV) {
-    case NodeEnvEnum.Develop:
+    case NodeEnvEnum.Dev:
       (() => {
         const config = new DocumentBuilder()
           .setTitle('13기 4팀 서버')
-          .setDescription('Daljin Dev Moon Description')
+          .setDescription('자기소개서 관리 시스템')
           .addServer(
-            `${envService.get(EnvEnum.LOCAL_SERVER)}:${envService.get(
-              EnvEnum.PORT,
-            )}`,
+            `http://localhost:${envService.get(EnvEnum.PORT)}`,
             '로컬서버',
           )
           .addServer(
-            `${envService.get(EnvEnum.DEVELOPMENT_SERVER)}:${envService.get(
+            `${envService.get(EnvEnum.DEV_SERVER)}:${envService.get(
               EnvEnum.PORT,
             )}`,
             '개발서버',
           )
           .addServer(
-            `${envService.get(EnvEnum.RELEASE_SERVER)}:${envService.get(
+            `${envService.get(EnvEnum.STAGE_SERVER)}:${envService.get(
               EnvEnum.PORT,
             )}`,
-            '릴리즈서버',
+            '스테이트서버',
           )
           .addServer(
-            `${envService.get(EnvEnum.PRODUCTION_SERVER)}:${envService.get(
+            `${envService.get(EnvEnum.MAIN_SERVER)}:${envService.get(
               EnvEnum.PORT,
             )}`,
             '운영서버',
@@ -53,14 +53,15 @@ async function bootstrap() {
       })();
       break;
     case NodeEnvEnum.Test:
-    case NodeEnvEnum.Production:
+    case NodeEnvEnum.Main:
       break;
   }
-
+  const prismaService = app.get(PrismaService);
+  await prismaService.enableShutdownHook(app);
   //Winston
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
 
   //서버 시작
-  await app.listen(envService.get(EnvEnum.PORT));
+  await app.listen(PORT);
 }
 bootstrap();

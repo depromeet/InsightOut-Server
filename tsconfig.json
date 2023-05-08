@@ -16,7 +16,10 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@prisma/generated": ["./prisma/generated/index"]
+    }
   },
-  "include": ["./src/**/*", "./test/**/*"]
+  "include": ["src/**/*", "test/**/*"]
 }
