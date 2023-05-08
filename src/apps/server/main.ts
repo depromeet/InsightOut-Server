@@ -57,7 +57,7 @@ async function bootstrap() {
       break;
   }
   const prismaService = app.get(PrismaService);
-  prismaService.enableShutdownHook(app);
+  await prismaService.enableShutdownHook(app);
   //Winston
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
 
