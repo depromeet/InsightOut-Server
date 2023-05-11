@@ -59,4 +59,4 @@ jobs:
       #     task-definition: ${{ steps.task-def.outputs.task-definition }}
       #     service: insight-out
       #     cluster: cloudblog
-    #     wait-for-service-stability: true
+      #     wait-for-service-stability: true
