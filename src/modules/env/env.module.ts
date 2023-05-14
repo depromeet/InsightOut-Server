@@ -22,6 +22,7 @@ import { EnvService } from 'src/modules/env/env.service';
         }
         return envFiles;
       })(),
+      isGlobal: true,
     }),
   ],
   providers: [EnvService],
