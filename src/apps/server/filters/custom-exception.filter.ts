@@ -38,7 +38,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
       }
     })();
 
-    this.slackService.sendExceptionMessage(exception);
+    // this.slackService.sendExceptionMessage(exception);
 
     this.logService.error(CustomExceptionFilter.name, exception);
 
