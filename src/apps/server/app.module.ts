@@ -12,6 +12,9 @@ import { CustomExceptionFilter } from './filters/custom-exception.filter';
 import { LogInterceptor } from './interceptors/log.interceptor';
 import { SlackModule } from 'src/modules/slack/slack.module';
 import { AuthModule } from './auth/auth.module';
+import { RedisModule } from '@liaoliaots/nestjs-redis';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { RedisConfigFactory } from '../../modules/cache/redis/redis.factory';
 
 @Module({
   imports: [
@@ -19,6 +22,11 @@ import { AuthModule } from './auth/auth.module';
     EnvModule.forRoot(),
     LogModule.forRoot(),
     SlackModule,
+    RedisModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useClass: RedisConfigFactory,
+    }),
 
     // Domains
     AuthModule,
