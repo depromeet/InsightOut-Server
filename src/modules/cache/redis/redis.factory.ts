@@ -9,7 +9,7 @@ import { ConfigService } from '@nestjs/config';
 export class RedisConfigFactory implements RedisOptionsFactory {
   constructor(private readonly configService: ConfigService) {}
 
-  createRedisOptions(): RedisModuleOptions | Promise<RedisModuleOptions> {
+  createRedisOptions(): RedisModuleOptions {
     const host =
       this.configService.get('NODE_ENV') === 'dev'
         ? this.configService.get('REDIS_HOST_DEV')
