@@ -9,12 +9,12 @@ import { SlackBlockType } from './slack.enum';
 export class SlackService {
   constructor(private readonly envService: EnvService) {}
 
-  sendExceptionMessage(exception: ExceptionResponse): void {
+  async sendExceptionMessage(exception: ExceptionResponse): Promise<void> {
     const { statusCode, title, message } = exception;
     const token: string = this.envService.get<string>(EnvEnum.SLACK_TOKEN);
     const web: WebClient = new WebClient(token);
 
-    web.chat.postMessage({
+    await web.chat.postMessage({
       blocks: [
         {
           type: SlackBlockType.SECTION,
