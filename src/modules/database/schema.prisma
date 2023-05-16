@@ -37,9 +37,9 @@ enum Field {
 
 model UserInfo {
   userId   Int      @map("user_id")
-  field    Field
-  provider Provider
-  imageUrl String   @db.Text @map("image_url")
+  field    Field?
+  provider Provider?
+  imageUrl String?   @db.Text @map("image_url")
 
   User User @relation(references: [userId], fields: [userId])
 
