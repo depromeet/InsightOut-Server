@@ -11,6 +11,24 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
           url: configService.getOrThrow('DATABASE_URL'),
         },
       },
+      log: [
+        {
+          emit: 'event',
+          level: 'query',
+        },
+        {
+          emit: 'event',
+          level: 'error',
+        },
+        {
+          emit: 'stdout',
+          level: 'info',
+        },
+        {
+          emit: 'stdout',
+          level: 'warn',
+        },
+      ],
     });
   }
 
