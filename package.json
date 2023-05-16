@@ -9,10 +9,11 @@
     "prisma:migrate": "npx prisma migrate dev",
     "prisma:deploy": "npx prisma migrate deploy",
     "prisma:studio": "npx prisma studio",
+    "web": "npm run deploy",
     "dev": "npx cross-env NODE_ENV=dev nest start --entryFile ./apps/server/main --watch --watchAssets",
+    "deploy": "npm install && npm run build && npm run start:dev",
     "stage": "npx cross-env NODE_ENV=stage nest start --entryFile ./apps/server/main --watch --watchAssets",
     "main": "npx cross-env NODE_ENV=main nest start --entryFile ./apps/server/main --watch --watchAssets",
-    "deploy": "npx cross-env NODE_ENV=main nest build && npx cross-env NODE_ENV=main node ./apps/server/main",
     "lint": "eslint \"{src,test}/**/*.ts\"",
     "test": "jest 'src\\/.*\\.(controller|service|repository)\\.spec\\.ts$'"
   },

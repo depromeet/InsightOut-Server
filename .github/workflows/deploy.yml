@@ -16,7 +16,6 @@ jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
-    # environment: production
 
     steps:
       - name: Checkout
@@ -37,7 +36,6 @@ jobs:
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          # IMAGE_TAG: ${{ github.sha }}
           IMAGE_TAG: latest
         run: |
           # Build a docker container and
@@ -45,18 +43,30 @@ jobs:
           # be deployed to ECS.
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
-      # - name: Fill in the new image ID in the Amazon ECS task definition
-      #   id: task-def
-      #   uses: aws-actions/amazon-ecs-render-task-definition@v1
-      #   with:
-      #     task-definition: mytaskdef.json
-      #     container-name: cloudblog
-      #     image: ${{ steps.build-image.outputs.image }}
-      # - name: Deploy Amazon ECS task definition
-      #   uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-      #   with:
-      #     task-definition: ${{ steps.task-def.outputs.task-definition }}
-      #     service: insight-out
-      #     cluster: cloudblog
-      #     wait-for-service-stability: true
+
+      - name: Get current time
+        uses: 1466587594/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYYMMDD_HH-mm-ss
+          utcOffset: '+09:00'
+
+      - name: Generate deployment package
+        run: |
+          mkdir -p deploy
+          cp Dockerrun.aws.json deploy/Dockerrun.aws.json
+          cd deploy && zip -r deploy.zip .
+
+      - name: Beanstalk Deploy
+        uses: einaregilsson/beanstalk-deploy@v14
+        with:
+          aws_access_key: ${{ secrets.BE_STUDENT_KEY }}
+          aws_secret_key: ${{ secrets.BE_STUDENT_SECRET }}
+          application_name: ${{ env.APPLICATION_NAME }}
+          environment_name: ${{ env.ENVIRONMENT_NAME }}
+          version_label: egg-docker-${{steps.current-time.outputs.formattedTime}}
+          region: ${{ env.AWS_REGION }}
+          deployment_package: deploy/deploy.zip
+          wait_for_environment_recovery: 200
