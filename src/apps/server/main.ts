@@ -13,7 +13,7 @@ async function bootstrap() {
   //환경변수 가져오기
   const envService = app.get(EnvService);
   const NODE_ENV = envService.get<NodeEnvEnum>(EnvEnum.NODE_ENV);
-  const PORT = +envService.get(EnvEnum.PORT);
+  const PORT = +envService.get(EnvEnum.PORT) || 3000;
 
   //Swagger
   switch (NODE_ENV) {
