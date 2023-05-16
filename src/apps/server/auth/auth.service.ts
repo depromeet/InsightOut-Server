@@ -26,7 +26,26 @@ export class AuthService {
     try {
       const { email, picture, socialId } = user;
 
-      const nickname = this.getRandomNickname();
+      const existUser = await this.userRepository.findFirst({ socialId });
+
+      // If user exists, pass to signin
+      if (!existUser) {
+        const nickname = await this.getRandomNickname();
+        const newUser = await this.userRepository.insertUser({
+          email,
+          socialId,
+          nickname,
+        });
+        await this.userInfoRepository.insertUserInfo({
+          User: {
+            connect: { userId: newUser.userId },
+          },
+          provider: Provider.google,
+          imageUrl: picture,
+        });
+        return newUser;
+      }
+      return existUser;
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException();
