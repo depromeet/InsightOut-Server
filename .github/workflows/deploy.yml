@@ -6,7 +6,6 @@ on:
       - main
       - stage
       - dev
-      - 'feature/PID-43'
 
 env:
   AWS_REGION: ap-northeast-2
