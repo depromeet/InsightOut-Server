@@ -27,7 +27,11 @@ export class SigninGuard implements CanActivate {
       });
       const payload: TokenPayload = ticket.getPayload();
 
-      request.user = { email: payload.email, picture: payload.picture };
+      request.user = {
+        email: payload.email,
+        picture: payload.picture,
+        socialId: payload.sub,
+      };
 
       return ticket ? true : false;
     } catch (error) {

@@ -1,10 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { SigninRequestBodyDto } from './dtos/signin-request-body.dto';
-import { TokenPayload } from 'google-auth-library';
 import { RedisCacheService } from '../../../modules/cache/redis/redis.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { ACCESS_TOKEN_EXPIRES_IN } from '../consts/jwt.const';
+import { UserPayload } from '../guards/signin-request-body.interface';
+import { UserRepository } from '../../../modules/database/repositories/user.repository';
 
 @Injectable()
 export class AuthService {
@@ -12,14 +17,23 @@ export class AuthService {
     private readonly redisService: RedisCacheService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly userRepository: UserRepository,
   ) {}
 
-  async signin(body: SigninRequestBodyDto, user: TokenPayload) {
-    const result = await this.redisService.set('test', '123');
-    console.log(result);
+  async signin(body: SigninRequestBodyDto, user: UserPayload) {
+    try {
+      const { email, picture, socialId } = user;
+
+      const nickname = this.getRandomNickname();
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new NotFoundException();
+      }
+      throw new InternalServerErrorException();
+    }
   }
 
-  issueAccessToken(userId: number) {
+  issueAccessToken(userId: number): string {
     return this.jwtService.sign(
       { userId },
       {
@@ -29,7 +43,7 @@ export class AuthService {
     );
   }
 
-  issueRefreshToken(userId: number) {
+  issueRefreshToken(userId: number): string {
     return this.jwtService.sign(
       { userId },
       {
@@ -37,5 +51,14 @@ export class AuthService {
         expiresIn: ACCESS_TOKEN_EXPIRES_IN * 1000,
       },
     );
+  }
+
+  async getRandomNickname(): Promise<string> {
+    const response = await fetch(
+      'https://nickname.hwanmoo.kr/?format=text&max_length=6',
+    );
+
+    const responseData = await response.text();
+    return responseData;
   }
 }

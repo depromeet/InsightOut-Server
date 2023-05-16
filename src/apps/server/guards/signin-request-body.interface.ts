@@ -8,4 +8,5 @@ export interface SinginRequestBody {
 export interface UserPayload {
   email: string;
   picture: string;
+  socialId: string;
 }
