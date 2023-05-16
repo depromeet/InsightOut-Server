@@ -13,6 +13,9 @@ import { LogInterceptor } from './interceptors/log.interceptor';
 import { SlackModule } from 'src/modules/slack/slack.module';
 import { AuthModule } from './auth/auth.module';
 import { AppController } from './app.controller';
+import { RedisModule } from '@liaoliaots/nestjs-redis';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { RedisConfigFactory } from '../../modules/cache/redis/redis.factory';
 
 @Module({
   controllers: [AppController],
@@ -21,6 +24,11 @@ import { AppController } from './app.controller';
     EnvModule.forRoot(),
     LogModule.forRoot(),
     SlackModule,
+    RedisModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useClass: RedisConfigFactory,
+    }),
 
     // Domains
     AuthModule,
