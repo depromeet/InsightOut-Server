@@ -16,7 +16,7 @@ import { JwtStrategy } from '../guards/strategies/jwt.strategy';
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
         return {
-          secret: configService.get<string>('JWT_SECRET'),
+          secret: configService.get<string>('JWT_ACCESS_TOKEN_SECRET'),
         };
       },
     }),
