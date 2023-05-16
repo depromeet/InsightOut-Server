@@ -38,6 +38,7 @@ jobs:
         run: |
           touch .env
           echo PORT=3000 >> .env
+          echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> .env
           cat .env
 
       - name: Build, tag, and push image to Amazon ECR
