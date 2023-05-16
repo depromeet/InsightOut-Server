@@ -4,12 +4,16 @@ import { AuthService } from './auth.service';
 import { SigninGuard } from '../guards/signin.guard';
 import { RedisCacheModule } from '../../../modules/cache/redis/redis.module';
 import { JwtModule } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UserRepository } from '../../../modules/database/repositories/user.repository';
+import { JwtStrategy } from '../guards/strategies/jwt.strategy';
 
 @Module({
   imports: [
     RedisCacheModule,
     JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
         return {
           secret: configService.get<string>('JWT_SECRET'),
@@ -18,6 +22,6 @@ import { ConfigService } from '@nestjs/config';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, SigninGuard],
+  providers: [AuthService, SigninGuard, UserRepository, JwtStrategy],
 })
 export class AuthModule {}
