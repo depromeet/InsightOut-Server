@@ -1,7 +1,7 @@
 {
   "AWSEBDockerrunVersion": "1",
   "Image": {
-    "Name": "066653720512.dkr.ecr.ap-northeast-2.amazonaws.com/insight-out/latest",
+    "Name": "066653720512.dkr.ecr.ap-northeast-2.amazonaws.com/insight-out",
     "Update": "true"
   },
   "Ports": [
