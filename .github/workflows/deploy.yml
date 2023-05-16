@@ -1,5 +1,5 @@
 name: Dockerizing to Amazon ECR
-# Test
+
 on:
   push:
     branches:
