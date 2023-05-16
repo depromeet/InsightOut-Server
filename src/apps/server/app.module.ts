@@ -10,16 +10,18 @@ import { LogModule } from 'src/modules/log/log.module';
 import { ValidationException } from './exceptions/validation.exception';
 import { CustomExceptionFilter } from './filters/custom-exception.filter';
 import { LogInterceptor } from './interceptors/log.interceptor';
-import { IndexRouterModule } from './router/index.router';
 import { SlackModule } from 'src/modules/slack/slack.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     DatabaseModule.forRoot(),
     EnvModule.forRoot(),
     LogModule.forRoot(),
-    IndexRouterModule,
     SlackModule,
+
+    // Domains
+    AuthModule,
   ],
   providers: [
     {
