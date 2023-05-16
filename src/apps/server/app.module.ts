@@ -12,8 +12,10 @@ import { CustomExceptionFilter } from './filters/custom-exception.filter';
 import { LogInterceptor } from './interceptors/log.interceptor';
 import { SlackModule } from 'src/modules/slack/slack.module';
 import { AuthModule } from './auth/auth.module';
+import { AppController } from './app.controller';
 
 @Module({
+  controllers: [AppController],
   imports: [
     DatabaseModule.forRoot(),
     EnvModule.forRoot(),
