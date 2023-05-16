@@ -7,8 +7,8 @@ import {
 import { SigninRequestBodyDto } from './dtos/signin-request-body.dto';
 import { SigninGuard } from '../guards/signin.guard';
 import { User } from '../decorators/request/user.decorator';
-import { TokenPayload } from 'google-auth-library';
 import { AuthService } from './auth.service';
+import { UserPayload } from '../guards/signin-request-body.interface';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -25,7 +25,7 @@ export class AuthController {
     status: 401,
     description: '유효하지 않은 Token입니다.',
   })
-  async signin(@Body() body: SigninRequestBodyDto, @User() user: TokenPayload) {
+  async signin(@Body() body: SigninRequestBodyDto, @User() user: UserPayload) {
     await this.authService.signin(body, user);
   }
 }
