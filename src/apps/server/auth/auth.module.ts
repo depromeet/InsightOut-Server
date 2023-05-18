@@ -17,7 +17,7 @@ import { UserInfoRepository } from '../../../modules/database/repositories/user-
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
         return {
-          secret: configService.get<string>('JWT_ACCESS_TOKEN_SECRET'),
+          secret: configService.get<string>('JWT_SECRET'),
         };
       },
     }),
