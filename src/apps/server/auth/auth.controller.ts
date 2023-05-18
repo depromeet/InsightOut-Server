@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common';
 import {
   ApiOperation,
   ApiTags,
@@ -9,6 +9,8 @@ import { SigninGuard } from '../guards/signin.guard';
 import { User } from '../decorators/request/user.decorator';
 import { AuthService } from './auth.service';
 import { UserPayload } from '../guards/signin-request-body.interface';
+import { Response } from 'express';
+import { TokenType } from '../../../enums/token.enum';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -25,7 +27,23 @@ export class AuthController {
     status: 401,
     description: '유효하지 않은 Token입니다.',
   })
-  async signin(@Body() body: SigninRequestBodyDto, @User() user: UserPayload) {
-    await this.authService.signin(body, user);
+  async signin(
+    @Body() _: SigninRequestBodyDto,
+    @User() user: UserPayload,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const userId = await this.authService.signin(user);
+
+    const accessToken = this.authService.issueAccessToken(userId);
+    const refreshToken = this.authService.issueRefreshToken(userId);
+
+    await this.authService.setRefreshToken(userId, refreshToken);
+
+    const cookieOptions = this.authService.getCookieOptions(
+      TokenType.RefreshToken,
+    );
+
+    res.cookie('refreshToken', refreshToken, cookieOptions);
+    return { accessToken };
   }
 }
