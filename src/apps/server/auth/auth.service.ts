@@ -3,14 +3,19 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { SigninRequestBodyDto } from './dtos/signin-request-body.dto';
 import { RedisCacheService } from '../../../modules/cache/redis/redis.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { ACCESS_TOKEN_EXPIRES_IN } from '../consts/jwt.const';
+import {
+  ACCESS_TOKEN_EXPIRES_IN,
+  REFRESH_TOKEN_EXPIRES_IN,
+} from '../consts/jwt.const';
 import { UserPayload } from '../guards/signin-request-body.interface';
 import { UserRepository } from '../../../modules/database/repositories/user.repository';
+import { CookieOptions } from 'express';
 import { UserInfoRepository } from '../../../modules/database/repositories/user-info.repository';
+import { Provider } from '@prisma/client';
+import { TokenType } from '../../../enums/token.enum';
 
 @Injectable()
 export class AuthService {
@@ -22,7 +27,7 @@ export class AuthService {
     private readonly userInfoRepository: UserInfoRepository,
   ) {}
 
-  async signin(body: SigninRequestBodyDto, user: UserPayload) {
+  async signin(user: UserPayload): Promise<number> {
     try {
       const { email, picture, socialId } = user;
 
@@ -43,9 +48,9 @@ export class AuthService {
           provider: Provider.google,
           imageUrl: picture,
         });
-        return newUser;
+        return newUser.userId;
       }
-      return existUser;
+      return existUser.userId;
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException();
@@ -74,6 +79,14 @@ export class AuthService {
     );
   }
 
+  async setRefreshToken(userId: number, refreshToken: string): Promise<void> {
+    await this.redisService.set(
+      String(userId),
+      refreshToken,
+      REFRESH_TOKEN_EXPIRES_IN,
+    );
+  }
+
   async getRandomNickname(): Promise<string> {
     const response = await fetch(
       'https://nickname.hwanmoo.kr/?format=text&max_length=6',
@@ -81,5 +94,18 @@ export class AuthService {
 
     const responseData = await response.text();
     return responseData;
+  }
+
+  getCookieOptions(tokenType: TokenType): CookieOptions {
+    const maxAge =
+      tokenType === TokenType.AccessToken
+        ? ACCESS_TOKEN_EXPIRES_IN
+        : REFRESH_TOKEN_EXPIRES_IN;
+
+    // TODO https 설정 후 추가 작성
+    return {
+      maxAge,
+      httpOnly: false,
+    };
   }
 }
