@@ -3,9 +3,9 @@ name: Dockerizing to Amazon ECR
 on:
   push:
     branches:
-      - main
-      - stage
-      - dev
+      # - main
+      # - stage
+      # - dev
 
 env:
   AWS_REGION: ap-northeast-2
@@ -38,6 +38,11 @@ jobs:
           touch .env
           echo PORT=3000 >> .env
           echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> .env
+          echo DATABASE_URL=${{ secrets.GOOGLE_CLIENT_ID }} >> .env
+          echo DATABASE_URL=${{ secrets.JWT_SECRET }} >> .env
+          echo DATABASE_URL=${{ secrets.REDIS_HOST_DEV }} >> .env
+          echo DATABASE_URL=${{ secrets.REDIS_PORT_DEV }} >> .env
+          echo DATABASE_URL=${{ secrets.SLACK_TOKEN }} >> .env
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
