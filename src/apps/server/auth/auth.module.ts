@@ -8,6 +8,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserRepository } from '../../../modules/database/repositories/user.repository';
 import { JwtStrategy } from '../guards/strategies/jwt.strategy';
 import { UserInfoRepository } from '../../../modules/database/repositories/user-info.repository';
+import { JwtRefreshStrategy } from '../guards/strategies/jwt-refresh.strategy';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { UserInfoRepository } from '../../../modules/database/repositories/user-
     AuthService,
     SigninGuard,
     JwtStrategy,
+    JwtRefreshStrategy,
 
     // Repositories
     UserRepository,
