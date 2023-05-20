@@ -2,6 +2,7 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { RedisCacheService } from '../../../modules/cache/redis/redis.service';
 import { JwtService } from '@nestjs/jwt';
@@ -16,6 +17,11 @@ import { CookieOptions } from 'express';
 import { UserInfoRepository } from '../../../modules/database/repositories/user-info.repository';
 import { Provider } from '@prisma/client';
 import { TokenType } from '../../../enums/token.enum';
+import { Request } from 'express';
+import {
+  AccessTokenAndRefreshToken,
+  UserWithRefreshTokenPayload,
+} from './types/jwt-tokwn.type';
 
 @Injectable()
 export class AuthService {
@@ -99,13 +105,39 @@ export class AuthService {
   getCookieOptions(tokenType: TokenType): CookieOptions {
     const maxAge =
       tokenType === TokenType.AccessToken
-        ? ACCESS_TOKEN_EXPIRES_IN
-        : REFRESH_TOKEN_EXPIRES_IN;
+        ? ACCESS_TOKEN_EXPIRES_IN * 1000
+        : REFRESH_TOKEN_EXPIRES_IN * 1000;
 
     // TODO https 설정 후 추가 작성
     return {
       maxAge,
       httpOnly: false,
     };
+  }
+
+  trackRefreshToken(request: Request): string {
+    return request?.cookies?.refreshToken;
+  }
+
+  async rotateRefreshToken(
+    userPayload: UserWithRefreshTokenPayload,
+  ): Promise<AccessTokenAndRefreshToken> {
+    const { userId, refreshToken } = userPayload;
+    const savedRefreshToken = await this.redisService.get(String(userId));
+
+    if (refreshToken !== savedRefreshToken) {
+      throw new UnauthorizedException('유효하지 않은 refresh token입니다.');
+    }
+
+    const newAccessToken = this.issueAccessToken(userId);
+    const newRefreshToken = this.issueRefreshToken(userId);
+
+    await this.redisService.set(
+      String(userId),
+      newRefreshToken,
+      REFRESH_TOKEN_EXPIRES_IN,
+    );
+
+    return { accessToken: newAccessToken, refreshToken: newRefreshToken };
   }
 }
