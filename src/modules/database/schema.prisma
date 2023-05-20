@@ -31,24 +31,24 @@ model User {
 }
 
 enum Provider {
-  google
-  apple
-  kakao
+  google // 구글 로그인
+  apple // 애플 로그인
+  kakao // 카카오 로그인
 }
 
+// TODO 직무 모두 기입 필요
 enum Field {
   developer
 }
 
 model UserInfo {
-  userId   Int       @map("user_id")
-  field    Field?
-  provider Provider?
-  imageUrl String?   @map("image_url") @db.Text
+  userId   Int      @id @map("user_id")
+  field    Field? // 직무 분야
+  provider Provider? // 소셜 로그인 제공자
+  imageUrl String?   @map("image_url") @db.Text // 이미지 url
 
   User User @relation(references: [id], fields: [userId])
 
-  @@id([userId])
   @@map("user_info")
 }
 
@@ -59,7 +59,7 @@ model UserInfo {
 // 자기소개서 폴더링 제목
 model Resume {
   id    Int    @id
-  title String @db.VarChar(100)
+  title String @db.VarChar(100) // 자기소개서 제목
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -72,18 +72,20 @@ model Resume {
   @@map("resume")
 }
 
-// 자기소개서 문항
+// ********************************
+// ********** 자기소개서 문항 *********
+// ********************************
 model Question {
-  resumeId Int @map("resume_id")
+  resumeId Int @id @map("resume_id") // 자기소개서 폴더링 제목 pfk
 
   title  String @db.VarChar(50) // 문항 제목
   answer String @db.VarChar(3000) // 문항 내용
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   Resume Resume @relation(references: [id], fields: [resumeId])
 
-  @@id([resumeId])
+  // @@id([resumeId])
   @@map("question")
 }
