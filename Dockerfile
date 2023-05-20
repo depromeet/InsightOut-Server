@@ -1,4 +1,4 @@
-FROM node:16-alpine3.14
+FROM node:18-alpine3.14
 LABEL version="1.0.0"
 
 WORKDIR /usr/src/app
