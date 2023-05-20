@@ -16,7 +16,14 @@ export class RedisCacheService {
     return await this.redisClient.get(key);
   }
 
-  // key-value 저장
+  /**
+   * key-value 저장
+   *
+   * @param key 레디스에 저장할 키
+   * @param value 레디스에 저장할 값
+   * @param expire 유효기간 - 초 단위
+   * @returns 완료 후 'OK'를 반환
+   */
   async set(key: string, value: any, expire = 3600): Promise<'OK'> {
     return await this.redisClient.set(key, value, 'EX', expire);
   }
