@@ -9,6 +9,7 @@ import { UserRepository } from '../../../modules/database/repositories/user.repo
 import { JwtStrategy } from '../guards/strategies/jwt.strategy';
 import { UserInfoRepository } from '../../../modules/database/repositories/user-info.repository';
 import { JwtRefreshStrategy } from '../guards/strategies/jwt-refresh.strategy';
+import { ApiModule } from '../../../modules/api/api.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { JwtRefreshStrategy } from '../guards/strategies/jwt-refresh.strategy';
         };
       },
     }),
+    ApiModule,
   ],
   controllers: [AuthController],
   providers: [
