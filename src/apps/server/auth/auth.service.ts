@@ -49,14 +49,14 @@ export class AuthService {
         });
         await this.userInfoRepository.insertUserInfo({
           User: {
-            connect: { userId: newUser.userId },
+            connect: { id: newUser.id },
           },
           provider: Provider.google,
           imageUrl: picture,
         });
-        return newUser.userId;
+        return newUser.id;
       }
-      return existUser.userId;
+      return existUser.id;
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException();
