@@ -10,17 +10,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ****************************
+// ************ 유저 ***********
+// ****************************
+
 model User {
-  userId    Int      @id @default(autoincrement()) @map("user_id")
-  email     String   @unique @db.VarChar(100)
-  socialId String   @db.Text @map("social_id")
-  
+  id       Int    @id @default(autoincrement()) @map("user_id")
+  email    String @unique @db.VarChar(100)
+  socialId String @map("social_id") @db.Text
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   deletedAt DateTime @updatedAt @map("deleted_at")
-  nickname  String   @map("nickname")
+  nickname  String
 
   UserInfo UserInfo?
+  Resume   Resume[]
 
   @@map("user")
 }
@@ -36,13 +41,49 @@ enum Field {
 }
 
 model UserInfo {
-  userId   Int      @map("user_id")
+  userId   Int       @map("user_id")
   field    Field?
   provider Provider?
-  imageUrl String?   @db.Text @map("image_url")
+  imageUrl String?   @map("image_url") @db.Text
 
-  User User @relation(references: [userId], fields: [userId])
+  User User @relation(references: [id], fields: [userId])
 
   @@id([userId])
   @@map("user_info")
+}
+
+// ****************************
+// ********** 자기소개서 *********
+// ****************************
+
+// 자기소개서 폴더링 제목
+model Resume {
+  id    Int    @id
+  title String @db.VarChar(100)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  userId Int @map("user_id")
+
+  User User @relation(references: [id], fields: [userId])
+  Question Question[]
+
+  @@map("resume")
+}
+
+// 자기소개서 문항
+model Question {
+  resumeId Int @map("resume_id")
+
+  title  String @db.VarChar(50) // 문항 제목
+  answer String @db.VarChar(3000) // 문항 내용
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Resume Resume @relation(references: [id], fields: [resumeId])
+
+  @@id([resumeId])
+  @@map("question")
 }
