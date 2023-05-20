@@ -11,10 +11,38 @@ datasource db {
 }
 
 model User {
-  userId          Int   @id @default(autoincrement()) @map("user_id")
-  createdAt   DateTime  @default(now())  @map("created_at")
-  updatedAt   DateTime  @updatedAt  @map("updated_at")
-  deletedAt   DateTime  @updatedAt  @map("deleted_at")
-  userName    String    @map("user_name")
-  password    String    @map("password")
+  userId    Int      @id @default(autoincrement()) @map("user_id")
+  email     String   @unique @db.VarChar(100)
+  socialId String   @db.Text @map("social_id")
+  
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  deletedAt DateTime @updatedAt @map("deleted_at")
+  nickname  String   @map("nickname")
+
+  UserInfo UserInfo?
+
+  @@map("user")
+}
+
+enum Provider {
+  google
+  apple
+  kakao
+}
+
+enum Field {
+  developer
+}
+
+model UserInfo {
+  userId   Int      @map("user_id")
+  field    Field?
+  provider Provider?
+  imageUrl String?   @db.Text @map("image_url")
+
+  User User @relation(references: [userId], fields: [userId])
+
+  @@id([userId])
+  @@map("user_info")
 }

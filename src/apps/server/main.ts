@@ -6,9 +6,12 @@ import { EnvEnum } from 'src/modules/env/env.enum';
 import { EnvService } from 'src/modules/env/env.service';
 import { AppModule } from './app.module';
 import { PrismaService } from '../../modules/database/prisma.service';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.use(cookieParser());
 
   //환경변수 가져오기
   const envService = app.get(EnvService);
@@ -61,6 +64,17 @@ async function bootstrap() {
   //Winston
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
 
+  app.enableCors({
+    origin: ['localhost:3000'],
+    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
+    allowedHeaders: [
+      'access-control-allow-origin',
+      'X-Request-With',
+      'Content-Type',
+      'Accept',
+    ],
+    credentials: true,
+  });
   //서버 시작
   await app.listen(PORT);
 }
