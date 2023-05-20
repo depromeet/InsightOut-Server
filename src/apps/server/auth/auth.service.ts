@@ -22,6 +22,7 @@ import {
   AccessTokenAndRefreshToken,
   UserWithRefreshTokenPayload,
 } from './types/jwt-tokwn.type';
+import { ApiService } from '../../../modules/api/api.service';
 
 @Injectable()
 export class AuthService {
@@ -31,6 +32,7 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly userRepository: UserRepository,
     private readonly userInfoRepository: UserInfoRepository,
+    private readonly apiService: ApiService,
   ) {}
 
   async signin(user: UserPayload): Promise<number> {
@@ -41,7 +43,7 @@ export class AuthService {
 
       // If user exists, pass to signin
       if (!existUser) {
-        const nickname = await this.getRandomNickname();
+        const nickname = await this.apiService.getRandomNickname();
         const newUser = await this.userRepository.insertUser({
           email,
           socialId,
@@ -91,15 +93,6 @@ export class AuthService {
       refreshToken,
       REFRESH_TOKEN_EXPIRES_IN,
     );
-  }
-
-  async getRandomNickname(): Promise<string> {
-    const response = await fetch(
-      'https://nickname.hwanmoo.kr/?format=text&max_length=6',
-    );
-
-    const responseData = await response.text();
-    return responseData;
   }
 
   getCookieOptions(tokenType: TokenType): CookieOptions {
