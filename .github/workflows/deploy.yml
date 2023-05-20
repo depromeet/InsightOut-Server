@@ -3,9 +3,7 @@ name: Dockerizing to Amazon ECR
 on:
   push:
     branches:
-      - main
-      # - stage
-      # - dev
+      - dev
 
 env:
   AWS_REGION: ap-northeast-2
