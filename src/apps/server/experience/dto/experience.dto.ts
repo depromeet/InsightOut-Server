@@ -19,7 +19,15 @@ export class ExperinceDto {
   })
   @IsString()
   @IsOptional()
-  reason: string;
+  motivate: string;
+
+  @ApiProperty({
+    required: false,
+    example: 'UI/UX 디자이너',
+  })
+  @IsString()
+  @IsOptional()
+  experienceRole: string;
 
   @ApiProperty({ required: false, example: '2022-01' })
   @IsString()

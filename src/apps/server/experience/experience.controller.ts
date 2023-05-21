@@ -1,7 +1,9 @@
-import { HttpStatus } from '@nestjs/common';
+import { Body, HttpStatus, ValidationPipe } from '@nestjs/common';
 import { Route } from '../common/decorators/router/route.decorator';
 import { Method } from '../../../enums/method.enum';
 import { RouteTable } from '../common/decorators/router/route-table.decorator';
+import { CreateExperienceInfoReqDto } from './dto/req/createExperienceInfo.dto';
+import { ExperienceService } from './experience.service';
 
 @RouteTable({
   path: 'experience',
@@ -10,6 +12,8 @@ import { RouteTable } from '../common/decorators/router/route-table.decorator';
   },
 })
 export class ExperienceController {
+  constructor(private readonly experienceService: ExperienceService) {}
+
   @Route({
     request: {
       method: Method.POST,
@@ -18,8 +22,13 @@ export class ExperienceController {
     response: {
       code: HttpStatus.OK,
     },
-    description: '유저 생성 API입니다.',
-    summary: '유저 생성API.',
+    description: '경험 정보 생성 API입니다.',
+    summary: '경험 정보 생성API',
   })
-  public async createExperience() {}
+  public async createExperienceInfo(
+    @Body(ValidationPipe) body: CreateExperienceInfoReqDto,
+    // @reqUser() user: User,
+  ) {
+    return this.experienceService.createExperienceInfo(body);
+  }
 }
