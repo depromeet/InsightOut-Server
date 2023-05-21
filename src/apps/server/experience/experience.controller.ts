@@ -31,10 +31,7 @@ export class ExperienceController {
     description: '경험 정보 생성 API입니다.',
     summary: '경험 정보 생성API',
   })
-  public async createExperienceInfo(
-    @Body(ValidationPipe) body: CreateExperienceInfoReqDto,
-    @User() user: UserJwtToken,
-  ) {
+  public async createExperienceInfo(@Body(ValidationPipe) body: CreateExperienceInfoReqDto, @User() user: UserJwtToken) {
     return this.experienceService.createExperienceInfo(body, user);
   }
 }
