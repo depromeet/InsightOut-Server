@@ -10,6 +10,8 @@ import { JwtStrategy } from '../guards/strategies/jwt.strategy';
 import { UserInfoRepository } from '../../../modules/database/repositories/user-info.repository';
 import { JwtRefreshStrategy } from '../guards/strategies/jwt-refresh.strategy';
 import { ApiModule } from '../../../modules/api/api.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -35,6 +37,12 @@ import { ApiModule } from '../../../modules/api/api.module';
     // Repositories
     UserRepository,
     UserInfoRepository,
+
+    // Guard
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
   ],
 })
 export class AuthModule {}
