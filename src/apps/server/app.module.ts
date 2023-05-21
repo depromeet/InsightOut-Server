@@ -16,6 +16,7 @@ import { AppController } from './app.controller';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RedisConfigFactory } from '../../modules/cache/redis/redis.factory';
+import { ExperienceModule } from './experience/experience.module';
 
 @Module({
   controllers: [AppController],
@@ -32,6 +33,8 @@ import { RedisConfigFactory } from '../../modules/cache/redis/redis.factory';
 
     // Domains
     AuthModule,
+
+    ExperienceModule,
   ],
   providers: [
     {
