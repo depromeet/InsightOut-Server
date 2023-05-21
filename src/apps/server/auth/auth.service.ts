@@ -81,7 +81,7 @@ export class AuthService {
     return this.jwtService.sign(
       { userId },
       {
-        secret: this.configService.get<string>('JWT_REFRESH_TOKEN_SECRET'),
+        secret: this.configService.get<string>('JWT_SECRET'),
         expiresIn: ACCESS_TOKEN_EXPIRES_IN * 1000,
       },
     );
