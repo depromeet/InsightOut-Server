@@ -37,12 +37,6 @@ import { JwtAuthGuard } from '../guards/jwt-auth.guard';
     // Repositories
     UserRepository,
     UserInfoRepository,
-
-    // Guard
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
   ],
 })
 export class AuthModule {}

@@ -1,11 +1,13 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ResumesService } from './resumes.service';
 import { User } from '../decorators/request/user.decorator';
 import { UserJwtToken } from '../auth/types/jwt-tokwn.type';
 import { ResponseEntity } from '../../../libs/utils/respone.entity';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 
 @ApiTags('resumes')
+@UseGuards(JwtAuthGuard)
 @Controller('resumes')
 export class ResumesController {
   constructor(private readonly resumesService: ResumesService) {}
