@@ -2,7 +2,6 @@ import { HttpStatus } from '@nestjs/common';
 import { Exclude, Expose } from 'class-transformer';
 
 export class ResponseEntity<T> {
-  // 존재 이유
   @Exclude() private readonly _statusCode: HttpStatus; // 상태 코드
   @Exclude() private readonly _message: string; // 메시지
   @Exclude() private readonly _data: T; // Controller response data
@@ -36,22 +35,6 @@ export class ResponseEntity<T> {
   static CREATED_WITH_DATA<T>(data: T): ResponseEntity<T> {
     return new ResponseEntity<T>(HttpStatus.CREATED, '', data);
   }
-
-  //   static INTERNAL_SERVER_ERROR(): ResponseEntity<string> {
-  //     return new ResponseEntity<string>(HttpStatus.INTERNAL_SERVER_ERROR, '', '');
-  //   }
-
-  //   static INTERNAL_SERVER_ERROR_WITH(message: string): ResponseEntity<string> {
-  //     return new ResponseEntity<string>(
-  //       HttpStatus.INTERNAL_SERVER_ERROR,
-  //       message,
-  //       '',
-  //     );
-  //   }
-
-  //   static INTERNAL_SERVER_ERROR_ERROR_WITH_DATA(data): ResponseEntity<string> {
-  //     return new ResponseEntity<string>(HttpStatus.INTERNAL_SERVER_ERROR, '', '');
-  //   }
 
   static ERROR<T>(
     statusCode = HttpStatus.INTERNAL_SERVER_ERROR,
