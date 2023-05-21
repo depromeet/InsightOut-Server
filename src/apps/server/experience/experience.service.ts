@@ -1,16 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { CreateExperienceInfoReqDto } from './dto/req/createExperienceInfo.dto';
 import { PrismaService } from '../../../modules/database/prisma.service';
+import { UserJwtToken } from '../auth/types/jwt-tokwn.type';
 
 @Injectable()
 export class ExperienceService {
   constructor(private readonly prisma: PrismaService) {}
   public async createExperienceInfo(
     body: CreateExperienceInfoReqDto,
-    // user: User,
+    user: UserJwtToken,
   ) {
-    console.log('body', body);
-
     return await this.prisma.$transaction(async (tx) => {
       const experience = await tx.experience.create({
         data: {
@@ -18,7 +17,7 @@ export class ExperienceService {
           startDate: body.startDate,
           endDate: body.endDate,
           experienceStatus: body.experienceStatus,
-          userId: 1,
+          userId: user.userId,
         },
       });
 
