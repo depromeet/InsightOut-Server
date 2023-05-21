@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ExceptionResponse } from 'src/apps/server/exceptions/exception.type';
+import { ExceptionResponse } from 'src/apps/server/common/exceptions/exception.type';
 import { EnvEnum } from '../env/env.enum';
 import { EnvService } from '../env/env.service';
 import { WebClient } from '@slack/web-api';
