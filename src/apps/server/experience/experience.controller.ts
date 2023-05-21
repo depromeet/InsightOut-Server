@@ -13,7 +13,7 @@ export class ExperienceController {
   @Route({
     request: {
       method: Method.POST,
-      path: '/',
+      path: '/info',
     },
     response: {
       code: HttpStatus.OK,
