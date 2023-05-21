@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ResumesController } from './resumes.controller';
-import { ResumesProvider } from './resumes.service.ts';
+import { ResumesService } from './resumes.service';
+import { ResumesRepository } from '../../../modules/database/repositories/resume.repository';
 
 @Module({
   imports: [],
   controllers: [ResumesController],
-  providers: [ResumesProvider],
+  providers: [ResumesService, ResumesRepository],
 })
 export class ResumesModule {}
