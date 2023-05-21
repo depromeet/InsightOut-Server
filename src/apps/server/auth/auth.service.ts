@@ -82,7 +82,7 @@ export class AuthService {
       { userId },
       {
         secret: this.configService.get<string>('JWT_SECRET'),
-        expiresIn: ACCESS_TOKEN_EXPIRES_IN * 1000,
+        expiresIn: REFRESH_TOKEN_EXPIRES_IN * 1000,
       },
     );
   }
