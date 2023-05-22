@@ -41,6 +41,6 @@ export class ExperienceController {
     @Body(ValidationPipe) body: CreateExperienceInfoReqDto,
     @User() user: UserJwtToken,
   ): Promise<CreateExperienceInfoResDto> {
-    return this.experienceService.createExperienceInfo(body, user);
+    return await this.experienceService.createExperienceInfo(body, user);
   }
 }
