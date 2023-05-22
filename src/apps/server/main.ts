@@ -5,7 +5,6 @@ import { NodeEnvEnum } from 'src/enums/node-env.enum';
 import { EnvEnum } from 'src/modules/env/env.enum';
 import { EnvService } from 'src/modules/env/env.service';
 import { AppModule } from './app.module';
-import { PrismaService } from '../../modules/database/prisma.service';
 import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
@@ -59,13 +58,12 @@ async function bootstrap() {
     case NodeEnvEnum.Main:
       break;
   }
-  const prismaService = app.get(PrismaService);
-  await prismaService.enableShutdownHook(app);
+
   //Winston
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
 
   app.enableCors({
-    origin: ['localhost:3000'],
+    origin: ['http://localhost:3000'],
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
     allowedHeaders: [
       'access-control-allow-origin',
