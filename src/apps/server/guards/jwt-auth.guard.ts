@@ -1,6 +1,7 @@
 import {
   ExecutionContext,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { TokenExpiredError } from 'jsonwebtoken';
@@ -24,7 +25,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     }
 
     if (!user) {
-      throw new UnauthorizedException();
+      throw new NotFoundException('User not found');
     }
 
     return user;
