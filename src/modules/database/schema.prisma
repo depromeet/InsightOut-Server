@@ -107,6 +107,11 @@ model Experience {
 
   experienceStatus ExperienceStatus @default(inprogress) // 경험 분해 진행 척도 디폴트 inprogress
 
+  situation String? @db.VarChar(100) // S: Situation, 계기와 배경
+  task String? @db.VarChar(100) // T: Task, 과제 및 목표
+  action String? @db.VarChar(100) // A: Action, 행동
+  result String? @db.VarChar(100) // R: Result, 결과
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -133,6 +138,8 @@ model ExperienceInfo {
   
   experienceRole String? @db.VarChar(100) @map("experience_role") // 경험 나의 역할
   motivate String? @db.VarChar(100) // 경험 수행 이유
+  utilization String? @db.VarChar(100) // 역량 활용
+  analysis String? @db.VarChar(300) // AI 분석
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
