@@ -1,16 +1,22 @@
-import { Inject, Injectable, UnprocessableEntityException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { CreateExperienceInfoReqDto } from './dto/req/createExperienceInfo.dto';
 import { UserJwtToken } from '../auth/types/jwt-tokwn.type';
-import { ExperienceTransactionInterface } from './interface/experience-repository.interface';
+import { ExperienceReposirotyInterface, ExperienceTransactionInterface } from './interface/experience-repository.interface';
 import { ExperienceToken } from './provider/injectionToken';
 import { CreateExperienceInfoResDto } from './dto/res/createExperienceInfo.res.dto';
 import { returnValueToDto } from '../common/decorators/returnValueToDto';
+
+import { Experience } from '@prisma/client';
+import { getExperienceAttribute } from '../common/consts/experience-attribute.const';
 
 @Injectable()
 export class ExperienceService {
   constructor(
     @Inject(ExperienceToken.EXPERIENCE_TRANSACTION_REPOSITORY)
     private readonly experienceTransactionRepository: ExperienceTransactionInterface,
+
+    @Inject(ExperienceToken.EXPERIENCE_REPOSITORY)
+    private readonly experienceRepository: ExperienceReposirotyInterface,
   ) {}
 
   @returnValueToDto(CreateExperienceInfoResDto)
@@ -27,5 +33,12 @@ export class ExperienceService {
       experienceRole: experienceInfo.experienceRole,
       motivate: experienceInfo.motivate,
     };
+  }
+
+  public async getExperience(experienceId: number): Promise<Experience> {
+    const experience = await this.experienceRepository.selectOneById(experienceId, getExperienceAttribute);
+    if (!experience) throw new NotFoundException('해당 ID의 경험카드는 존재하지 않습니다.');
+
+    return experience;
   }
 }
