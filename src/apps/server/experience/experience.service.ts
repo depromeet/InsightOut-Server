@@ -23,7 +23,7 @@ export class ExperienceService {
       title: experience.title,
       startDate: experience.startDate,
       endDate: experience.endDate,
-      experienceInfoId: experienceInfo.experienceId,
+      experienceInfoId: experienceInfo.experienceInfoId,
       experienceRole: experienceInfo.experienceRole,
       motivate: experienceInfo.motivate,
     };

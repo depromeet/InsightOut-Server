@@ -34,6 +34,7 @@ export class ExperienceController {
     summary: '경험 정보 생성API',
   })
   @ApiUnprocessableEntityResponse({
+    description: '경험 카드 생성 실패',
     type: CreateExperienceInfoUnprocessableErrorResDto,
   })
   public async createExperienceInfo(
