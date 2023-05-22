@@ -5,7 +5,7 @@ export const getExperienceAttribute: ExperienceSelect = {
   startDate: true,
   endDate: true,
   experienceStatus: true,
-  ExperienceInfo: {
+  experienceInfo: {
     select: {
       experienceInfoId: true,
       experienceRole: true,
