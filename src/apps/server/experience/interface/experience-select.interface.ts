@@ -4,6 +4,10 @@ export interface ExperienceSelect {
   startDate?: boolean;
   endDate?: boolean;
   experienceStatus?: boolean;
+  situation?: boolean;
+  task?: boolean;
+  action?: boolean;
+  result?: boolean;
   createdAt?: boolean;
   updatedAt?: boolean;
   userId?: boolean;
@@ -14,6 +18,8 @@ export interface ExperienceSelect {
           experienceInfoId?: boolean;
           experienceRole?: boolean;
           motivate?: boolean;
+          analysis?: boolean;
+          utilization?: boolean;
           createdAt?: boolean;
           updatedAt?: boolean;
           experienceId?: boolean;

@@ -5,9 +5,8 @@ import { ExperienceReposirotyInterface, ExperienceTransactionInterface } from '.
 import { ExperienceToken } from './provider/injectionToken';
 import { CreateExperienceInfoResDto } from './dto/res/createExperienceInfo.res.dto';
 import { returnValueToDto } from '../common/decorators/returnValueToDto';
-
-import { Experience } from '@prisma/client';
 import { getExperienceAttribute } from '../common/consts/experience-attribute.const';
+import { GetExperienceResDto } from './dto/res/getExperience.res.dto';
 
 @Injectable()
 export class ExperienceService {
@@ -35,10 +34,9 @@ export class ExperienceService {
     };
   }
 
-  public async getExperience(experienceId: number): Promise<Experience> {
+  public async getExperience(experienceId: number): Promise<GetExperienceResDto> {
     const experience = await this.experienceRepository.selectOneById(experienceId, getExperienceAttribute);
     if (!experience) throw new NotFoundException('해당 ID의 경험카드는 존재하지 않습니다.');
-
     return experience;
   }
 }

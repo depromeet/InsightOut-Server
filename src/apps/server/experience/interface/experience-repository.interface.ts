@@ -8,5 +8,5 @@ export interface ExperienceTransactionInterface {
 }
 
 export interface ExperienceReposirotyInterface {
-  selectOneById(experienceId: number, select: ExperienceSelect): Promise<Experience>;
+  selectOneById(experienceId: number, select: ExperienceSelect): Promise<Partial<Experience & { experienceInfo?: ExperienceInfo }>>;
 }
