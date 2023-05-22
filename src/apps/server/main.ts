@@ -68,7 +68,7 @@ async function bootstrap() {
     origin: ['http://localhost:3000'],
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
     allowedHeaders: [
-      'access-control-allow-origin',
+      'Access-Control-Allow-Origin',
       'X-Request-With',
       'Content-Type',
       'Accept',
