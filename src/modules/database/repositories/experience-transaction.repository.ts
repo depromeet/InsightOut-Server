@@ -10,25 +10,29 @@ export class ExperienceTransactionRepository implements ExperienceTransactionInt
   constructor(private readonly prisma: PrismaService) {}
 
   public async createExperienceInfo(body: CreateExperienceInfoReqDto, user: UserJwtToken): Promise<[Experience, ExperienceInfo]> {
-    return await this.prisma.$transaction(async (tx) => {
-      const experience = await tx.experience.create({
-        data: {
-          title: body.title,
-          startDate: body.startDate,
-          endDate: body.endDate,
-          experienceStatus: ExperienceStatus.inprogress,
-          userId: 123,
-        },
-      });
+    try {
+      return await this.prisma.$transaction(async (tx) => {
+        const experience = await tx.experience.create({
+          data: {
+            title: body.title,
+            startDate: body.startDate,
+            endDate: body.endDate,
+            experienceStatus: ExperienceStatus.inprogress,
+            userId: user.userId,
+          },
+        });
 
-      const experienceInfo = await tx.experienceInfo.create({
-        data: {
-          experienceRole: body.experienceRole,
-          motivate: body.motivate,
-          experienceId: experience.id,
-        },
+        const experienceInfo = await tx.experienceInfo.create({
+          data: {
+            experienceRole: body.experienceRole,
+            motivate: body.motivate,
+            experienceId: experience.id,
+          },
+        });
+        return [experience, experienceInfo];
       });
-      return [experience, experienceInfo];
-    });
+    } catch (error) {
+      throw new UnprocessableEntityException('경험 카드 생성하는 데 실패했습니다. 타입을 확인해주세요');
+    }
   }
 }

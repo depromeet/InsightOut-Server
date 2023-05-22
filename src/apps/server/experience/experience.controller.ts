@@ -9,6 +9,7 @@ import { ApiBearerAuth, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { UserJwtToken } from '../auth/types/jwt-tokwn.type';
 import { CreateExperienceInfoResDto, CreateExperienceInfoUnprocessableErrorResDto } from './dto/res/createExperienceInfo.res.dto';
+import { ResponseEntity } from '../../../libs/utils/respone.entity';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -34,13 +35,12 @@ export class ExperienceController {
     summary: '경험 정보 생성API',
   })
   @ApiUnprocessableEntityResponse({
-    description: '경험 카드 생성 실패',
+    description: '경험 카드 생성 실패 타입 확인해주세요 :)',
     type: CreateExperienceInfoUnprocessableErrorResDto,
   })
-  public async createExperienceInfo(
-    @Body(ValidationPipe) body: CreateExperienceInfoReqDto,
-    @User() user: UserJwtToken,
-  ): Promise<CreateExperienceInfoResDto> {
-    return await this.experienceService.createExperienceInfo(body, user);
+  public async createExperienceInfo(@Body(ValidationPipe) body: CreateExperienceInfoReqDto, @User() user: UserJwtToken) {
+    const experience = await this.experienceService.createExperienceInfo(body, user);
+
+    return ResponseEntity.CREATED_WITH_DATA(experience);
   }
 }
