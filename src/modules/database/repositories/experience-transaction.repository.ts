@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { CreateExperienceInfoReqDto } from '../../../apps/server/experience/dto/req/createExperienceInfo.dto';
 import { UserJwtToken } from '../../../apps/server/auth/types/jwt-tokwn.type';
@@ -17,7 +17,7 @@ export class ExperienceTransactionRepository implements ExperienceTransactionInt
           startDate: body.startDate,
           endDate: body.endDate,
           experienceStatus: ExperienceStatus.inprogress,
-          userId: user.userId,
+          userId: 123,
         },
       });
 

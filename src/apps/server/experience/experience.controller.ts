@@ -5,9 +5,10 @@ import { RouteTable } from '../common/decorators/router/route-table.decorator';
 import { CreateExperienceInfoReqDto } from './dto/req/createExperienceInfo.dto';
 import { ExperienceService } from './experience.service';
 import { User } from '../common/decorators/request/user.decorator';
-import { ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { UserJwtToken } from '../auth/types/jwt-tokwn.type';
+import { CreateExperienceInfoResDto, CreateExperienceInfoUnprocessableErrorResDto } from './dto/res/createExperienceInfo.res.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -27,11 +28,18 @@ export class ExperienceController {
     },
     response: {
       code: HttpStatus.OK,
+      type: CreateExperienceInfoResDto,
     },
     description: '경험 정보 생성 API입니다.',
     summary: '경험 정보 생성API',
   })
-  public async createExperienceInfo(@Body(ValidationPipe) body: CreateExperienceInfoReqDto, @User() user: UserJwtToken) {
+  @ApiUnprocessableEntityResponse({
+    type: CreateExperienceInfoUnprocessableErrorResDto,
+  })
+  public async createExperienceInfo(
+    @Body(ValidationPipe) body: CreateExperienceInfoReqDto,
+    @User() user: UserJwtToken,
+  ): Promise<CreateExperienceInfoResDto> {
     return this.experienceService.createExperienceInfo(body, user);
   }
 }
