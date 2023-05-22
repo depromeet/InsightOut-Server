@@ -5,12 +5,13 @@ import { RouteTable } from '../common/decorators/router/route-table.decorator';
 import { CreateExperienceInfoReqDto } from './dto/req/createExperienceInfo.dto';
 import { ExperienceService } from './experience.service';
 import { User } from '../common/decorators/request/user.decorator';
-import { ApiBearerAuth, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiNotFoundResponse, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { UserJwtToken } from '../auth/types/jwt-tokwn.type';
 import { CreateExperienceInfoResDto, CreateExperienceInfoUnprocessableErrorResDto } from './dto/res/createExperienceInfo.res.dto';
 import { ResponseEntity } from '../../../libs/utils/respone.entity';
 import { ExperienceIdParamReqDto } from './dto/req/experienceIdParam.dto';
+import { GetExperienceNotFoundErrorResDto, GetExperienceResDto } from './dto/res/getExperience.res.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -52,10 +53,14 @@ export class ExperienceController {
     },
     response: {
       code: HttpStatus.OK,
-      type: CreateExperienceInfoResDto,
+      type: GetExperienceResDto,
     },
     description: '경험 분해 조회 API입니다.',
     summary: '경험 분해 조회 API',
+  })
+  @ApiNotFoundResponse({
+    description: '해당 경험 카드 ID를 확인해주세요 :)',
+    type: GetExperienceNotFoundErrorResDto,
   })
   public async getExperience(@Param(ValidationPipe) param: ExperienceIdParamReqDto) {
     const experience = await this.experienceService.getExperience(param.experienceId);
