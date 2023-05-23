@@ -1,15 +1,14 @@
 import { ApiProperty, PickType } from '@nestjs/swagger';
 import { ExperinceDto } from '../experience.dto';
+import { Expose } from 'class-transformer';
 
-export class CreateExperienceInfoResDto extends PickType(ExperinceDto, [
-  'experienceId',
-  'experienceInfoId',
-  'title',
-  'startDate',
-  'endDate',
-  'experienceRole',
-  'motivate',
-] as const) {}
+export class CreateExperienceInfoResDto extends PickType(ExperinceDto, ['experienceInfoId', 'experienceRole', 'motivation'] as const) {}
+
+export class CreateExperienceResDto extends PickType(ExperinceDto, ['experienceId', 'title', 'startDate', 'endDate'] as const) {
+  @ApiProperty({ type: CreateExperienceInfoResDto })
+  @Expose()
+  experienceInfo: CreateExperienceInfoResDto;
+}
 
 export class CreateExperienceInfoUnprocessableErrorResDto {
   @ApiProperty({ example: 422 })

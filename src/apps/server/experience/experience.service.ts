@@ -3,7 +3,7 @@ import { CreateExperienceInfoReqDto } from './dto/req/createExperienceInfo.dto';
 import { UserJwtToken } from '../auth/types/jwt-tokwn.type';
 import { ExperienceReposirotyInterface, ExperienceTransactionInterface } from './interface/experience-repository.interface';
 import { ExperienceToken } from './provider/injectionToken';
-import { CreateExperienceInfoResDto } from './dto/res/createExperienceInfo.res.dto';
+import { CreateExperienceResDto } from './dto/res/createExperienceInfo.res.dto';
 import { returnValueToDto } from '../common/decorators/returnValueToDto';
 import { getExperienceAttribute } from '../common/consts/experience-attribute.const';
 import { GetExperienceResDto } from './dto/res/getExperience.res.dto';
@@ -18,8 +18,8 @@ export class ExperienceService {
     private readonly experienceRepository: ExperienceReposirotyInterface,
   ) {}
 
-  @returnValueToDto(CreateExperienceInfoResDto)
-  public async createExperienceInfo(body: CreateExperienceInfoReqDto, user: UserJwtToken): Promise<CreateExperienceInfoResDto> {
+  @returnValueToDto(CreateExperienceResDto)
+  public async createExperienceInfo(body: CreateExperienceInfoReqDto, user: UserJwtToken): Promise<CreateExperienceResDto> {
     const [experience, experienceInfo] = await this.experienceTransactionRepository.createExperienceInfo(body, user);
     if (!experience || !experienceInfo) throw new UnprocessableEntityException('경험 카드 생성하는 데 실패했습니다. 타입을 확인해주세요');
 
@@ -28,9 +28,11 @@ export class ExperienceService {
       title: experience.title,
       startDate: experience.startDate,
       endDate: experience.endDate,
-      experienceInfoId: experienceInfo.experienceInfoId,
-      experienceRole: experienceInfo.experienceRole,
-      motivate: experienceInfo.motivate,
+      experienceInfo: {
+        experienceInfoId: experienceInfo.experienceInfoId,
+        experienceRole: experienceInfo.experienceRole,
+        motivation: experienceInfo.motivation,
+      },
     };
   }
 

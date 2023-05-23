@@ -8,7 +8,7 @@ import { User } from '../common/decorators/request/user.decorator';
 import { ApiBearerAuth, ApiNotFoundResponse, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { UserJwtToken } from '../auth/types/jwt-tokwn.type';
-import { CreateExperienceInfoResDto, CreateExperienceInfoUnprocessableErrorResDto } from './dto/res/createExperienceInfo.res.dto';
+import { CreateExperienceInfoUnprocessableErrorResDto, CreateExperienceResDto } from './dto/res/createExperienceInfo.res.dto';
 import { ResponseEntity } from '../../../libs/utils/respone.entity';
 import { ExperienceIdParamReqDto } from './dto/req/experienceIdParam.dto';
 import { GetExperienceNotFoundErrorResDto, GetExperienceResDto } from './dto/res/getExperience.res.dto';
@@ -31,7 +31,7 @@ export class ExperienceController {
     },
     response: {
       code: HttpStatus.CREATED,
-      type: CreateExperienceInfoResDto,
+      type: CreateExperienceResDto,
     },
     description: '경험 정보 생성 API입니다.',
     summary: '경험 정보 생성API',

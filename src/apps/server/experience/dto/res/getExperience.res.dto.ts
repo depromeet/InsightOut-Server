@@ -7,7 +7,7 @@ export class GetExperienceInfoResDto extends PickType(ExperinceSelectDto, [
   'experienceInfoId',
   'experienceRole',
   'experienceStatus',
-  'motivate',
+  'motivation',
   'analysis',
   'utilization',
 ] as const) {}

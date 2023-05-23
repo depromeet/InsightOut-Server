@@ -17,7 +17,7 @@ export interface ExperienceSelect {
         select?: {
           experienceInfoId?: boolean;
           experienceRole?: boolean;
-          motivate?: boolean;
+          motivation?: boolean;
           analysis?: boolean;
           utilization?: boolean;
           createdAt?: boolean;

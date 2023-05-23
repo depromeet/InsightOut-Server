@@ -16,7 +16,7 @@ export class ExperinceSelectDto extends PickType(ExperinceDto, [
   'action',
   'experienceStatus',
   'experienceRole',
-  'motivate',
+  'motivation',
   'analysis',
   'utilization',
 ] as const) {

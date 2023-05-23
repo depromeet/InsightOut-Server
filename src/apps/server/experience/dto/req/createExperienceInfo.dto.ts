@@ -6,5 +6,5 @@ export class CreateExperienceInfoReqDto extends PickType(ExperinceDto, [
   'startDate',
   'endDate',
   'experienceRole',
-  'motivate',
+  'motivation',
 ] as const) {}

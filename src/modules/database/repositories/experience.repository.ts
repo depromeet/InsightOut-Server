@@ -12,6 +12,7 @@ export class ExperienceRepository implements ExperienceReposirotyInterface {
     experienceId: number,
     select: ExperienceSelect,
   ): Promise<Partial<Experience & { experienceInfo: ExperienceInfo }>> {
+    console.log('experienceId', experienceId);
     try {
       return await this.prisma.experience.findUniqueOrThrow({
         select,

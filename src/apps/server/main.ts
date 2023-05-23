@@ -47,9 +47,9 @@ async function bootstrap() {
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
 
   app.enableCors({
-    origin: ['localhost:3000'],
+    origin: ['http://localhost:3000'],
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
-    allowedHeaders: ['access-control-allow-origin', 'X-Request-With', 'Content-Type', 'Accept'],
+    allowedHeaders: ['Access-Control-Allow-Origin', 'X-Request-With', 'Content-Type', 'Accept'],
     credentials: true,
   });
   //서버 시작

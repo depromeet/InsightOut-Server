@@ -102,8 +102,8 @@ model Experience {
 
   title String? @db.VarChar(100) // 경험 제목
 
-  startDate String? @db.VarChar(50) @map("start_date") // 시작 날짜 type: YYYY-MM
-  endDate String? @db.VarChar(50) @map("end_date") // 끝 날짜 type: YYYY-MM
+  startDate String? @db.VarChar(20) @map("start_date") // 시작 날짜 type: YYYY-MM
+  endDate String? @db.VarChar(20) @map("end_date") // 끝 날짜 type: YYYY-MM
 
   experienceStatus ExperienceStatus @default(inprogress) // 경험 분해 진행 척도 디폴트 inprogress
 
@@ -137,7 +137,7 @@ model ExperienceInfo {
   experienceInfoId Int @default(autoincrement())  @map("experience_info_id")
   
   experienceRole String? @db.VarChar(100) @map("experience_role") // 경험 나의 역할
-  motivate String? @db.VarChar(100) // 경험 수행 이유
+  motivation String? @db.VarChar(100) // 경험 수행 이유
   utilization String? @db.VarChar(100) // 역량 활용
   analysis String? @db.VarChar(300) // AI 분석
 
