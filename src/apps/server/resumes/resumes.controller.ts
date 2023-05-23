@@ -41,11 +41,6 @@ export class ResumesController {
   })
   @ApiOkResponse({
     description: '맞춤법 조회 결과를 반환합니다.',
-    // content: {
-    //   'application/json': {
-    //     examples: {}
-    //   }
-    // }
   })
   async spellCheck(@Body() body: PostSpellCheckRequestBodyDto) {
     const checkedSpell = await this.resumesService.spellCheck(body);
