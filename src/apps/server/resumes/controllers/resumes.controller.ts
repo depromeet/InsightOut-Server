@@ -3,10 +3,10 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ResumesService } from '../services/resumes.service';
 import { User } from '../../decorators/request/user.decorator';
 import { UserJwtToken } from '../../auth/types/jwt-tokwn.type';
-import { ResponseEntity } from '../../../../libs/utils/respone.entity';
+import { ResponseEntity } from '@libs/utils/respone.entity';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { Route } from '../../decorators/router/route.decorator';
-import { Method } from '../../../../enums/method.enum';
+import { Method } from '@libs/enums/method.enum';
 import { PostResumeRequestBodyDto } from '../dtos/post-resume.dto';
 
 @ApiTags('resumes')

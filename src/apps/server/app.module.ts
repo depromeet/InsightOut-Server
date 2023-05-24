@@ -4,18 +4,18 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
-import { DatabaseModule } from 'src/modules/database/database.module';
-import { EnvModule } from 'src/modules/env/env.module';
-import { LogModule } from 'src/modules/log/log.module';
+import { DatabaseModule } from '@modules/database/database.module';
+import { EnvModule } from '@modules/env/env.module';
+import { LogModule } from '@modules/log/log.module';
 import { ValidationException } from './exceptions/validation.exception';
 import { CustomExceptionFilter } from './filters/custom-exception.filter';
 import { LogInterceptor } from './interceptors/log.interceptor';
-import { SlackModule } from 'src/modules/slack/slack.module';
+import { SlackModule } from '@modules/slack/slack.module';
 import { AuthModule } from './auth/auth.module';
 import { AppController } from './app.controller';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { RedisConfigFactory } from '../../modules/cache/redis/redis.factory';
+import { RedisConfigFactory } from '@modules/cache/redis/redis.factory';
 import { ResumesModule } from './resumes/resumes.module';
 import { TestModule } from './test/test.module';
 

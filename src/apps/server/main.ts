@@ -1,11 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
-import { NodeEnvEnum } from 'src/enums/node-env.enum';
-import { EnvEnum } from 'src/modules/env/env.enum';
-import { EnvService } from 'src/modules/env/env.service';
+import { NodeEnvEnum } from '@libs/enums/node-env.enum';
+import { EnvEnum } from '@modules/env/env.enum';
+import { EnvService } from '@modules/env/env.service';
 import { AppModule } from './app.module';
-import { PrismaService } from '../../modules/database/prisma.service';
+import { PrismaService } from '@modules/database/prisma.service';
 import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {

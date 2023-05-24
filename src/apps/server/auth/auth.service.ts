@@ -4,7 +4,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { RedisCacheService } from '../../../modules/cache/redis/redis.service';
+import { RedisCacheService } from '@modules/cache/redis/redis.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import {
@@ -12,17 +12,17 @@ import {
   REFRESH_TOKEN_EXPIRES_IN,
 } from '../consts/jwt.const';
 import { UserPayload } from '../guards/signin-request-body.interface';
-import { UserRepository } from '../../../modules/database/repositories/user.repository';
+import { UserRepository } from '@modules/database/repositories/user.repository';
 import { CookieOptions } from 'express';
-import { UserInfoRepository } from '../../../modules/database/repositories/user-info.repository';
+import { UserInfoRepository } from '@modules/database/repositories/user-info.repository';
 import { Provider } from '@prisma/client';
-import { TokenType } from '../../../enums/token.enum';
+import { TokenType } from '@libs/enums/token.enum';
 import { Request } from 'express';
 import {
   AccessTokenAndRefreshToken,
   UserWithRefreshTokenPayload,
 } from './types/jwt-tokwn.type';
-import { ApiService } from '../../../modules/api/api.service';
+import { ApiService } from '@modules/api/api.service';
 
 @Injectable()
 export class AuthService {

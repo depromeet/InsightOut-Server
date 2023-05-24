@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { UserRepository } from '../../../../modules/database/repositories/user.repository';
+import { UserRepository } from '@modules/database/repositories/user.repository';
 import { UserJwtToken } from '../../auth/types/jwt-tokwn.type';
 
 @Injectable()

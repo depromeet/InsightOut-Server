@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Resume } from '@prisma/client';
-import { ResumeRepository } from '../../../../modules/database/repositories/resume.repository';
+import { ResumeRepository } from '@modules/database/repositories/resume.repository';
 import {
   PostResumeRequestBodyDto,
   PostResumeResponseDto,

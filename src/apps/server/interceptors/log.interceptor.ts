@@ -7,7 +7,7 @@ import {
 import { Request } from 'express';
 import * as RequestIp from 'request-ip';
 import { Observable, tap } from 'rxjs';
-import { LogService } from 'src/modules/log/log.service';
+import { LogService } from '@modules/log/log.service';
 @Injectable()
 export class LogInterceptor implements NestInterceptor {
   constructor(private readonly logService: LogService) {}

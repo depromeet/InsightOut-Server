@@ -4,7 +4,8 @@
     "baseUrl": "./",
     "paths": {
       "@apps/*": ["./src/apps/*"],
-      "@libs/*": ["./src/libs/*"]
+      "@libs/*": ["./src/libs/*"],
+      "@modules/*": ["./src/modules/*"]
     }
   }
 }
