@@ -7,6 +7,7 @@ import { ResponseEntity } from '../../../../libs/utils/respone.entity';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { Route } from '../../decorators/router/route.decorator';
 import { Method } from '../../../../enums/method.enum';
+import { PostQuestionResponseDto } from '../dtos/post-question.dto';
 
 @RouteTable({
   path: 'resumes/questions',
@@ -25,6 +26,7 @@ export class QuestionsController {
     },
     response: {
       code: HttpStatus.CREATED,
+      type: PostQuestionResponseDto,
     },
     summary: '자기소개서 문항 추가',
     description:
@@ -33,7 +35,7 @@ export class QuestionsController {
   async createOneQuestion(
     @Param('resumeId', ParseIntPipe) resumeId: number,
     @User() user: UserJwtToken,
-  ) {
+  ): Promise<ResponseEntity<PostQuestionResponseDto>> {
     const question = await this.questionService.createOneQuestion(
       user.userId,
       resumeId,
