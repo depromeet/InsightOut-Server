@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Resume } from '@prisma/client';
-import { ResumesRepository } from '../../../modules/database/repositories/resume.repository';
+import { ResumesRepository } from '../../../../modules/database/repositories/resume.repository';
 import {
   PostResumeRequestBodyDto,
   PostResumeResponseDto,
-} from './dtos/post-resume.dto';
+} from '../dtos/post-resume.dto';
 
 @Injectable()
 export class ResumesService {
