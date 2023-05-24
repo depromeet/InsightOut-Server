@@ -51,15 +51,18 @@ export class ApiService {
             headers: { 'Content-Type': 'multipart/form-data' },
           },
         );
-        // console.log(response);
         const responseData = await firstValueFrom(response);
-        // console.log(responseData);
         return parseJSON(responseData.data);
       }),
     );
     return sentences;
   }
 
+  /**
+   * 주어진 문장을 2000글자 단위로 나눠서 맞춤법 검사를 진행합니다.
+   * @param sentence 입력된 글
+   * @returns 글에서 맞춤법오류 종류, 맞춤법 오류 토큰, 정정 토큰, 맞춤법이 틀린 곳의 문장, 정정 이유를 배열로 반환합니다.
+   */
   async spellCheckByDaum(sentence: string): Promise<SpellCheckResult[][]> {
     const DAUM_URL = 'https://dic.daum.net/grammar_checker.do';
     const DAUM_MAX_CHARS = 2000;
