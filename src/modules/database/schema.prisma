@@ -79,7 +79,7 @@ model Question {
   resumeId Int @id @map("resume_id") // 자기소개서 폴더링 제목 pfk
 
   title  String @db.VarChar(50) // 문항 제목
-  answer String @db.VarChar(3000) // 문항 내용
+  answer String? @db.VarChar(3000) // 문항 내용
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
