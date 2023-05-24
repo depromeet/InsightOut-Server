@@ -1,10 +1,13 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ResumesService } from './resumes.service';
 import { User } from '../decorators/request/user.decorator';
 import { UserJwtToken } from '../auth/types/jwt-tokwn.type';
 import { ResponseEntity } from '../../../libs/utils/respone.entity';
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { Route } from '../decorators/router/route.decorator';
+import { Method } from '../../../enums/method.enum';
+import { PostResumeRequestBodyDto } from './dtos/post-resume.dto';
 
 @ApiTags('resumes')
 @UseGuards(JwtAuthGuard)
@@ -22,5 +25,28 @@ export class ResumesController {
     const resumes = await this.resumesService.getAllResumes(user.userId);
 
     return ResponseEntity.OK_WITH_DATA(resumes);
+  }
+
+  @Route({
+    request: {
+      path: '',
+      method: Method.POST,
+    },
+    response: {
+      code: HttpStatus.CREATED,
+    },
+    summary: '자기소개서 폴더 추가 API',
+    description: '새로 추가 버튼을 눌러 자기소개서 폴더를 추가합니다.',
+  })
+  async createResumeFolder(
+    @Body() postResumeRequestBodyDto: PostResumeRequestBodyDto,
+    @User() user: UserJwtToken,
+  ) {
+    const resume = await this.resumesService.createResumeFolder(
+      postResumeRequestBodyDto,
+      user.userId,
+    );
+
+    return ResponseEntity.CREATED_WITH_DATA(resume);
   }
 }
