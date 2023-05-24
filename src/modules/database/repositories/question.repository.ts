@@ -7,17 +7,17 @@ import {
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 
-type ResumeDelegate = Prisma.ResumeDelegate<
+type QuestionDelegate = Prisma.QuestionDelegate<
   Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined
 >;
 
 @Injectable()
-export class ResumeRepository extends AbstractRepository<
-  ResumeDelegate,
-  DelegateArgs<ResumeDelegate>,
-  DelegateReturnTypes<ResumeDelegate>
+export class QuestionRepository extends AbstractRepository<
+  QuestionDelegate,
+  DelegateArgs<QuestionDelegate>,
+  DelegateReturnTypes<QuestionDelegate>
 > {
   constructor(private readonly prisma: PrismaService) {
-    super(prisma.resume);
+    super(prisma.question);
   }
 }
