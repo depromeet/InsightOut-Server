@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Resume } from '@prisma/client';
-import { ResumesRepository } from '../../../../modules/database/repositories/resume.repository';
+import { ResumeRepository } from '../../../../modules/database/repositories/resume.repository';
 import {
   PostResumeRequestBodyDto,
   PostResumeResponseDto,
@@ -8,7 +8,7 @@ import {
 
 @Injectable()
 export class ResumesService {
-  constructor(private readonly resumesRepository: ResumesRepository) {}
+  constructor(private readonly resumesRepository: ResumeRepository) {}
 
   async getAllResumes(userId: number): Promise<Resume[]> {
     const resumes = await this.resumesRepository.findMany({
