@@ -1,4 +1,10 @@
-import { HttpStatus, Param, ParseIntPipe, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  UseGuards,
+} from '@nestjs/common';
 import { RouteTable } from '../../decorators/router/route-table.decorator';
 import { QuestionsService } from '../services/question.service';
 import { User } from '../../decorators/request/user.decorator';
@@ -8,6 +14,7 @@ import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { Route } from '../../decorators/router/route.decorator';
 import { PostQuestionResponseDto } from '../dtos/post-question.dto';
 import { Method } from '@libs/enums/method.enum';
+import { PatchQuestionRequestBodyDto } from '@apps/server/resumes/dtos/patch-question-request.dto';
 
 @RouteTable({
   path: 'resumes/questions',
@@ -42,5 +49,24 @@ export class QuestionsController {
     );
 
     return ResponseEntity.CREATED_WITH_DATA(question);
+  }
+
+  @Route({
+    request: {
+      path: ':questionId',
+      method: Method.PATCH,
+    },
+    response: {
+      code: HttpStatus.OK,
+    },
+    summary: '자기소개서 문항 수정',
+    description: '자기소개서 문항 제목 및 내용 수정',
+  })
+  async updateOneQuestion(
+    @Param('questionId', ParseIntPipe) questionId: number,
+    @Body() body: PatchQuestionRequestBodyDto,
+    @User() user: UserJwtToken,
+  ) {
+    await this.questionService.updateOneQuestion(body, questionId, user.userId);
   }
 }
