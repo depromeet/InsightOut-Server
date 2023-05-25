@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Resume } from '@prisma/client';
 import { ResumesRepository } from '../../../modules/database/repositories/resume.repository';
 import {
@@ -30,5 +30,25 @@ export class ResumesService {
     // Entity -> DTO
     const resumeResponseDto = new PostResumeResponseDto(resume);
     return resumeResponseDto;
+  }
+
+  async deleteResume({
+    resumeId,
+    userId,
+  }: {
+    resumeId: number;
+    userId: number;
+  }): Promise<void> {
+    const resume = await this.resumesRepository.findFirst({
+      where: { id: resumeId, userId },
+    });
+
+    if (!resume) {
+      throw new NotFoundException('Resume not found');
+    }
+
+    await this.resumesRepository.delete({
+      where: { id: resumeId },
+    });
   }
 }
