@@ -1,4 +1,12 @@
-import { Body, Controller, Get, HttpStatus, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ResumesService } from './resumes.service';
 import { User } from '../decorators/request/user.decorator';
@@ -8,6 +16,7 @@ import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 import { Route } from '../decorators/router/route.decorator';
 import { Method } from '../../../enums/method.enum';
 import { PostResumeRequestBodyDto } from './dtos/post-resume.dto';
+import { PatchResumeRequestDto } from './dtos/patch-resume.dto';
 
 @ApiTags('resumes')
 @UseGuards(JwtAuthGuard)
@@ -48,5 +57,30 @@ export class ResumesController {
     );
 
     return ResponseEntity.CREATED_WITH_DATA(resume);
+  }
+
+  @Route({
+    request: {
+      path: ':resumeId',
+      method: Method.PATCH,
+    },
+    response: {
+      code: HttpStatus.OK,
+    },
+    summary: '자기소개서 폴더 수정 API',
+    description: '미트볼 버튼을 눌러서 자기소개서 폴더를 수정합니다.',
+  })
+  async updateResumeFolder(
+    @Param('resumeId', ParseIntPipe) resumeId: number,
+    @User() user: UserJwtToken,
+    @Body() body: PatchResumeRequestDto,
+  ) {
+    await this.resumesService.updateResumeFolder({
+      body,
+      resumeId,
+      userId: user.userId,
+    });
+
+    return ResponseEntity.OK_WITH_MESSAGE('Resume updated');
   }
 }
