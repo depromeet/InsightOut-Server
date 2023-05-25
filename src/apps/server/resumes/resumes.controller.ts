@@ -73,7 +73,7 @@ export class ResumesController {
   async deleteResume(
     @Param('resumeId', ParseIntPipe) resumeId: number,
     @User() user: UserJwtToken,
-  ) {
+  ): Promise<ResponseEntity<string>> {
     await this.resumesService.deleteResume({ resumeId, userId: user.userId });
 
     return ResponseEntity.OK_WITH_MESSAGE('Resume deleted');
