@@ -3,16 +3,27 @@ import { Question } from '@prisma/client';
 import { Exclude, Expose } from 'class-transformer';
 
 export class PostQuestionResponseDto {
+  @Exclude() readonly _id: number;
   @Exclude() readonly _resumeId: number;
   @Exclude() readonly _title: string;
   @Exclude() readonly _createdAt: Date;
   @Exclude() readonly _updatedAt: Date;
 
   constructor(question: Question) {
+    this._id = question.id;
     this._resumeId = question.resumeId;
     this._title = question.title;
     this._createdAt = question.createdAt;
     this._updatedAt = question.updatedAt;
+  }
+
+  @Expose()
+  @ApiProperty({
+    description: '자기소개서 문항 id',
+    example: 1234,
+  })
+  get id(): number {
+    return this._id;
   }
 
   @Expose()
