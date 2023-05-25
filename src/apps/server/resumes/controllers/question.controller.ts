@@ -43,4 +43,27 @@ export class QuestionsController {
 
     return ResponseEntity.CREATED_WITH_DATA(question);
   }
+
+  @Route({
+    request: {
+      path: ':questionId',
+      method: Method.DELETE,
+    },
+    response: {
+      code: HttpStatus.OK,
+    },
+    summary: '자기소개서 문항 삭제 API',
+    description: '자기소개서 문항을 삭제합니다.',
+  })
+  async deleteQuestion(
+    @Param('questionId', ParseIntPipe) questionId: number,
+    @User() user: UserJwtToken,
+  ): Promise<ResponseEntity<string>> {
+    await this.questionService.deleteQuestion({
+      questionId,
+      userId: user.userId,
+    });
+
+    return ResponseEntity.OK_WITH_MESSAGE('Resume question deleted');
+  }
 }
