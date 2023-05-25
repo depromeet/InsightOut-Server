@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Resume } from '@prisma/client';
 import { ResumesRepository } from '../../../modules/database/repositories/resume.repository';
 import {
   PostResumeRequestBodyDto,
   PostResumeResponseDto,
 } from './dtos/post-resume.dto';
+import { PatchResumeRequestDto } from './dtos/patch-resume.dto';
 
 @Injectable()
 export class ResumesService {
@@ -30,5 +31,32 @@ export class ResumesService {
     // Entity -> DTO
     const resumeResponseDto = new PostResumeResponseDto(resume);
     return resumeResponseDto;
+  }
+
+  async updateResumeFolder({
+    body,
+    resumeId,
+    userId,
+  }: {
+    body: PatchResumeRequestDto;
+    resumeId: number;
+    userId: number;
+  }) {
+    const { title } = body;
+
+    const resume = await this.resumesRepository.findFirst({
+      where: { id: resumeId, userId },
+    });
+
+    if (!resume) {
+      throw new NotFoundException('Resume not found');
+    }
+
+    if (title) {
+      await this.resumesRepository.update({
+        data: { title },
+        where: { id: resumeId },
+      });
+    }
   }
 }
