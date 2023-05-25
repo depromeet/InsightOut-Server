@@ -41,7 +41,7 @@ export class ResumesService {
     body: PatchResumeRequestDto;
     resumeId: number;
     userId: number;
-  }) {
+  }): Promise<void> {
     const { title } = body;
 
     const resume = await this.resumesRepository.findFirst({

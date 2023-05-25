@@ -74,7 +74,7 @@ export class ResumesController {
     @Param('resumeId', ParseIntPipe) resumeId: number,
     @User() user: UserJwtToken,
     @Body() body: PatchResumeRequestDto,
-  ) {
+  ): Promise<ResponseEntity<string>> {
     await this.resumesService.updateResumeFolder({
       body,
       resumeId,
