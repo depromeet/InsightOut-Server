@@ -66,7 +66,13 @@ export class QuestionsController {
     @Param('questionId', ParseIntPipe) questionId: number,
     @Body() body: PatchQuestionRequestBodyDto,
     @User() user: UserJwtToken,
-  ) {
-    await this.questionService.updateOneQuestion(body, questionId, user.userId);
+  ): Promise<ResponseEntity<string>> {
+    await this.questionService.updateOneQuestion({
+      body,
+      questionId,
+      userId: user.userId,
+    });
+
+    return ResponseEntity.OK_WITH_MESSAGE('Resume question updated');
   }
 }

@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { QuestionRepository } from '@modules/database/repositories/question.repository';
 import { ResumeRepository } from '@modules/database/repositories/resume.repository';
 import { PostQuestionResponseDto } from '../dtos/post-question.dto';
+import { PatchQuestionRequestBodyDto } from '@apps/server/resumes/dtos/patch-question-request.dto';
 
 @Injectable()
 export class QuestionsService {
@@ -31,5 +32,32 @@ export class QuestionsService {
 
     const questionReponseDto = new PostQuestionResponseDto(question);
     return questionReponseDto;
+  }
+
+  async updateOneQuestion({
+    body,
+    questionId,
+    userId,
+  }: {
+    body: PatchQuestionRequestBodyDto;
+    questionId: number;
+    userId: number;
+  }): Promise<void> {
+    const { title, answer } = body;
+
+    const question = await this.questionRepository.findFirst({
+      where: { id: questionId, Resume: { User: { id: userId } } },
+    });
+
+    if (!question) {
+      throw new NotFoundException('Resume question not found');
+    }
+
+    if (title || answer) {
+      await this.questionRepository.update({
+        data: { title, answer },
+        where: { id: questionId },
+      });
+    }
   }
 }
