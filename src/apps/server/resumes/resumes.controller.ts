@@ -1,4 +1,12 @@
-import { Body, Controller, Get, HttpStatus, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ResumesService } from './resumes.service';
 import { User } from '../decorators/request/user.decorator';
@@ -48,5 +56,26 @@ export class ResumesController {
     );
 
     return ResponseEntity.CREATED_WITH_DATA(resume);
+  }
+
+  @Route({
+    request: {
+      path: ':resumeId',
+      method: Method.DELETE,
+    },
+    response: {
+      code: HttpStatus.OK,
+    },
+    summary: '자기소개서 폴더 삭제 API',
+    description:
+      '자기소개서 폴더를 삭제합니다. 폴더 하위에 있는 문항도 같이 삭제됩니다.',
+  })
+  async deleteResume(
+    @Param('resumeId', ParseIntPipe) resumeId: number,
+    @User() user: UserJwtToken,
+  ) {
+    await this.resumesService.deleteResume({ resumeId, userId: user.userId });
+
+    return ResponseEntity.OK_WITH_MESSAGE('Resume deleted');
   }
 }
