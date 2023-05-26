@@ -1,31 +1,20 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Question, Resume } from '@prisma/client';
-import { Exclude, Expose } from 'class-transformer';
-import {
-  IsBooleanString,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  MaxLength,
-} from 'class-validator';
+import { Exclude, Expose, Transform } from 'class-transformer';
+import { IsBoolean, IsOptional } from 'class-validator';
 
 export class GetResumeRequestQueryDto {
-  @ApiPropertyOptional({
-    description: '필터링할 폴더 제목',
-    example: '디프만 자기소개서',
-  })
-  @IsString()
-  @IsNotEmpty()
-  @IsOptional()
-  @MaxLength(20)
-  filter?: string | undefined;
-
   @ApiPropertyOptional({
     description:
       '자기소개서 문항 조회 유무. false를 입력 시 자기소개서만 조회하고, true를 입력 시 문항도 함께 조회합니다.',
     example: false,
   })
-  @IsBooleanString()
+  @IsBoolean()
+  @Transform(({ value }) => {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+    return value;
+  })
   @IsOptional()
   question = false;
 }
