@@ -1,4 +1,11 @@
-import { Body, Controller, Get, HttpStatus, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ResumesService } from '../services/resumes.service';
 import { User } from '../../decorators/request/user.decorator';
@@ -8,6 +15,7 @@ import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { Route } from '../../decorators/router/route.decorator';
 import { Method } from '@libs/enums/method.enum';
 import { PostResumeRequestBodyDto } from '../dtos/post-resume.dto';
+import { GetResumeRequestQueryDto } from '@apps/server/resumes/dtos/get-resume-query.dto';
 
 @ApiTags('resumes')
 @UseGuards(JwtAuthGuard)
@@ -21,8 +29,11 @@ export class ResumesController {
     description:
       '자기소개서를 처음 조회했을 때, 자기소개서 폴더링 목록과 각 폴더링 별 문항을 모두 출력합니다.',
   })
-  async getAllResumes(@User() user: UserJwtToken) {
-    const resumes = await this.resumesService.getAllResumes(user.userId);
+  async getAllResumes(
+    @User() user: UserJwtToken,
+    @Query() query: GetResumeRequestQueryDto,
+  ) {
+    const resumes = await this.resumesService.getAllResumes(user.userId, query);
 
     return ResponseEntity.OK_WITH_DATA(resumes);
   }
