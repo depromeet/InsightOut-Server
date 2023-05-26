@@ -15,7 +15,10 @@ import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { Route } from '../../decorators/router/route.decorator';
 import { Method } from '@libs/enums/method.enum';
 import { PostResumeRequestBodyDto } from '../dtos/post-resume.dto';
-import { GetResumeRequestQueryDto } from '@apps/server/resumes/dtos/get-resume.dto';
+import {
+  GetResumeRequestQueryDto,
+  GetResumeResponseDto,
+} from '@apps/server/resumes/dtos/get-resume.dto';
 
 @ApiTags('resumes')
 @UseGuards(JwtAuthGuard)
@@ -32,7 +35,7 @@ export class ResumesController {
   async getAllResumes(
     @User() user: UserJwtToken,
     @Query() query: GetResumeRequestQueryDto,
-  ) {
+  ): Promise<ResponseEntity<GetResumeResponseDto[]>> {
     const resumes = await this.resumesService.getAllResumes(user.userId, query);
 
     return ResponseEntity.OK_WITH_DATA(resumes);
