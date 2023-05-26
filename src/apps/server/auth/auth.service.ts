@@ -10,7 +10,7 @@ import { ConfigService } from '@nestjs/config';
 import {
   ACCESS_TOKEN_EXPIRES_IN,
   REFRESH_TOKEN_EXPIRES_IN,
-} from '../consts/jwt.const';
+} from '../common/consts/jwt.const';
 import { UserPayload } from '../guards/signin-request-body.interface';
 import { UserRepository } from '@modules/database/repositories/user.repository';
 import { CookieOptions } from 'express';
