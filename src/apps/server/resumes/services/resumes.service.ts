@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { Resume } from '@prisma/client';
 import { ResumeRepository } from '@modules/database/repositories/resume.repository';
 import {
   PostResumeRequestBodyDto,
   PostResumeResponseDto,
 } from '../dtos/post-resume.dto';
-import { GetResumeRequestQueryDto } from '@apps/server/resumes/dtos/get-resume-query.dto';
+import {
+  GetResumeRequestQueryDto,
+  GetResumeResponseDto,
+} from '@apps/server/resumes/dtos/get-resume.dto';
 
 @Injectable()
 export class ResumesService {
@@ -14,16 +16,19 @@ export class ResumesService {
   async getAllResumes(
     userId: number,
     query?: GetResumeRequestQueryDto,
-  ): Promise<Resume[]> {
+  ): Promise<GetResumeResponseDto[]> {
     const resumes = await this.resumesRepository.findMany({
       where: { userId },
       include: { Question: query.question },
+      orderBy: { updatedAt: 'desc' },
     });
     if (query && query.filter) {
-      return resumes.filter((resume) => resume.title === query.filter);
+      return resumes
+        .filter((resume) => resume.title === query.filter)
+        .map((resume) => new GetResumeResponseDto(resume));
     }
 
-    return resumes;
+    return resumes.map((resume) => new GetResumeResponseDto(resume));
   }
 
   async createResumeFolder(

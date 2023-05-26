@@ -15,7 +15,7 @@ import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { Route } from '../../decorators/router/route.decorator';
 import { Method } from '@libs/enums/method.enum';
 import { PostResumeRequestBodyDto } from '../dtos/post-resume.dto';
-import { GetResumeRequestQueryDto } from '@apps/server/resumes/dtos/get-resume-query.dto';
+import { GetResumeRequestQueryDto } from '@apps/server/resumes/dtos/get-resume.dto';
 
 @ApiTags('resumes')
 @UseGuards(JwtAuthGuard)
