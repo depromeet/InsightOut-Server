@@ -22,11 +22,6 @@ export class ResumesService {
       include: { Question: query.question },
       orderBy: { updatedAt: 'desc' },
     });
-    if (query && query.filter) {
-      return resumes
-        .filter((resume) => resume.title === query.filter)
-        .map((resume) => new GetResumeResponseDto(resume));
-    }
 
     return resumes.map((resume) => new GetResumeResponseDto(resume));
   }
