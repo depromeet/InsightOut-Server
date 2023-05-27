@@ -32,13 +32,13 @@ export class ExperinceDto {
   endDate?: string | null;
 
   @ApiPropertyOptional({
-    example: 'inprogress or done',
-    default: 'inprogress',
+    example: ExperienceStatus.INPROGRESS,
+    default: ExperienceStatus.INPROGRESS,
   })
   @IsEnum(ExperienceStatus)
   @IsOptional()
   @Expose()
-  experienceStatus?: ExperienceStatus = ExperienceStatus.inprogress;
+  experienceStatus?: ExperienceStatus = ExperienceStatus.INPROGRESS;
 
   @ApiPropertyOptional({ example: '개발자와 협업 역량을 쌓기 위해 IT 동아리에 들어감' })
   @IsString()

@@ -42,7 +42,7 @@ export class AuthService {
           User: {
             connect: { id: newUser.id },
           },
-          provider: Provider.google,
+          provider: Provider.GOOGLE,
           imageUrl: picture,
         });
         return newUser.id;
