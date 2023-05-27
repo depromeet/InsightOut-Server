@@ -26,6 +26,7 @@ model User {
 
   UserInfo UserInfo?
   Resume   Resume[]
+  Experiences   Experience[]
 
   @@map("user")
 }
@@ -76,11 +77,11 @@ model Resume {
 // ********** 자기소개서 문항 *********
 // ********************************
 model Question {
-  id Int @id
+  id Int @id @default(autoincrement())
   resumeId Int @map("resume_id") // 자기소개서 폴더링 제목 pfk
 
   title  String @db.VarChar(50) // 문항 제목
-  answer String @db.VarChar(3000) // 문항 내용
+  answer String? @db.VarChar(3000) // 문항 내용
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -89,4 +90,63 @@ model Question {
 
   // @@id([resumeId])
   @@map("question")
+}
+
+
+// ********************************
+// ***** 경험 in 경험 분해 ********
+// ********************************
+
+// 임시 저장이 있기에 모든 필드는 Nullable입니다.
+model Experience {
+  id Int @id @default(autoincrement()) @map("id")// 경험 id
+
+  title String? @db.VarChar(100) // 경험 제목
+
+  startDate String? @db.VarChar(20) @map("start_date") // 시작 날짜 type: YYYY-MM
+  endDate String? @db.VarChar(20) @map("end_date") // 끝 날짜 type: YYYY-MM
+
+  experienceStatus ExperienceStatus @default(inprogress) // 경험 분해 진행 척도 디폴트 inprogress
+
+  situation String? @db.VarChar(100) // S: Situation, 계기와 배경
+  task String? @db.VarChar(100) // T: Task, 과제 및 목표
+  action String? @db.VarChar(100) // A: Action, 행동
+  result String? @db.VarChar(100) // R: Result, 결과
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  userId Int @map("user_id")
+
+  User User @relation(references: [id], fields: [userId])
+  experienceInfo ExperienceInfo?
+
+  @@map("experience")
+}
+
+// 경험 분해 진행 상태
+enum ExperienceStatus {
+  inprogress  // 진행중
+  done    // 끝
+}
+
+// ********************************
+// ********** 경험 정보 ***********
+// ********************************
+// 임시 저장이 있기에 모든 필드는 Nullable입니다.
+model ExperienceInfo {
+  experienceInfoId Int @default(autoincrement())  @map("experience_info_id")
+  
+  experienceRole String? @db.VarChar(100) @map("experience_role") // 경험 나의 역할
+  motivation String? @db.VarChar(100) // 경험 수행 이유
+  utilization String? @db.VarChar(100) // 역량 활용
+  analysis String? @db.VarChar(300) // AI 분석
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  experienceId Int @id @map("experience_id")// 경험 id
+  experience Experience @relation(references: [id], fields: [experienceId])
+
+  @@map("experience_info")
 }

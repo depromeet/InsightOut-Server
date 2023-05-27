@@ -5,10 +5,10 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
-import { LogService } from 'src/modules/log/log.service';
+import { LogService } from '@modules/log/log.service';
 import { BaseException } from '../exceptions/base.exception';
 import { UnknownException } from '../exceptions/unknown.exception';
-import { SlackService } from 'src/modules/slack/slack.service';
+import { SlackService } from '@modules/slack/slack.service';
 
 @Catch()
 export class CustomExceptionFilter implements ExceptionFilter {
@@ -37,8 +37,6 @@ export class CustomExceptionFilter implements ExceptionFilter {
         });
       }
     })();
-
-    // this.slackService.sendExceptionMessage(exception);
 
     this.logService.error(CustomExceptionFilter.name, exception);
 
