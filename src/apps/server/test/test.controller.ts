@@ -1,8 +1,8 @@
 import { Body, Controller, Post, Res } from '@nestjs/common';
 import { TestService } from './test.service';
-import { ResponseEntity } from '@libs/utils/respone.entity';
 import { Response } from 'express';
 import { ACCESS_TOKEN_EXPIRES_IN } from '../consts/jwt.const';
+import { ResponseEntity } from '📚libs/utils/respone.entity';
 
 @Controller('test')
 export class TestController {

@@ -3,11 +3,11 @@ import { RouteTable } from '../../decorators/router/route-table.decorator';
 import { QuestionsService } from '../services/question.service';
 import { User } from '../../decorators/request/user.decorator';
 import { UserJwtToken } from '../../auth/types/jwt-tokwn.type';
-import { ResponseEntity } from '@libs/utils/respone.entity';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { Route } from '../../decorators/router/route.decorator';
 import { PostQuestionResponseDto } from '../dtos/post-question.dto';
-import { Method } from '@libs/enums/method.enum';
+import { ResponseEntity } from '📚libs/utils/respone.entity';
+import { Method } from '📚libs/enums/method.enum';
 
 @RouteTable({
   path: 'resumes/questions',

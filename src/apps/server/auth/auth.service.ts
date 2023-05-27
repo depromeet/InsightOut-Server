@@ -16,13 +16,13 @@ import { UserRepository } from '@modules/database/repositories/user.repository';
 import { CookieOptions } from 'express';
 import { UserInfoRepository } from '@modules/database/repositories/user-info.repository';
 import { Provider } from '@prisma/client';
-import { TokenType } from '@libs/enums/token.enum';
 import { Request } from 'express';
 import {
   AccessTokenAndRefreshToken,
   UserWithRefreshTokenPayload,
 } from './types/jwt-tokwn.type';
 import { ApiService } from '@modules/api/api.service';
+import { TokenType } from '📚libs/enums/token.enum';
 
 @Injectable()
 export class AuthService {

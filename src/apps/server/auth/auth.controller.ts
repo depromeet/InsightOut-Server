@@ -12,9 +12,9 @@ import { User } from '../decorators/request/user.decorator';
 import { AuthService } from './auth.service';
 import { UserPayload } from '../guards/signin-request-body.interface';
 import { Response } from 'express';
-import { TokenType } from '@libs/enums/token.enum';
 import { UserWithRefreshTokenPayload } from './types/jwt-tokwn.type';
 import { JwtRefreshGuard } from '../guards/jwt-refresh.guard';
+import { TokenType } from '📚libs/enums/token.enum';
 
 @ApiTags('Auth')
 @Controller('auth')
