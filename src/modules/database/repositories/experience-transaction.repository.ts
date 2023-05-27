@@ -25,7 +25,7 @@ export class ExperienceTransactionRepository implements ExperienceTransactionInt
         const experienceInfo = await tx.experienceInfo.create({
           data: {
             experienceRole: body.experienceRole,
-            motivate: body.motivate,
+            motivation: body.motivation,
             experienceId: experience.id,
           },
         });

@@ -102,10 +102,15 @@ model Experience {
 
   title String? @db.VarChar(100) // 경험 제목
 
-  startDate String? @db.VarChar(50) @map("start_date") // 시작 날짜 type: YYYY-MM
-  endDate String? @db.VarChar(50) @map("end_date") // 끝 날짜 type: YYYY-MM
+  startDate String? @db.VarChar(20) @map("start_date") // 시작 날짜 type: YYYY-MM
+  endDate String? @db.VarChar(20) @map("end_date") // 끝 날짜 type: YYYY-MM
 
   experienceStatus ExperienceStatus @default(inprogress) // 경험 분해 진행 척도 디폴트 inprogress
+
+  situation String? @db.VarChar(100) // S: Situation, 계기와 배경
+  task String? @db.VarChar(100) // T: Task, 과제 및 목표
+  action String? @db.VarChar(100) // A: Action, 행동
+  result String? @db.VarChar(100) // R: Result, 결과
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -113,7 +118,7 @@ model Experience {
   userId Int @map("user_id")
 
   User User @relation(references: [id], fields: [userId])
-  ExperienceInfo ExperienceInfo?
+  experienceInfo ExperienceInfo?
 
   @@map("experience")
 }
@@ -132,7 +137,9 @@ model ExperienceInfo {
   experienceInfoId Int @default(autoincrement())  @map("experience_info_id")
   
   experienceRole String? @db.VarChar(100) @map("experience_role") // 경험 나의 역할
-  motivate String? @db.VarChar(100) // 경험 수행 이유
+  motivation String? @db.VarChar(100) // 경험 수행 이유
+  utilization String? @db.VarChar(100) // 역량 활용
+  analysis String? @db.VarChar(300) // AI 분석
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

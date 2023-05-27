@@ -49,12 +49,7 @@ async function bootstrap() {
   app.enableCors({
     origin: ['http://localhost:3000'],
     methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
-    allowedHeaders: [
-      'Access-Control-Allow-Origin',
-      'X-Request-With',
-      'Content-Type',
-      'Accept',
-    ],
+    allowedHeaders: ['Access-Control-Allow-Origin', 'X-Request-With', 'Content-Type', 'Accept'],
     credentials: true,
   });
   //서버 시작
