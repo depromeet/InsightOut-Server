@@ -34,15 +34,11 @@ export class QuestionsService {
     return questionReponseDto;
   }
 
-  async updateOneQuestion({
-    body,
-    questionId,
-    userId,
-  }: {
-    body: PatchQuestionRequestBodyDto;
-    questionId: number;
-    userId: number;
-  }): Promise<void> {
+  async updateOneQuestion(
+    body: PatchQuestionRequestBodyDto,
+    questionId: number,
+    userId: number,
+  ): Promise<void> {
     const { title, answer } = body;
 
     const question = await this.questionRepository.findFirst({

@@ -12,9 +12,15 @@ import { UserJwtToken } from '../../auth/types/jwt-tokwn.type';
 import { ResponseEntity } from '@libs/utils/respone.entity';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { Route } from '../../decorators/router/route.decorator';
-import { PostQuestionResponseDto } from '../dtos/post-question.dto';
+import {
+  PostQuestionRequestParamDto,
+  PostQuestionResponseDto,
+} from '../dtos/post-question.dto';
 import { Method } from '@libs/enums/method.enum';
-import { PatchQuestionRequestBodyDto } from '@apps/server/resumes/dtos/patch-question-request.dto';
+import {
+  PatchQuestionRequestBodyDto,
+  PatchQuestionRequestParamDto,
+} from '@apps/server/resumes/dtos/patch-question-request.dto';
 
 @RouteTable({
   path: 'resumes/questions',
@@ -40,12 +46,12 @@ export class QuestionsController {
       '자기소개서 폴더 아래 문항 추가 버튼을 눌러서 문항을 추가합니다. 빈 문항만 추가됩니다.',
   })
   async createOneQuestion(
-    @Param('resumeId', ParseIntPipe) resumeId: number,
+    @Param() postQuestionRequestParamDto: PostQuestionRequestParamDto,
     @User() user: UserJwtToken,
   ): Promise<ResponseEntity<PostQuestionResponseDto>> {
     const question = await this.questionService.createOneQuestion(
       user.userId,
-      resumeId,
+      postQuestionRequestParamDto.resumeId,
     );
 
     return ResponseEntity.CREATED_WITH_DATA(question);
@@ -63,15 +69,15 @@ export class QuestionsController {
     description: '자기소개서 문항 제목 및 내용 수정',
   })
   async updateOneQuestion(
-    @Param('questionId', ParseIntPipe) questionId: number,
+    @Param() patchQuestionRequestParamDto: PatchQuestionRequestParamDto,
     @Body() body: PatchQuestionRequestBodyDto,
     @User() user: UserJwtToken,
   ): Promise<ResponseEntity<string>> {
-    await this.questionService.updateOneQuestion({
+    await this.questionService.updateOneQuestion(
       body,
-      questionId,
-      userId: user.userId,
-    });
+      patchQuestionRequestParamDto.questionId,
+      user.userId,
+    );
 
     return ResponseEntity.OK_WITH_MESSAGE('Resume question updated');
   }

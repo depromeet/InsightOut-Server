@@ -1,5 +1,24 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString, MaxLength } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsPositive,
+  IsString,
+  MaxLength,
+} from 'class-validator';
+
+export class PatchQuestionRequestParamDto {
+  @ApiProperty({
+    description: '자기소개서 문항 id',
+    example: 1234,
+  })
+  @Type(() => Number)
+  @IsInt()
+  @IsPositive()
+  questionId: number;
+}
 
 export class PatchQuestionRequestBodyDto {
   @ApiPropertyOptional({

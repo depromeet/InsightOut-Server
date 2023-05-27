@@ -55,9 +55,6 @@ import { TestModule } from './test/test.module';
       useFactory: () =>
         new ValidationPipe({
           transform: true,
-          transformOptions: {
-            enableImplicitConversion: true,
-          },
           whitelist: true,
           forbidNonWhitelisted: true,
           exceptionFactory: (errors) => {
