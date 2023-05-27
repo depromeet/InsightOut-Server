@@ -1,21 +1,18 @@
-import {
-  ClassSerializerInterceptor,
-  Module,
-  ValidationPipe,
-} from '@nestjs/common';
+import { ClassSerializerInterceptor, Module, ValidationPipe } from '@nestjs/common';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
-import { DatabaseModule } from '@modules/database/database.module';
-import { EnvModule } from '@modules/env/env.module';
-import { LogModule } from '@modules/log/log.module';
-import { ValidationException } from './exceptions/validation.exception';
-import { CustomExceptionFilter } from './filters/custom-exception.filter';
-import { LogInterceptor } from './interceptors/log.interceptor';
-import { SlackModule } from '@modules/slack/slack.module';
+import { DatabaseModule } from 'src/modules/database/database.module';
+import { EnvModule } from 'src/modules/env/env.module';
+import { LogModule } from 'src/modules/log/log.module';
+import { ValidationException } from './common/exceptions/validation.exception';
+import { CustomExceptionFilter } from './common/filters/custom-exception.filter';
+import { LogInterceptor } from './common/interceptors/log.interceptor';
+import { SlackModule } from 'src/modules/slack/slack.module';
 import { AuthModule } from './auth/auth.module';
 import { AppController } from './app.controller';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RedisConfigFactory } from '@modules/cache/redis/redis.factory';
+import { ExperienceModule } from './experience/experience.module';
 import { ResumesModule } from './resumes/resumes.module';
 import { TestModule } from './test/test.module';
 
@@ -34,6 +31,7 @@ import { TestModule } from './test/test.module';
 
     // Domains
     AuthModule,
+    ExperienceModule,
     ResumesModule,
     TestModule,
   ],
@@ -55,9 +53,6 @@ import { TestModule } from './test/test.module';
       useFactory: () =>
         new ValidationPipe({
           transform: true,
-          transformOptions: {
-            enableImplicitConversion: true,
-          },
           whitelist: true,
           forbidNonWhitelisted: true,
           exceptionFactory: (errors) => {
