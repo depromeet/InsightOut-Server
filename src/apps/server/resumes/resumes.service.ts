@@ -27,6 +27,20 @@ export class ResumesService {
     return resumeResponseDto;
   }
 
+  async deleteResume({ resumeId, userId }: { resumeId: number; userId: number }): Promise<void> {
+    const resume = await this.resumesRepository.findFirst({
+      where: { id: resumeId, userId },
+    });
+
+    if (!resume) {
+      throw new NotFoundException('Resume not found');
+    }
+
+    await this.resumesRepository.delete({
+      where: { id: resumeId },
+    });
+  }
+
   async updateResumeFolder({ body, resumeId, userId }: { body: PatchResumeRequestDto; resumeId: number; userId: number }): Promise<void> {
     const { title } = body;
 

@@ -47,6 +47,23 @@ export class ResumesController {
   @Route({
     request: {
       path: ':resumeId',
+      method: Method.DELETE,
+    },
+    response: {
+      code: HttpStatus.OK,
+    },
+    summary: '자기소개서 폴더 삭제 API',
+    description: '자기소개서 폴더를 삭제합니다. 폴더 하위에 있는 문항도 같이 삭제됩니다.',
+  })
+  async deleteResume(@Param('resumeId', ParseIntPipe) resumeId: number, @User() user: UserJwtToken): Promise<ResponseEntity<string>> {
+    await this.resumesService.deleteResume({ resumeId, userId: user.userId });
+
+    return ResponseEntity.OK_WITH_MESSAGE('Resume deleted');
+  }
+
+  @Route({
+    request: {
+      path: ':resumeId',
       method: Method.PATCH,
     },
     response: {

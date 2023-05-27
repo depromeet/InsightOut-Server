@@ -86,7 +86,7 @@ model Question {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  Resume Resume @relation(references: [id], fields: [resumeId])
+  Resume Resume @relation(references: [id], fields: [resumeId], onDelete: Cascade)
 
   // @@id([resumeId])
   @@map("question")
