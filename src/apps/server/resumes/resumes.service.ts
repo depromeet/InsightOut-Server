@@ -1,15 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Resume } from '@prisma/client';
-import { ResumesRepository } from '../../../modules/database/repositories/resume.repository';
-import {
-  PostResumeRequestBodyDto,
-  PostResumeResponseDto,
-} from './dtos/post-resume.dto';
+import { PostResumeRequestBodyDto, PostResumeResponseDto } from './dtos/post-resume.dto';
 import { PatchResumeRequestDto } from './dtos/patch-resume.dto';
+import { ResumeRepository } from '@modules/database/repositories/resume.repository';
 
 @Injectable()
 export class ResumesService {
-  constructor(private readonly resumesRepository: ResumesRepository) {}
+  constructor(private readonly resumesRepository: ResumeRepository) {}
 
   async getAllResumes(userId: number): Promise<Resume[]> {
     const resumes = await this.resumesRepository.findMany({
@@ -19,10 +16,7 @@ export class ResumesService {
     return resumes;
   }
 
-  async createResumeFolder(
-    body: PostResumeRequestBodyDto,
-    userId: number,
-  ): Promise<PostResumeResponseDto> {
+  async createResumeFolder(body: PostResumeRequestBodyDto, userId: number): Promise<PostResumeResponseDto> {
     const { title } = body;
     const resume = await this.resumesRepository.create({
       data: { title, userId },
@@ -33,15 +27,7 @@ export class ResumesService {
     return resumeResponseDto;
   }
 
-  async updateResumeFolder({
-    body,
-    resumeId,
-    userId,
-  }: {
-    body: PatchResumeRequestDto;
-    resumeId: number;
-    userId: number;
-  }): Promise<void> {
+  async updateResumeFolder({ body, resumeId, userId }: { body: PatchResumeRequestDto; resumeId: number; userId: number }): Promise<void> {
     const { title } = body;
 
     const resume = await this.resumesRepository.findFirst({

@@ -16,10 +16,8 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
-    "paths": {
-      "@prisma/generated": ["./prisma/generated/index"]
-    }
+    "noFallthroughCasesInSwitch": false
   },
-  "include": ["src/**/*", "test/**/*"]
+  "include": ["src/**/*", "test/**/*"],
+  "extends": ["./tsconfig.paths"]
 }

@@ -12,7 +12,7 @@ type ResumeDelegate = Prisma.ResumeDelegate<
 >;
 
 @Injectable()
-export class ResumesRepository extends AbstractRepository<
+export class ResumeRepository extends AbstractRepository<
   ResumeDelegate,
   DelegateArgs<ResumeDelegate>,
   DelegateReturnTypes<ResumeDelegate>
