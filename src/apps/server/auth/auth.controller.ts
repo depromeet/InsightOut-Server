@@ -7,14 +7,14 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { SigninRequestBodyDto } from './dtos/signin-request-body.dto';
-import { SigninGuard } from '../guards/signin.guard';
-import { User } from '../decorators/request/user.decorator';
+import { SigninGuard } from '../common/guards/signin.guard';
+import { User } from '../common/decorators/request/user.decorator';
 import { AuthService } from './auth.service';
-import { UserPayload } from '../guards/signin-request-body.interface';
+import { UserPayload } from '../common/guards/signin-request-body.interface';
 import { Response } from 'express';
 import { TokenType } from '../../../enums/token.enum';
 import { UserWithRefreshTokenPayload } from './types/jwt-tokwn.type';
-import { JwtRefreshGuard } from '../guards/jwt-refresh.guard';
+import { JwtRefreshGuard } from '../common/guards/jwt-refresh.guard';
 
 @ApiTags('Auth')
 @Controller('auth')

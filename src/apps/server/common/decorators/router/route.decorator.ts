@@ -1,23 +1,5 @@
-import {
-  applyDecorators,
-  Delete,
-  Get,
-  HttpStatus,
-  Patch,
-  Post,
-  Put,
-} from '@nestjs/common';
-import {
-  ApiBadRequestResponse,
-  ApiCreatedResponse,
-  ApiForbiddenResponse,
-  ApiHeader,
-  ApiInternalServerErrorResponse,
-  ApiNoContentResponse,
-  ApiOkResponse,
-  ApiOperation,
-} from '@nestjs/swagger';
-import { BaseException } from '../../exceptions/base.exception';
+import { applyDecorators, Delete, Get, HttpStatus, Patch, Post, Put } from '@nestjs/common';
+import { ApiCreatedResponse, ApiHeader, ApiNoContentResponse, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 
 export type RouteProps<ResponseBody = any> = {
   request: {
@@ -34,11 +16,7 @@ export type RouteProps<ResponseBody = any> = {
 };
 
 export function Route({ summary, description, request, response }: RouteProps) {
-  const conditionDecorator: (
-    | ClassDecorator
-    | MethodDecorator
-    | PropertyDecorator
-  )[] = [];
+  const conditionDecorator: (ClassDecorator | MethodDecorator | PropertyDecorator)[] = [];
 
   if (request) {
     //Header
@@ -103,17 +81,17 @@ export function Route({ summary, description, request, response }: RouteProps) {
     ...conditionDecorator,
     methodDecorator(request.path),
     ApiOperation({ summary, description }),
-    ApiBadRequestResponse({
-      description: '잘못된 요청',
-      type: BaseException,
-    }),
-    ApiForbiddenResponse({
-      description: '접근 불가',
-      type: BaseException,
-    }),
-    ApiInternalServerErrorResponse({
-      description: '서버측 오류',
-      type: BaseException,
-    }),
+    // ApiBadRequestResponse({
+    //   description: '잘못된 요청',
+    //   type: BaseException,
+    // }),
+    // ApiForbiddenResponse({
+    //   description: '접근 불가',
+    //   type: BaseException,
+    // }),
+    // ApiInternalServerErrorResponse({
+    //   description: '서버측 오류',
+    //   type: BaseException,
+    // }),
   );
 }

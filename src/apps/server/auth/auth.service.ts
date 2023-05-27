@@ -10,8 +10,8 @@ import { ConfigService } from '@nestjs/config';
 import {
   ACCESS_TOKEN_EXPIRES_IN,
   REFRESH_TOKEN_EXPIRES_IN,
-} from '../consts/jwt.const';
-import { UserPayload } from '../guards/signin-request-body.interface';
+} from '../common/consts/jwt.const';
+import { UserPayload } from '../common/guards/signin-request-body.interface';
 import { UserRepository } from '../../../modules/database/repositories/user.repository';
 import { CookieOptions } from 'express';
 import { UserInfoRepository } from '../../../modules/database/repositories/user-info.repository';
@@ -72,7 +72,7 @@ export class AuthService {
       { userId },
       {
         secret: this.configService.get<string>('JWT_SECRET'),
-        expiresIn: ACCESS_TOKEN_EXPIRES_IN * 1000,
+        expiresIn: ACCESS_TOKEN_EXPIRES_IN,
       },
     );
   }
@@ -81,8 +81,8 @@ export class AuthService {
     return this.jwtService.sign(
       { userId },
       {
-        secret: this.configService.get<string>('JWT_REFRESH_TOKEN_SECRET'),
-        expiresIn: ACCESS_TOKEN_EXPIRES_IN * 1000,
+        secret: this.configService.get<string>('JWT_SECRET'),
+        expiresIn: REFRESH_TOKEN_EXPIRES_IN,
       },
     );
   }
