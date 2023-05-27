@@ -26,6 +26,7 @@ model User {
 
   UserInfo UserInfo?
   Resume   Resume[]
+  Experiences   Experience[]
 
   @@map("user")
 }
@@ -88,4 +89,56 @@ model Question {
 
   // @@id([resumeId])
   @@map("question")
+}
+
+
+// ********************************
+// ***** 경험 in 경험 분해 ********
+// ********************************
+
+// 임시 저장이 있기에 모든 필드는 Nullable입니다.
+model Experience {
+  id Int @id @default(autoincrement()) @map("id")// 경험 id
+
+  title String? @db.VarChar(100) // 경험 제목
+
+  startDate String? @db.VarChar(50) @map("start_date") // 시작 날짜 type: YYYY-MM
+  endDate String? @db.VarChar(50) @map("end_date") // 끝 날짜 type: YYYY-MM
+
+  experienceStatus ExperienceStatus @default(inprogress) // 경험 분해 진행 척도 디폴트 inprogress
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  userId Int @map("user_id")
+
+  User User @relation(references: [id], fields: [userId])
+  ExperienceInfo ExperienceInfo?
+
+  @@map("experience")
+}
+
+// 경험 분해 진행 상태
+enum ExperienceStatus {
+  inprogress  // 진행중
+  done    // 끝
+}
+
+// ********************************
+// ********** 경험 정보 ***********
+// ********************************
+// 임시 저장이 있기에 모든 필드는 Nullable입니다.
+model ExperienceInfo {
+  experienceInfoId Int @default(autoincrement())  @map("experience_info_id")
+  
+  experienceRole String? @db.VarChar(100) @map("experience_role") // 경험 나의 역할
+  motivate String? @db.VarChar(100) // 경험 수행 이유
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  experienceId Int @id @map("experience_id")// 경험 id
+  experience Experience @relation(references: [id], fields: [experienceId])
+
+  @@map("experience_info")
 }

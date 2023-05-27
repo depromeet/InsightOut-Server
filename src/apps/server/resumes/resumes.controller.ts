@@ -1,10 +1,10 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ResumesService } from './resumes.service';
-import { User } from '../decorators/request/user.decorator';
+import { User } from '../common/decorators/request/user.decorator';
 import { UserJwtToken } from '../auth/types/jwt-tokwn.type';
 import { ResponseEntity } from '../../../libs/utils/respone.entity';
-import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 
 @ApiTags('resumes')
 @UseGuards(JwtAuthGuard)
