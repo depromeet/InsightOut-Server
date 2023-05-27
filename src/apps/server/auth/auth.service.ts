@@ -35,7 +35,7 @@ export class AuthService {
     private readonly apiService: ApiService,
   ) {}
 
-  async signin(user: UserPayload): Promise<number> {
+  public async signin(user: UserPayload): Promise<number> {
     try {
       const { email, picture, socialId } = user;
 
@@ -87,7 +87,10 @@ export class AuthService {
     );
   }
 
-  async setRefreshToken(userId: number, refreshToken: string): Promise<void> {
+  public async setRefreshToken(
+    userId: number,
+    refreshToken: string,
+  ): Promise<void> {
     await this.redisService.set(
       String(userId),
       refreshToken,
@@ -112,7 +115,7 @@ export class AuthService {
     return request?.cookies?.refreshToken;
   }
 
-  async rotateRefreshToken(
+  public async rotateRefreshToken(
     userPayload: UserWithRefreshTokenPayload,
   ): Promise<AccessTokenAndRefreshToken> {
     const { userId, refreshToken } = userPayload;

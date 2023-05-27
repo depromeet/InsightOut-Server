@@ -12,7 +12,7 @@ export class ResumesService {
     private readonly apiService: ApiService,
   ) {}
 
-  async getAllResumes(userId: number): Promise<Resume[]> {
+  public async getAllResumes(userId: number): Promise<Resume[]> {
     const resumes = await this.resumesRepository.findMany({
       where: { userId },
     });
@@ -20,7 +20,7 @@ export class ResumesService {
     return resumes;
   }
 
-  async spellCheck(
+  public async spellCheck(
     body: PostSpellCheckRequestBodyDto,
   ): Promise<SpellCheckResult[][]> {
     const { sentence } = body;
