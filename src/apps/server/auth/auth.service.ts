@@ -1,28 +1,17 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { RedisCacheService } from '../../../modules/cache/redis/redis.service';
+import { Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { RedisCacheService } from '@modules/cache/redis/redis.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import {
-  ACCESS_TOKEN_EXPIRES_IN,
-  REFRESH_TOKEN_EXPIRES_IN,
-} from '../common/consts/jwt.const';
+import { UserRepository } from '@modules/database/repositories/user.repository';
 import { UserPayload } from '../common/guards/signin-request-body.interface';
-import { UserRepository } from '../../../modules/database/repositories/user.repository';
 import { CookieOptions } from 'express';
-import { UserInfoRepository } from '../../../modules/database/repositories/user-info.repository';
+import { UserInfoRepository } from '@modules/database/repositories/user-info.repository';
 import { Provider } from '@prisma/client';
-import { TokenType } from '../../../enums/token.enum';
 import { Request } from 'express';
-import {
-  AccessTokenAndRefreshToken,
-  UserWithRefreshTokenPayload,
-} from './types/jwt-tokwn.type';
-import { ApiService } from '../../../modules/api/api.service';
+import { AccessTokenAndRefreshToken, UserWithRefreshTokenPayload } from './types/jwt-tokwn.type';
+import { ApiService } from '@modules/api/api.service';
+import { TokenType } from '📚libs/enums/token.enum';
+import { ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } from '🔥apps/server/common/consts/jwt.const';
 
 @Injectable()
 export class AuthService {
@@ -87,22 +76,12 @@ export class AuthService {
     );
   }
 
-  public async setRefreshToken(
-    userId: number,
-    refreshToken: string,
-  ): Promise<void> {
-    await this.redisService.set(
-      String(userId),
-      refreshToken,
-      REFRESH_TOKEN_EXPIRES_IN,
-    );
+  public async setRefreshToken(userId: number, refreshToken: string): Promise<void> {
+    await this.redisService.set(String(userId), refreshToken, REFRESH_TOKEN_EXPIRES_IN);
   }
 
   getCookieOptions(tokenType: TokenType): CookieOptions {
-    const maxAge =
-      tokenType === TokenType.AccessToken
-        ? ACCESS_TOKEN_EXPIRES_IN * 1000
-        : REFRESH_TOKEN_EXPIRES_IN * 1000;
+    const maxAge = tokenType === TokenType.AccessToken ? ACCESS_TOKEN_EXPIRES_IN * 1000 : REFRESH_TOKEN_EXPIRES_IN * 1000;
 
     // TODO https 설정 후 추가 작성
     return {
@@ -115,9 +94,7 @@ export class AuthService {
     return request?.cookies?.refreshToken;
   }
 
-  public async rotateRefreshToken(
-    userPayload: UserWithRefreshTokenPayload,
-  ): Promise<AccessTokenAndRefreshToken> {
+  public async rotateRefreshToken(userPayload: UserWithRefreshTokenPayload): Promise<AccessTokenAndRefreshToken> {
     const { userId, refreshToken } = userPayload;
     const savedRefreshToken = await this.redisService.get(String(userId));
 
@@ -128,11 +105,7 @@ export class AuthService {
     const newAccessToken = this.issueAccessToken(userId);
     const newRefreshToken = this.issueRefreshToken(userId);
 
-    await this.redisService.set(
-      String(userId),
-      newRefreshToken,
-      REFRESH_TOKEN_EXPIRES_IN,
-    );
+    await this.redisService.set(String(userId), newRefreshToken, REFRESH_TOKEN_EXPIRES_IN);
 
     return { accessToken: newAccessToken, refreshToken: newRefreshToken };
   }

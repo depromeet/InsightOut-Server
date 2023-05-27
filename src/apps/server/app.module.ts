@@ -1,8 +1,4 @@
-import {
-  ClassSerializerInterceptor,
-  Module,
-  ValidationPipe,
-} from '@nestjs/common';
+import { ClassSerializerInterceptor, Module, ValidationPipe } from '@nestjs/common';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { DatabaseModule } from 'src/modules/database/database.module';
 import { EnvModule } from 'src/modules/env/env.module';
@@ -15,7 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { AppController } from './app.controller';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { RedisConfigFactory } from '../../modules/cache/redis/redis.factory';
+import { RedisConfigFactory } from '@modules/cache/redis/redis.factory';
 import { ExperienceModule } from './experience/experience.module';
 import { ResumesModule } from './resumes/resumes.module';
 import { TestModule } from './test/test.module';

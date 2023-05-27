@@ -1,14 +1,14 @@
 import { Body, Controller, Get, HttpStatus, HttpCode, Post, UseGuards } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { ResumesService } from './resumes.service';
-import { User } from '../common/decorators/request/user.decorator';
-import { UserJwtToken } from '../auth/types/jwt-tokwn.type';
-import { ResponseEntity } from '../../../libs/utils/respone.entity';
-import { Method } from '../../../enums/method.enum';
-import { PostResumeRequestBodyDto } from './dtos/post-resume.dto';
-import { PostSpellCheckRequestBodyDto } from './dtos/post-spell-check-request.body.dto';
-import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
-import { Route } from '../common/decorators/router/route.decorator';
+import { ResumesService } from '../services/resumes.service';
+import { UserJwtToken } from '../../auth/types/jwt-tokwn.type';
+import { PostResumeRequestBodyDto } from '../dtos/post-resume.dto';
+import { ResponseEntity } from '📚libs/utils/respone.entity';
+import { Method } from '📚libs/enums/method.enum';
+import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
+import { User } from '🔥apps/server/common/decorators/request/user.decorator';
+import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
+import { PostSpellCheckRequestBodyDto } from '🔥apps/server/resumes/dtos/post-spell-check-request.body.dto';
 
 @ApiTags('resumes')
 @UseGuards(JwtAuthGuard)

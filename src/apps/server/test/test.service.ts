@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ACCESS_TOKEN_EXPIRES_IN } from '../common/consts/jwt.const';
 import { ConfigService } from '@nestjs/config';
-import { RedisCacheService } from '../../../modules/cache/redis/redis.service';
+import { RedisCacheService } from '@modules/cache/redis/redis.service';
 
 @Injectable()
 export class TestService {

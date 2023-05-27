@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.prisma.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "🔥apps/*": ["./src/apps/*"],
+      "📚libs/*": ["./src/libs/*"],
+      "@modules/*": ["./src/modules/*"]
+    }
+  }
+}

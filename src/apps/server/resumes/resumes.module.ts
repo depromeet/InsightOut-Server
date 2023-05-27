@@ -1,12 +1,14 @@
 import { Module } from '@nestjs/common';
-import { ResumesController } from './resumes.controller';
-import { ResumesService } from './resumes.service';
-import { ResumesRepository } from '../../../modules/database/repositories/resume.repository';
-import { ApiModule } from '../../../modules/api/api.module';
+import { ResumesController } from './controllers/resumes.controller';
+import { ResumesService } from './services/resumes.service';
+import { Repositories } from './resume.provider';
+import { QuestionsService } from './services/question.service';
+import { QuestionsController } from './controllers/question.controller';
+import { ApiModule } from '@modules/api/api.module';
 
 @Module({
   imports: [ApiModule],
-  controllers: [ResumesController],
-  providers: [ResumesService, ResumesRepository],
+  controllers: [ResumesController, QuestionsController],
+  providers: [ResumesService, QuestionsService, ...Repositories],
 })
 export class ResumesModule {}

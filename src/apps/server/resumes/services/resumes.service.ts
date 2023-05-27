@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { Resume } from '@prisma/client';
-import { ResumesRepository } from '../../../modules/database/repositories/resume.repository';
-import { PostResumeRequestBodyDto, PostResumeResponseDto } from './dtos/post-resume.dto';
-import { PostSpellCheckRequestBodyDto } from './dtos/post-spell-check-request.body.dto';
-import { ApiService } from '../../../modules/api/api.service';
-import { SpellCheckResult } from '../../../modules/api/api.type';
+import { ResumeRepository } from '@modules/database/repositories/resume.repository';
+import { PostResumeRequestBodyDto, PostResumeResponseDto } from '../dtos/post-resume.dto';
+import { ApiService } from '@modules/api/api.service';
+import { PostSpellCheckRequestBodyDto } from '🔥apps/server/resumes/dtos/post-spell-check-request.body.dto';
+import { SpellCheckResult } from '@modules/api/api.type';
 
 @Injectable()
 export class ResumesService {
-  constructor(private readonly resumesRepository: ResumesRepository, private readonly apiService: ApiService) {}
+  constructor(private readonly resumesRepository: ResumeRepository, private readonly apiService: ApiService) {}
 
   public async getAllResumes(userId: number): Promise<Resume[]> {
     const resumes = await this.resumesRepository.findMany({
