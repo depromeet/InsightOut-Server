@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Experience, ExperienceInfo } from '@prisma/client';
-import { ExperienceSelect } from '../../../apps/server/experience/interface/experience-select.interface';
-import { ExperienceReposirotyInterface } from '../../../apps/server/experience/interface/experience-repository.interface';
+import { ExperienceSelect } from '../../../../apps/server/experience/interface/experience-select.interface';
+import { ExperienceReposirotyInterface } from '../../../../apps/server/experience/interface/experience-repository.interface';
 
 @Injectable()
 export class ExperienceRepository implements ExperienceReposirotyInterface {

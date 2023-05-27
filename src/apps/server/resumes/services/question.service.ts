@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { QuestionRepository } from '@modules/database/repositories/question.repository';
-import { ResumeRepository } from '@modules/database/repositories/resume.repository';
+import { QuestionRepository } from '📚libs/modules/database/repositories/question.repository';
+import { ResumeRepository } from '📚libs/modules/database/repositories/resume.repository';
 import { PostQuestionResponseDto } from '../dtos/post-question.dto';
 import { PatchQuestionRequestBodyDto } from '🔥apps/server/resumes/dtos/patch-question-request.dto';
 
