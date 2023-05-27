@@ -10,8 +10,8 @@ import { ConfigService } from '@nestjs/config';
 import {
   ACCESS_TOKEN_EXPIRES_IN,
   REFRESH_TOKEN_EXPIRES_IN,
-} from '../consts/jwt.const';
-import { UserPayload } from '../guards/signin-request-body.interface';
+} from '../common/consts/jwt.const';
+import { UserPayload } from '../common/guards/signin-request-body.interface';
 import { UserRepository } from '../../../modules/database/repositories/user.repository';
 import { CookieOptions } from 'express';
 import { UserInfoRepository } from '../../../modules/database/repositories/user-info.repository';
@@ -35,7 +35,7 @@ export class AuthService {
     private readonly apiService: ApiService,
   ) {}
 
-  async signin(user: UserPayload): Promise<number> {
+  public async signin(user: UserPayload): Promise<number> {
     try {
       const { email, picture, socialId } = user;
 
@@ -87,7 +87,10 @@ export class AuthService {
     );
   }
 
-  async setRefreshToken(userId: number, refreshToken: string): Promise<void> {
+  public async setRefreshToken(
+    userId: number,
+    refreshToken: string,
+  ): Promise<void> {
     await this.redisService.set(
       String(userId),
       refreshToken,
@@ -112,7 +115,7 @@ export class AuthService {
     return request?.cookies?.refreshToken;
   }
 
-  async rotateRefreshToken(
+  public async rotateRefreshToken(
     userPayload: UserWithRefreshTokenPayload,
   ): Promise<AccessTokenAndRefreshToken> {
     const { userId, refreshToken } = userPayload;
