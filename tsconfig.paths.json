@@ -3,8 +3,8 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@apps/*": ["./src/apps/*"],
-      "@libs/*": ["./src/libs/*"],
+      "🔥apps/*": ["./src/apps/*"],
+      "📚libs/*": ["./src/libs/*"],
       "@modules/*": ["./src/modules/*"]
     }
   }
