@@ -1,6 +1,5 @@
 import { Body, HttpStatus, Param, UseGuards, ValidationPipe } from '@nestjs/common';
 import { Route } from '../common/decorators/router/route.decorator';
-import { Method } from '../../../enums/method.enum';
 import { RouteTable } from '../common/decorators/router/route-table.decorator';
 import { CreateExperienceInfoReqDto } from './dto/req/createExperienceInfo.dto';
 import { ExperienceService } from './experience.service';
@@ -12,6 +11,7 @@ import { CreateExperienceInfoUnprocessableErrorResDto, CreateExperienceResDto } 
 import { ResponseEntity } from '../../../libs/utils/respone.entity';
 import { ExperienceIdParamReqDto } from './dto/req/experienceIdParam.dto';
 import { GetExperienceNotFoundErrorResDto, GetExperienceResDto } from './dto/res/getExperience.res.dto';
+import { Method } from '📚libs/enums/method.enum';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
