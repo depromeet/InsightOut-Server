@@ -46,4 +46,18 @@ export class QuestionsService {
       });
     }
   }
+
+  async deleteQuestion({ questionId, userId }: { questionId: number; userId: number }): Promise<void> {
+    const question = await this.questionRepository.findFirst({
+      where: { id: questionId, Resume: { userId } },
+    });
+
+    if (!question) {
+      throw new NotFoundException('Resume question not found');
+    }
+
+    await this.questionRepository.delete({
+      where: { id: questionId },
+    });
+  }
 }

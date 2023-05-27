@@ -1,4 +1,4 @@
-import { UseGuards, HttpStatus, Param, Body } from '@nestjs/common';
+import { UseGuards, HttpStatus, Param, Body, ParseIntPipe } from '@nestjs/common';
 import { Method } from '📚libs/enums/method.enum';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
@@ -60,5 +60,25 @@ export class QuestionsController {
     await this.questionService.updateOneQuestion(body, patchQuestionRequestParamDto.questionId, user.userId);
 
     return ResponseEntity.OK_WITH_MESSAGE('Resume question updated');
+  }
+
+  @Route({
+    request: {
+      path: ':questionId',
+      method: Method.DELETE,
+    },
+    response: {
+      code: HttpStatus.OK,
+    },
+    summary: '자기소개서 문항 삭제 API',
+    description: '자기소개서 문항을 삭제합니다.',
+  })
+  async deleteQuestion(@Param('questionId', ParseIntPipe) questionId: number, @User() user: UserJwtToken): Promise<ResponseEntity<string>> {
+    await this.questionService.deleteQuestion({
+      questionId,
+      userId: user.userId,
+    });
+
+    return ResponseEntity.OK_WITH_MESSAGE('Resume question deleted');
   }
 }
