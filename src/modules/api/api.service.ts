@@ -16,7 +16,7 @@ export class ApiService {
   async getRandomNickname(): Promise<string> {
     const response = await firstValueFrom(
       this.httpService
-        .get('https://nickname.hwanmoo.kr/?format=text&max_length=6')
+        .get('https://nickname.hwanmoo.kr/?format=text&max_length=5')
         .pipe(
           catchError((error) => {
             throw error;
