@@ -1,6 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Question } from '@prisma/client';
-import { Exclude, Expose } from 'class-transformer';
+import { Exclude, Expose, Type } from 'class-transformer';
+import { IsInt, IsPositive } from 'class-validator';
+
+export class PostQuestionRequestParamDto {
+  @ApiProperty({
+    description: '자기소개서 id',
+    example: 123,
+  })
+  @Type(() => Number)
+  @IsInt()
+  @IsPositive()
+  resumeId: number;
+}
 
 export class PostQuestionResponseDto {
   @Exclude() readonly _id: number;
