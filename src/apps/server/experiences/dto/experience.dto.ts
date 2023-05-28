@@ -11,7 +11,7 @@ export class ExperinceDto {
   @Exclude() private readonly _title: string;
   @Exclude() private readonly _startDate: string;
   @Exclude() private readonly _endDate: string;
-  @Exclude() private readonly _experienceStatus: ExperienceStatus = ExperienceStatus.inprogress;
+  @Exclude() private readonly _experienceStatus: ExperienceStatus = ExperienceStatus.INPROGRESS;
   @Exclude() private readonly _situation: string;
   @Exclude() private readonly _task: string;
   @Exclude() private readonly _action: string;

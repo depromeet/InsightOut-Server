@@ -1,7 +1,7 @@
 import { Inject, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { CreateExperienceInfoReqDto } from './dto/req/createExperienceInfo.dto';
 import { UserJwtToken } from '../auth/types/jwt-tokwn.type';
-import { ExperienceReposirotyInterface } from './interface/experience-repository.interface';
+import { ExperienceRepositoryInterface } from './interface/experience-repository.interface';
 import { CreateExperienceResDto } from './dto/res/createExperienceInfo.res.dto';
 import { returnValueToDto } from '../common/decorators/returnValueToDto';
 import { getExperienceAttribute } from '../common/consts/experience-attribute.const';
@@ -14,7 +14,7 @@ import { ExperienceRepository } from '📚libs/modules/database/repositories/exp
 export class ExperienceService {
   constructor(
     @Inject(ExperienceRepository)
-    private readonly experienceRepository: ExperienceReposirotyInterface,
+    private readonly experienceRepository: ExperienceRepositoryInterface,
     private readonly prisma: PrismaService,
   ) {}
 
@@ -27,7 +27,7 @@ export class ExperienceService {
             title: body.title,
             startDate: body.startDate,
             endDate: body.endDate,
-            experienceStatus: ExperienceStatus.inprogress,
+            experienceStatus: ExperienceStatus.INPROGRESS,
             userId: user.userId,
           },
         });

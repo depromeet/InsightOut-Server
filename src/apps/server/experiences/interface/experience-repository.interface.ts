@@ -7,6 +7,6 @@ export interface ExperienceTransactionInterface {
   createExperienceInfo(body: CreateExperienceInfoReqDto, user: UserJwtToken): Promise<[Experience, ExperienceInfo]>;
 }
 
-export interface ExperienceReposirotyInterface {
+export interface ExperienceRepositoryInterface {
   selectOneById(experienceId: number, select: ExperienceSelect): Promise<Partial<Experience & { experienceInfo?: ExperienceInfo }>>;
 }
