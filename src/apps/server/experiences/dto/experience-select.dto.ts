@@ -25,23 +25,23 @@ export class ExperienceSelectDto extends PickType(ExperinceDto, [
   @IsNumber()
   @IsOptional()
   @Expose()
-  id?: number | null;
+  id?: number;
 
   @ApiPropertyOptional({ example: 1 })
   @IsNumber()
   @IsOptional()
   @Expose()
-  experienceInfoId?: number | null;
+  experienceInfoId?: number;
 
   @ApiPropertyOptional({ example: 1 })
   @IsNumber()
   @IsOptional()
   @Expose()
-  userId?: number | null;
+  userId?: number;
 
   @ApiPropertyOptional({ example: 1 })
   @IsNumber()
   @IsOptional()
   @Expose()
-  experienceId?: number | null;
+  experienceId?: number;
 }

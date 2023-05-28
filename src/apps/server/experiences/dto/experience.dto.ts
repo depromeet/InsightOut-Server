@@ -16,21 +16,21 @@ export class ExperinceDto {
   @IsString()
   @IsOptional()
   @Expose()
-  title?: string | null;
+  title?: string;
 
   @ApiPropertyOptional({ example: '2022-01' })
   @IsString()
   @IsOptional()
   @Expose()
   @Matches(/^(19|20|21)\d{2}-(0[1-9]|1[012])$/)
-  startDate?: string | null;
+  startDate?: string;
 
   @ApiPropertyOptional({ example: '2022-07' })
   @IsString()
   @IsOptional()
   @Expose()
   @Matches(/^(19|20|21)\d{2}-(0[1-9]|1[012])$/)
-  endDate?: string | null;
+  endDate?: string;
 
   @ApiPropertyOptional({
     example: 'inprogress or done',
@@ -46,28 +46,28 @@ export class ExperinceDto {
   @IsOptional()
   @Expose()
   @MaxLength(100)
-  situation?: string | null;
+  situation?: string;
 
   @ApiProperty({ example: '개발 시간이 짧아서 빠른 기간 내에 런칭을 완료해야 했음' })
   @IsString()
   @IsOptional()
   @Expose()
   @MaxLength(100)
-  task?: string | null;
+  task?: string;
 
   @ApiPropertyOptional({ example: '디자인 시스템 제작, 런칭일 정해서 린하게 개발하는 방법 제의' })
   @IsString()
   @IsOptional()
   @Expose()
   @MaxLength(100)
-  action?: string | null;
+  action?: string;
 
   @ApiPropertyOptional({ example: '4개월만에 출시를 성공하게 됨' })
   @IsString()
   @IsOptional()
   @Expose()
   @MaxLength(100)
-  result?: string | null;
+  result?: string;
 
   @ApiProperty({ example: 1 })
   @IsNumber()
@@ -98,7 +98,7 @@ export class ExperinceDto {
   @IsOptional()
   @Expose()
   @MaxLength(100)
-  motivation?: string | null;
+  motivation?: string;
 
   @ApiPropertyOptional({
     example: 'UI/UX 디자이너',
@@ -107,7 +107,7 @@ export class ExperinceDto {
   @IsOptional()
   @Expose()
   @MaxLength(100)
-  experienceRole?: string | null;
+  experienceRole?: string;
 
   @ApiPropertyOptional({
     example: '역량 활용',
@@ -116,7 +116,7 @@ export class ExperinceDto {
   @IsOptional()
   @Expose()
   @MaxLength(100)
-  utilization?: string | null;
+  utilization?: string;
 
   @ApiPropertyOptional({
     example: 'AI 분석',
@@ -125,5 +125,5 @@ export class ExperinceDto {
   @IsOptional()
   @Expose()
   @MaxLength(300)
-  analysis?: string | null;
+  analysis?: string;
 }
