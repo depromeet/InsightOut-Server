@@ -17,4 +17,14 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
       where: { id: experienceId },
     });
   }
+
+  public async selectOneByUserId(
+    userId: number,
+    select: ExperienceSelect,
+  ): Promise<Partial<Experience & { experienceInfo: ExperienceInfo }>> {
+    return await this.prisma.experience.findFirst({
+      select,
+      where: { userId },
+    });
+  }
 }

@@ -6,7 +6,7 @@ import { CreateExperienceResDto } from './dto/res/createExperienceInfo.res.dto';
 import { returnValueToDto } from '../common/decorators/returnValueToDto';
 import { getExperienceAttribute } from '../common/consts/experience-attribute.const';
 import { GetExperienceResDto } from './dto/res/getExperience.res.dto';
-import { ExperienceStatus, Prisma } from '@prisma/client';
+import { Experience, ExperienceInfo, ExperienceStatus, Prisma } from '@prisma/client';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
 import { ExperienceRepository } from '📚libs/modules/database/repositories/experience.repository';
 
@@ -61,6 +61,24 @@ export class ExperienceService {
   public async getExperience(experienceId: number): Promise<Partial<GetExperienceResDto>> {
     try {
       const experience = await this.experienceRepository.selectOneById(experienceId, getExperienceAttribute);
+
+      return experience;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) throw new NotFoundException('해당 ID의 경험카드는 존재하지 않습니다.');
+    }
+  }
+
+  public async getExperienceByUserId(userId: number): Promise<
+    | Partial<
+        Experience & {
+          experienceInfo?: ExperienceInfo;
+        }
+      >
+    | string
+  > {
+    try {
+      const experience = await this.experienceRepository.selectOneByUserId(userId, getExperienceAttribute);
+      if (!experience) return '생성된 경험카드가 없습니다';
 
       return experience;
     } catch (error) {
