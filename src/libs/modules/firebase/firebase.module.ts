@@ -1,4 +1,4 @@
-import { FirebaseService } from '@modules/firebase/firebase.service';
+import { FirebaseService } from '📚libs/modules/firebase/firebase.service';
 import { Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { initializeApp } from 'firebase-admin/app';

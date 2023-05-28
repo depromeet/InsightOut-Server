@@ -11,7 +11,7 @@ import { SigninGuard } from '../common/guards/signin.guard';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from '../common/guards/strategies/jwt.strategy';
 import { JwtRefreshStrategy } from '../common/guards/strategies/jwt-refresh.strategy';
-import { FirebaseModule } from '@modules/firebase/firebase.module';
+import { FirebaseModule } from '📚libs/modules/firebase/firebase.module';
 
 @Module({
   imports: [

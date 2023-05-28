@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { Experience, ExperienceInfo } from '@prisma/client';
-import { ExperienceReposirotyInterface } from '🔥apps/server/experience/interface/experience-repository.interface';
+import { ExperienceRepositoryInterface } from '🔥apps/server/experience/interface/experience-repository.interface';
 import { ExperienceSelect } from '🔥apps/server/experience/interface/experience-select.interface';
 
 @Injectable()
-export class ExperienceRepository implements ExperienceReposirotyInterface {
+export class ExperienceRepository implements ExperienceRepositoryInterface {
   constructor(private readonly prisma: PrismaService) {}
 
   public async selectOneById(
