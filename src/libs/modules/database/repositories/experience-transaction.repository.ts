@@ -16,7 +16,7 @@ export class ExperienceTransactionRepository implements ExperienceTransactionInt
             title: body.title,
             startDate: body.startDate,
             endDate: body.endDate,
-            experienceStatus: ExperienceStatus.inprogress,
+            experienceStatus: ExperienceStatus.INPROGRESS,
             userId: user.userId,
           },
         });

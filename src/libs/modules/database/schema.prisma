@@ -32,14 +32,37 @@ model User {
 }
 
 enum Provider {
-  google // 구글 로그인
-  apple // 애플 로그인
-  kakao // 카카오 로그인
+  GOOGLE // 구글 로그인
+  APPLE // 애플 로그인
+  KAKAO // 카카오 로그인
 }
 
 // TODO 직무 모두 기입 필요
 enum Field {
-  developer
+  DEVELOPMENT // 개발
+  MANAGEMENT // 경영
+  BUSINESS // 비즈니스
+  MARKETING // 마케팅
+  ADVERTISING // 광고
+  DESIGN // 디자인
+  SALES // 영업
+  CUSTOMER_SERVICE // 고객 서비스
+  RETAIL // 리테일
+  GAME_PRODUCTION // 게임 제작
+  MEDIA // 미디어
+  HUMAN_RESOURCE // 인사
+  ENGINEERING // 엔지니어링 & 설계
+  FINANCE // 금융
+  MANUFACTURING // 제조 & 생산
+  MEDICAL // 의료
+  BIO // 바이오
+  LOGISTICS // 물류
+  TRADE // 무역
+  EDUCATION // 교육
+  LAW // 법률
+  CONSTRUCTION // 건설
+  CIVIL_ENGINEERING // 토목
+  PUBLIC_WELFARE // 공공 & 복지
 }
 
 model UserInfo {
@@ -106,7 +129,7 @@ model Experience {
   startDate String? @db.VarChar(20) @map("start_date") // 시작 날짜 type: YYYY-MM
   endDate String? @db.VarChar(20) @map("end_date") // 끝 날짜 type: YYYY-MM
 
-  experienceStatus ExperienceStatus @default(inprogress) // 경험 분해 진행 척도 디폴트 inprogress
+  experienceStatus ExperienceStatus @default(INPROGRESS) // 경험 분해 진행 척도 디폴트 inprogress
 
   situation String? @db.VarChar(100) // S: Situation, 계기와 배경
   task String? @db.VarChar(100) // T: Task, 과제 및 목표
@@ -126,8 +149,8 @@ model Experience {
 
 // 경험 분해 진행 상태
 enum ExperienceStatus {
-  inprogress  // 진행중
-  done    // 끝
+  INPROGRESS  // 진행중
+  DONE    // 끝
 }
 
 // ********************************

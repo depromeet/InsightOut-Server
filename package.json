@@ -38,6 +38,7 @@
     "cookie-parser": "^1.4.6",
     "dayjs": "^1.11.7",
     "dotenv-cli": "^7.2.1",
+    "firebase-admin": "^11.8.0",
     "google-auth-library": "^8.8.0",
     "hanspell": "^0.9.7",
     "html-entities": "^2.3.3",
