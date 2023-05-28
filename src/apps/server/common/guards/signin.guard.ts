@@ -11,21 +11,17 @@ export class SigninGuard implements CanActivate {
 
     const { idToken } = request.body;
     try {
-      try {
-        const decodedToken = await this.firebaseService.verifyIdToken(idToken);
-        const user = {
-          email: decodedToken.email,
-          socialId: decodedToken.sub,
-          picture: decodedToken.picture,
-        };
-        request.user = user;
+      const decodedToken = await this.firebaseService.verifyIdToken(idToken);
+      const user = {
+        email: decodedToken.email,
+        socialId: decodedToken.sub,
+        picture: decodedToken.picture,
+      };
+      request.user = user;
 
-        return decodedToken ? true : false;
-      } catch (e) {
-        throw new UnauthorizedException(`Firebase verify token error: ${e}`);
-      }
-    } catch (error) {
-      throw new UnauthorizedException('Invalid idToken:', error);
+      return decodedToken ? true : false;
+    } catch (e) {
+      throw new UnauthorizedException(`Firebase verify token error: ${e}`);
     }
   }
 }
