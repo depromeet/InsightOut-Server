@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
-import { EnvEnum } from '@modules/env/env.enum';
-import { EnvService } from '@modules/env/env.service';
+import { EnvEnum } from '📚libs/modules/env/env.enum';
+import { EnvService } from '📚libs/modules/env/env.service';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 import { NodeEnvEnum } from '📚libs/enums/node-env.enum';

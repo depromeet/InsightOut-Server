@@ -1,21 +1,19 @@
-import { Inject, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { CreateExperienceInfoReqDto } from './dto/req/createExperienceInfo.dto';
 import { UserJwtToken } from '../auth/types/jwt-tokwn.type';
-import { ExperienceReposirotyInterface, ExperienceTransactionInterface } from './interface/experience-repository.interface';
-import { ExperienceToken } from './provider/injectionToken';
 import { CreateExperienceResDto } from './dto/res/createExperienceInfo.res.dto';
 import { returnValueToDto } from '../common/decorators/returnValueToDto';
 import { getExperienceAttribute } from '../common/consts/experience-attribute.const';
 import { GetExperienceResDto } from './dto/res/getExperience.res.dto';
+import { ExperienceRepository } from '📚libs/modules/database/repositories/experience.repository';
+import { ExperienceTransactionRepository } from '📚libs/modules/database/repositories/experience-transaction.repository';
 
 @Injectable()
 export class ExperienceService {
   constructor(
-    @Inject(ExperienceToken.EXPERIENCE_TRANSACTION_REPOSITORY)
-    private readonly experienceTransactionRepository: ExperienceTransactionInterface,
+    private readonly experienceTransactionRepository: ExperienceTransactionRepository,
 
-    @Inject(ExperienceToken.EXPERIENCE_REPOSITORY)
-    private readonly experienceRepository: ExperienceReposirotyInterface,
+    private readonly experienceRepository: ExperienceRepository,
   ) {}
 
   @returnValueToDto(CreateExperienceResDto)
