@@ -13,11 +13,10 @@ export interface ExperienceRepositoryInterface {
     userId: number,
     select: ExperienceSelect,
   ): Promise<
-    | Partial<
-        Experience & {
-          experienceInfo?: ExperienceInfo;
-        }
-      >
-    | string
+    Partial<
+      Experience & {
+        experienceInfo?: ExperienceInfo;
+      }
+    >
   >;
 }

@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { ExperienceStatus } from '@prisma/client';
+import { Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
 import { Exclude, Expose } from 'class-transformer';
 import { IsEnum, IsOptional, Matches } from 'class-validator';
 import { dateValidation } from '🔥apps/server/common/consts/date-validation.const';
@@ -69,6 +69,24 @@ export class GetExperienceResDto {
   @Exclude() _task: string;
   @Exclude() _action: string;
   @Exclude() _result: string;
+
+  constructor(
+    experience: Partial<
+      Experience & {
+        experienceInfo?: ExperienceInfo;
+      }
+    >,
+  ) {
+    this._id = experience.id;
+    this._title = experience.title;
+    this._startDate = experience.startDate;
+    this._endDate = experience.endDate;
+    this._experienceStatus = experience.experienceStatus;
+    this._task = experience.task;
+    this._action = experience.action;
+    this._result = experience.result;
+    this.experienceInfo = experience.experienceInfo;
+  }
 
   @ApiProperty({ example: 1 })
   @IsOptionalNumber()
