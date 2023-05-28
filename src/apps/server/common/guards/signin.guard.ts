@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { SinginRequestBody } from './signin-request-body.interface';
-import { FirebaseService } from '@modules/firebase/firebase.service';
+import { FirebaseService } from '📚libs/modules/firebase/firebase.service';
 
 @Injectable()
 export class SigninGuard implements CanActivate {

@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma.service';
 import { Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
 import { ExperienceTransactionInterface } from '🔥apps/server/experience/interface/experience-repository.interface';
 import { CreateExperienceInfoReqDto } from '🔥apps/server/experience/dto/req/createExperienceInfo.dto';
+import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
 
 @Injectable()
 export class ExperienceTransactionRepository implements ExperienceTransactionInterface {
