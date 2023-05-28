@@ -1,9 +1,9 @@
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { CreateExperienceInfoReqDto } from '../../../apps/server/experience/dto/req/createExperienceInfo.dto';
+import { CreateExperienceInfoReqDto } from '../../../apps/server/experiences/dto/req/createExperienceInfo.dto';
 import { UserJwtToken } from '../../../apps/server/auth/types/jwt-tokwn.type';
 import { Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
-import { ExperienceTransactionInterface } from '../../../apps/server/experience/interface/experience-repository.interface';
+import { ExperienceTransactionInterface } from '../../../apps/server/experiences/interface/experience-repository.interface';
 
 @Injectable()
 export class ExperienceTransactionRepository implements ExperienceTransactionInterface {
