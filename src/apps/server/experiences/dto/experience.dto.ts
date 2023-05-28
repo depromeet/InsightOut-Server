@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { ExperienceStatus } from '@prisma/client';
-import { Expose, Type } from 'class-transformer';
-import { IsEnum, IsOptional, Matches, MaxLength } from 'class-validator';
+import { Expose } from 'class-transformer';
+import { IsEnum, IsOptional, Matches } from 'class-validator';
 import { IsOptionalNumber } from '🔥apps/server/common/decorators/validation/isOptionalNumber.decorator';
 import { IsOptionalString } from '🔥apps/server/common/decorators/validation/isOptionalString.decorator';
 
