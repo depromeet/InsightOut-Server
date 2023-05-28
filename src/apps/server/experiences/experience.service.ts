@@ -7,8 +7,8 @@ import { returnValueToDto } from '../common/decorators/returnValueToDto';
 import { getExperienceAttribute } from '../common/consts/experience-attribute.const';
 import { GetExperienceResDto } from './dto/res/getExperience.res.dto';
 import { ExperienceStatus, Prisma } from '@prisma/client';
-import { PrismaService } from '@modules/database/prisma.service';
-import { ExperienceRepository } from '@modules/database/repositories/experience.repository';
+import { PrismaService } from '📚libs/modules/database/prisma.service';
+import { ExperienceRepository } from '📚libs/modules/database/repositories/experience.repository';
 
 @Injectable()
 export class ExperienceService {

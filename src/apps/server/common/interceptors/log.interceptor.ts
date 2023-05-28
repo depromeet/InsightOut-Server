@@ -1,13 +1,8 @@
-import {
-  CallHandler,
-  ExecutionContext,
-  Injectable,
-  NestInterceptor,
-} from '@nestjs/common';
+import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
 import { Request } from 'express';
 import * as RequestIp from 'request-ip';
 import { Observable, tap } from 'rxjs';
-import { LogService } from '@modules/log/log.service';
+import { LogService } from '📚libs/modules/log/log.service';
 @Injectable()
 export class LogInterceptor implements NestInterceptor {
   constructor(private readonly logService: LogService) {}
@@ -24,12 +19,6 @@ export class LogInterceptor implements NestInterceptor {
       body: request.body,
     });
 
-    return next
-      .handle()
-      .pipe(
-        tap((response) =>
-          this.logService.info(LogInterceptor.name, `Response`, response),
-        ),
-      );
+    return next.handle().pipe(tap((response) => this.logService.info(LogInterceptor.name, `Response`, response)));
   }
 }

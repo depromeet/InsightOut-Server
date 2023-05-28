@@ -1,14 +1,9 @@
-import {
-  ArgumentsHost,
-  Catch,
-  ExceptionFilter,
-  HttpException,
-} from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
-import { LogService } from '@modules/log/log.service';
+import { LogService } from '📚libs/modules/log/log.service';
 import { BaseException } from '../exceptions/base.exception';
 import { UnknownException } from '../exceptions/unknown.exception';
-import { SlackService } from '@modules/slack/slack.service';
+import { SlackService } from '📚libs/modules/slack/slack.service';
 
 @Catch()
 export class CustomExceptionFilter implements ExceptionFilter {
@@ -40,10 +35,6 @@ export class CustomExceptionFilter implements ExceptionFilter {
 
     this.logService.error(CustomExceptionFilter.name, exception);
 
-    this.httpAdapterHost.httpAdapter.reply(
-      (() => host.switchToHttp().getResponse())(),
-      exception.getResponse(),
-      exception.getStatus(),
-    );
+    this.httpAdapterHost.httpAdapter.reply((() => host.switchToHttp().getResponse())(), exception.getResponse(), exception.getStatus());
   }
 }

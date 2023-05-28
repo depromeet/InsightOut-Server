@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { RedisCacheModule } from '@modules/cache/redis/redis.module';
+import { RedisCacheModule } from '📚libs/modules/cache/redis/redis.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { UserRepository } from '@modules/database/repositories/user.repository';
-import { UserInfoRepository } from '@modules/database/repositories/user-info.repository';
-import { ApiModule } from '@modules/api/api.module';
+import { UserRepository } from '📚libs/modules/database/repositories/user.repository';
+import { UserInfoRepository } from '📚libs/modules/database/repositories/user-info.repository';
+import { ApiModule } from '📚libs/modules/api/api.module';
 
 import { SigninGuard } from '../common/guards/signin.guard';
 import { JwtModule } from '@nestjs/jwt';

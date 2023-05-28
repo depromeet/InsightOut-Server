@@ -1,12 +1,7 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { catchError, firstValueFrom } from 'rxjs';
-import {
-  byLength,
-  parseJSON,
-  parseJSONFromDaum,
-  split,
-} from '../../libs/utils/hanspell.function';
+import { byLength, parseJSON, parseJSONFromDaum, split } from '../../utils/hanspell.function';
 import { SpellCheckResult } from './api.type';
 
 @Injectable()
@@ -15,13 +10,11 @@ export class ApiService {
 
   async getRandomNickname(): Promise<string> {
     const response = await firstValueFrom(
-      this.httpService
-        .get('https://nickname.hwanmoo.kr/?format=text&max_length=5')
-        .pipe(
-          catchError((error) => {
-            throw error;
-          }),
-        ),
+      this.httpService.get('https://nickname.hwanmoo.kr/?format=text&max_length=5').pipe(
+        catchError((error) => {
+          throw error;
+        }),
+      ),
     );
     const responseData = response.data;
 
@@ -37,10 +30,7 @@ export class ApiService {
     const PNU_URL = 'http://speller.cs.pusan.ac.kr/results';
 
     sentence = sentence.replace(/<[^ㄱ-ㅎㅏ-ㅣ가-힣>]+>/g, '');
-    const data = split(
-      `${sentence.replace(/([^\r])\n/g, '$1\r\n')}\r\n`,
-      PNU_MAX_WORDS,
-    );
+    const data = split(`${sentence.replace(/([^\r])\n/g, '$1\r\n')}\r\n`, PNU_MAX_WORDS);
 
     const sentences = await Promise.all(
       data.map(async (part) => {
