@@ -52,8 +52,8 @@ export class ExperinceDto {
   }
 
   @ApiPropertyOptional({
-    example: 'inprogress or done',
-    default: 'inprogress',
+    example: 'INPROGRESS or DONE',
+    default: 'INPROGRESS',
   })
   @IsEnum(ExperienceStatus)
   @IsOptional()
