@@ -41,6 +41,9 @@ jobs:
           echo REDIS_HOST_DEV=${{ secrets.REDIS_HOST_DEV }} >> .env
           echo REDIS_PORT_DEV=${{ secrets.REDIS_PORT_DEV }} >> .env
           echo SLACK_TOKEN=${{ secrets.SLACK_TOKEN }} >> .env
+          echo FIREBASE_PROJECT_ID=${{ secrets.FIREBASE_PROJECT_ID }} >> .env
+          echo FIREBASE_API_KEY=${{ secrets.FIREBASE_API_KEY }} >> .env
+          echo FIREBASE_CLIENT_EMAIL=${{ secrets.FIREBASE_CLIENT_EMAIL }} >> .env
 
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
