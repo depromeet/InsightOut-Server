@@ -1,4 +1,8 @@
-import { PickType } from '@nestjs/swagger';
-import { ExperinceDto } from '../experience.dto';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsOptionalNumber } from '🔥apps/server/common/decorators/validation/isOptionalNumber.decorator';
 
-export class ExperienceIdParamReqDto extends PickType(ExperinceDto, ['experienceId'] as const) {}
+export class ExperienceIdParamReqDto {
+  @ApiProperty({ example: 1 })
+  @IsOptionalNumber()
+  experienceId: number;
+}

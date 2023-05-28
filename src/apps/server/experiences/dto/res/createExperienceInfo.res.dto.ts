@@ -1,10 +1,47 @@
-import { ApiProperty, PickType } from '@nestjs/swagger';
-import { ExperinceDto } from '../experience.dto';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
+import { IsOptionalNumber } from '🔥apps/server/common/decorators/validation/isOptionalNumber.decorator';
+import { IsOptionalString } from '🔥apps/server/common/decorators/validation/isOptionalString.decorator';
+import { dateValidation } from '🔥apps/server/common/consts/date-validation.const';
+import { Matches } from 'class-validator';
 
-export class CreateExperienceInfoResDto extends PickType(ExperinceDto, ['experienceInfoId', 'experienceRole', 'motivation'] as const) {}
+export class CreateExperienceInfoResDto {
+  @ApiProperty({ example: 1 })
+  @IsOptionalNumber()
+  experienceInfoId: number;
 
-export class CreateExperienceResDto extends PickType(ExperinceDto, ['experienceId', 'title', 'startDate', 'endDate'] as const) {
+  @ApiPropertyOptional({
+    example: '개발자와 협업 역량을 기르기 위해 하게 됨',
+  })
+  @IsOptionalString(0, 100)
+  motivation: string;
+
+  @ApiPropertyOptional({
+    example: 'UI/UX 디자이너',
+  })
+  @IsOptionalString(0, 100)
+  experienceRole: string;
+}
+
+export class CreateExperienceResDto {
+  @ApiProperty({ example: 1 })
+  @IsOptionalNumber()
+  experienceId: number;
+
+  @ApiPropertyOptional({ example: '00직무 디자인 인턴' })
+  @IsOptionalString(0, 100)
+  title: string;
+
+  @ApiPropertyOptional({ example: '2022-01' })
+  @IsOptionalString(0, 7)
+  @Matches(dateValidation.YYYY_MM)
+  startDate: string;
+
+  @ApiPropertyOptional({ example: '2022-07' })
+  @IsOptionalString(0, 7)
+  @Matches(dateValidation.YYYY_MM)
+  endDate: string;
+
   @ApiProperty({ type: CreateExperienceInfoResDto })
   @Expose()
   experienceInfo: CreateExperienceInfoResDto;
