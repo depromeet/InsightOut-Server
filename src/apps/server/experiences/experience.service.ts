@@ -59,8 +59,12 @@ export class ExperienceService {
 
   @returnValueToDto(GetExperienceResDto)
   public async getExperience(experienceId: number): Promise<GetExperienceResDto> {
-    const experience = await this.experienceRepository.selectOneById(experienceId, getExperienceAttribute);
-    if (!experience) throw new NotFoundException('해당 ID의 경험카드는 존재하지 않습니다.');
-    return experience;
+    try {
+      const experience = await this.experienceRepository.selectOneById(experienceId, getExperienceAttribute);
+
+      return experience;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) throw new NotFoundException('해당 ID의 경험카드는 존재하지 않습니다.');
+    }
   }
 }

@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { ExperienceStatus } from '@prisma/client';
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 import { IsEnum, IsNumber, IsOptional, IsString, Matches, MaxLength } from 'class-validator';
 
 export class ExperinceDto {
@@ -9,6 +9,7 @@ export class ExperinceDto {
   @IsNumber()
   @IsOptional()
   @Expose()
+  @Type(() => Number)
   id: number;
 
   @ApiPropertyOptional({ example: '00직무 디자인 인턴' })
@@ -72,6 +73,7 @@ export class ExperinceDto {
   @IsNumber()
   @IsOptional()
   @Expose()
+  @Type(() => Number)
   userId: number;
 
   // experienceInfo
@@ -79,12 +81,14 @@ export class ExperinceDto {
   @IsNumber()
   @IsOptional()
   @Expose()
+  @Type(() => Number)
   experienceInfoId: number;
 
   @ApiProperty({ example: 1 })
   @IsNumber()
   @IsOptional()
   @Expose()
+  @Type(() => Number)
   experienceId: number;
 
   @ApiPropertyOptional({
