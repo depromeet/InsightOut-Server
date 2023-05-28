@@ -8,7 +8,7 @@ import { ApiBearerAuth, ApiNotFoundResponse, ApiUnprocessableEntityResponse } fr
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { UserJwtToken } from '../auth/types/jwt-tokwn.type';
 import { CreateExperienceInfoUnprocessableErrorResDto, CreateExperienceResDto } from './dto/res/createExperienceInfo.res.dto';
-import { ResponseEntity } from '../../../libs/utils/respone.entity';
+import { ResponseEntity } from '📚libs/utils/respone.entity';
 import { ExperienceIdParamReqDto } from './dto/req/experienceIdParam.dto';
 import { GetExperienceNotFoundErrorResDto, GetExperienceResDto } from './dto/res/getExperience.res.dto';
 import { Method } from '📚libs/enums/method.enum';
