@@ -1,15 +1,15 @@
 import { Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { RedisCacheService } from '@modules/cache/redis/redis.service';
+import { RedisCacheService } from '📚libs/modules/cache/redis/redis.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { UserRepository } from '@modules/database/repositories/user.repository';
+import { UserRepository } from '📚libs/modules/database/repositories/user.repository';
 import { UserPayload } from '../common/guards/signin-request-body.interface';
 import { CookieOptions } from 'express';
-import { UserInfoRepository } from '@modules/database/repositories/user-info.repository';
+import { UserInfoRepository } from '📚libs/modules/database/repositories/user-info.repository';
 import { Provider } from '@prisma/client';
 import { Request } from 'express';
 import { AccessTokenAndRefreshToken, UserWithRefreshTokenPayload } from './types/jwt-tokwn.type';
-import { ApiService } from '@modules/api/api.service';
+import { ApiService } from '📚libs/modules/api/api.service';
 import { TokenType } from '📚libs/enums/token.enum';
 import { ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } from '🔥apps/server/common/consts/jwt.const';
 

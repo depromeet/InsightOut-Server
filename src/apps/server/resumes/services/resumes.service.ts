@@ -1,6 +1,6 @@
-import { ApiService } from '@modules/api/api.service';
-import { SpellCheckResult } from '@modules/api/api.type';
-import { ResumeRepository } from '@modules/database/repositories/resume.repository';
+import { ApiService } from '📚libs/modules/api/api.service';
+import { SpellCheckResult } from '📚libs/modules/api/api.type';
+import { ResumeRepository } from '📚libs/modules/database/repositories/resume.repository';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { GetResumeRequestQueryDto, GetResumeResponseDto } from '🔥apps/server/resumes/dtos/get-resume.dto';
 import { PatchResumeRequestDto } from '🔥apps/server/resumes/dtos/patch-resume.dto';
