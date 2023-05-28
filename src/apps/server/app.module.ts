@@ -12,9 +12,9 @@ import { AppController } from './app.controller';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RedisConfigFactory } from '📚libs/modules/cache/redis/redis.factory';
-import { ExperienceModule } from './experience/experience.module';
 import { ResumesModule } from './resumes/resumes.module';
 import { TestModule } from './test/test.module';
+import { ExperienceModule } from '🔥apps/server/experiences/experience.module';
 
 @Module({
   controllers: [AppController],

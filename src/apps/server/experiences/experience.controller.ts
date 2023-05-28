@@ -1,4 +1,4 @@
-import { Body, HttpStatus, Param, UseGuards, ValidationPipe } from '@nestjs/common';
+import { Body, HttpStatus, Param, UseGuards } from '@nestjs/common';
 import { Route } from '../common/decorators/router/route.decorator';
 import { RouteTable } from '../common/decorators/router/route-table.decorator';
 import { CreateExperienceInfoReqDto } from './dto/req/createExperienceInfo.dto';
@@ -40,8 +40,8 @@ export class ExperienceController {
     description: '경험 카드 생성 실패 타입 확인해주세요 :)',
     type: CreateExperienceInfoUnprocessableErrorResDto,
   })
-  public async createExperienceInfo(@Body(ValidationPipe) body: CreateExperienceInfoReqDto, @User() user: UserJwtToken) {
-    const experience = await this.experienceService.createExperienceInfo(body, user);
+  public async createExperienceInfo(@Body() createExperienceInfoReqDto: CreateExperienceInfoReqDto, @User() user: UserJwtToken) {
+    const experience = await this.experienceService.createExperienceInfo(createExperienceInfoReqDto, user);
 
     return ResponseEntity.CREATED_WITH_DATA(experience);
   }
@@ -62,8 +62,8 @@ export class ExperienceController {
     description: '해당 경험 카드 ID를 확인해주세요 :)',
     type: GetExperienceNotFoundErrorResDto,
   })
-  public async getExperience(@Param(ValidationPipe) param: ExperienceIdParamReqDto) {
-    const experience = await this.experienceService.getExperience(param.experienceId);
+  public async getExperience(@Param() experienceIdParamReqDto: ExperienceIdParamReqDto) {
+    const experience = await this.experienceService.getExperience(experienceIdParamReqDto.experienceId);
 
     return ResponseEntity.OK_WITH_DATA(experience);
   }

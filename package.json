@@ -79,7 +79,7 @@
     "typescript": "5.0.4"
   },
   "prisma": {
-    "schema": "src/modules/database/schema.prisma"
+    "schema": "src/libs/modules/database/schema.prisma"
   },
   "jest": {
     "moduleFileExtensions": [
