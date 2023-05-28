@@ -2,18 +2,18 @@ import { Inject, Injectable, NotFoundException, UnprocessableEntityException } f
 import { CreateExperienceInfoReqDto } from './dto/req/createExperienceInfo.dto';
 import { UserJwtToken } from '../auth/types/jwt-tokwn.type';
 import { ExperienceReposirotyInterface } from './interface/experience-repository.interface';
-import { ExperienceToken } from './provider/injectionToken';
 import { CreateExperienceResDto } from './dto/res/createExperienceInfo.res.dto';
 import { returnValueToDto } from '../common/decorators/returnValueToDto';
 import { getExperienceAttribute } from '../common/consts/experience-attribute.const';
 import { GetExperienceResDto } from './dto/res/getExperience.res.dto';
 import { ExperienceStatus, Prisma } from '@prisma/client';
 import { PrismaService } from '@modules/database/prisma.service';
+import { ExperienceRepository } from '@modules/database/repositories/experience.repository';
 
 @Injectable()
 export class ExperienceService {
   constructor(
-    @Inject(ExperienceToken.EXPERIENCE_REPOSITORY)
+    @Inject(ExperienceRepository)
     private readonly experienceRepository: ExperienceReposirotyInterface,
     private readonly prisma: PrismaService,
   ) {}
