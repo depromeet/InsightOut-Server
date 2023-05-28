@@ -58,7 +58,7 @@ export class ExperienceService {
   }
 
   @returnValueToDto(GetExperienceResDto)
-  public async getExperience(experienceId: number): Promise<GetExperienceResDto> {
+  public async getExperience(experienceId: number): Promise<Partial<GetExperienceResDto>> {
     try {
       const experience = await this.experienceRepository.selectOneById(experienceId, getExperienceAttribute);
 
