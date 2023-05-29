@@ -24,9 +24,10 @@ model User {
   deletedAt DateTime? @db.Timestamptz @map("deleted_at")
   nickname  String
 
-  UserInfo UserInfo?
-  Resume   Resume[]
-  Experiences   Experience[]
+  UserInfo    UserInfo?
+  Resume      Resume[]
+  Experiences Experience[]
+  Capability  Capability[]
 
   @@map("user")
 }
@@ -66,7 +67,7 @@ enum Field {
 }
 
 model UserInfo {
-  userId   Int      @id @map("user_id")
+  userId   Int       @id @map("user_id")
   field    Field? // 직무 분야
   provider Provider? // 소셜 로그인 제공자
   imageUrl String?   @map("image_url") @db.Text // 이미지 url
@@ -83,14 +84,14 @@ model UserInfo {
 // 자기소개서 폴더링 제목
 model Resume {
   id    Int    @id @default(autoincrement())
-  title String @db.VarChar(100) // 자기소개서 제목
+  title String @db.VarChar(20) // 자기소개서 제목
 
   createdAt DateTime @db.Timestamptz @default(now()) @map("created_at")
   updatedAt DateTime @db.Timestamptz @updatedAt @map("updated_at")
 
   userId Int @map("user_id")
 
-  User User @relation(references: [id], fields: [userId])
+  User     User       @relation(references: [id], fields: [userId])
   Question Question[]
 
   @@map("resume")
@@ -100,11 +101,11 @@ model Resume {
 // ********** 자기소개서 문항 *********
 // ********************************
 model Question {
-  id Int @id @default(autoincrement())
+  id       Int @id @default(autoincrement())
   resumeId Int @map("resume_id") // 자기소개서 폴더링 제목 pfk
 
-  title  String @db.VarChar(50) // 문항 제목
-  answer String? @db.VarChar(3000) // 문항 내용
+  title  String  @db.VarChar(20) // 문항 제목
+  answer String? @db.VarChar(2000) // 문항 내용
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -115,61 +116,87 @@ model Question {
   @@map("question")
 }
 
-
 // ********************************
-// ***** 경험 in 경험 분해 ********
+// ******* 경험 in 경험 분해 *********
 // ********************************
 
 // 임시 저장이 있기에 모든 필드는 Nullable입니다.
 model Experience {
-  id Int @id @default(autoincrement()) @map("id")// 경험 id
+  id Int @id @default(autoincrement()) @map("id") // 경험 id
 
-  title String? @db.VarChar(100) // 경험 제목
-
+  title String? @db.VarChar(25) // 경험 제목
   startDate DateTime? @db.Date @map("start_date") // 시작 날짜 type: YYYY-MM
-  endDate DateTime? @db.Date @map("end_date") // 끝 날짜 type: YYYY-MM
+  endDate   DateTime? @db.Date @map("end_date") // 끝 날짜 type: YYYY-MM
 
   experienceStatus ExperienceStatus @default(INPROGRESS) // 경험 분해 진행 척도 디폴트 inprogress
 
   situation String? @db.VarChar(100) // S: Situation, 계기와 배경
-  task String? @db.VarChar(100) // T: Task, 과제 및 목표
-  action String? @db.VarChar(100) // A: Action, 행동
-  result String? @db.VarChar(100) // R: Result, 결과
+  task      String? @db.VarChar(100) // T: Task, 과제 및 목표
+  action    String? @db.VarChar(100) // A: Action, 행동
+  result    String? @db.VarChar(100) // R: Result, 결과
 
   createdAt DateTime @db.Timestamptz @default(now()) @map("created_at")
   updatedAt DateTime @db.Timestamptz @updatedAt @map("updated_at")
 
   userId Int @map("user_id")
 
-  User User @relation(references: [id], fields: [userId])
-  experienceInfo ExperienceInfo?
+  User                 User?                  @relation(references: [id], fields: [userId])
+  experienceInfo       ExperienceInfo?
+  ExperienceCapability ExperienceCapability[]
 
   @@map("experience")
 }
 
 // 경험 분해 진행 상태
 enum ExperienceStatus {
-  INPROGRESS  // 진행중
-  DONE    // 끝
+  INPROGRESS // 진행중
+  DONE // 끝
 }
 
 // ********************************
-// ********** 경험 정보 ***********
+// *********** 경험 정보 ************
 // ********************************
 // 임시 저장이 있기에 모든 필드는 Nullable입니다.
 model ExperienceInfo {
-  experienceInfoId Int @default(autoincrement())  @map("experience_info_id")
-  
-  experienceRole String? @db.VarChar(100) @map("experience_role") // 경험 나의 역할
-  motivation String? @db.VarChar(100) // 경험 수행 이유
-  utilization String? @db.VarChar(100) // 역량 활용
-  analysis String? @db.VarChar(300) // AI 분석
+  experienceInfoId Int @default(autoincrement()) @map("experience_info_id")
+
+  experienceRole String? @map("experience_role") @db.VarChar(20) // 경험 나의 역할
+  motivation     String? @db.VarChar(100) // 경험 수행 이유
+  utilization    String? @db.VarChar(100) // 역량 활용
+  analysis       String? @db.VarChar(160) // AI 분석
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  experienceId Int @id @map("experience_id")// 경험 id
-  experience Experience @relation(references: [id], fields: [experienceId])
+  experienceId Int        @id @map("experience_id") // 경험 id
+  experience   Experience @relation(references: [id], fields: [experienceId])
 
   @@map("experience_info")
+}
+
+// ********************************
+// ************* 역량 **************
+// ********************************
+
+model Capability {
+  id      Int    @id @default(autoincrement()) // 역량 id
+  keyword String @db.VarChar(7) // 역량 키워드
+
+  userId Int @map("user_id")
+
+  User                 User                   @relation(references: [id], fields: [userId])
+  ExperienceCapability ExperienceCapability[]
+
+  @@map("capability")
+}
+
+model ExperienceCapability {
+  experenceId  Int @map("experience_id")
+  capabilityId Int @map("capability_id")
+
+  Experience Experience @relation(references: [id], fields: [experenceId])
+  Capability Capability @relation(references: [id], fields: [capabilityId])
+
+  @@id([experenceId, capabilityId])
+  @@map("experience_capability")
 }
