@@ -37,6 +37,7 @@ export type RouteProps<ResponseBody = any> = {
   };
   response: {
     code: HttpStatus.OK | HttpStatus.CREATED | HttpStatus.NO_CONTENT;
+    description?: string;
     type?: ResponseBody;
     isArray?: boolean;
   };
@@ -65,7 +66,7 @@ export function Route({ summary, description, request, response }: RouteProps) {
     case HttpStatus.OK:
       conditionDecorator.push(
         ApiOkResponse({
-          description: `${request.method} 요청 응답`,
+          description: response.description ?? `${request.method} 요청 응답`,
           type: response.type,
           isArray: response.isArray,
         }),
@@ -74,7 +75,7 @@ export function Route({ summary, description, request, response }: RouteProps) {
     case HttpStatus.CREATED:
       conditionDecorator.push(
         ApiCreatedResponse({
-          description: `${request.method} 요청 응답`,
+          description: response.description ?? `${request.method} 요청 응답`,
           type: response.type,
           isArray: response.isArray,
         }),
@@ -83,7 +84,7 @@ export function Route({ summary, description, request, response }: RouteProps) {
     case HttpStatus.NO_CONTENT:
       conditionDecorator.push(
         ApiNoContentResponse({
-          description: `${request.method} 요청 응답 대기 후 진행`,
+          description: response.description ?? `${request.method} 요청 응답 대기 후 진행`,
         }),
       );
       break;
