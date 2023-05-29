@@ -51,7 +51,7 @@ export class ExperienceService {
     try {
       const experience = await this.experienceRepository.selectOneById(experienceId, getExperienceAttribute);
 
-      return experience;
+      return new GetExperienceResDto(experience);
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) throw new NotFoundException('해당 ID의 경험카드는 존재하지 않습니다.');
     }
