@@ -9,4 +9,14 @@ export interface ExperienceTransactionInterface {
 
 export interface ExperienceRepositoryInterface {
   selectOneById(experienceId: number, select: ExperienceSelect): Promise<Partial<Experience & { experienceInfo?: ExperienceInfo }>>;
+  selectOneByUserId(
+    userId: number,
+    select: ExperienceSelect,
+  ): Promise<
+    Partial<
+      Experience & {
+        experienceInfo?: ExperienceInfo;
+      }
+    >
+  >;
 }

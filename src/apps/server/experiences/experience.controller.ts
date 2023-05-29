@@ -1,4 +1,4 @@
-import { Body, HttpStatus, Param, UseGuards } from '@nestjs/common';
+import { Body, HttpStatus, UseGuards } from '@nestjs/common';
 import { Route } from '../common/decorators/router/route.decorator';
 import { RouteTable } from '../common/decorators/router/route-table.decorator';
 import { CreateExperienceInfoReqDto } from './dto/req/createExperienceInfo.dto';
@@ -9,7 +9,6 @@ import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { UserJwtToken } from '../auth/types/jwt-tokwn.type';
 import { CreateExperienceInfoUnprocessableErrorResDto, CreateExperienceResDto } from './dto/res/createExperienceInfo.res.dto';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
-import { ExperienceIdParamReqDto } from './dto/req/experienceIdParam.dto';
 import { GetExperienceNotFoundErrorResDto, GetExperienceResDto } from './dto/res/getExperience.res.dto';
 import { Method } from '📚libs/enums/method.enum';
 
@@ -49,7 +48,7 @@ export class ExperienceController {
   @Route({
     request: {
       method: Method.GET,
-      path: '/:experienceId',
+      path: '/',
     },
     response: {
       code: HttpStatus.OK,
@@ -62,8 +61,8 @@ export class ExperienceController {
     description: '해당 경험 카드 ID를 확인해주세요 :)',
     type: GetExperienceNotFoundErrorResDto,
   })
-  public async getExperience(@Param() experienceIdParamReqDto: ExperienceIdParamReqDto) {
-    const experience = await this.experienceService.getExperience(experienceIdParamReqDto.experienceId);
+  public async getExperience(@User() user: UserJwtToken) {
+    const experience = await this.experienceService.getExperienceByUserId(user.userId);
 
     return ResponseEntity.OK_WITH_DATA(experience);
   }

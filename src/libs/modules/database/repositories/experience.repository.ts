@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { Experience, ExperienceInfo } from '@prisma/client';
+import { Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
 import { ExperienceSelect } from '🔥apps/server/experiences/interface/experience-select.interface';
 import { ExperienceRepositoryInterface } from '🔥apps/server/experiences/interface/experience-repository.interface';
 
@@ -15,6 +15,16 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
     return await this.prisma.experience.findUniqueOrThrow({
       select,
       where: { id: experienceId },
+    });
+  }
+
+  public async selectOneByUserId(
+    userId: number,
+    select: ExperienceSelect,
+  ): Promise<Partial<Experience & { experienceInfo: ExperienceInfo }>> {
+    return await this.prisma.experience.findFirst({
+      select,
+      where: { userId, experienceStatus: ExperienceStatus.INPROGRESS },
     });
   }
 }
