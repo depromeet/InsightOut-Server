@@ -4,7 +4,7 @@ import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { EnvEnum } from '📚libs/modules/env/env.enum';
 import { EnvService } from '📚libs/modules/env/env.service';
 import { AppModule } from './app.module';
-import * as cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 import { NodeEnvEnum } from '📚libs/enums/node-env.enum';
 
 async function bootstrap() {
