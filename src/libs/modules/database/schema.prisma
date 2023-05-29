@@ -20,8 +20,8 @@ model User {
   socialId String @map("social_id") @db.Text
 
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
-  deletedAt DateTime @updatedAt @map("deleted_at")
+  updatedAt DateTime @db.Timestamptz @updatedAt @map("updated_at")
+  deletedAt DateTime? @db.Timestamptz @map("deleted_at")
   nickname  String
 
   UserInfo UserInfo?
@@ -85,8 +85,8 @@ model Resume {
   id    Int    @id @default(autoincrement())
   title String @db.VarChar(100) // 자기소개서 제목
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @db.Timestamptz @default(now()) @map("created_at")
+  updatedAt DateTime @db.Timestamptz @updatedAt @map("updated_at")
 
   userId Int @map("user_id")
 
@@ -126,8 +126,8 @@ model Experience {
 
   title String? @db.VarChar(100) // 경험 제목
 
-  startDate String? @db.VarChar(20) @map("start_date") // 시작 날짜 type: YYYY-MM
-  endDate String? @db.VarChar(20) @map("end_date") // 끝 날짜 type: YYYY-MM
+  startDate DateTime? @db.Date @map("start_date") // 시작 날짜 type: YYYY-MM
+  endDate DateTime? @db.Date @map("end_date") // 끝 날짜 type: YYYY-MM
 
   experienceStatus ExperienceStatus @default(INPROGRESS) // 경험 분해 진행 척도 디폴트 inprogress
 
@@ -136,8 +136,8 @@ model Experience {
   action String? @db.VarChar(100) // A: Action, 행동
   result String? @db.VarChar(100) // R: Result, 결과
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @db.Timestamptz @default(now()) @map("created_at")
+  updatedAt DateTime @db.Timestamptz @updatedAt @map("updated_at")
 
   userId Int @map("user_id")
 
