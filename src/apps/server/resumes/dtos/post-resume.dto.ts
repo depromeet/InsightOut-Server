@@ -28,7 +28,7 @@ export class PostResumeResponseDto {
 
   @Expose()
   @ApiProperty({
-    description: '자기소개서 폴더 id',
+    description: '자기소개서 id입니다. 각 자기소개서 별로 고유한 key 값으로 사용가능합니다.',
     example: 1234,
   })
   get id(): number {
@@ -37,7 +37,7 @@ export class PostResumeResponseDto {
 
   @Expose()
   @ApiProperty({
-    description: '자기소개서 폴더 제목',
+    description: '자기소개서 제목입니다. 모아보기에서 해당 제목이 사용됩니다.',
     example: '디프만 13기',
   })
   get title(): string {
@@ -46,7 +46,7 @@ export class PostResumeResponseDto {
 
   @Expose()
   @ApiProperty({
-    description: '자기소개서 폴더 생성일자',
+    description: '자기소개서 생성일자입니다.',
     example: new Date(),
   })
   get createdAt(): Date {
@@ -55,7 +55,7 @@ export class PostResumeResponseDto {
 
   @Expose()
   @ApiProperty({
-    description: '자기소개서 폴더 수정일자',
+    description: '자기소개서 수정일자입니다.',
     example: new Date(),
   })
   get updatedAt(): Date {

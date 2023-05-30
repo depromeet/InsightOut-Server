@@ -53,7 +53,7 @@ export class ResumesService {
     });
   }
 
-  async updateResumeFolder({ body, resumeId, userId }: { body: PatchResumeRequestDto; resumeId: number; userId: number }): Promise<void> {
+  async updateResumeFolder(body: PatchResumeRequestDto, resumeId: number, userId: number): Promise<void> {
     const { title } = body;
 
     const resume = await this.resumesRepository.findFirst({

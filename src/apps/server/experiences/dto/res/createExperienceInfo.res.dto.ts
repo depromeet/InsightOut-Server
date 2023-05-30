@@ -5,6 +5,7 @@ import { IsOptionalString } from '🔥apps/server/common/decorators/validation/i
 import { dateValidation } from '🔥apps/server/common/consts/date-validation.const';
 import { Matches } from 'class-validator';
 import { Experience, ExperienceInfo } from '@prisma/client';
+import { getFormattedDate } from '📚libs/utils/date';
 
 export class CreateExperienceInfoResDto {
   @Exclude() private _experienceInfoId: number;
@@ -59,8 +60,8 @@ export class CreateExperienceResDto {
   constructor(experience: Experience, experienceInfo: ExperienceInfo) {
     this._experienceId = experience.id;
     this._title = experience.title;
-    this._startDate = experience.startDate;
-    this._endDate = experience.endDate;
+    this._startDate = getFormattedDate(experience.startDate);
+    this._endDate = getFormattedDate(experience.endDate);
 
     const experienceInfoRes = new CreateExperienceInfoResDto();
     experienceInfoRes.setExperienceInfoId = experienceInfo.experienceInfoId;

@@ -2,6 +2,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
 import { Exclude, Expose } from 'class-transformer';
 import { IsEnum, IsOptional, Matches } from 'class-validator';
+import { getFormattedDate } from '📚libs/utils/date';
 import { dateValidation } from '🔥apps/server/common/consts/date-validation.const';
 import { IsOptionalNumber } from '🔥apps/server/common/decorators/validation/isOptionalNumber.decorator';
 import { IsOptionalString } from '🔥apps/server/common/decorators/validation/isOptionalString.decorator';
@@ -79,8 +80,8 @@ export class GetExperienceResDto {
   ) {
     this._id = experience.id;
     this._title = experience.title;
-    this._startDate = experience.startDate;
-    this._endDate = experience.endDate;
+    this._startDate = getFormattedDate(experience.startDate);
+    this._endDate = getFormattedDate(experience.endDate);
     this._experienceStatus = experience.experienceStatus;
     this._task = experience.task;
     this._action = experience.action;
