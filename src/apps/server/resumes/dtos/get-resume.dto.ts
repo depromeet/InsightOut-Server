@@ -19,10 +19,10 @@ export class GetResumeRequestQueryDto {
 }
 
 class QuestionResponse {
-  #id: number;
-  #title: string;
-  #answer: string;
-  #updatedAt: Date;
+  @Exclude() private _id: number;
+  @Exclude() private _title: string;
+  @Exclude() private _answer: string;
+  @Exclude() private _updatedAt: Date;
 
   @ApiProperty({
     description: '자기소개서 문항 id',
@@ -33,11 +33,11 @@ class QuestionResponse {
   @IsPositive()
   @IsNotEmpty()
   get id(): number {
-    return this.#id;
+    return this._id;
   }
 
   set id(value) {
-    this.#id = value;
+    this._id = value;
   }
 
   @ApiProperty({
@@ -48,11 +48,11 @@ class QuestionResponse {
   @IsString()
   @IsNotEmpty()
   get title(): string {
-    return this.#title;
+    return this._title;
   }
 
   set title(value) {
-    this.#title = value;
+    this._title = value;
   }
 
   @ApiProperty({
@@ -63,11 +63,11 @@ class QuestionResponse {
   @IsString()
   @IsNotEmpty()
   get answer(): string {
-    return this.#answer;
+    return this._answer;
   }
 
   set answer(value) {
-    this.#answer = value;
+    this._answer = value;
   }
 
   @ApiProperty({
@@ -78,11 +78,11 @@ class QuestionResponse {
   @IsDate()
   @IsNotEmpty()
   get updatedAt() {
-    return this.#updatedAt;
+    return this._updatedAt;
   }
 
   set updatedAt(value) {
-    this.#updatedAt = value;
+    this._updatedAt = value;
   }
 }
 
