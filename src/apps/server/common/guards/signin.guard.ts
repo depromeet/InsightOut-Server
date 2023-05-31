@@ -1,13 +1,13 @@
 import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
-import { SinginRequestBody } from './signin-request-body.interface';
 import { FirebaseService } from '📚libs/modules/firebase/firebase.service';
+import { PostSinginRequestBodyForGuard } from '🔥apps/server/auth/dtos/post-signin.dto';
 
 @Injectable()
 export class SigninGuard implements CanActivate {
   constructor(private readonly firebaseService: FirebaseService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request: SinginRequestBody = context.switchToHttp().getRequest();
+    const request: PostSinginRequestBodyForGuard = context.switchToHttp().getRequest();
 
     const { idToken } = request.body;
     try {
@@ -16,6 +16,7 @@ export class SigninGuard implements CanActivate {
         email: decodedToken.email,
         socialId: decodedToken.sub,
         picture: decodedToken.picture,
+        uid: decodedToken.uid,
       };
       request.user = user;
 

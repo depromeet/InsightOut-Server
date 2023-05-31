@@ -1,9 +1,8 @@
-import { Body, Controller, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiCreatedResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
+import { Body, Controller, HttpStatus, Res, UseGuards } from '@nestjs/common';
+import { ApiBadRequestResponse, ApiCreatedResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { SigninGuard } from '../common/guards/signin.guard';
 import { User } from '../common/decorators/request/user.decorator';
 import { AuthService } from './auth.service';
-import { UserPayload } from '../common/guards/signin-request-body.interface';
 import { Response } from 'express';
 import { UserWithRefreshTokenPayload } from './types/jwt-tokwn.type';
 import { TokenType } from '📚libs/enums/token.enum';
@@ -11,7 +10,7 @@ import { JwtRefreshGuard } from '../common/guards/jwt-refresh.guard';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
 import { Method } from '📚libs/enums/method.enum';
 import { PostReissueResponseDto } from '🔥apps/server/auth/dtos/post-reissue.dto';
-import { PostSigninRequestBodyDto, PostSigninResponseDto } from '🔥apps/server/auth/dtos/post-signin.dto';
+import { PostSigninRequestBodyDto, PostSigninResponseDto, UserPayload } from '🔥apps/server/auth/dtos/post-signin.dto';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
 
 @ApiTags('🔐 권한 관련 API')
