@@ -89,8 +89,13 @@ export class AuthService {
           // 기본 자기소개서를 생성합니다.
           await prisma.resume.create({
             data: {
-              title: '샘플) 자신의 경쟁력에 대해 구체적으로 적어 주세요.',
+              title: '자기소개서 예시',
               userId: newUser.id,
+              Question: {
+                create: {
+                  title: '샘플) 자신의 경쟁력에 대해 구체적으로 적어 주세요.',
+                },
+              },
             },
           });
 
