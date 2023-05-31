@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsString, IsUUID, IsUrl } from 'class-validator';
 
 export class PostSinginRequestBodyForGuard {
@@ -53,6 +53,7 @@ export class PostSigninResponseDto {
   })
   @IsNotEmpty()
   @IsString()
+  @Expose()
   get accessToken(): string {
     return this._accessToken;
   }
