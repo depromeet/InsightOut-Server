@@ -2,13 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude } from 'class-transformer';
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class PostSigninRequestBodyDto {
-  @ApiProperty({ description: '구글 idToken' })
-  @IsString()
-  idToken: string;
-}
-
-export class PostSigninResponseDto {
+export class PostReissueResponseDto {
   @Exclude() private readonly _accessToken: string;
 
   constructor(accessToken: string) {
