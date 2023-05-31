@@ -1,9 +1,10 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, InternalServerErrorException } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { LogService } from '📚libs/modules/log/log.service';
 import { BaseException } from '../exceptions/base.exception';
 import { UnknownException } from '../exceptions/unknown.exception';
 import { SlackService } from '📚libs/modules/slack/slack.service';
+import { Prisma } from '@prisma/client';
 
 @Catch()
 export class CustomExceptionFilter implements ExceptionFilter {
@@ -17,20 +18,31 @@ export class CustomExceptionFilter implements ExceptionFilter {
     const exception = (() => {
       if (error instanceof BaseException) {
         return error;
-      } else if (error instanceof HttpException) {
+      }
+
+      if (error instanceof HttpException) {
         return new BaseException({
           statusCode: error.getStatus(),
           title: error.name,
           message: error.message,
           raw: error,
         });
-      } else {
-        return new UnknownException({
-          title: error.name,
-          message: error.message,
-          raw: error,
-        });
       }
+
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P1003') {
+          return new InternalServerErrorException({
+            title: error.name,
+            message: error.message,
+            raw: error,
+          });
+        }
+      }
+      return new UnknownException({
+        title: error.name,
+        message: error.message,
+        raw: error,
+      });
     })();
 
     this.logService.error(CustomExceptionFilter.name, exception);
