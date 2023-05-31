@@ -53,6 +53,7 @@ export class AuthController {
     const cookieOptions = this.authService.getCookieOptions(TokenType.RefreshToken);
 
     response.cookie('refreshToken', refreshToken, cookieOptions);
+
     return ResponseEntity.CREATED_WITH_DATA(new PostSigninResponseDto(accessToken));
   }
 

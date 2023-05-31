@@ -12,6 +12,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from '../common/guards/strategies/jwt.strategy';
 import { JwtRefreshStrategy } from '../common/guards/strategies/jwt-refresh.strategy';
 import { FirebaseModule } from '📚libs/modules/firebase/firebase.module';
+import { ResumeRepository } from '📚libs/modules/database/repositories/resume.repository';
+import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
 
 @Module({
   imports: [
@@ -38,6 +40,8 @@ import { FirebaseModule } from '📚libs/modules/firebase/firebase.module';
     // Repositories
     UserRepository,
     UserInfoRepository,
+    ResumeRepository,
+    CapabilityRepository,
   ],
 })
 export class AuthModule {}
