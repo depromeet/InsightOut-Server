@@ -1,0 +1,21 @@
+version: 0.0
+os: linux
+files:
+  - source:  /
+    destination: /home/ubuntu/13th-4team-backend
+
+permissions:
+  - object: /
+    mode: 755
+    pattern: "**"
+    owner: ubuntu
+    group: ubuntu
+
+
+hooks:
+  BeforeInstall:
+    - location: deploy-before.sh
+      runas: ubuntu
+  ApplicationStart:
+    - location: deploy-run.sh
+      runas: ubuntu
