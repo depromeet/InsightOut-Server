@@ -2,6 +2,7 @@
 
 pm2 delete all
 
+yarn
 yarn prisma generate
 yarn build
 
