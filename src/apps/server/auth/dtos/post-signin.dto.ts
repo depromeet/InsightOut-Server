@@ -36,6 +36,7 @@ export class UserPayload {
 
 export class PostSigninRequestBodyDto {
   @ApiProperty({ description: '구글 idToken' })
+  @IsNotEmpty()
   @IsString()
   idToken: string;
 }
