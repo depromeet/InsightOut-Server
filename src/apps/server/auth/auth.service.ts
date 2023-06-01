@@ -43,7 +43,7 @@ export class AuthService {
    */
   public async signin(user: UserPayload): Promise<number> {
     try {
-      const { email, picture, socialId } = user;
+      const { email, picture, socialId, uid } = user;
 
       const existUser = await this.userRepository.findFirst({ socialId });
 
@@ -69,6 +69,7 @@ export class AuthService {
           // 기본 유저를 생성합니다.
           const newUser = await prisma.user.create({
             data: {
+              uid,
               email,
               socialId,
               nickname,
