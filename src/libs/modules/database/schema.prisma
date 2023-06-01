@@ -18,11 +18,12 @@ model User {
   id       Int    @id @default(autoincrement()) @map("user_id")
   email    String @unique @db.VarChar(100)
   socialId String @map("social_id") @db.Text
+  uid      String @unique
 
-  createdAt DateTime  @default(now()) @map("created_at")
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz
   deletedAt DateTime? @map("deleted_at") @db.Timestamptz
-  nickname  String
+  nickname  String    @db.VarChar(5)
 
   UserInfo    UserInfo?
   Resume      Resume[]
@@ -81,7 +82,7 @@ model UserInfo {
 // ********** 자기소개서 *********
 // ****************************
 
-// 자기소개서 폴더링 제목
+// 자기소개서 제목
 model Resume {
   id    Int    @id @default(autoincrement())
   title String @db.VarChar(13) // 자기소개서 제목
@@ -102,13 +103,13 @@ model Resume {
 // ********************************
 model Question {
   id       Int @id @default(autoincrement())
-  resumeId Int @map("resume_id") // 자기소개서 폴더링 제목 pfk
+  resumeId Int @map("resume_id") // 자기소개서 제목 pfk
 
   title  String  @db.VarChar(30) // 문항 제목
   answer String? @db.VarChar(2000) // 문항 내용
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
   Resume Resume @relation(references: [id], fields: [resumeId], onDelete: Cascade)
 
@@ -142,7 +143,7 @@ model Experience {
 
   User                 User?                  @relation(references: [id], fields: [userId])
   experienceInfo       ExperienceInfo?
-  ExperienceSummary    ExperieceSummary[]
+  ExperienceSummary    ExperienceSummary[]
   ExperienceCapability ExperienceCapability[]
 
   @@map("experience")
@@ -157,7 +158,7 @@ enum ExperienceStatus {
 // ********************************
 // *********** 역량 키워드 ***********
 // ********************************
-model ExperieceSummary {
+model ExperienceSummary {
   experienceId Int    @id @map("experience_id")
   keyword      String @db.VarChar(10) // 키워드 이름
 
@@ -178,8 +179,8 @@ model ExperienceInfo {
   utilization    String? @db.VarChar(100) // 역량 활용
   analysis       String? @db.VarChar(160) // AI 분석
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
   experienceId Int        @id @map("experience_id") // 경험 id
   experience   Experience @relation(references: [id], fields: [experienceId])
@@ -223,4 +224,6 @@ model Feedback {
   contents String @db.VarChar(300)
 
   createdAt DateTime @default(now()) @map("createdAt") @db.Timestamptz
+
+  @@map("feedback")
 }
