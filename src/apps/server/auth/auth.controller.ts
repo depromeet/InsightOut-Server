@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post, Res, UseGuards } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiCreatedResponse, ApiOperation, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import { SigninRequestBodyDto } from './dtos/signin-request-body.dto';
 import { SigninGuard } from '../common/guards/signin.guard';
@@ -9,6 +9,9 @@ import { Response } from 'express';
 import { UserWithRefreshTokenPayload } from './types/jwt-tokwn.type';
 import { TokenType } from '📚libs/enums/token.enum';
 import { JwtRefreshGuard } from '../common/guards/jwt-refresh.guard';
+import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
+import { Method } from '📚libs/enums/method.enum';
+import { ResponseEntity } from '📚libs/utils/respone.entity';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -57,5 +60,30 @@ export class AuthController {
 
     response.cookie('refreshToken', refreshToken, cookieOptions);
     return { accessToken };
+  }
+
+  /**
+   * 유저 회원 탈퇴 API입니다.
+   * JwtRefreshGaurd를 통해서 유저가 Refresh Token을 가지고 있는지 확인합니다.
+   * Redis에 저장된 Refresh Token과 같은지 검증하기 위함입니다.
+   * 반환값은 없습니다.
+   */
+  @UseGuards(JwtRefreshGuard)
+  @Route({
+    request: {
+      path: 'withdraw',
+      method: Method.DELETE,
+    },
+    response: {
+      code: HttpStatus.OK,
+    },
+    summary: '회원 탈퇴 API',
+    description:
+      '# 회원 탈퇴 API\n## Description\n회원 탈퇴를 진행합니다. 해당 유저의 Refresh Token을 받아서 삭제합니다.\n## Response\n반환값은 없습니다.\n## etc.\n⛳️ [마이페이지 회원탈퇴](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1418-10972&t=PibZzDLncZrUbrLe-4)',
+  })
+  async withdraw(@User() user: UserWithRefreshTokenPayload) {
+    await this.authService.withdraw(user);
+
+    return ResponseEntity.OK_WITH_MESSAGE('User withdrawed');
   }
 }
