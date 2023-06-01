@@ -73,7 +73,7 @@ model UserInfo {
   provider Provider? // 소셜 로그인 제공자
   imageUrl String?   @map("image_url") @db.Text // 이미지 url
 
-  User User @relation(references: [id], fields: [userId])
+  User User @relation(references: [id], fields: [userId], onDelete: Cascade)
 
   @@map("user_info")
 }
@@ -92,7 +92,7 @@ model Resume {
 
   userId Int @map("user_id")
 
-  User     User       @relation(references: [id], fields: [userId])
+  User     User       @relation(references: [id], fields: [userId], onDelete: Cascade)
   Question Question[]
 
   @@map("resume")
@@ -141,7 +141,7 @@ model Experience {
 
   userId Int @map("user_id")
 
-  User                 User?                  @relation(references: [id], fields: [userId])
+  User                 User?                  @relation(references: [id], fields: [userId], onDelete: Cascade)
   experienceInfo       ExperienceInfo?
   ExperienceSummary    ExperienceSummary[]
   ExperienceCapability ExperienceCapability[]
@@ -198,7 +198,7 @@ model Capability {
 
   userId Int @map("user_id")
 
-  User                 User                   @relation(references: [id], fields: [userId])
+  User                 User                   @relation(references: [id], fields: [userId], onDelete: Cascade)
   ExperienceCapability ExperienceCapability[]
 
   @@map("capability")
