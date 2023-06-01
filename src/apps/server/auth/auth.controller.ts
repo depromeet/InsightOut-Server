@@ -89,4 +89,23 @@ export class AuthController {
 
     return ResponseEntity.OK_WITH_MESSAGE('User withdrawed');
   }
+
+  /** */
+  @UseGuards(JwtRefreshGuard)
+  @Route({
+    request: {
+      path: 'signout',
+      method: Method.POST,
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: String,
+      description:
+        '### ✅ 로그아웃에 성공했습니다.\nRefresh token이 같으므로, 유효한 토큰이라 판단해 redis에서 삭제합니다. 회원탈퇴와 다르게 firebase Authentication에서 유저를 삭제하지는 않습니다.',
+    },
+    summary: '로그아웃 API',
+    description:
+      '# 로그아웃 API\n## Description\n로그아웃을 처리합니다. 해당 유저의 Refresh Token을 쿠키에서 탐색하여, 해당 token이 redis에 존재하는 refresh token과 같은지 검증합니다. RTR 방식으로 매번 refresh token을 생성하지만, 기존 브라우저에 존재하는 refresh token을 만료하게 할 수는 없기 떄문에, Redis와 같은 key-value 저장소에 저장된 토큰을 유효한 토큰으로 간주합니다.\n## Response\n반환값은 없습니다.\n## etc.\n⛳️ [로그아웃](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1418-10717&t=6UiMDM9wwxO4vDZo-4)   \n💬 참고자료: https://seungyong20.tistory.com/entry/JWT-Access-Token%EA%B3%BC-Refresh-Token-%EA%B7%B8%EB%A6%AC%EA%B3%A0-RTR-%EA%B8%B0%EB%B2%95%EC%97%90-%EB%8C%80%ED%95%B4%EC%84%9C-%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90',
+  })
+  async signout(@User() user: UserWithRefreshTokenPayload) {}
 }
