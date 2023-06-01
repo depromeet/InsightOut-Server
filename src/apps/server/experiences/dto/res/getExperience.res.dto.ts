@@ -2,7 +2,6 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
 import { Exclude, Expose } from 'class-transformer';
 import { IsEnum, IsOptional, Matches } from 'class-validator';
-import { getFormattedDate } from '📚libs/utils/date';
 import { dateValidation } from '🔥apps/server/common/consts/date-validation.const';
 import { IsOptionalNumber } from '🔥apps/server/common/decorators/validation/isOptionalNumber.decorator';
 import { IsOptionalString } from '🔥apps/server/common/decorators/validation/isOptionalString.decorator';
@@ -63,8 +62,8 @@ export class GetExperienceInfoResDto {
 export class GetExperienceResDto {
   @Exclude() _id: number;
   @Exclude() _title: string;
-  @Exclude() _startDate: string;
-  @Exclude() _endDate: string;
+  @Exclude() _startDate: Date;
+  @Exclude() _endDate: Date;
   @Exclude() _experienceStatus: ExperienceStatus;
   @Exclude() _situation: string;
   @Exclude() _task: string;
@@ -80,8 +79,8 @@ export class GetExperienceResDto {
   ) {
     this._id = experience.id;
     this._title = experience.title;
-    this._startDate = getFormattedDate(experience.startDate);
-    this._endDate = getFormattedDate(experience.endDate);
+    this._startDate = experience.startDate;
+    this._endDate = experience.endDate;
     this._experienceStatus = experience.experienceStatus;
     this._task = experience.task;
     this._action = experience.action;
@@ -104,14 +103,14 @@ export class GetExperienceResDto {
   @ApiPropertyOptional({ example: '2022-01' })
   @IsOptionalString(0, 7)
   @Matches(dateValidation.YYYY_MM)
-  get startDate(): string {
+  get startDate(): Date {
     return this._startDate;
   }
 
   @ApiPropertyOptional({ example: '2022-07' })
   @IsOptionalString(0, 7)
   @Matches(dateValidation.YYYY_MM)
-  get endDate(): string {
+  get endDate(): Date {
     return this._endDate;
   }
 
