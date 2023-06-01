@@ -76,6 +76,9 @@ export class AuthController {
     },
     response: {
       code: HttpStatus.OK,
+      type: String,
+      description:
+        '### ✅ 회원 탈퇴에 성공했습니다.\nRefresh token을 redis에서 삭제하며, firebase Authentication 서비스에서 유저를 삭제합니다.',
     },
     summary: '회원 탈퇴 API',
     description:
