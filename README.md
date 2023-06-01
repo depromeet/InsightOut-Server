@@ -101,20 +101,20 @@
 
 # 7. 팀원
 
-|                                 Server, 파트장                                 |                                    백엔드                                    |                                     백엔드                                     |
-| :----------------------------------------------------------------------------: | :--------------------------------------------------------------------------: | :----------------------------------------------------------------------------: |
-|                                     김동현                                     |                                    이성태                                    |                                     장원진                                     |
-| <img src="https://avatars.githubusercontent.com/u/97580759?v=4" width="200" /> | <img src="https://avatars.githubusercontent.com/u/83271772?v=4" width="200"> | <img src="https://avatars.githubusercontent.com/u/45301224?v=4" width="200" /> |
-|                [kimddakki](https://github.com/PracticeEveryday)                |                   [Seongtae](https://github.com/stae1102)                    |                  [Wonjin Jang](https://github.com/JangDaljin)                  |
+|                             Server, 💫 **파트장**                              |                      백엔드, 💼 **운영진**, 👑 **팀장**                      |
+| :----------------------------------------------------------------------------: | :--------------------------------------------------------------------------: |
+|                                     김동현                                     |                                    이성태                                    |
+| <img src="https://avatars.githubusercontent.com/u/97580759?v=4" width="200" /> | <img src="https://avatars.githubusercontent.com/u/83271772?v=4" width="200"> |
+|                [kimddakki](https://github.com/PracticeEveryday)                |                   [Seongtae](https://github.com/stae1102)                    |
 
-|                                  Web, 파트장                                   |                                      Web                                       |                                      Web                                       |                                      Web                                       |
+|                               Web, 💫 **파트장**                               |                                      Web                                       |                                      Web                                       |                                      Web                                       |
 | :----------------------------------------------------------------------------: | :----------------------------------------------------------------------------: | :----------------------------------------------------------------------------: | :----------------------------------------------------------------------------: |
 |                                     박준하                                     |                                     박상범                                     |                                     신민경                                     |                                     윤상준                                     |
 | <img src="https://avatars.githubusercontent.com/u/85827017?v=4" width="200" /> | <img src="https://avatars.githubusercontent.com/u/43921054?v=4" width="200" /> | <img src="https://avatars.githubusercontent.com/u/80238096?v=4" width="200" /> | <img src="https://avatars.githubusercontent.com/u/63948484?v=4" width="200" /> |
 |                  [Joonha Park](https://github.com/harseille)                   |                 [SangBeom Park](https://github.com/sangbooom)                  |                   [minkyung](https://github.com/minkyung00)                    |                    [highJoon](https://github.com/highjoon)                     |
 
-|                                                          Design, 팀장                                                           |                                                            디자인                                                             |
-| :-----------------------------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------: |
-|                                                             이설희                                                              |                                                            유지선                                                             |
-| <img src="https://user-images.githubusercontent.com/83271772/212343731-6332432b-cae8-42b5-8667-d0a8b18d34be.png" width="200" /> | <img src="https://user-images.githubusercontent.com/83271772/212343731-6332432b-cae8-42b5-8667-d0a8b18d34be.png" width="200"> |
-|                                           [이설희](https://www.behance.net/seullee6)                                            |                                                            유지선                                                             |
+|           Design, 💫 **파트장**            | 디자인, 🤵🏻‍♀️ **PM** |
+| :----------------------------------------: | :---------------: |
+|                   이설희                   |      유지선       |
+|                                            |                   |
+| [이설희](https://www.behance.net/seullee6) |      유지선       |
