@@ -3,11 +3,12 @@ import { Exclude, Expose } from 'class-transformer';
 
 export class ResponseEntity<T> {
   @Exclude() private readonly _statusCode: HttpStatus; // 상태 코드
-  @Exclude() private readonly _message?: string; // 메시지
   @Exclude() private readonly _success: boolean; // 성공 여부
   @Exclude() private readonly _data: T; // Controller response data
+  @Exclude() private readonly _title?: string;
+  @Exclude() private readonly _message?: string; // 메시지
 
-  private constructor(status: HttpStatus, success: boolean, options?: { data?: T; message?: string | undefined }) {
+  constructor(status: HttpStatus, success: boolean, options?: { data?: T; message?: string; title?: string }) {
     this._statusCode = status;
     this._success = success;
     this._message = options.message;
@@ -38,8 +39,8 @@ export class ResponseEntity<T> {
     return new ResponseEntity<T>(HttpStatus.CREATED, true, { data, message });
   }
 
-  static ERROR<T>(statusCode = HttpStatus.INTERNAL_SERVER_ERROR, message?: string, data?: T) {
-    return new ResponseEntity<T>(statusCode, false, { data, message });
+  static ERROR<T>(statusCode = HttpStatus.INTERNAL_SERVER_ERROR, title?: string, message?: string, data?: T) {
+    return new ResponseEntity<T>(statusCode, false, { data, message, title });
   }
 
   @Expose()
@@ -60,5 +61,10 @@ export class ResponseEntity<T> {
   @Expose()
   get data(): T | undefined {
     return this._data;
+  }
+
+  @Expose()
+  get title(): string | undefined {
+    return this._title;
   }
 }
