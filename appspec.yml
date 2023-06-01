@@ -1,0 +1,21 @@
+version: 0.0
+os: linux
+files:
+  - source:  /
+    destination: /var/www/cdp-server
+
+permissions:
+  - object: /
+    mode: 755
+    pattern: "**"
+    owner: ec2-user
+    group: ec2-user
+
+
+hooks:
+  BeforeInstall:
+    - location: deploy-before.sh
+      runas: ec2-user
+  ApplicationStart:
+    - location: deploy-run.sh
+      runas: ec2-user
