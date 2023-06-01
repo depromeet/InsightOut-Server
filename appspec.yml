@@ -15,7 +15,7 @@ permissions:
 hooks:
   BeforeInstall:
     - location: deploy-before.sh
-      runas: ec2-user
+      runas: ubuntu
   ApplicationStart:
     - location: deploy-run.sh
-      runas: ec2-user
+      runas: ubuntu
