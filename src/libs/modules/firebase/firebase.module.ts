@@ -13,7 +13,6 @@ export class FirebaseModule implements OnModuleInit {
 
   async onModuleInit() {
     const firebaseConfig = {
-      apiKey: this.configService.get('FIREBASE_API_KEY'),
       credential: admin.credential.cert({
         projectId: this.configService.get('FIREBASE_PROJECT_ID'),
         privateKey: this.configService.get('FIREBASE_PRIVATE_KEY').replace(/\\n/g, '\n'),
