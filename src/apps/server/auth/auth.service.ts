@@ -158,4 +158,28 @@ export class AuthService {
       }
     }
   }
+
+  /**
+   * 로그아웃을 처리합니다.
+   *
+   * 1. 레디스에 있는 Refresh token을 가져옵니다.
+   * 2. 요청의 쿠키 중 refreshToken의 값과 서로 같은지 확인합니다.
+   * 3. 값이 같지 않다면, 인가되지 않은 요청이므로 예외를 일으킵니다.
+   * 4. 값이 같다면, 유효한 요청이라 판단하여 refresh token을 삭제합니다.
+   */
+  async signout(user: UserWithRefreshTokenPayload) {
+    const { userId, refreshToken } = user;
+
+    // 1. 레디스에서 Refresh token을 가져옵니다.
+    const existedRefreshToken = await this.redisService.get(String(userId));
+
+    // 2. 요청의 쿠키 중 refreshToken의 값과 서로 비교합니다.
+    if (existedRefreshToken !== refreshToken) {
+      // 3. 만약 값이 같지 않다면 예외를 일으킵니다.
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+
+    // 4. 만약 값이 같다면 refreshToken을 레디스에서 삭제합니다.
+    await this.redisService.del(String(userId));
+  }
 }
