@@ -18,11 +18,12 @@ model User {
   id       Int    @id @default(autoincrement()) @map("user_id")
   email    String @unique @db.VarChar(100)
   socialId String @map("social_id") @db.Text
+  uid      String @unique
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @db.Timestamptz @updatedAt @map("updated_at")
-  deletedAt DateTime? @db.Timestamptz @map("deleted_at")
-  nickname  String
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz
+  nickname  String    @db.VarChar(5)
 
   UserInfo    UserInfo?
   Resume      Resume[]
@@ -81,13 +82,13 @@ model UserInfo {
 // ********** 자기소개서 *********
 // ****************************
 
-// 자기소개서 폴더링 제목
+// 자기소개서 제목
 model Resume {
   id    Int    @id @default(autoincrement())
-  title String @db.VarChar(20) // 자기소개서 제목
+  title String @db.VarChar(13) // 자기소개서 제목
 
-  createdAt DateTime @db.Timestamptz @default(now()) @map("created_at")
-  updatedAt DateTime @db.Timestamptz @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
   userId Int @map("user_id")
 
@@ -102,13 +103,13 @@ model Resume {
 // ********************************
 model Question {
   id       Int @id @default(autoincrement())
-  resumeId Int @map("resume_id") // 자기소개서 폴더링 제목 pfk
+  resumeId Int @map("resume_id") // 자기소개서 제목 pfk
 
-  title  String  @db.VarChar(20) // 문항 제목
+  title  String  @db.VarChar(30) // 문항 제목
   answer String? @db.VarChar(2000) // 문항 내용
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
   Resume Resume @relation(references: [id], fields: [resumeId], onDelete: Cascade)
 
@@ -124,9 +125,9 @@ model Question {
 model Experience {
   id Int @id @default(autoincrement()) @map("id") // 경험 id
 
-  title String? @db.VarChar(25) // 경험 제목
-  startDate DateTime? @db.Date @map("start_date") // 시작 날짜 type: YYYY-MM
-  endDate   DateTime? @db.Date @map("end_date") // 끝 날짜 type: YYYY-MM
+  title     String?   @db.VarChar(25) // 경험 제목
+  startDate DateTime? @map("start_date") @db.Date // 시작 날짜 type: YYYY-MM
+  endDate   DateTime? @map("end_date") @db.Date // 끝 날짜 type: YYYY-MM
 
   experienceStatus ExperienceStatus @default(INPROGRESS) // 경험 분해 진행 척도 디폴트 inprogress
 
@@ -135,13 +136,14 @@ model Experience {
   action    String? @db.VarChar(100) // A: Action, 행동
   result    String? @db.VarChar(100) // R: Result, 결과
 
-  createdAt DateTime @db.Timestamptz @default(now()) @map("created_at")
-  updatedAt DateTime @db.Timestamptz @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
   userId Int @map("user_id")
 
   User                 User?                  @relation(references: [id], fields: [userId])
   experienceInfo       ExperienceInfo?
+  ExperienceSummary    ExperienceSummary[]
   ExperienceCapability ExperienceCapability[]
 
   @@map("experience")
@@ -151,6 +153,18 @@ model Experience {
 enum ExperienceStatus {
   INPROGRESS // 진행중
   DONE // 끝
+}
+
+// ********************************
+// *********** 역량 키워드 ***********
+// ********************************
+model ExperienceSummary {
+  experienceId Int    @id @map("experience_id")
+  keyword      String @db.VarChar(10) // 키워드 이름
+
+  Experience Experience @relation(references: [id], fields: [experienceId])
+
+  @@map("experience_summary")
 }
 
 // ********************************
@@ -165,8 +179,8 @@ model ExperienceInfo {
   utilization    String? @db.VarChar(100) // 역량 활용
   analysis       String? @db.VarChar(160) // AI 분석
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
   experienceId Int        @id @map("experience_id") // 경험 id
   experience   Experience @relation(references: [id], fields: [experienceId])
@@ -199,4 +213,17 @@ model ExperienceCapability {
 
   @@id([experenceId, capabilityId])
   @@map("experience_capability")
+}
+
+// *******************************
+// ************ 피드백 *************
+// *******************************
+
+model Feedback {
+  id       Int    @id @default(autoincrement())
+  contents String @db.VarChar(300)
+
+  createdAt DateTime @default(now()) @map("createdAt") @db.Timestamptz
+
+  @@map("feedback")
 }
