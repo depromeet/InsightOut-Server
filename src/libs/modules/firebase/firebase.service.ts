@@ -8,4 +8,8 @@ export class FirebaseService {
 
     return decodedToken;
   }
+
+  async withdraw(uid: string) {
+    await getAuth().deleteUser(uid);
+  }
 }
