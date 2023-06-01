@@ -16,6 +16,7 @@ export class SigninGuard implements CanActivate {
         email: decodedToken.email,
         socialId: decodedToken.sub,
         picture: decodedToken.picture,
+        uid: decodedToken.uid,
       };
       request.user = user;
 

@@ -17,8 +17,8 @@ datasource db {
 model User {
   id       Int    @id @default(autoincrement()) @map("user_id")
   email    String @unique @db.VarChar(100)
+  uid      String @unique @db.VarChar(100) // 구글 uid
   socialId String @map("social_id") @db.Text
-  uid      String @unique
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz

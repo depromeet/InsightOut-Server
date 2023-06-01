@@ -37,6 +37,7 @@ export class AuthService {
           email,
           socialId,
           nickname,
+          uid,
         });
         await this.userInfoRepository.insertUserInfo({
           User: {
