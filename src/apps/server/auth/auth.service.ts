@@ -43,7 +43,7 @@ export class AuthService {
       // If user exists, pass to signin
       if (!existUser) {
         const nickname = await this.apiService.getRandomNickname();
-        console.log(nickname.length);
+
         const newUser = await this.userRepository.insertUser({
           email,
           socialId,
