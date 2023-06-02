@@ -1,11 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-  UnauthorizedException,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { RedisCacheService } from '📚libs/modules/cache/redis/redis.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -23,8 +16,8 @@ import { PrismaService } from '📚libs/modules/database/prisma.service';
 import { ResumeRepository } from '📚libs/modules/database/repositories/resume.repository';
 import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
 import { DEFAULT_CAPABILITIES } from '🔥apps/server/common/consts/default-capability.const';
-import { FirebaseService } from '📚libs/modules/firebase/firebase.service';
 import { isFirebaseAuthError } from '🔥apps/server/common/types/firebase-auth.type';
+import { FirebaseService } from '📚libs/modules/firebase/firebase.service';
 
 @Injectable()
 export class AuthService {
