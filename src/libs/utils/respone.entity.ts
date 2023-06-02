@@ -15,7 +15,7 @@ export class ResponseEntity<T> {
     this._data = options.data;
   }
 
-  static OK(): ResponseEntity<string> {
+  static get OK(): ResponseEntity<string> {
     return new ResponseEntity<string>(HttpStatus.OK, true);
   }
 
