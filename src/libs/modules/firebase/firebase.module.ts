@@ -1,7 +1,7 @@
 import { FirebaseService } from '📚libs/modules/firebase/firebase.service';
 import { Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { initializeApp } from 'firebase-admin/app';
+import admin from 'firebase-admin';
 
 @Module({
   imports: [ConfigModule],
@@ -13,10 +13,12 @@ export class FirebaseModule implements OnModuleInit {
 
   async onModuleInit() {
     const firebaseConfig = {
-      apiKey: this.configService.get('FIREBASE_API_KEY'),
-      projectId: this.configService.get('FIREBASE_PROJECT_ID'),
-      clientEmail: this.configService.get('FIREBASE_CLIENT_EMAIL'),
+      credential: admin.credential.cert({
+        projectId: this.configService.get('FIREBASE_PROJECT_ID'),
+        privateKey: this.configService.get('FIREBASE_PRIVATE_KEY').replace(/\\n/g, '\n'),
+        clientEmail: this.configService.get('FIREBASE_CLIENT_EMAIL'),
+      }),
     };
-    initializeApp(firebaseConfig);
+    admin.initializeApp(firebaseConfig);
   }
 }

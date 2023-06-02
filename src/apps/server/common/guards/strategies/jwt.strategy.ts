@@ -18,7 +18,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(payload: UserJwtToken): Promise<UserJwtToken> {
     const { userId } = payload;
 
-    const isExistUser = await this.userRepository.findFirst({ id: userId });
+    const isExistUser = await this.userRepository.findFirst({ where: { id: userId } });
     if (!isExistUser) {
       throw new NotFoundException('User not found');
     }
