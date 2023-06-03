@@ -15,6 +15,7 @@ import { RedisConfigFactory } from '📚libs/modules/cache/redis/redis.factory';
 import { ResumesModule } from './resumes/resumes.module';
 import { TestModule } from './test/test.module';
 import { ExperienceModule } from '🔥apps/server/experiences/experience.module';
+import { UserModule } from '🔥apps/server/users/user.module';
 
 @Module({
   controllers: [AppController],
@@ -34,6 +35,7 @@ import { ExperienceModule } from '🔥apps/server/experiences/experience.module'
     ExperienceModule,
     ResumesModule,
     TestModule,
+    UserModule,
   ],
   providers: [
     {
