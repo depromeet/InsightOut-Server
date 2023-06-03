@@ -11,7 +11,7 @@ import { UpsertExperienceInfoUnprocessableErrorResDto, CreateExperienceResDto } 
 import { ResponseEntity } from '📚libs/utils/respone.entity';
 import { GetExperienceNotFoundErrorResDto, GetExperienceResDto } from './dto/res/getExperience.res.dto';
 import { Method } from '📚libs/enums/method.enum';
-import { getExperienceSuccMd } from '🔥apps/server/experiences/markdown/experience.md';
+import { getExperienceSuccMd, upsertExperienceSuccMd } from '🔥apps/server/experiences/markdown/experience.md';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -33,8 +33,8 @@ export class ExperienceController {
       code: HttpStatus.CREATED,
       type: CreateExperienceResDto,
     },
-    description: '경험 정보 생성 및 업데이트 API입니다.',
-    summary: '경험 정보 생성 API',
+    description: upsertExperienceSuccMd,
+    summary: '경험 정보 생성 및 업데이트 API',
   })
   @ApiUnprocessableEntityResponse({
     description: '경험 카드 생성 실패 타입 확인해주세요 :)',
