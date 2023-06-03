@@ -72,6 +72,7 @@ model UserInfo {
   field    Field? // 직무 분야
   provider Provider? // 소셜 로그인 제공자
   imageUrl String?   @map("image_url") @db.Text // 이미지 url
+  hasWrittenResume Boolean @default(false) @map("has_written_resume")
 
   User User @relation(references: [id], fields: [userId], onDelete: Cascade)
 
