@@ -29,8 +29,8 @@ export class ResumesController {
       type: GetResumeResponseDto,
       isArray: true,
     },
-    summary: '자기소개서 조회 API',
-    description: `# 자기소개서 조회 API\n## Description\n자기소개서를 처음 조회했을 때, 자기소개서 목록과 각 자기소개서 별 문항을 모두 출력합니다.\n## Keyword\n용어가 통일되지 않아 명세합니다.\n1. 자기소개서: 디프만 13기\n2. 문항: 디프만 13기 지원 동기   \n## etc.\n⛳️[자기소개서 작성 첫 화면](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1221-8169&t=bY8GHCeIQEeC8L6e-4)
+    summary: '자기소개서 조회 API (2023.6.3. Updated)',
+    description: `# 자기소개서 조회 API\n## Description\n자기소개서를 조회합니다., 자기소개서 목록과 각 자기소개서 별 문항을 모두 출력합니다.   \n문항에 대한 답안이 payload가 크기 때문에 기본적으로 문항 제목만 조회하며, answer 쿼리스트링 값에 따라서 문항에 대한 답안도 추가적으로 가져옵니다.   \n\`\`\`ts\nconsole.log('hello world!')\n\`\`\`  \n## Keyword\n용어가 통일되지 않아 명세합니다.\n1. 자기소개서: 디프만 13기\n2. 문항: 디프만 13기 지원 동기   \n## etc.\n⛳️[자기소개서 작성 첫 화면](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1221-8169&t=bY8GHCeIQEeC8L6e-4)
       `,
   })
   @ApiQuery({
