@@ -24,7 +24,7 @@ export class PostQuestionResponseDto {
   constructor(question: Question) {
     this._id = question.id;
     this._resumeId = question.resumeId;
-    this._title = question.title;
+    if (question.title) this._title = question.title;
     this._createdAt = question.createdAt;
     this._updatedAt = question.updatedAt;
   }

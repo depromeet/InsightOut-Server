@@ -64,7 +64,7 @@ export class CreateExperienceResDto {
     this._endDate = experience.endDate;
 
     const experienceInfoRes = new CreateExperienceInfoResDto();
-    experienceInfoRes.setExperienceInfoId = experienceInfo.experienceInfoId;
+    experienceInfoRes.setExperienceInfoId = experienceInfo.id;
     experienceInfoRes.setExperienceRole = experienceInfo.experienceRole;
     experienceInfoRes.setMotivation = experienceInfo.motivation;
 
