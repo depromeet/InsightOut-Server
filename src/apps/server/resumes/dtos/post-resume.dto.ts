@@ -14,14 +14,12 @@ export class PostResumeRequestBodyDto {
 
 export class PostResumeResponseDto {
   @Exclude() readonly _id: number;
-  @Exclude() readonly _title: string;
   @Exclude() readonly _createdAt: Date;
   @Exclude() readonly _updatedAt: Date;
 
   // Entity -> DTO
   constructor(resume: Resume) {
     this._id = resume.id;
-    this._title = resume.title;
     this._createdAt = resume.createdAt;
     this._updatedAt = resume.updatedAt;
   }
@@ -33,15 +31,6 @@ export class PostResumeResponseDto {
   })
   get id(): number {
     return this._id;
-  }
-
-  @Expose()
-  @ApiProperty({
-    description: '자기소개서 제목입니다. 모아보기에서 해당 제목이 사용됩니다.',
-    example: '디프만 13기',
-  })
-  get title(): string {
-    return this._title;
   }
 
   @Expose()
