@@ -3,37 +3,32 @@ import { Exclude, Expose } from 'class-transformer';
 import { IsOptionalNumber } from '🔥apps/server/common/decorators/validation/isOptionalNumber.decorator';
 import { IsOptionalString } from '🔥apps/server/common/decorators/validation/isOptionalString.decorator';
 import { dateValidation } from '🔥apps/server/common/consts/date-validation.const';
-import { Matches } from 'class-validator';
-import { Experience, ExperienceInfo } from '@prisma/client';
+import { IsEnum, IsOptional, Matches } from 'class-validator';
+import { Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
 
-export class CreateExperienceInfoResDto {
+export class UpsertExperienceResDto {
   @Exclude() private _experienceInfoId: number;
   @Exclude() private _experienceRole: string;
   @Exclude() private _motivation: string;
   @Exclude() private _utilization: string;
   @Exclude() private _analysis: string;
 
-  @Expose()
   set setExperienceInfoId(experienceInfoId: number) {
     this._experienceInfoId = experienceInfoId;
   }
 
-  @Expose()
   set setMotivation(motivation: string) {
     this._motivation = motivation;
   }
 
-  @Expose()
   set setExperienceRole(experienceRole: string) {
     this._experienceRole = experienceRole;
   }
 
-  @Expose()
   set setUtilization(utiliaztion: string) {
     this._utilization = utiliaztion;
   }
 
-  @Expose()
   set setAnalysis(analysis: string) {
     this._analysis = analysis;
   }
@@ -86,7 +81,8 @@ export class CreateExperienceResDto {
   @Exclude() private readonly _result: string;
   @Exclude() private readonly _startDate: Date;
   @Exclude() private readonly _endDate: Date;
-  @Exclude() private readonly _experienceInfo: CreateExperienceInfoResDto;
+  @Exclude() _experienceStatus: ExperienceStatus;
+  @Exclude() private readonly _experienceInfo: UpsertExperienceResDto;
 
   constructor(experience: Experience, experienceInfo: ExperienceInfo) {
     this._experienceId = experience.id;
@@ -98,7 +94,7 @@ export class CreateExperienceResDto {
     this._action = experience.action;
     this._result = experience.result;
 
-    const experienceInfoRes = new CreateExperienceInfoResDto();
+    const experienceInfoRes = new UpsertExperienceResDto();
     experienceInfoRes.setExperienceInfoId = experienceInfo.experienceInfoId;
     experienceInfoRes.setExperienceRole = experienceInfo.experienceRole;
     experienceInfoRes.setMotivation = experienceInfo.motivation;
@@ -157,10 +153,20 @@ export class CreateExperienceResDto {
   get result(): string {
     return this._result;
   }
-
-  @ApiProperty({ type: CreateExperienceInfoResDto })
+  @ApiPropertyOptional({
+    example: 'INPROGRESS or DONE',
+    default: 'INPROGRESS',
+  })
+  @IsEnum(ExperienceStatus)
+  @IsOptional()
   @Expose()
-  get experienceInfo(): CreateExperienceInfoResDto {
+  get experienceStatus(): ExperienceStatus {
+    return this._experienceStatus;
+  }
+
+  @ApiProperty({ type: UpsertExperienceResDto })
+  @Expose()
+  get experienceInfo(): UpsertExperienceResDto {
     return this._experienceInfo;
   }
 }

@@ -2,7 +2,7 @@ import { Inject, Injectable, NotFoundException, UnprocessableEntityException } f
 import { UpsertExperienceReqDto } from './dto/req/upsertExperience.dto';
 import { UserJwtToken } from '../auth/types/jwt-tokwn.type';
 import { ExperienceRepositoryInterface } from './interface/experience-repository.interface';
-import { CreateExperienceResDto } from './dto/res/createExperienceInfo.res.dto';
+import { CreateExperienceResDto } from './dto/res/upsertExperienceInfo.res.dto';
 import { getExperienceAttribute } from '../common/consts/experience-attribute.const';
 import { GetExperienceResDto } from './dto/res/getExperience.res.dto';
 import { Experience, ExperienceInfo, ExperienceStatus, Prisma } from '@prisma/client';
@@ -53,8 +53,8 @@ export class ExperienceService {
 
       return new GetExperienceResDto(experience);
     } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) throw new NotFoundException('해당 ID의 경험카드는 존재하지 않습니다.');
-      return 'INPROGRESS 상태의 경험카드가 없습니다';
+      console.log('error', error);
+      if (error instanceof Prisma.PrismaClientKnownRequestError) throw new NotFoundException('INPROGRESS 상태의 경험카드가 없습니다.');
     }
   }
 
@@ -110,6 +110,7 @@ export class ExperienceService {
       const experience = await tx.experience.update({
         where: { id },
         data: {
+          experienceStatus: updatedExperienceInfo.experienceStatus,
           title: updatedExperienceInfo.title,
           startDate: updatedExperienceInfo.startDate,
           endDate: updatedExperienceInfo.endDate,

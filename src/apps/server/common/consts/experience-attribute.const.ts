@@ -10,7 +10,7 @@ export const getExperienceAttribute: ExperienceSelect = {
   task: true,
   action: true,
   result: true,
-  experienceInfo: {
+  ExperienceInfo: {
     select: {
       experienceId: true,
       experienceInfoId: true,

@@ -1,6 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
-import { Expose } from 'class-transformer';
 import { IsEnum, IsOptional, Matches } from 'class-validator';
 import { dateValidation } from '🔥apps/server/common/consts/date-validation.const';
 import { IsOptionalString } from '🔥apps/server/common/decorators/validation/isOptionalString.decorator';
@@ -48,7 +47,6 @@ export class UpsertExperienceReqDto {
   })
   @IsEnum(ExperienceStatus)
   @IsOptional()
-  @Expose()
   experienceStatus: ExperienceStatus;
 
   @ApiPropertyOptional({
@@ -77,6 +75,8 @@ export class UpsertExperienceReqDto {
     if (this.task) experience.task = this.task;
     if (this.action) experience.action = this.action;
     if (this.result) experience.result = this.result;
+    if (this.experienceStatus) experience.experienceStatus = this.experienceStatus;
+    if (this.experienceRole) experience.ExperienceInfo.experienceRole = this.experienceRole;
     if (this.motivation) experience.ExperienceInfo.motivation = this.motivation;
     if (this.utilization) experience.ExperienceInfo.utilization = this.utilization;
     if (this.analysis) experience.ExperienceInfo.analysis = this.analysis;

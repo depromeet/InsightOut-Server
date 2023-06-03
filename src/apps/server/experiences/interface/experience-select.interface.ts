@@ -11,7 +11,7 @@ export interface ExperienceSelect {
   createdAt?: boolean;
   updatedAt?: boolean;
   userId?: boolean;
-  experienceInfo?:
+  ExperienceInfo?:
     | boolean
     | {
         select?: {

@@ -11,7 +11,7 @@ import {
   UpsertExperienceInfoUnprocessableErrorResDto,
   CreateExperienceResDto,
   BadRequestErrorResDto,
-} from './dto/res/createExperienceInfo.res.dto';
+} from './dto/res/upsertExperienceInfo.res.dto';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
 import { GetExperienceNotFoundErrorResDto, GetExperienceResDto } from './dto/res/getExperience.res.dto';
 import { Method } from '📚libs/enums/method.enum';
