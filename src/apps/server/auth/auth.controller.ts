@@ -43,7 +43,7 @@ export class AuthController {
     @User() user: UserPayload,
     @Res({ passthrough: true }) response: Response,
   ): Promise<ResponseEntity<PostSigninResponseDto>> {
-    const userId = await this.authService.signin(user);
+    const { userId, hasWrittenResume } = await this.authService.signin(user);
 
     const accessToken = this.authService.issueAccessToken(userId);
     const refreshToken = this.authService.issueRefreshToken(userId);
@@ -54,7 +54,7 @@ export class AuthController {
 
     response.cookie('refreshToken', refreshToken, cookieOptions);
 
-    return ResponseEntity.CREATED_WITH_DATA(new PostSigninResponseDto(accessToken));
+    return ResponseEntity.CREATED_WITH_DATA(new PostSigninResponseDto(accessToken, hasWrittenResume));
   }
 
   @UseGuards(JwtRefreshGuard)

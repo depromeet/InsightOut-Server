@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
-import { IsEmail, IsNotEmpty, IsString, IsUUID, IsUrl } from 'class-validator';
+import { IsBoolean, IsEmail, IsNotEmpty, IsString, IsUUID, IsUrl } from 'class-validator';
 
 export class PostSinginRequestBodyForGuard {
   body: {
@@ -43,19 +43,35 @@ export class PostSigninRequestBodyDto {
 
 export class PostSigninResponseDto {
   @Exclude() private readonly _accessToken: string;
+  @Exclude() private readonly _hasWrittenResume: boolean;
 
-  constructor(accessToken: string) {
+  constructor(accessToken: string, hasWrittenResume: boolean) {
     this._accessToken = accessToken;
+    this._hasWrittenResume = hasWrittenResume;
   }
 
+  @Expose()
   @ApiProperty({
     description: '## 액세스 토큰입니다.\n해당 Access token을 Authorization 헤더에 bearer로 넣어서 요청을 보내주세요.',
     example: 'eyJhbGciOiJIUzI1N...',
+    type: String,
   })
   @IsNotEmpty()
   @IsString()
-  @Expose()
   get accessToken(): string {
     return this._accessToken;
+  }
+
+  @Expose()
+  @ApiProperty({
+    description:
+      '## 온보딩 진행 여부입니다.\n자기소개서 온보딩 여부를 파악하여, 자기소개서 초기 작성 시 툴팁을 보이게 할지 보이지 않게 할지 처리합니다.',
+    example: true,
+    type: Boolean,
+  })
+  @IsBoolean()
+  @IsNotEmpty()
+  get hasWrittenResume(): boolean {
+    return this._hasWrittenResume;
   }
 }
