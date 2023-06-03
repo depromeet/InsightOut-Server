@@ -4,10 +4,14 @@ import { RouteTable } from '../common/decorators/router/route-table.decorator';
 import { UpsertExperienceReqDto } from './dto/req/upsertExperience.dto';
 import { ExperienceService } from './experience.service';
 import { User } from '../common/decorators/request/user.decorator';
-import { ApiBearerAuth, ApiNotFoundResponse, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiNotFoundResponse, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { UserJwtToken } from '../auth/types/jwt-tokwn.type';
-import { UpsertExperienceInfoUnprocessableErrorResDto, CreateExperienceResDto } from './dto/res/createExperienceInfo.res.dto';
+import {
+  UpsertExperienceInfoUnprocessableErrorResDto,
+  CreateExperienceResDto,
+  BadRequestErrorResDto,
+} from './dto/res/createExperienceInfo.res.dto';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
 import { GetExperienceNotFoundErrorResDto, GetExperienceResDto } from './dto/res/getExperience.res.dto';
 import { Method } from '📚libs/enums/method.enum';
@@ -24,6 +28,10 @@ import { getExperienceSuccMd, upsertExperienceSuccMd } from '🔥apps/server/exp
 export class ExperienceController {
   constructor(private readonly experienceService: ExperienceService) {}
 
+  @ApiBadRequestResponse({
+    description: '⛔ 유효성 검사에 실패하였습니다. 타입을 확인해주세요 :)',
+    type: BadRequestErrorResDto,
+  })
   @ApiUnprocessableEntityResponse({
     description: '⛔ 경험 카드 생성 실패 타입 확인해주세요 :)',
     type: UpsertExperienceInfoUnprocessableErrorResDto,

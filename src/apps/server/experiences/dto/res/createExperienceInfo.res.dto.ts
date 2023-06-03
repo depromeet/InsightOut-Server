@@ -173,3 +173,15 @@ export class UpsertExperienceInfoUnprocessableErrorResDto {
   @ApiProperty({ example: '경험 카드 생성하는 데 실패했습니다. 타입을 확인해주세요' })
   message: string;
 }
+
+export class BadRequestErrorResDto {
+  @ApiProperty({ example: 400 })
+  statusCode: number;
+  @ApiProperty({ example: '데이터 형식이 잘못되었습니다.' })
+  title: string;
+  @ApiProperty({
+    example:
+      'action / 124 / action must be a string,action must be shorter than or equal to 100 characters,action must be longer than or equal to 0 characters\nexperienceStatus / INPROGRESS or DONE / experienceStatus must be one of the following values: INPROGRESS, DONE',
+  })
+  message: string;
+}
