@@ -22,8 +22,15 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
     userId: number,
     select: ExperienceSelect,
   ): Promise<Partial<Experience & { experienceInfo: ExperienceInfo }>> {
-    return await this.prisma.experience.findFirst({
+    return await this.prisma.experience.findFirstOrThrow({
       select,
+      where: { userId, experienceStatus: ExperienceStatus.INPROGRESS },
+    });
+  }
+
+  public async findOneByUserId(userId: number): Promise<Experience> {
+    return await this.prisma.experience.findFirst({
+      include: { ExperienceInfo: true },
       where: { userId, experienceStatus: ExperienceStatus.INPROGRESS },
     });
   }
