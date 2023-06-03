@@ -7,7 +7,7 @@ import { RouteTable } from '🔥apps/server/common/decorators/router/route-table
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
 import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
 import { PatchQuestionRequestParamDto, PatchQuestionRequestBodyDto } from '🔥apps/server/resumes/dtos/patch-question-request.dto';
-import { PostQuestionResponseDto, PostQuestionRequestParamDto } from '🔥apps/server/resumes/dtos/post-question.dto';
+import { PostQuestionResponseDto, PostQuestionRequestBodyDto } from '🔥apps/server/resumes/dtos/post-question.dto';
 import { QuestionsService } from '🔥apps/server/resumes/services/question.service';
 
 @RouteTable({
@@ -22,7 +22,7 @@ export class QuestionsController {
 
   @Route({
     request: {
-      path: ':resumeId',
+      path: '',
       method: Method.POST,
     },
     response: {
@@ -33,7 +33,7 @@ export class QuestionsController {
     description: '자기소개서 폴더 아래 문항 추가 버튼을 눌러서 문항을 추가합니다. 빈 문항만 추가됩니다.',
   })
   async createOneQuestion(
-    @Param() postQuestionRequestParamDto: PostQuestionRequestParamDto,
+    @Body() postQuestionRequestParamDto: PostQuestionRequestBodyDto,
     @User() user: UserJwtToken,
   ): Promise<ResponseEntity<PostQuestionResponseDto>> {
     const question = await this.questionService.createOneQuestion(user.userId, postQuestionRequestParamDto.resumeId);

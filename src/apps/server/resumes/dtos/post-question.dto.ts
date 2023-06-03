@@ -3,7 +3,7 @@ import { Question } from '@prisma/client';
 import { Exclude, Expose, Type } from 'class-transformer';
 import { IsInt, IsPositive } from 'class-validator';
 
-export class PostQuestionRequestParamDto {
+export class PostQuestionRequestBodyDto {
   @ApiProperty({
     description: '자기소개서 id',
     example: 123,
