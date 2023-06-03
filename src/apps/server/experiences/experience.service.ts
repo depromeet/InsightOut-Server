@@ -2,7 +2,7 @@ import { Inject, Injectable, NotFoundException, UnprocessableEntityException } f
 import { UpsertExperienceReqDto } from './dto/req/upsertExperience.dto';
 import { UserJwtToken } from '../auth/types/jwt-tokwn.type';
 import { ExperienceRepositoryInterface } from './interface/experience-repository.interface';
-import { CreateExperienceResDto } from './dto/res/upsertExperienceInfo.res.dto';
+import { UpsertExperienceResDto } from './dto/res/upsertExperienceInfo.res.dto';
 import { getExperienceAttribute } from '../common/consts/experience-attribute.const';
 import { GetExperienceResDto } from './dto/res/getExperience.res.dto';
 import { Experience, ExperienceInfo, ExperienceStatus, Prisma } from '@prisma/client';
@@ -17,7 +17,7 @@ export class ExperienceService {
     private readonly prisma: PrismaService,
   ) {}
 
-  public async upsertExperience(body: UpsertExperienceReqDto, user: UserJwtToken): Promise<CreateExperienceResDto> {
+  public async upsertExperience(body: UpsertExperienceReqDto, user: UserJwtToken): Promise<UpsertExperienceResDto> {
     // 생성 중인 경험 카드가 있는지 확인
     const experinece = await this.experienceRepository.findOneByUserId(user.userId);
     if (experinece) {
@@ -59,7 +59,7 @@ export class ExperienceService {
   }
 
   // Private
-  private async processCreateExperience(body: UpsertExperienceReqDto, user: UserJwtToken): Promise<CreateExperienceResDto> {
+  private async processCreateExperience(body: UpsertExperienceReqDto, user: UserJwtToken): Promise<UpsertExperienceResDto> {
     const [experience, experienceInfo] = await this.prisma.$transaction(async (tx) => {
       const experience = await tx.experience.create({
         data: {
@@ -87,7 +87,7 @@ export class ExperienceService {
       return [experience, experienceInfo];
     });
 
-    return new CreateExperienceResDto(experience, experienceInfo);
+    return new UpsertExperienceResDto(experience, experienceInfo);
   }
 
   private async processUpdateExperience(
@@ -95,7 +95,7 @@ export class ExperienceService {
     updatedExperienceInfo: Experience & {
       ExperienceInfo?: ExperienceInfo;
     },
-  ): Promise<CreateExperienceResDto> {
+  ): Promise<UpsertExperienceResDto> {
     const [experience, experienceInfo] = await this.prisma.$transaction(async (tx) => {
       const experienceInfo = await tx.experienceInfo.update({
         where: { experienceId: id },
@@ -122,6 +122,6 @@ export class ExperienceService {
       });
       return [experience, experienceInfo];
     });
-    return new CreateExperienceResDto(experience, experienceInfo);
+    return new UpsertExperienceResDto(experience, experienceInfo);
   }
 }

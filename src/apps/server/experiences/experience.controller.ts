@@ -9,7 +9,7 @@ import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { UserJwtToken } from '../auth/types/jwt-tokwn.type';
 import {
   UpsertExperienceInfoUnprocessableErrorResDto,
-  CreateExperienceResDto,
+  UpsertExperienceResDto,
   BadRequestErrorResDto,
 } from './dto/res/upsertExperienceInfo.res.dto';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
@@ -43,7 +43,7 @@ export class ExperienceController {
     },
     response: {
       code: HttpStatus.CREATED,
-      type: CreateExperienceResDto,
+      type: UpsertExperienceResDto,
     },
     description: upsertExperienceSuccMd,
     summary: '✅ 경험 정보 생성 및 업데이트 API',
