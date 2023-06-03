@@ -68,13 +68,14 @@ class QuestionResponse {
     this._title = value;
   }
 
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: '자기소개서 문항 답안',
     type: String,
     example: '디프만을 통한 빠른 성장',
   })
   @IsString()
   @IsNotEmpty()
+  @IsOptional()
   get answer(): string {
     return this._answer;
   }
@@ -150,7 +151,7 @@ export class GetOneResumeResponseDto {
   }
 
   @Expose()
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: '자기소개서 문항',
     type: QuestionResponse,
   })
