@@ -6,7 +6,9 @@ import { ACCESS_TOKEN_EXPIRES_IN } from '../common/consts/jwt.const';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
 import { Method } from '📚libs/enums/method.enum';
 import { PostIssueTestTokenRequestBodyDto } from '🔥apps/server/test/dtos/post-issue-test-token.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('🧑🏻‍💻 개발용 API')
 @Controller('test')
 export class TestController {
   constructor(private readonly testService: TestService) {}

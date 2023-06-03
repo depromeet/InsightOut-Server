@@ -3,6 +3,7 @@ import { QuestionRepository } from '📚libs/modules/database/repositories/quest
 import { ResumeRepository } from '📚libs/modules/database/repositories/resume.repository';
 import { PostQuestionResponseDto } from '../dtos/post-question.dto';
 import { PatchQuestionRequestBodyDto } from '🔥apps/server/resumes/dtos/patch-question-request.dto';
+import { GetOneQuestionResponseDto } from '🔥apps/server/resumes/dtos/get-question.dto';
 
 @Injectable()
 export class QuestionsService {
@@ -62,5 +63,28 @@ export class QuestionsService {
     await this.questionRepository.delete({
       where: { id: questionId },
     });
+  }
+
+  /**
+   * 자기소개서 문항을 한 개 조회합니다.
+   *
+   * 유저 id(userId)와 자기소개서 문항 id(questionId)를 통해서 자기소개서 문항을 가져옵니다.
+   * 자기소개서 문항은 제목과 답안이 존재하지 않을 수 있으므로, optional property로 dto를 구성합니다.
+   *
+   * @param userId 유저 id
+   * @param questionId 자기소개서 문항 id
+   * @returns 특정 자기소개서 문항 1개
+   */
+  async getOneQuestion(userId: number, questionId: number): Promise<GetOneQuestionResponseDto> {
+    const question = await this.questionRepository.findFirst({
+      where: { id: questionId, Resume: { userId } },
+    });
+
+    if (!question) {
+      throw new NotFoundException('Question not found');
+    }
+
+    const questionResponseDto = new GetOneQuestionResponseDto(question);
+    return questionResponseDto;
   }
 }

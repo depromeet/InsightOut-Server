@@ -95,7 +95,7 @@ export class CreateExperienceResDto {
     this._result = experience.result;
 
     const experienceInfoRes = new UpsertExperienceResDto();
-    experienceInfoRes.setExperienceInfoId = experienceInfo.experienceInfoId;
+    experienceInfoRes.setExperienceInfoId = experienceInfo.id;
     experienceInfoRes.setExperienceRole = experienceInfo.experienceRole;
     experienceInfoRes.setMotivation = experienceInfo.motivation;
     experienceInfoRes.setUtilization = experienceInfo.utilization;

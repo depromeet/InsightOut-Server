@@ -6,7 +6,7 @@ import { Route } from '🔥apps/server/common/decorators/router/route.decorator'
 import { PostSendFeedbackRequestBodyDto } from '🔥apps/server/users/dtos/post-feedback.dto';
 import { UserService } from '🔥apps/server/users/user.service';
 
-@ApiTags('users')
+@ApiTags('👶🏻 유저 API')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}

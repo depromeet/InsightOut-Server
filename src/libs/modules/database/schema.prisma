@@ -172,7 +172,7 @@ model ExperienceSummary {
 // ********************************
 // 임시 저장이 있기에 모든 필드는 Nullable입니다.
 model ExperienceInfo {
-  experienceInfoId Int @default(autoincrement()) @map("experience_info_id")
+  id Int @default(autoincrement()) @map("experience_info_id")
 
   experienceRole String? @map("experience_role") @db.VarChar(20) // 경험 나의 역할
   motivation     String? @db.VarChar(100) // 경험 수행 이유

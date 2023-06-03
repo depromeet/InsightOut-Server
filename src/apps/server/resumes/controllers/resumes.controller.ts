@@ -83,7 +83,8 @@ export class ResumesController {
     },
     response: {
       code: HttpStatus.CREATED,
-      description: '자기소개서 추가에 성공했습니다.',
+      description:
+        '### ✅ 자기소개서 추가에 성공했습니다.\ntitle이 존재하지 않고 빈 폴더를 생성하기 때문에 이름(제목, title)은 응답으로 보내지 않습니다.',
       type: PostResumeResponseDto,
     },
     summary: '자기소개서 추가 API (2023.6.3. Updated)',
