@@ -69,32 +69,12 @@ export class ResumesService {
    * @returns resumeId, title, createdAt, updatedAt
    */
   public async createResumeFolder(userId: number): Promise<PostResumeResponseDto> {
-    const result = await this.prisma.$transaction(async () => {
-      const newResume = await this.prisma.resume.create({
-        data: { userId },
-      });
-
-      // 유저가 자기소개서를 작성했는지 여부 파악
-      const { hasWrittenResume } = await this.prisma.userInfo.findFirst({
-        where: { userId },
-        select: { hasWrittenResume: true },
-      });
-
-      // 자기소개서를 작성하지 않았다면
-      if (!hasWrittenResume) {
-        await this.prisma.userInfo.update({
-          where: { userId },
-          data: { hasWrittenResume: true },
-          select: { hasWrittenResume: true },
-        });
-        return { resume: newResume, userOnboarded: false };
-      }
-
-      return { resume: newResume, userOnboarded: true };
+    const resume = await this.prisma.resume.create({
+      data: { userId },
     });
 
     // Entity -> DTO
-    const resumeResponseDto = new PostResumeResponseDto(result);
+    const resumeResponseDto = new PostResumeResponseDto(resume);
     return resumeResponseDto;
   }
 

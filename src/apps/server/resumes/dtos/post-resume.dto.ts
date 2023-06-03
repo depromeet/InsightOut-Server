@@ -19,12 +19,10 @@ export class PostResumeResponseDto {
   @Exclude() private readonly _hasWrittenResume?: boolean | undefined;
 
   // Entity -> DTO
-  constructor({ resume, userOnboarded }: { resume: Resume; userOnboarded: boolean }) {
+  constructor(resume: Resume) {
     this._id = resume.id;
     this._createdAt = resume.createdAt;
     this._updatedAt = resume.updatedAt;
-    // 유저가 온보딩을 하지 않아 업데이트가 발생하는 경우
-    if (!userOnboarded) this._hasWrittenResume = true;
   }
 
   @Expose()
