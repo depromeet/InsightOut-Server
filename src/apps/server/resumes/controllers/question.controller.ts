@@ -63,7 +63,7 @@ export class QuestionsController {
     },
   })
   async getOneQuestion(@Param() getOneQuestionRequestParamDto: GetOneQuestionRequestParamDto, @User() user: UserJwtToken) {
-    const question = await this.questionService.getOneQuestion(user.userId, getOneQuestionRequestParamDto);
+    const question = await this.questionService.getOneQuestion(user.userId, getOneQuestionRequestParamDto.questionId);
 
     return ResponseEntity.OK_WITH_DATA(question);
   }
