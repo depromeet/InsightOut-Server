@@ -24,6 +24,10 @@ import { getExperienceSuccMd, upsertExperienceSuccMd } from '🔥apps/server/exp
 export class ExperienceController {
   constructor(private readonly experienceService: ExperienceService) {}
 
+  @ApiUnprocessableEntityResponse({
+    description: '⛔ 경험 카드 생성 실패 타입 확인해주세요 :)',
+    type: UpsertExperienceInfoUnprocessableErrorResDto,
+  })
   @Route({
     request: {
       method: Method.POST,
@@ -34,11 +38,7 @@ export class ExperienceController {
       type: CreateExperienceResDto,
     },
     description: upsertExperienceSuccMd,
-    summary: '경험 정보 생성 및 업데이트 API',
-  })
-  @ApiUnprocessableEntityResponse({
-    description: '경험 카드 생성 실패 타입 확인해주세요 :)',
-    type: UpsertExperienceInfoUnprocessableErrorResDto,
+    summary: '✅ 경험 정보 생성 및 업데이트 API',
   })
   public async upsertExperience(@Body() upsertExperienceReqDto: UpsertExperienceReqDto, @User() user: UserJwtToken) {
     const experience = await this.experienceService.upsertExperience(upsertExperienceReqDto, user);
@@ -56,10 +56,10 @@ export class ExperienceController {
       type: GetExperienceResDto,
     },
     description: getExperienceSuccMd,
-    summary: '경험 분해 조회 API',
+    summary: '✅ 경험 분해 조회 API',
   })
   @ApiNotFoundResponse({
-    description: '해당 경험 카드 ID를 확인해주세요 :)',
+    description: '⛔ 해당 경험 카드 ID를 확인해주세요 :)',
     type: GetExperienceNotFoundErrorResDto,
   })
   public async getExperience(@User() user: UserJwtToken) {
