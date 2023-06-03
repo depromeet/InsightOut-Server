@@ -49,11 +49,12 @@ export class ExperienceService {
   public async getExperienceByUserId(userId: number): Promise<GetExperienceResDto | string> {
     try {
       const experience = await this.experienceRepository.selectOneByUserId(userId, getExperienceAttribute);
-      if (!experience) return '생성된 경험카드가 없습니다';
+      if (!experience) return 'INPROGRESS 상태의 경험카드가 없습니다';
 
       return new GetExperienceResDto(experience);
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) throw new NotFoundException('해당 ID의 경험카드는 존재하지 않습니다.');
+      return 'INPROGRESS 상태의 경험카드가 없습니다';
     }
   }
 

@@ -22,7 +22,7 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
     userId: number,
     select: ExperienceSelect,
   ): Promise<Partial<Experience & { experienceInfo: ExperienceInfo }>> {
-    return await this.prisma.experience.findFirst({
+    return await this.prisma.experience.findFirstOrThrow({
       select,
       where: { userId, experienceStatus: ExperienceStatus.INPROGRESS },
     });
