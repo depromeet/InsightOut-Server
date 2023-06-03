@@ -3,7 +3,20 @@ import { Question, Resume } from '@prisma/client';
 import { Exclude, Expose, Transform, Type } from 'class-transformer';
 import { IsArray, IsBoolean, IsDate, IsInt, IsNotEmpty, IsObject, IsOptional, IsPositive, IsString, ValidateNested } from 'class-validator';
 
-export class GetResumeRequestQueryDto {
+export class GetOneResumeRequestParamDto {
+  @ApiProperty({
+    description: '자기소개서 id입니다.',
+    example: 1234,
+    type: Number,
+  })
+  @IsInt()
+  @IsPositive()
+  @IsNotEmpty()
+  @Type(() => Number)
+  resumeId: number;
+}
+
+export class GetAllResumeRequestQueryDto {
   @ApiPropertyOptional({
     description: '자기소개서 문항 조회 유무. false를 입력 시 자기소개서만 조회하고, true를 입력 시 문항도 함께 조회합니다.',
     example: false,
@@ -86,7 +99,7 @@ class QuestionResponse {
   }
 }
 
-export class GetResumeResponseDto {
+export class GetOneResumeResponseDto {
   @Exclude() private readonly _id: number;
   @Exclude() private readonly _title: string;
   @Exclude() private readonly _updatedAt: Date;
@@ -149,3 +162,5 @@ export class GetResumeResponseDto {
     return this._question;
   }
 }
+
+export class GetAllResumeResponseDto extends Array<GetOneResumeResponseDto> {}
