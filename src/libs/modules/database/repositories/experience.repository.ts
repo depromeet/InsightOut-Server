@@ -27,4 +27,11 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
       where: { userId, experienceStatus: ExperienceStatus.INPROGRESS },
     });
   }
+
+  public async findOneByUserId(userId: number): Promise<Experience> {
+    return await this.prisma.experience.findFirst({
+      include: { ExperienceInfo: true },
+      where: { userId, experienceStatus: ExperienceStatus.INPROGRESS },
+    });
+  }
 }

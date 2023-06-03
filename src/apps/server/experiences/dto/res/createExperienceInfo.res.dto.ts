@@ -5,12 +5,13 @@ import { IsOptionalString } from '🔥apps/server/common/decorators/validation/i
 import { dateValidation } from '🔥apps/server/common/consts/date-validation.const';
 import { Matches } from 'class-validator';
 import { Experience, ExperienceInfo } from '@prisma/client';
-import { getFormattedDate } from '📚libs/utils/date';
 
 export class CreateExperienceInfoResDto {
   @Exclude() private _experienceInfoId: number;
-  @Exclude() private _motivation: string;
   @Exclude() private _experienceRole: string;
+  @Exclude() private _motivation: string;
+  @Exclude() private _utilization: string;
+  @Exclude() private _analysis: string;
 
   @Expose()
   set setExperienceInfoId(experienceInfoId: number) {
@@ -25,6 +26,16 @@ export class CreateExperienceInfoResDto {
   @Expose()
   set setExperienceRole(experienceRole: string) {
     this._experienceRole = experienceRole;
+  }
+
+  @Expose()
+  set setUtilization(utiliaztion: string) {
+    this._utilization = utiliaztion;
+  }
+
+  @Expose()
+  set setAnalysis(analysis: string) {
+    this._analysis = analysis;
   }
 
   @ApiProperty({ example: 1 })
@@ -48,11 +59,31 @@ export class CreateExperienceInfoResDto {
   get experienceRole(): string {
     return this._experienceRole;
   }
+
+  @ApiPropertyOptional({
+    example: '개발자와 협업이 많기로 알고 있는데 커뮤니케이션 역량을 발휘해 목표 일정에 맞게 일을 빠르고 정확하게 할 수 있을 것',
+  })
+  @IsOptionalString(0, 100)
+  get utilization(): string {
+    return this._utilization;
+  }
+
+  @ApiPropertyOptional({
+    example: '저는 UX 디자인 직무에 지원하려는 [이름 입니다.]...~',
+  })
+  @IsOptionalString(0, 100)
+  get analysis(): string {
+    return this._analysis;
+  }
 }
 
 export class CreateExperienceResDto {
   @Exclude() private readonly _experienceId: number;
   @Exclude() private readonly _title: string;
+  @Exclude() private readonly _situation: string;
+  @Exclude() private readonly _task: string;
+  @Exclude() private readonly _action: string;
+  @Exclude() private readonly _result: string;
   @Exclude() private readonly _startDate: Date;
   @Exclude() private readonly _endDate: Date;
   @Exclude() private readonly _experienceInfo: CreateExperienceInfoResDto;
@@ -62,11 +93,17 @@ export class CreateExperienceResDto {
     this._title = experience.title;
     this._startDate = experience.startDate;
     this._endDate = experience.endDate;
+    this._situation = experience.situation;
+    this._task = experience.task;
+    this._action = experience.action;
+    this._result = experience.result;
 
     const experienceInfoRes = new CreateExperienceInfoResDto();
     experienceInfoRes.setExperienceInfoId = experienceInfo.experienceInfoId;
     experienceInfoRes.setExperienceRole = experienceInfo.experienceRole;
     experienceInfoRes.setMotivation = experienceInfo.motivation;
+    experienceInfoRes.setUtilization = experienceInfo.utilization;
+    experienceInfoRes.setAnalysis = experienceInfo.analysis;
 
     this._experienceInfo = experienceInfoRes;
   }
@@ -97,6 +134,30 @@ export class CreateExperienceResDto {
     return this._endDate;
   }
 
+  @ApiPropertyOptional({ example: '개발자와 협업 역량을 쌓기 위해 IT 동아리에 들어감' })
+  @IsOptionalString(0, 100)
+  get situation(): string {
+    return this._situation;
+  }
+
+  @ApiPropertyOptional({ example: '개발 기간이 짧아서 빠른 기간 내 런칭을 완료해야 했음.' })
+  @IsOptionalString(0, 100)
+  get task(): string {
+    return this._task;
+  }
+
+  @ApiPropertyOptional({ example: '디자인 시스템 제작, 런칭일 정해서 린하게 개발하는 방법 제의' })
+  @IsOptionalString(0, 100)
+  get action(): string {
+    return this._action;
+  }
+
+  @ApiPropertyOptional({ example: '4개월 만에 출시에 성공하게 됨.' })
+  @IsOptionalString(0, 100)
+  get result(): string {
+    return this._result;
+  }
+
   @ApiProperty({ type: CreateExperienceInfoResDto })
   @Expose()
   get experienceInfo(): CreateExperienceInfoResDto {
@@ -104,7 +165,7 @@ export class CreateExperienceResDto {
   }
 }
 
-export class CreateExperienceInfoUnprocessableErrorResDto {
+export class UpsertExperienceInfoUnprocessableErrorResDto {
   @ApiProperty({ example: 422 })
   statusCode: number;
   @ApiProperty({ example: 'UnprocessableEntityException' })

@@ -142,7 +142,7 @@ model Experience {
   userId Int @map("user_id")
 
   User                 User?                  @relation(references: [id], fields: [userId], onDelete: Cascade)
-  experienceInfo       ExperienceInfo?
+  ExperienceInfo       ExperienceInfo?
   ExperienceSummary    ExperienceSummary[]
   ExperienceCapability ExperienceCapability[]
 
