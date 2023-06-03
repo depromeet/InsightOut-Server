@@ -16,6 +16,7 @@ import { ResumesModule } from './resumes/resumes.module';
 import { TestModule } from './test/test.module';
 import { ExperienceModule } from '🔥apps/server/experiences/experience.module';
 import { UserModule } from '🔥apps/server/users/user.module';
+import { OnboardingsModule } from '🔥apps/server/onboarding/onboarding.module';
 
 @Module({
   controllers: [AppController],
@@ -36,6 +37,7 @@ import { UserModule } from '🔥apps/server/users/user.module';
     ResumesModule,
     TestModule,
     UserModule,
+    OnboardingsModule,
   ],
   providers: [
     {
