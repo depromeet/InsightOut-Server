@@ -8,20 +8,23 @@ import { PatchQuestionRequestBodyDto } from '🔥apps/server/resumes/dtos/patch-
 export class QuestionsService {
   constructor(private readonly resumeRepository: ResumeRepository, private readonly questionRepository: QuestionRepository) {}
 
+  /**
+   * 자기소개서의 문항을 한 개 생성합니다.
+   *
+   * @param userId 자기소개서 문항(Question)을 작성한 userId 입니다.
+   * @param resumeId 자기소개서의 id 입니다. 자기소개서의 문항이 위치할 곳이므로 id 값이 필요합니다.
+   */
   async createOneQuestion(userId: number, resumeId: number): Promise<PostQuestionResponseDto> {
     const resume = await this.resumeRepository.findFirst({
       where: { id: resumeId, User: { id: userId } },
-      include: { Question: true },
     });
 
     if (!resume) {
       throw new NotFoundException('Resume not found');
     }
 
-    const questionLength = resume['Question'].length;
-
     const question = await this.questionRepository.create({
-      data: { resumeId, title: `${questionLength + 1}번 문항` },
+      data: { resumeId },
     });
 
     const questionReponseDto = new PostQuestionResponseDto(question);

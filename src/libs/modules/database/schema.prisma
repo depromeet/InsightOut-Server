@@ -17,7 +17,7 @@ datasource db {
 model User {
   id       Int    @id @default(autoincrement()) @map("user_id")
   email    String @unique @db.VarChar(100)
-  uid      String @unique @db.VarChar(100) // 구글 uid
+  uid      String @unique @db.Text // 구글 uid
   socialId String @map("social_id") @db.Text
 
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
@@ -85,7 +85,7 @@ model UserInfo {
 // 자기소개서 제목
 model Resume {
   id    Int    @id @default(autoincrement())
-  title String @db.VarChar(13) // 자기소개서 제목
+  title String @db.VarChar(13) @default("새 자기소개서") // 자기소개서 제목
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
@@ -105,8 +105,8 @@ model Question {
   id       Int @id @default(autoincrement())
   resumeId Int @map("resume_id") // 자기소개서 제목 pfk
 
-  title  String  @db.VarChar(30) // 문항 제목
-  answer String? @db.VarChar(2000) // 문항 내용
+  title  String?  @db.VarChar(300) // 문항 제목
+  answer String? @db.VarChar(2500) // 문항 내용
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
@@ -125,7 +125,7 @@ model Question {
 model Experience {
   id Int @id @default(autoincrement()) @map("id") // 경험 id
 
-  title     String?   @db.VarChar(25) // 경험 제목
+  title     String?   @db.VarChar(50) // 경험 제목
   startDate DateTime? @map("start_date") @db.Date // 시작 날짜 type: YYYY-MM
   endDate   DateTime? @map("end_date") @db.Date // 끝 날짜 type: YYYY-MM
 
