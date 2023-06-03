@@ -1,22 +1,18 @@
-import { UseGuards, HttpStatus, Param, Body, ParseIntPipe } from '@nestjs/common';
+import { UseGuards, HttpStatus, Param, Body, ParseIntPipe, Controller } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Method } from '📚libs/enums/method.enum';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
 import { User } from '🔥apps/server/common/decorators/request/user.decorator';
-import { RouteTable } from '🔥apps/server/common/decorators/router/route-table.decorator';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
 import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
-import { GetOneQuestionRequestParamDto } from '🔥apps/server/resumes/dtos/get-question.dto';
+import { GetOneQuestionRequestParamDto, GetOneQuestionResponseDto } from '🔥apps/server/resumes/dtos/get-question.dto';
 import { PatchQuestionRequestParamDto, PatchQuestionRequestBodyDto } from '🔥apps/server/resumes/dtos/patch-question-request.dto';
 import { PostQuestionResponseDto, PostQuestionRequestBodyDto } from '🔥apps/server/resumes/dtos/post-question.dto';
 import { QuestionsService } from '🔥apps/server/resumes/services/question.service';
 
-@RouteTable({
-  path: 'resumes/questions',
-  tag: {
-    title: 'resumes/questions',
-  },
-})
+@ApiTags('📑 자기소개서 문항 API')
+@Controller('resumes/questions')
 @UseGuards(JwtAuthGuard)
 export class QuestionsController {
   constructor(private readonly questionService: QuestionsService) {}
@@ -61,8 +57,14 @@ export class QuestionsController {
       code: HttpStatus.OK,
       description: '### ✅ 자기소개서 문항 조회에 성공헀습니다.\n',
     },
+    summary: '자기소개서 문항 조회 API',
+    description:
+      '# 자기소개서 문항 조회 API\n## Description\n자기소개서 문항을 한 개 조회합니다. 리소스를 식별하기에 path parameter를 요청으로 기대합니다. 자기소개서 문항의 id 값과, 제목, 답안, 생성일자, 수정일자를 응답으로 전달합니다.\n## Picture\n![image](https://github.com/depromeet/13th-4team-backend/assets/83271772/bd82d7bf-4744-4a48-81d5-85c7481d5d77)\n## Figma\n⛳️ [자기소개서 조회 - 자기소개서 작성 첫 화면](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1221-8169&t=oMTkLrgQjXJOPb8D-4)',
   })
-  async getOneQuestion(@Param() getOneQuestionRequestParamDto: GetOneQuestionRequestParamDto, @User() user: UserJwtToken) {
+  async getOneQuestion(
+    @Param() getOneQuestionRequestParamDto: GetOneQuestionRequestParamDto,
+    @User() user: UserJwtToken,
+  ): Promise<ResponseEntity<GetOneQuestionResponseDto>> {
     const question = await this.questionService.getOneQuestion(user.userId, getOneQuestionRequestParamDto.questionId);
 
     return ResponseEntity.OK_WITH_DATA(question);
