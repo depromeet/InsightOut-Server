@@ -1,6 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Experience, ExperienceInfo } from '@prisma/client';
-import { Matches } from 'class-validator';
+import { Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
+import { Expose } from 'class-transformer';
+import { IsEnum, IsOptional, Matches } from 'class-validator';
 import { dateValidation } from '🔥apps/server/common/consts/date-validation.const';
 import { IsOptionalString } from '🔥apps/server/common/decorators/validation/isOptionalString.decorator';
 
@@ -42,6 +43,15 @@ export class UpsertExperienceReqDto {
   experienceRole?: string;
 
   @ApiPropertyOptional({
+    example: 'INPROGRESS or DONE',
+    default: 'INPROGRESS',
+  })
+  @IsEnum(ExperienceStatus)
+  @IsOptional()
+  @Expose()
+  experienceStatus: ExperienceStatus;
+
+  @ApiPropertyOptional({
     example: '개발자와 협업 역량을 기르기 위해 하게 됨',
   })
   @IsOptionalString(0, 100)
@@ -60,7 +70,6 @@ export class UpsertExperienceReqDto {
   analysis?: string;
 
   public compareProperty(experience: Experience & { ExperienceInfo?: ExperienceInfo }) {
-    console.log('experience', experience);
     if (this.title) experience.title = this.title;
     if (this.startDate) experience.startDate = new Date(this.startDate);
     if (this.endDate) experience.endDate = new Date(this.endDate);
@@ -71,7 +80,7 @@ export class UpsertExperienceReqDto {
     if (this.motivation) experience.ExperienceInfo.motivation = this.motivation;
     if (this.utilization) experience.ExperienceInfo.utilization = this.utilization;
     if (this.analysis) experience.ExperienceInfo.analysis = this.analysis;
-    console.log('experience222', experience);
+
     return experience;
   }
 }
