@@ -81,7 +81,7 @@ export class UpsertExperienceResDto {
   @Exclude() private readonly _result: string;
   @Exclude() private readonly _startDate: Date;
   @Exclude() private readonly _endDate: Date;
-  @Exclude() _experienceStatus: ExperienceStatus;
+  @Exclude() private readonly _experienceStatus: ExperienceStatus;
   @Exclude() private readonly _experienceInfo: UpsertExperienceInfoResDto;
 
   constructor(experience: Experience, experienceInfo: ExperienceInfo) {

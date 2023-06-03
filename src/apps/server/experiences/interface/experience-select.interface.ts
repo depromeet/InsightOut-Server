@@ -15,7 +15,7 @@ export interface ExperienceSelect {
     | boolean
     | {
         select?: {
-          experienceInfoId?: boolean;
+          id?: boolean;
           experienceRole?: boolean;
           motivation?: boolean;
           analysis?: boolean;
