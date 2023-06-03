@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Resume } from '@prisma/client';
 import { Exclude, Expose } from 'class-transformer';
-import { IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
 
 export class PostResumeRequestBodyDto {
   @ApiProperty({
@@ -13,15 +13,18 @@ export class PostResumeRequestBodyDto {
 }
 
 export class PostResumeResponseDto {
-  @Exclude() readonly _id: number;
-  @Exclude() readonly _createdAt: Date;
-  @Exclude() readonly _updatedAt: Date;
+  @Exclude() private readonly _id: number;
+  @Exclude() private readonly _createdAt: Date;
+  @Exclude() private readonly _updatedAt: Date;
+  @Exclude() private readonly _hasWrittenResume?: boolean | undefined;
 
   // Entity -> DTO
-  constructor(resume: Resume) {
+  constructor({ resume, userOnboarded }: { resume: Resume; userOnboarded: boolean }) {
     this._id = resume.id;
     this._createdAt = resume.createdAt;
     this._updatedAt = resume.updatedAt;
+    // 유저가 온보딩을 하지 않아 업데이트가 발생하는 경우
+    if (!userOnboarded) this._hasWrittenResume = true;
   }
 
   @Expose()
@@ -49,5 +52,17 @@ export class PostResumeResponseDto {
   })
   get updatedAt(): Date {
     return this._updatedAt;
+  }
+
+  @Expose()
+  @ApiProperty({
+    description: '자기소개서 온보딩 수행 여부입니다.',
+    example: true,
+    type: Boolean,
+  })
+  @IsBoolean()
+  @IsNotEmpty()
+  get hasWrittenResume(): boolean | undefined {
+    return this._hasWrittenResume;
   }
 }

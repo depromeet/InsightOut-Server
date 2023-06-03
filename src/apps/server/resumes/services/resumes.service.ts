@@ -7,10 +7,15 @@ import { PatchResumeRequestDto } from '🔥apps/server/resumes/dtos/patch-resume
 import { PostResumeResponseDto } from '🔥apps/server/resumes/dtos/post-resume.dto';
 import { PostSpellCheckRequestBodyDto } from '🔥apps/server/resumes/dtos/post-spell-check-request.body.dto';
 import { Question, Resume } from '@prisma/client';
+import { PrismaService } from '📚libs/modules/database/prisma.service';
 
 @Injectable()
 export class ResumesService {
-  constructor(private readonly resumesRepository: ResumeRepository, private readonly apiService: ApiService) {}
+  constructor(
+    private readonly resumesRepository: ResumeRepository,
+    private readonly apiService: ApiService,
+    private readonly prisma: PrismaService,
+  ) {}
 
   /**
    * 유저가 작성한 모든 자기소개서를 가져옵니다. 문항의 답안(answer)은 payload가 크기 때문에 option으로 선택해 가져옵니다.
@@ -64,12 +69,32 @@ export class ResumesService {
    * @returns resumeId, title, createdAt, updatedAt
    */
   public async createResumeFolder(userId: number): Promise<PostResumeResponseDto> {
-    const resume = await this.resumesRepository.create({
-      data: { userId },
+    const result = await this.prisma.$transaction(async () => {
+      const newResume = await this.prisma.resume.create({
+        data: { userId },
+      });
+
+      // 유저가 자기소개서를 작성했는지 여부 파악
+      const { hasWrittenResume } = await this.prisma.userInfo.findFirst({
+        where: { userId },
+        select: { hasWrittenResume: true },
+      });
+
+      // 자기소개서를 작성하지 않았다면
+      if (!hasWrittenResume) {
+        await this.prisma.userInfo.update({
+          where: { userId },
+          data: { hasWrittenResume: true },
+          select: { hasWrittenResume: true },
+        });
+        return { resume: newResume, userOnboarded: false };
+      }
+
+      return { resume: newResume, userOnboarded: true };
     });
 
     // Entity -> DTO
-    const resumeResponseDto = new PostResumeResponseDto(resume);
+    const resumeResponseDto = new PostResumeResponseDto(result);
     return resumeResponseDto;
   }
 
