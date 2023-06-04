@@ -163,5 +163,3 @@ export class GetOneResumeResponseDto {
     return this._question;
   }
 }
-
-export class GetAllResumeResponseDto extends Array<GetOneResumeResponseDto> {}
