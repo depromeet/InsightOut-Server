@@ -9,7 +9,6 @@ import { Route } from '🔥apps/server/common/decorators/router/route.decorator'
 import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
 import {
   GetAllResumeRequestQueryDto,
-  GetAllResumeResponseDto,
   GetOneResumeRequestParamDto,
   GetOneResumeResponseDto,
 } from '🔥apps/server/resumes/dtos/get-resume.dto';
@@ -31,7 +30,7 @@ export class ResumesController {
     },
     response: {
       code: HttpStatus.OK,
-      type: GetAllResumeResponseDto,
+      type: GetOneResumeResponseDto,
       isArray: true,
       description:
         '### ✅ 자기소개서 전체 조회에 성공했습니다.\n유저가 작성한 모든 자기소개서를 반환하며, 각각의 자기소개서는 문항을 포함하고 문항의 답안은 Optional로 선택하여 가져올 수 있습니다.   \n자기소개서가 출력되는 기준은 모두 생성일자로부터 내림차순입니다. 자기소개서에 속한 자기소개서 문항도 마찬가지입니다.',
@@ -47,7 +46,7 @@ export class ResumesController {
   async getAllResumes(
     @User() user: UserJwtToken,
     @Query() getAllResumeRequestQueryDto: GetAllResumeRequestQueryDto,
-  ): Promise<ResponseEntity<GetAllResumeResponseDto>> {
+  ): Promise<ResponseEntity<GetOneResumeResponseDto[]>> {
     const resumes = await this.resumesService.getAllResumes(user.userId, getAllResumeRequestQueryDto);
 
     return ResponseEntity.OK_WITH_DATA(resumes);
