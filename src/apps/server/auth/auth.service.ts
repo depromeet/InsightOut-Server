@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { UserRepository } from '📚libs/modules/database/repositories/user.repository';
 import { CookieOptions } from 'express';
-import { Provider, User, UserInfo } from '@prisma/client';
+import { Provider } from '@prisma/client';
 import { Request } from 'express';
 import { AccessTokenAndRefreshToken, UserWithRefreshTokenPayload } from './types/jwt-tokwn.type';
 import { ApiService } from '📚libs/modules/api/api.service';

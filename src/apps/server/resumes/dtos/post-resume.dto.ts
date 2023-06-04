@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Resume } from '@prisma/client';
 import { Exclude, Expose } from 'class-transformer';
-import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class PostResumeRequestBodyDto {
   @ApiProperty({
@@ -16,7 +16,6 @@ export class PostResumeResponseDto {
   @Exclude() private readonly _id: number;
   @Exclude() private readonly _createdAt: Date;
   @Exclude() private readonly _updatedAt: Date;
-  @Exclude() private readonly _hasWrittenResume?: boolean | undefined;
 
   // Entity -> DTO
   constructor(resume: Resume) {
@@ -50,17 +49,5 @@ export class PostResumeResponseDto {
   })
   get updatedAt(): Date {
     return this._updatedAt;
-  }
-
-  @Expose()
-  @ApiProperty({
-    description: '자기소개서 온보딩 수행 여부입니다.',
-    example: true,
-    type: Boolean,
-  })
-  @IsBoolean()
-  @IsNotEmpty()
-  get hasWrittenResume(): boolean | undefined {
-    return this._hasWrittenResume;
   }
 }
