@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Onboarding } from '@prisma/client';
 import { Exclude, Expose } from 'class-transformer';
+import { IsBoolean, IsNotEmpty } from 'class-validator';
 
 export class GetAllOnboardingsResponseDto {
   @Exclude() private readonly _experience: boolean;
@@ -16,25 +17,41 @@ export class GetAllOnboardingsResponseDto {
   }
 
   @Expose()
-  @ApiProperty()
+  @ApiProperty({
+    description: '경험 분해 온보딩 여부',
+  })
+  @IsBoolean()
+  @IsNotEmpty()
   get experience(): boolean {
     return this._experience;
   }
 
   @Expose()
-  @ApiProperty()
+  @ApiProperty({
+    description: '경험 분해 스텝퍼 온보딩 여부',
+  })
+  @IsBoolean()
+  @IsNotEmpty()
   get experienceStepper(): boolean {
     return this._experienceStepper;
   }
 
   @Expose()
-  @ApiProperty()
+  @ApiProperty({
+    description: '자기소개서 온보딩 여부',
+  })
+  @IsBoolean()
+  @IsNotEmpty()
   get resume(): boolean {
     return this._resume;
   }
 
   @Expose()
-  @ApiProperty()
+  @ApiProperty({
+    description: '모아보기 온보딩 여부',
+  })
+  @IsBoolean()
+  @IsNotEmpty()
   get collection(): boolean {
     return this._collection;
   }
