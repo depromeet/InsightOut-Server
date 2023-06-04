@@ -2,7 +2,7 @@ import { Body, HttpStatus, Param, UseGuards } from '@nestjs/common';
 import { Route } from '../../common/decorators/router/route.decorator';
 import { RouteTable } from '../../common/decorators/router/route-table.decorator';
 import { User } from '../../common/decorators/request/user.decorator';
-import { ApiBadRequestResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiNotFoundResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { UserJwtToken } from '../../auth/types/jwt-tokwn.type';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
@@ -11,9 +11,12 @@ import { ExperienceCapabilityService } from '🔥apps/server/experiences/service
 import { CreateExperienceCapabilitiesdBodyDto } from '🔥apps/server/experiences/dto/req/create-experience-capabilities.dto';
 import { ExperienceIdParamReqDto } from '🔥apps/server/experiences/dto/req/experienceIdParam.dto';
 import { AddCapabilitydBodyDto } from '🔥apps/server/experiences/dto/req/add-capability.dto';
-import { AddCapabilityResDto } from '🔥apps/server/experiences/dto/res/addCapability.res.dto';
-import { addCapabilitySuccMd } from '🔥apps/server/experiences/markdown/experience.md';
-import { AddCapabilityRequestErrorResDto } from '🔥apps/server/experiences/dto/res/upsertExperienceInfo.res.dto';
+import { AddCapabilityRequestErrorResDto, AddCapabilityResDto } from '🔥apps/server/experiences/dto/res/addCapability.res.dto';
+import { addCapabilitySuccMd, createManyExperienceCapabilitiesSuccMd } from '🔥apps/server/experiences/markdown/experience.md';
+import {
+  CreateExperienceCapabilitiesResDto,
+  CreateExperienceCapabillitiesNotFoundErrorResDto,
+} from '🔥apps/server/experiences/dto/res/createExperienceCapabilities.res.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -48,6 +51,10 @@ export class ExperienceKeywordController {
     return ResponseEntity.CREATED_WITH_DATA(capability);
   }
 
+  @ApiNotFoundResponse({
+    description: '⛔ keywords 중 만들어 있지 않는 것이 있는지 확인해주세요 :)',
+    type: CreateExperienceCapabillitiesNotFoundErrorResDto,
+  })
   @Route({
     request: {
       method: Method.POST,
@@ -55,9 +62,9 @@ export class ExperienceKeywordController {
     },
     response: {
       code: HttpStatus.CREATED,
-      // type: UpsertExperienceResDto,
+      type: CreateExperienceCapabilitiesResDto,
     },
-    // description: upsertExperienceSuccMd,
+    description: createManyExperienceCapabilitiesSuccMd,
     summary: '✅ 경험 정보 임시 저장 API',
   })
   public async createManyExperienceCapabilities(

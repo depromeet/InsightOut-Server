@@ -8,6 +8,7 @@ import { CapabilityRepository } from '📚libs/modules/database/repositories/cap
 import { ExperienceCapabilityRepository } from '📚libs/modules/database/repositories/experience-capability.repository';
 import { AddCapabilitydBodyDto } from '🔥apps/server/experiences/dto/req/add-capability.dto';
 import { AddCapabilityResDto } from '🔥apps/server/experiences/dto/res/addCapability.res.dto';
+import { CreateExperienceCapabilitiesResDto } from '🔥apps/server/experiences/dto/res/createExperienceCapabilities.res.dto';
 
 @Injectable()
 export class ExperienceCapabilityService {
@@ -33,7 +34,9 @@ export class ExperienceCapabilityService {
     );
 
     try {
-      return await this.experienceCapabilityRepository.createMany(createdInfos);
+      const batchPayload = await this.experienceCapabilityRepository.createMany(createdInfos);
+
+      return new CreateExperienceCapabilitiesResDto(batchPayload.count);
     } catch (error) {
       if (error instanceof Prisma.PrismaClientValidationError) {
         throw new UnprocessableEntityException('키워드가 정상적으로 생성되지 않았습니다. 타입을 확인하세요');

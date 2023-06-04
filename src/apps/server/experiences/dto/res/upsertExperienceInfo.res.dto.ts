@@ -180,13 +180,14 @@ export class UpsertExperienceInfoUnprocessableErrorResDto {
   message: string;
 }
 
-export class AddCapabilityRequestErrorResDto {
+export class BadRequestErrorResDto {
   @ApiProperty({ example: 400 })
   statusCode: number;
-  @ApiProperty({ example: 'BadRequestException' })
+  @ApiProperty({ example: '데이터 형식이 잘못되었습니다.' })
   title: string;
   @ApiProperty({
-    example: '문제해결역량 해당 키워드가 이미 존재합니다. 확인 부탁드립니다',
+    example:
+      'action / 124 / action must be a string,action must be shorter than or equal to 100 characters,action must be longer than or equal to 0 characters\nexperienceStatus / INPROGRESS or DONE / experienceStatus must be one of the following values: INPROGRESS, DONE',
   })
   message: string;
 }

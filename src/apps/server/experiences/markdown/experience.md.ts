@@ -18,3 +18,10 @@ export const addCapabilitySuccMd = `
 이미 가지고 있는 키워드라면 \`{가지고 있는 키워드} 해당 키워드가 이미 존재합니다. 확인 부탁드립니다.\`라는 400 에러가 발생합니다.\n
 body keyword는 \`required\`입니다.
 `;
+
+export const createManyExperienceCapabilitiesSuccMd = `
+### ✅ 경험 분해 키워드를 임시 저장하는 데 성공했습니다.
+해당 유저가 가지고 있지 않은 키워드를 임시저장하려고 하면 \`{가지고 있지 않은 키워드}해당 키워드가 만들어 있지 않습니다. 확인 부탁드립니다.\` 라는 400 에러가 발생합니다.\n
+body keywords는 \`required\`입니다.\n
+이미 만들어져 있는 키워드를 추가한다면 count에 포함되지 않습니다.(prisma에서 자동으로 만들지 않습니다.)
+`;

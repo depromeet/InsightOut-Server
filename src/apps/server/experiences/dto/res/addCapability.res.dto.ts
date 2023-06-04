@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Capability } from '@prisma/client';
-import { Exclude } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
 
 export class AddCapabilityResDto {
@@ -15,12 +15,14 @@ export class AddCapabilityResDto {
   }
 
   @ApiProperty({ example: 1 })
+  @Expose()
   @IsNotEmpty()
   get id(): number {
     return this._id;
   }
 
   @ApiProperty({ example: '문제해결역량' })
+  @Expose()
   @IsNotEmpty()
   get keyword(): string {
     return this._keyword;
@@ -29,20 +31,20 @@ export class AddCapabilityResDto {
   @ApiPropertyOptional({
     example: 1,
   })
+  @Expose()
   @IsNotEmpty()
   get userId(): number {
     return this._userId;
   }
 }
 
-export class BadRequestErrorResDto {
+export class AddCapabilityRequestErrorResDto {
   @ApiProperty({ example: 400 })
   statusCode: number;
-  @ApiProperty({ example: '데이터 형식이 잘못되었습니다.' })
+  @ApiProperty({ example: 'BadRequestException' })
   title: string;
   @ApiProperty({
-    example:
-      'action / 124 / action must be a string,action must be shorter than or equal to 100 characters,action must be longer than or equal to 0 characters\nexperienceStatus / INPROGRESS or DONE / experienceStatus must be one of the following values: INPROGRESS, DONE',
+    example: '문제해결역량 해당 키워드가 이미 존재합니다. 확인 부탁드립니다',
   })
   message: string;
 }
