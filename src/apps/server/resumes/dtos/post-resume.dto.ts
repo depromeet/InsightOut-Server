@@ -13,9 +13,9 @@ export class PostResumeRequestBodyDto {
 }
 
 export class PostResumeResponseDto {
-  @Exclude() readonly _id: number;
-  @Exclude() readonly _createdAt: Date;
-  @Exclude() readonly _updatedAt: Date;
+  @Exclude() private readonly _id: number;
+  @Exclude() private readonly _createdAt: Date;
+  @Exclude() private readonly _updatedAt: Date;
 
   // Entity -> DTO
   constructor(resume: Resume) {

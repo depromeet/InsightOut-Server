@@ -48,13 +48,14 @@ export class PostSigninResponseDto {
     this._accessToken = accessToken;
   }
 
+  @Expose()
   @ApiProperty({
     description: '## 액세스 토큰입니다.\n해당 Access token을 Authorization 헤더에 bearer로 넣어서 요청을 보내주세요.',
     example: 'eyJhbGciOiJIUzI1N...',
+    type: String,
   })
   @IsNotEmpty()
   @IsString()
-  @Expose()
   get accessToken(): string {
     return this._accessToken;
   }

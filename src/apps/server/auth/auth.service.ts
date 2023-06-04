@@ -4,7 +4,6 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { UserRepository } from '📚libs/modules/database/repositories/user.repository';
 import { CookieOptions } from 'express';
-import { UserInfoRepository } from '📚libs/modules/database/repositories/user-info.repository';
 import { Provider } from '@prisma/client';
 import { Request } from 'express';
 import { AccessTokenAndRefreshToken, UserWithRefreshTokenPayload } from './types/jwt-tokwn.type';
@@ -13,8 +12,6 @@ import { TokenType } from '📚libs/enums/token.enum';
 import { ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } from '🔥apps/server/common/consts/jwt.const';
 import { UserPayload } from '🔥apps/server/auth/dtos/post-signin.dto';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
-import { ResumeRepository } from '📚libs/modules/database/repositories/resume.repository';
-import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
 import { DEFAULT_CAPABILITIES } from '🔥apps/server/common/consts/default-capability.const';
 import { isFirebaseAuthError } from '🔥apps/server/common/types/firebase-auth.type';
 import { FirebaseService } from '📚libs/modules/firebase/firebase.service';
@@ -27,9 +24,6 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly userRepository: UserRepository,
-    private readonly userInfoRepository: UserInfoRepository,
-    private readonly resumeRepository: ResumeRepository,
-    private readonly capabilityRepository: CapabilityRepository,
     private readonly apiService: ApiService,
     private readonly firebaseService: FirebaseService,
   ) {}
@@ -48,7 +42,10 @@ export class AuthService {
     try {
       const { email, picture, socialId, uid } = user;
 
-      const existUser = await this.userRepository.findFirst({ where: { socialId, uid } });
+      const existUser = await this.userRepository.findFirst({
+        where: { socialId, uid },
+        select: { id: true },
+      });
 
       // If user exists, pass to signin
       if (!existUser) {
@@ -68,9 +65,9 @@ export class AuthService {
          *
          * 해당 로직에서는 2번 preview 방식을 택했습니다.
          */
-        const user = await this.prismaService.$transaction(async (prisma) => {
+        const newUser = await this.prismaService.$transaction(async (prisma) => {
           // 기본 유저를 생성합니다.
-          const newUser = await prisma.user.create({
+          const user = await prisma.user.create({
             data: {
               uid,
               email,
@@ -83,10 +80,17 @@ export class AuthService {
           await prisma.userInfo.create({
             data: {
               User: {
-                connect: { id: newUser.id },
+                connect: { id: user.id },
               },
               provider: Provider.GOOGLE,
               imageUrl: picture,
+            },
+          });
+
+          // 온보딩 여부 row를 추가합니다.
+          await prisma.onboarding.create({
+            data: {
+              userId: user.id,
             },
           });
 
@@ -94,7 +98,7 @@ export class AuthService {
           await prisma.resume.create({
             data: {
               title: '자기소개서 예시',
-              userId: newUser.id,
+              userId: user.id,
               Question: {
                 create: {
                   title: '샘플) 자신의 경쟁력에 대해 구체적으로 적어 주세요.',
@@ -113,18 +117,19 @@ export class AuthService {
             data: DEFAULT_CAPABILITIES.map((capability) => {
               return {
                 keyword: capability,
-                userId: newUser.id,
+                userId: user.id,
               };
             }),
           });
 
-          // 처리한 트랜잭션 커밋 중 user만 반환합니다.
-          return newUser;
+          // 처리한 트랜잭션 커밋 중 user와 userInfo만 반환합니다.
+          return user;
         });
 
         // 액세스 토큰 발급을 위해 id를 반환합니다.
-        return user.id;
+        return newUser.id;
       }
+
       return existUser.id;
     } catch (error) {
       if (error instanceof NotFoundException) {
