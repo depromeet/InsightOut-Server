@@ -7,10 +7,15 @@ import { PatchResumeRequestDto } from '🔥apps/server/resumes/dtos/patch-resume
 import { PostResumeResponseDto } from '🔥apps/server/resumes/dtos/post-resume.dto';
 import { PostSpellCheckRequestBodyDto } from '🔥apps/server/resumes/dtos/post-spell-check-request.body.dto';
 import { Question, Resume } from '@prisma/client';
+import { PrismaService } from '📚libs/modules/database/prisma.service';
 
 @Injectable()
 export class ResumesService {
-  constructor(private readonly resumesRepository: ResumeRepository, private readonly apiService: ApiService) {}
+  constructor(
+    private readonly resumesRepository: ResumeRepository,
+    private readonly apiService: ApiService,
+    private readonly prisma: PrismaService,
+  ) {}
 
   /**
    * 유저가 작성한 모든 자기소개서를 가져옵니다. 문항의 답안(answer)은 payload가 크기 때문에 option으로 선택해 가져옵니다.
@@ -64,7 +69,7 @@ export class ResumesService {
    * @returns resumeId, title, createdAt, updatedAt
    */
   public async createResumeFolder(userId: number): Promise<PostResumeResponseDto> {
-    const resume = await this.resumesRepository.create({
+    const resume = await this.prisma.resume.create({
       data: { userId },
     });
 

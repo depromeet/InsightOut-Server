@@ -14,6 +14,7 @@ import { JwtRefreshStrategy } from '../common/guards/strategies/jwt-refresh.stra
 import { FirebaseModule } from '📚libs/modules/firebase/firebase.module';
 import { ResumeRepository } from '📚libs/modules/database/repositories/resume.repository';
 import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
+import { OnboardingsModule } from '🔥apps/server/onboarding/onboarding.module';
 
 @Module({
   imports: [
@@ -29,6 +30,9 @@ import { CapabilityRepository } from '📚libs/modules/database/repositories/cap
     }),
     ApiModule,
     FirebaseModule,
+
+    // Domains
+    OnboardingsModule,
   ],
   controllers: [AuthController],
   providers: [
