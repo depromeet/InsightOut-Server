@@ -93,6 +93,8 @@ model Onboarding {
   collection Boolean @default(false) // 모아보기 온보딩 여부
 
   User User @relation(references: [id], fields: [userId])
+
+  @@map("onboarding")
 }
 
 // ****************************
