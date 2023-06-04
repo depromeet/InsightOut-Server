@@ -2,7 +2,7 @@ import { ApiService } from '📚libs/modules/api/api.service';
 import { SpellCheckResult } from '📚libs/modules/api/api.type';
 import { ResumeRepository } from '📚libs/modules/database/repositories/resume.repository';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { GetAllResumeRequestQueryDto, GetAllResumeResponseDto, GetOneResumeResponseDto } from '🔥apps/server/resumes/dtos/get-resume.dto';
+import { GetAllResumeRequestQueryDto, GetOneResumeResponseDto } from '🔥apps/server/resumes/dtos/get-resume.dto';
 import { PatchResumeRequestDto } from '🔥apps/server/resumes/dtos/patch-resume.dto';
 import { PostResumeResponseDto } from '🔥apps/server/resumes/dtos/post-resume.dto';
 import { PostSpellCheckRequestBodyDto } from '🔥apps/server/resumes/dtos/post-spell-check-request.body.dto';
@@ -25,7 +25,7 @@ export class ResumesService {
    *
    * @returns 유저가 작성한 자기소개서를 문항과 함께 가져옵니다.
    */
-  public async getAllResumes(userId: number, query?: GetAllResumeRequestQueryDto): Promise<GetAllResumeResponseDto> {
+  public async getAllResumes(userId: number, query?: GetAllResumeRequestQueryDto): Promise<GetOneResumeResponseDto[]> {
     const { answer } = query;
 
     // 자기소개서와 문항을 함께 가져옵니다.
