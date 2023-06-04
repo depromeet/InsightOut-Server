@@ -22,7 +22,7 @@ export interface ExperienceRepositoryInterface {
   findOneByUserId(userId: number): Promise<Experience>;
 }
 
-export interface ExperienceCapabilityRepositiryInterface {
+export interface ExperienceCapabilityRepositoryInterface {
   createMany(createdInfos: { capabilityId: number; experienceId: number }[]): Promise<Prisma.BatchPayload>;
   deleteByExperienceId(experienceId: number): Promise<Prisma.BatchPayload>;
 }

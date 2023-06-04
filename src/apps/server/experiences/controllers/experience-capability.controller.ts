@@ -2,7 +2,7 @@ import { Body, HttpStatus, UseGuards } from '@nestjs/common';
 import { Route } from '../../common/decorators/router/route.decorator';
 import { RouteTable } from '../../common/decorators/router/route-table.decorator';
 import { User } from '../../common/decorators/request/user.decorator';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiNotFoundResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiConflictResponse, ApiNotFoundResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { UserJwtToken } from '../../auth/types/jwt-tokwn.type';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
@@ -10,7 +10,7 @@ import { Method } from '📚libs/enums/method.enum';
 import { ExperienceCapabilityService } from '🔥apps/server/experiences/services/experience-capability.service';
 import { CreateExperienceCapabilitiesdBodyDto } from '🔥apps/server/experiences/dto/req/create-experience-capabilities.dto';
 import { AddCapabilitydBodyDto } from '🔥apps/server/experiences/dto/req/add-capability.dto';
-import { AddCapabilityRequestErrorResDto, AddCapabilityResDto } from '🔥apps/server/experiences/dto/res/addCapability.res.dto';
+import { AddCapabilityConflictErrorResDto, AddCapabilityResDto } from '🔥apps/server/experiences/dto/res/addCapability.res.dto';
 import { addCapabilitySuccMd, createManyExperienceCapabilitiesSuccMd } from '🔥apps/server/experiences/markdown/experience.md';
 import {
   CreateExperienceCapabilitiesResDto,
@@ -28,9 +28,9 @@ import {
 export class ExperienceKeywordController {
   constructor(private readonly experienceCapabilityService: ExperienceCapabilityService) {}
 
-  @ApiBadRequestResponse({
+  @ApiConflictResponse({
     description: '⛔ {가지고 있는 키워드} 해당 키워드가 이미 존재합니다. 확인 부탁드립니다.',
-    type: AddCapabilityRequestErrorResDto,
+    type: AddCapabilityConflictErrorResDto,
   })
   @Route({
     request: {

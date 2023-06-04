@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Capability } from '@prisma/client';
 import { Exclude, Expose } from 'class-transformer';
-import { IsNotEmpty } from 'class-validator';
+import { IsInt, IsNotEmpty, IsString } from 'class-validator';
 
 export class AddCapabilityResDto {
   @Exclude() _id: number;
@@ -24,6 +24,7 @@ export class AddCapabilityResDto {
   @ApiProperty({ example: '문제해결역량' })
   @Expose()
   @IsNotEmpty()
+  @IsString()
   get keyword(): string {
     return this._keyword;
   }
@@ -33,12 +34,13 @@ export class AddCapabilityResDto {
   })
   @Expose()
   @IsNotEmpty()
+  @IsInt()
   get userId(): number {
     return this._userId;
   }
 }
 
-export class AddCapabilityRequestErrorResDto {
+export class AddCapabilityConflictErrorResDto {
   @ApiProperty({ example: 400 })
   statusCode: number;
   @ApiProperty({ example: 'BadRequestException' })

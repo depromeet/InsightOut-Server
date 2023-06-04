@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
-import { IsNotEmpty } from 'class-validator';
+import { IsInt, IsNotEmpty } from 'class-validator';
 
 export class CreateExperienceCapabilitiesResDto {
   @Exclude() _count: number;
@@ -9,9 +9,10 @@ export class CreateExperienceCapabilitiesResDto {
     this._count = count;
   }
 
-  @ApiProperty({ example: 4 })
+  @ApiProperty({ example: 4, description: '생성된 경험 카드의 개수를 의미합니다.' })
   @Expose()
   @IsNotEmpty()
+  @IsInt()
   get count(): number {
     return this._count;
   }
