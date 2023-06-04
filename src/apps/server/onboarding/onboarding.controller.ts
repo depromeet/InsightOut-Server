@@ -38,4 +38,23 @@ export class OnboardingsController {
 
     return ResponseEntity.OK_WITH_DATA(onboarding);
   }
+
+  @Route({
+    request: {
+      path: '',
+      method: Method.PATCH,
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: PatchOnboardingResponseDto,
+    },
+  })
+  async updateOnboarding(
+    @User() user: UserJwtToken,
+    @Body() patchOnboardingRequestBodyDto: PatchOnboardingRequestBodyDto,
+  ): Promise<ResponseEntity<PatchOnboardingResponseDto>> {
+    const updatedOnboarding = await this.onboardingsService.updateOnboarding(user.userId, patchOnboardingRequestBodyDto);
+
+    return ResponseEntity.OK_WITH_DATA(updatedOnboarding);
+  }
 }
