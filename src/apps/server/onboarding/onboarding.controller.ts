@@ -1,4 +1,4 @@
-import { Controller, HttpStatus, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpStatus, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Method } from '📚libs/enums/method.enum';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
@@ -11,7 +11,13 @@ import {
   GetOnboardingDescriptionMd,
   GetOnBoardingResponseDescription,
 } from '🔥apps/server/onboarding/docs/get-onboarding.doc';
+import {
+  PatchOnboardingDescriptionMd,
+  PatchOnboardingResponseDescriptionMd,
+  PatchOnboardingSummaryMd,
+} from '🔥apps/server/onboarding/docs/patch-onboarding.doc';
 import { GetAllOnboardingsResponseDto } from '🔥apps/server/onboarding/dtos/get-onboarding.dto';
+import { PatchOnboardingRequestBodyDto, PatchOnboardingResponseDto } from '🔥apps/server/onboarding/dtos/patch-onboarding.dto';
 import { OnboardingsService } from '🔥apps/server/onboarding/onboarding.service';
 
 @ApiTags('🏂 온보딩 API')
@@ -47,7 +53,10 @@ export class OnboardingsController {
     response: {
       code: HttpStatus.OK,
       type: PatchOnboardingResponseDto,
+      description: PatchOnboardingResponseDescriptionMd,
     },
+    summary: PatchOnboardingSummaryMd,
+    description: PatchOnboardingDescriptionMd,
   })
   async updateOnboarding(
     @User() user: UserJwtToken,
