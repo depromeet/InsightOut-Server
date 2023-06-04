@@ -1,4 +1,4 @@
-import { Body, HttpStatus, Param, UseGuards } from '@nestjs/common';
+import { Body, HttpStatus, UseGuards } from '@nestjs/common';
 import { Route } from '../../common/decorators/router/route.decorator';
 import { RouteTable } from '../../common/decorators/router/route-table.decorator';
 import { User } from '../../common/decorators/request/user.decorator';
@@ -9,7 +9,6 @@ import { ResponseEntity } from '📚libs/utils/respone.entity';
 import { Method } from '📚libs/enums/method.enum';
 import { ExperienceCapabilityService } from '🔥apps/server/experiences/services/experience-capability.service';
 import { CreateExperienceCapabilitiesdBodyDto } from '🔥apps/server/experiences/dto/req/create-experience-capabilities.dto';
-import { ExperienceIdParamReqDto } from '🔥apps/server/experiences/dto/req/experienceIdParam.dto';
 import { AddCapabilitydBodyDto } from '🔥apps/server/experiences/dto/req/add-capability.dto';
 import { AddCapabilityRequestErrorResDto, AddCapabilityResDto } from '🔥apps/server/experiences/dto/res/addCapability.res.dto';
 import { addCapabilitySuccMd, createManyExperienceCapabilitiesSuccMd } from '🔥apps/server/experiences/markdown/experience.md';
@@ -21,7 +20,7 @@ import {
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @RouteTable({
-  path: 'experience',
+  path: 'experience/capability',
   tag: {
     title: '🔭경험 분해 API',
   },
@@ -58,7 +57,7 @@ export class ExperienceKeywordController {
   @Route({
     request: {
       method: Method.POST,
-      path: '/:experienceId/capability',
+      path: '/',
     },
     response: {
       code: HttpStatus.CREATED,
@@ -69,12 +68,10 @@ export class ExperienceKeywordController {
   })
   public async createManyExperienceCapabilities(
     @Body() createExperienceKeywordBodyDto: CreateExperienceCapabilitiesdBodyDto,
-    @Param() experienceIdParamReqDto: ExperienceIdParamReqDto,
     @User() user: UserJwtToken,
   ) {
     const experienceCapabilities = await this.experienceCapabilityService.createManyExperienceCapabilities(
       createExperienceKeywordBodyDto,
-      experienceIdParamReqDto,
       user,
     );
     return ResponseEntity.CREATED_WITH_DATA(experienceCapabilities);
