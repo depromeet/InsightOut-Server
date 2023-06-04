@@ -10,6 +10,7 @@ import {
   GetOnboardingDescriptionMd,
   GetOnBoardingResponseDescription,
 } from '🔥apps/server/onboarding/docs/get-onboarding.doc';
+import { GetAllOnboardingsResponseDto } from '🔥apps/server/onboarding/dtos/get-onboarding.dto';
 import { OnboardingsService } from '🔥apps/server/onboarding/onboarding.service';
 
 @ApiTags('🏂 온보딩 API')
@@ -29,8 +30,8 @@ export class OnboardingsController {
     summary: GetOnboardingSummaryMd,
     description: GetOnboardingDescriptionMd,
   })
-  async getUserOnboardingInformation(@User() user: UserJwtToken) {
-    const onboarding = await this.onboardingsService.getUserOnboardingInformation(user.userId);
+  async getAllOnboardings(@User() user: UserJwtToken): Promise<ResponseEntity<GetAllOnboardingsResponseDto>> {
+    const onboarding = await this.onboardingsService.getAllOnboardings(user.userId);
 
     return ResponseEntity.OK_WITH_DATA(onboarding);
   }
