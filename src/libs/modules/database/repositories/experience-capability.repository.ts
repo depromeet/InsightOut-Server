@@ -10,4 +10,8 @@ export class ExperienceCapabilityRepository implements ExperienceCapabilityRepos
   public async createMany(createdInfos: { experienceId: number; capabilityId: number }[]): Promise<Prisma.BatchPayload> {
     return await this.prisma.experienceCapability.createMany({ data: createdInfos, skipDuplicates: true });
   }
+
+  public async deleteByExperienceId(experienceId: number): Promise<Prisma.BatchPayload> {
+    return await this.prisma.experienceCapability.deleteMany({ where: { experienceId } });
+  }
 }

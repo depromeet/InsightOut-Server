@@ -34,9 +34,12 @@ export class ExperienceCapabilityService {
     );
 
     try {
-      const batchPayload = await this.experienceCapabilityRepository.createMany(createdInfos);
+      // experienceId가 가지고 있는 keyword모두 삭제
+      await this.experienceCapabilityRepository.deleteByExperienceId(param.experienceId);
+      // 새로 추가할 키워드 생성
+      const createPatchPayload = await this.experienceCapabilityRepository.createMany(createdInfos);
 
-      return new CreateExperienceCapabilitiesResDto(batchPayload.count);
+      return new CreateExperienceCapabilitiesResDto(createPatchPayload.count);
     } catch (error) {
       if (error instanceof Prisma.PrismaClientValidationError) {
         throw new UnprocessableEntityException('키워드가 정상적으로 생성되지 않았습니다. 타입을 확인하세요');

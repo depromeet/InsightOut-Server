@@ -24,4 +24,5 @@ export interface ExperienceRepositoryInterface {
 
 export interface ExperienceCapabilityRepositiryInterface {
   createMany(createdInfos: { capabilityId: number; experienceId: number }[]): Promise<Prisma.BatchPayload>;
+  deleteByExperienceId(experienceId: number): Promise<Prisma.BatchPayload>;
 }
