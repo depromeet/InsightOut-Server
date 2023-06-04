@@ -4,6 +4,11 @@ import { Method } from '📚libs/enums/method.enum';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
 import { CollectionsService } from '🔥apps/server/collections/collection.service';
+import {
+  GetCountOfExperienceAndResumeDescriptionMd,
+  GetCountOfExperienceAndResumeResponseDescriptionMd,
+  GetCountOfExperienceAndResumeSummaryMd,
+} from '🔥apps/server/collections/docs/get-count-of-experience-and-resume.doc';
 import { GetCountOfExperienceAndResumeResponseDto } from '🔥apps/server/collections/dtos/get-count-of-experience-and-resume.dto';
 import { User } from '🔥apps/server/common/decorators/request/user.decorator';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
@@ -22,7 +27,10 @@ export class CollectionsController {
     },
     response: {
       code: HttpStatus.OK,
+      description: GetCountOfExperienceAndResumeResponseDescriptionMd,
     },
+    summary: GetCountOfExperienceAndResumeSummaryMd,
+    description: GetCountOfExperienceAndResumeDescriptionMd,
   })
   async getCountOfExperienceAndResume(@User() user: UserJwtToken): Promise<ResponseEntity<GetCountOfExperienceAndResumeResponseDto>> {
     const countOfExperienceAndResume = await this.collectionsService.getCountOfExperienceAndResume(user.userId);
