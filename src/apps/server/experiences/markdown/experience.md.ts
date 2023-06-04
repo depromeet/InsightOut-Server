@@ -12,3 +12,9 @@ export const upsertExperienceSuccMd = `
 변경 되지 않은 사항은 프로퍼티를 넣어 주시지 않으셔도 됩니다.\n
 전달 받은 프로퍼티만 업데이트 됩니다 :)
 `;
+
+export const addCapabilitySuccMd = `
+### ✅ 경험 분해 키워드 추가하는 데 성공했습니다.
+이미 가지고 있는 키워드라면 \`{가지고 있는 키워드} 해당 키워드가 이미 존재합니다. 확인 부탁드립니다.\`라는 400 에러가 발생합니다.\n
+body keyword는 \`required\`입니다.
+`;
