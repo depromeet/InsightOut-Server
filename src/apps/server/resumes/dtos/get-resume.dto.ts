@@ -103,12 +103,14 @@ class QuestionResponse {
 export class GetOneResumeResponseDto {
   @Exclude() private readonly _id: number;
   @Exclude() private readonly _title: string;
+  @Exclude() private readonly _createdAt: Date;
   @Exclude() private readonly _updatedAt: Date;
   @Exclude() private readonly _question?: Partial<QuestionResponse>[];
 
   constructor(resume: Resume & { Question: Question[] }) {
     this._id = resume.id;
     this._title = resume.title;
+    this._createdAt = resume.createdAt;
     this._updatedAt = resume.updatedAt;
     this._question = resume.Question.map((question) => {
       const { resumeId, createdAt, ...rest } = question;
@@ -141,6 +143,17 @@ export class GetOneResumeResponseDto {
 
   @Expose()
   @ApiProperty({
+    description: '자기소개서 생성 일자',
+    example: new Date(),
+  })
+  @IsDate()
+  @IsNotEmpty()
+  get createdAt(): Date {
+    return this._createdAt;
+  }
+
+  @Expose()
+  @ApiProperty({
     description: '자기소개서 작성 일자',
     example: new Date(),
   })
@@ -161,5 +174,64 @@ export class GetOneResumeResponseDto {
   @Type(() => QuestionResponse)
   get question(): Partial<Question>[] {
     return this._question;
+  }
+}
+
+export class GetOneResumeWithTitleResponseDto {
+  @Exclude() private readonly _id: number;
+  @Exclude() private readonly _title: string;
+  @Exclude() private readonly _createdAt: Date;
+  @Exclude() private readonly _updatedAt: Date;
+
+  constructor(resume: Resume) {
+    this._id = resume.id;
+    this._title = resume.title;
+    this._createdAt = resume.createdAt;
+    this._updatedAt = resume.updatedAt;
+  }
+
+  @Expose()
+  @ApiProperty({
+    description: '자기소개서 폴더 id',
+    example: 1234,
+  })
+  @IsInt()
+  @IsPositive()
+  @IsNotEmpty()
+  get id(): number {
+    return this._id;
+  }
+
+  @Expose()
+  @ApiProperty({
+    description: '자기소개서 폴더 제목',
+    example: '디프만 13기',
+  })
+  @IsString()
+  @IsNotEmpty()
+  get title(): string {
+    return this._title;
+  }
+
+  @Expose()
+  @ApiProperty({
+    description: '자기소개서 생성 일자',
+    example: new Date(),
+  })
+  @IsDate()
+  @IsNotEmpty()
+  get createdAt(): Date {
+    return this._createdAt;
+  }
+
+  @Expose()
+  @ApiProperty({
+    description: '자기소개서 작성 일자',
+    example: new Date(),
+  })
+  @IsDate()
+  @IsNotEmpty()
+  get updatedAt(): Date {
+    return this._updatedAt;
   }
 }
