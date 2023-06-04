@@ -25,3 +25,28 @@ export const createManyExperienceCapabilitiesSuccMd = `
 body keywords는 \`required\`입니다.\n
 이미 만들어져 있는 키워드를 추가한다면 count에 포함되지 않습니다.(prisma에서 자동으로 만들지 않습니다.)
 `;
+
+export const getExperienceCapabilitySuccMd = `
+### ✅ 경험 분해 키워드를 가져오는 데 성공했습니다.
+성공 Response는 아래와 같습니다. 유저의 키워드를 property에 key명으로 모두 담아 내립니다.\n
+유저의 모든 키워드 중 선택한 키워드는 value에 true 값을 담아 반환합니다.\n
+![image](https://github.com/depromeet/13th-4team-backend/assets/97580759/40590171-349f-45a6-9dd3-abe7156a647d)\n
+위 사진에서 보라색 칠해져 있는 값들이 true입니다.
+\`\`\`
+// 해당 사진과 관련없는 예시입니다.
+{
+  "statusCode": 201,
+  "success": true,
+  "data": {
+    "리더십": true,
+    "문제해결력": true,
+    "문제해결역량": false,
+    "의사소통": false,
+    "커뮤니케이션": false,
+    "협상/설득력": false,
+    "팀워크": false,
+  }
+}
+\`\`\`
+
+`;

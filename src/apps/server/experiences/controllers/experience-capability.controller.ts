@@ -11,7 +11,11 @@ import { ExperienceCapabilityService } from '🔥apps/server/experiences/service
 import { CreateExperienceCapabilitiesdBodyDto } from '🔥apps/server/experiences/dto/req/create-experience-capabilities.dto';
 import { AddCapabilitydBodyDto } from '🔥apps/server/experiences/dto/req/add-capability.dto';
 import { AddCapabilityConflictErrorResDto, AddCapabilityResDto } from '🔥apps/server/experiences/dto/res/addCapability.res.dto';
-import { addCapabilitySuccMd, createManyExperienceCapabilitiesSuccMd } from '🔥apps/server/experiences/markdown/experience.md';
+import {
+  addCapabilitySuccMd,
+  createManyExperienceCapabilitiesSuccMd,
+  getExperienceCapabilitySuccMd,
+} from '🔥apps/server/experiences/markdown/experience.md';
 import {
   CreateExperienceCapabilitiesResDto,
   CreateExperienceCapabillitiesNotFoundErrorResDto,
@@ -29,7 +33,6 @@ import { ExperienceIdParamReqDto } from '🔥apps/server/experiences/dto/req/exp
 export class ExperienceKeywordController {
   constructor(private readonly experienceCapabilityService: ExperienceCapabilityService) {}
 
-  // TODO:
   @Route({
     request: {
       method: Method.GET,
@@ -37,13 +40,16 @@ export class ExperienceKeywordController {
     },
     response: {
       code: HttpStatus.OK,
-      // type: CreateExperienceCapabilitiesResDto,
     },
-    // description: createManyExperienceCapabilitiesSuccMd,
+    description: getExperienceCapabilitySuccMd,
     summary: '✅ 경험 분해 키워드 가져오기 API',
   })
-  public async getExperienceCapability(@User() user: UserJwtToken, @Param() experienceIdParamReqDto: ExperienceIdParamReqDto) {
+  public async getExperienceCapability(
+    @User() user: UserJwtToken,
+    @Param() experienceIdParamReqDto: ExperienceIdParamReqDto,
+  ): Promise<{ [key in string] }> {
     const experienceCapabilities = await this.experienceCapabilityService.getExperienceCapability(user, experienceIdParamReqDto);
+
     return ResponseEntity.CREATED_WITH_DATA(experienceCapabilities);
   }
 
