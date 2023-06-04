@@ -28,6 +28,7 @@ export class OnboardingsController {
     response: {
       code: HttpStatus.OK,
       description: GetOnBoardingResponseDescription,
+      type: GetAllOnboardingsResponseDto,
     },
     summary: GetOnboardingSummaryMd,
     description: GetOnboardingDescriptionMd,
