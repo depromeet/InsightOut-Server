@@ -12,11 +12,13 @@ import { Method } from '📚libs/enums/method.enum';
 import { PostReissueResponseDto } from '🔥apps/server/auth/dtos/post-reissue.dto';
 import { PostSigninRequestBodyDto, PostSigninResponseDto, UserPayload } from '🔥apps/server/auth/dtos/post-signin.dto';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
+import { OnboardingsService } from '🔥apps/server/onboarding/onboarding.service';
+import { GetAllOnboardingsResponseDto } from '🔥apps/server/onboarding/dtos/get-onboarding.dto';
 
 @ApiTags('🔐 권한 관련 API')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService, private readonly onboardingsService: OnboardingsService) {}
 
   @UseGuards(SigninGuard)
   @Route({
@@ -42,8 +44,8 @@ export class AuthController {
     @Body() _: PostSigninRequestBodyDto,
     @User() user: UserPayload,
     @Res({ passthrough: true }) response: Response,
-  ): Promise<ResponseEntity<PostSigninResponseDto>> {
-    const { userId, hasWrittenResume } = await this.authService.signin(user);
+  ): Promise<ResponseEntity<PostSigninResponseDto & { onboarding: GetAllOnboardingsResponseDto }>> {
+    const userId = await this.authService.signin(user);
 
     const accessToken = this.authService.issueAccessToken(userId);
     const refreshToken = this.authService.issueRefreshToken(userId);
@@ -54,7 +56,9 @@ export class AuthController {
 
     response.cookie('refreshToken', refreshToken, cookieOptions);
 
-    return ResponseEntity.CREATED_WITH_DATA(new PostSigninResponseDto(accessToken, hasWrittenResume));
+    const onboarding = await this.onboardingsService.getAllOnboardings(userId);
+
+    return ResponseEntity.CREATED_WITH_DATA(Object.assign(new PostSigninResponseDto(accessToken), { onboarding }));
   }
 
   @UseGuards(JwtRefreshGuard)

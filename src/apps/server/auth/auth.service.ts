@@ -38,14 +38,14 @@ export class AuthService {
    * @param user email, picture, socialId 등이 담긴 객체입니다.
    * @returns
    */
-  public async signin(user: UserPayload): Promise<{ userId: number; hasWrittenResume: boolean }> {
+  public async signin(user: UserPayload): Promise<number> {
     try {
       const { email, picture, socialId, uid } = user;
 
-      const existUser = (await this.userRepository.findFirst({
+      const existUser = await this.userRepository.findFirst({
         where: { socialId, uid },
-        select: { id: true, UserInfo: { select: { hasWrittenResume: true } } },
-      })) as User & { UserInfo: UserInfo };
+        select: { id: true },
+      });
 
       // If user exists, pass to signin
       if (!existUser) {
@@ -65,7 +65,7 @@ export class AuthService {
          *
          * 해당 로직에서는 2번 preview 방식을 택했습니다.
          */
-        const { user, hasWrittenResume } = await this.prismaService.$transaction(async (prisma) => {
+        const newUser = await this.prismaService.$transaction(async (prisma) => {
           // 기본 유저를 생성합니다.
           const user = await prisma.user.create({
             data: {
@@ -77,7 +77,7 @@ export class AuthService {
           });
 
           // 해당 유저의 정보를 입력합니다. 기본적으로 Google이 소셜 로그인 제공자입니다.
-          const { hasWrittenResume } = await prisma.userInfo.create({
+          await prisma.userInfo.create({
             data: {
               User: {
                 connect: { id: user.id },
@@ -85,7 +85,13 @@ export class AuthService {
               provider: Provider.GOOGLE,
               imageUrl: picture,
             },
-            select: { hasWrittenResume: true },
+          });
+
+          // 온보딩 여부 row를 추가합니다.
+          await prisma.onboarding.create({
+            data: {
+              userId: user.id,
+            },
           });
 
           // 기본 자기소개서를 생성합니다.
@@ -117,14 +123,14 @@ export class AuthService {
           });
 
           // 처리한 트랜잭션 커밋 중 user와 userInfo만 반환합니다.
-          return { user, hasWrittenResume };
+          return user;
         });
 
         // 액세스 토큰 발급을 위해 id를 반환합니다.
-        return { userId: user.id, hasWrittenResume };
+        return newUser.id;
       }
 
-      return { userId: existUser.id, hasWrittenResume: existUser.UserInfo.hasWrittenResume };
+      return existUser.id;
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException();

@@ -6,5 +6,6 @@ import { OnboardingsService } from '🔥apps/server/onboarding/onboarding.servic
 @Module({
   controllers: [OnboardingsController],
   providers: [OnboardingsService, OnboardingRepository],
+  exports: [OnboardingsService],
 })
 export class OnboardingsModule {}
