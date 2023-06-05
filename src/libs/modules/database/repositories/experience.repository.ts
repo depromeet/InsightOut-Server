@@ -34,4 +34,10 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
       where: { userId, experienceStatus: ExperienceStatus.INPROGRESS },
     });
   }
+
+  public async countExperience(userId: number): Promise<number> {
+    return await this.prisma.experience.count({
+      where: { userId },
+    });
+  }
 }
