@@ -154,6 +154,7 @@ export class GetOneResumeResponseDto {
   @ApiProperty({
     description: '자기소개서 문항',
     type: QuestionResponse,
+    isArray: true,
   })
   @IsArray()
   @IsObject({ each: true })
