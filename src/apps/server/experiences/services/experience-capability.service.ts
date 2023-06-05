@@ -1,20 +1,45 @@
 import { ConflictException, Inject, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { CreateExperienceCapabilitiesdBodyDto } from '🔥apps/server/experiences/dto/req/create-experience-capabilities.dto';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
-import { Prisma } from '@prisma/client';
+import { Capability, ExperienceCapability, Prisma } from '@prisma/client';
 import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
 import { AddCapabilitydBodyDto } from '🔥apps/server/experiences/dto/req/add-capability.dto';
 import { AddCapabilityResDto } from '🔥apps/server/experiences/dto/res/addCapability.res.dto';
 import { CreateExperienceCapabilitiesResDto } from '🔥apps/server/experiences/dto/res/createExperienceCapabilities.res.dto';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
+import { ExperienceIdParamReqDto } from '🔥apps/server/experiences/dto/req/experienceIdParam.dto';
+import { ExperienceCapabilityRepository } from '📚libs/modules/database/repositories/experience-capability.repository';
+import { ExperienceCapabilityRepositoryInterface } from '🔥apps/server/experiences/interface/experience-repository.interface';
 
 @Injectable()
 export class ExperienceCapabilityService {
   constructor(
+    @Inject(ExperienceCapabilityRepository)
+    private readonly experienceCapabilityRepository: ExperienceCapabilityRepositoryInterface,
     @Inject(CapabilityRepository)
     private readonly capabilityRepository: CapabilityRepository,
     private readonly prisma: PrismaService,
   ) {}
+
+  public async getExperienceCapability(user: UserJwtToken, param: ExperienceIdParamReqDto): Promise<{ [key in string] }> {
+    const userCapabilities = await this.capabilityRepository.findMany({ where: { userId: user.userId } });
+    const where = { experienceId: param.experienceId };
+    const experienceCapabilities = await this.experienceCapabilityRepository.findManyByFilter(where);
+
+    const value = <{ [key in string] }>{};
+    userCapabilities.forEach((val: Capability) => {
+      value[val.keyword] = false;
+    });
+
+    experienceCapabilities.forEach((experienceCapability: ExperienceCapability) => {
+      const capability: Capability = userCapabilities.find((capability) => capability.id === experienceCapability.capabilityId);
+      if (!capability) throw new NotFoundException(`${capability.keyword} 해당 키워드를 찾을 수 없습니다.`);
+
+      value[capability.keyword] = true;
+    });
+
+    return value;
+  }
 
   public async createManyExperienceCapabilities(body: CreateExperienceCapabilitiesdBodyDto, user: UserJwtToken) {
     const createdInfos = await Promise.all(
