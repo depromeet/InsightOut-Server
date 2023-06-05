@@ -2,6 +2,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Onboarding } from '@prisma/client';
 import { Exclude, Expose } from 'class-transformer';
 import { IsBoolean, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsTrue } from '🔥apps/server/common/decorators/validation/isTrue.decorator';
 
 export class PatchOnboardingRequestBodyDto {
   @ApiPropertyOptional({
@@ -9,7 +10,7 @@ export class PatchOnboardingRequestBodyDto {
     example: true,
     type: Boolean,
   })
-  @IsBoolean()
+  @IsTrue()
   @IsNotEmpty()
   @IsOptional()
   experience?: boolean;
@@ -20,7 +21,7 @@ export class PatchOnboardingRequestBodyDto {
     example: true,
     type: Boolean,
   })
-  @IsBoolean()
+  @IsTrue()
   @IsNotEmpty()
   @IsOptional()
   experienceStepper?: boolean;
@@ -30,7 +31,7 @@ export class PatchOnboardingRequestBodyDto {
     example: true,
     type: Boolean,
   })
-  @IsBoolean()
+  @IsTrue()
   @IsNotEmpty()
   @IsOptional()
   resume?: boolean;
@@ -40,7 +41,7 @@ export class PatchOnboardingRequestBodyDto {
     example: true,
     type: Boolean,
   })
-  @IsBoolean()
+  @IsTrue()
   @IsNotEmpty()
   @IsOptional()
   collection?: boolean;
