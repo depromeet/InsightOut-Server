@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
 import { ExperienceRepository } from '📚libs/modules/database/repositories/experience.repository';
 import { ResumeRepository } from '📚libs/modules/database/repositories/resume.repository';
@@ -29,7 +29,17 @@ export class CollectionsService {
   public async getCountOfExperienceAndCapability(userId: number): Promise<GetCountOfExperienceAndCapabilityResponseDto[]> {
     const countOfExperienceAndCapability = await this.capabilityRepository.countExperienceAndCapability(userId);
 
-    const countOfExperienceAndCapabilityResponseDto = countOfExperienceAndCapability.map(
+    // count가 0인 키워드는 필터링합니다.
+    const filteredCountOfExperienceAndCapability = countOfExperienceAndCapability.filter((row: CountExperienceAndCapability) => {
+      row._count.ExperienceCapability !== 0;
+    });
+
+    if (!filteredCountOfExperienceAndCapability.length) {
+      console.log(filteredCountOfExperienceAndCapability);
+      throw new NotFoundException('Experience not found');
+    }
+
+    const countOfExperienceAndCapabilityResponseDto = filteredCountOfExperienceAndCapability.map(
       (count) => new GetCountOfExperienceAndCapabilityResponseDto(count as CountExperienceAndCapability),
     );
     return countOfExperienceAndCapabilityResponseDto;
