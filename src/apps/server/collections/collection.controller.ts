@@ -5,14 +5,17 @@ import { ResponseEntity } from '📚libs/utils/respone.entity';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
 import { CollectionsService } from '🔥apps/server/collections/collection.service';
 import {
+  GetCountOfExperienceAndCapabilityDescriptionMd,
+  GetCountOfExperienceAndCapabilityResponseDescriptionMd,
+  GetCountOfExperienceAndCapabilitySummaryMd,
+} from '🔥apps/server/collections/docs/get-count-of-experience-and-capability.doc';
+import {
   GetCountOfExperienceAndResumeDescriptionMd,
   GetCountOfExperienceAndResumeResponseDescriptionMd,
   GetCountOfExperienceAndResumeSummaryMd,
 } from '🔥apps/server/collections/docs/get-count-of-experience-and-resume.doc';
-import {
-  GetCountOfExperienceAndCapabilityResponseDto,
-  GetCountOfExperienceAndResumeResponseDto,
-} from '🔥apps/server/collections/dtos/get-count-of-experience-and-resume.dto';
+import { GetCountOfExperienceAndCapabilityResponseDto } from '🔥apps/server/collections/dtos/get-count-of-experience-and-capability.dto';
+import { GetCountOfExperienceAndResumeResponseDto } from '🔥apps/server/collections/dtos/get-count-of-experience-and-resume.dto';
 import { User } from '🔥apps/server/common/decorators/request/user.decorator';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
 import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
@@ -50,7 +53,10 @@ export class CollectionsController {
       code: HttpStatus.OK,
       type: GetCountOfExperienceAndCapabilityResponseDto,
       isArray: true,
+      description: GetCountOfExperienceAndCapabilityResponseDescriptionMd,
     },
+    summary: GetCountOfExperienceAndCapabilitySummaryMd,
+    description: GetCountOfExperienceAndCapabilityDescriptionMd,
   })
   async getCountOfExperienceAndCapability(
     @User() user: UserJwtToken,

@@ -2,10 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
 import { ExperienceRepository } from '📚libs/modules/database/repositories/experience.repository';
 import { ResumeRepository } from '📚libs/modules/database/repositories/resume.repository';
-import {
-  GetCountOfExperienceAndCapabilityResponseDto,
-  GetCountOfExperienceAndResumeResponseDto,
-} from '🔥apps/server/collections/dtos/get-count-of-experience-and-resume.dto';
+import { GetCountOfExperienceAndCapabilityResponseDto } from '🔥apps/server/collections/dtos/get-count-of-experience-and-capability.dto';
+import { GetCountOfExperienceAndResumeResponseDto } from '🔥apps/server/collections/dtos/get-count-of-experience-and-resume.dto';
 import { CountExperienceAndCapability } from '🔥apps/server/collections/types/count-experience-and-capability.type';
 
 @Injectable()
