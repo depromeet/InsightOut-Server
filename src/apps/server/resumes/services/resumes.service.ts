@@ -12,6 +12,7 @@ import { PostResumeResponseDto } from '🔥apps/server/resumes/dtos/post-resume.
 import { PostSpellCheckRequestBodyDto } from '🔥apps/server/resumes/dtos/post-spell-check-request.body.dto';
 import { Question, Resume } from '@prisma/client';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
+import { GetCountOfResumeResponseDto } from '🔥apps/server/resumes/dtos/get-count-of-resume.dto';
 
 @Injectable()
 export class ResumesService {
@@ -80,6 +81,16 @@ export class ResumesService {
     // Entity -> DTO
     const getOneResumeDto = new GetOneResumeResponseDto(resume as Resume & { Question: Question[] });
     return getOneResumeDto;
+  }
+
+  public async getCountOfResume(userId: number): Promise<GetCountOfResumeResponseDto> {
+    const countOfResume = await this.resumesRepository.count({
+      where: { userId },
+    });
+
+    const getCountOfResumeResponseDto = new GetCountOfResumeResponseDto(countOfResume);
+
+    return getCountOfResumeResponseDto;
   }
 
   /**

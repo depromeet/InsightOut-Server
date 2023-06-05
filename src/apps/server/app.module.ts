@@ -17,7 +17,6 @@ import { TestModule } from './test/test.module';
 import { ExperienceModule } from '🔥apps/server/experiences/experience.module';
 import { UserModule } from '🔥apps/server/users/user.module';
 import { OnboardingsModule } from '🔥apps/server/onboarding/onboarding.module';
-import { CollectionsModule } from '🔥apps/server/collections/collection.module';
 
 @Module({
   controllers: [AppController],
@@ -39,7 +38,6 @@ import { CollectionsModule } from '🔥apps/server/collections/collection.module
     TestModule,
     UserModule,
     OnboardingsModule,
-    CollectionsModule,
   ],
   providers: [
     {
