@@ -22,7 +22,7 @@ export class CollectionsController {
 
   @Route({
     request: {
-      path: 'count',
+      path: '',
       method: Method.GET,
     },
     response: {
@@ -36,5 +36,20 @@ export class CollectionsController {
     const countOfExperienceAndResume = await this.collectionsService.getCountOfExperienceAndResume(user.userId);
 
     return ResponseEntity.OK_WITH_DATA(countOfExperienceAndResume);
+  }
+
+  @Route({
+    request: {
+      path: 'capability',
+      method: Method.GET,
+    },
+    response: {
+      code: HttpStatus.OK,
+    },
+  })
+  async getCountOfExperienceAndCapability(@User() user: UserJwtToken) {
+    const countOfExperienceAndCapability = await this.collectionsService.getCountOfExperienceAndCapability(user.userId);
+
+    return ResponseEntity.OK_WITH_DATA(countOfExperienceAndCapability);
   }
 }
