@@ -1,7 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
+import { Capability, Experience, ExperienceInfo, ExperienceStatus, ExperienceSummary } from '@prisma/client';
 import { Exclude, Expose } from 'class-transformer';
-import { IsEnum, IsOptional, Matches } from 'class-validator';
+import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsPositive, IsString, Matches } from 'class-validator';
+import { getFormattedDate } from '📚libs/utils/date';
 import { dateValidation } from '🔥apps/server/common/consts/date-validation.const';
 import { IsOptionalNumber } from '🔥apps/server/common/decorators/validation/isOptionalNumber.decorator';
 import { IsOptionalString } from '🔥apps/server/common/decorators/validation/isOptionalString.decorator';
@@ -153,6 +154,134 @@ export class GetExperienceResDto {
   @Expose()
   @ApiProperty({ type: GetExperienceInfoResDto })
   experienceInfo?: Partial<GetExperienceInfoResDto>;
+}
+
+class _Capability {
+  id: number;
+  keyword: string;
+  userId: number;
+}
+
+export class GetExperienceByCapabilityResponseDto {
+  @Exclude() private readonly _id: number;
+  @Exclude() private readonly _title?: string;
+  @Exclude() private readonly _situation?: string;
+  @Exclude() private readonly _startDate?: string;
+  @Exclude() private readonly _endDate?: string;
+  @Exclude() private readonly _experienceStatus: ExperienceStatus;
+  @Exclude() private readonly _capability?: Omit<Capability, 'userId'>[] | undefined;
+  @Exclude() private readonly _aiRecommend: any[]; // AI 역량 키워드
+  @Exclude() private readonly _experienceSummary: ExperienceSummary[];
+
+  constructor(
+    experience: Experience & {
+      User: {
+        Capability: Capability[];
+      };
+    },
+  ) {
+    this._id = experience.id;
+    this._title = experience.title;
+    this._situation = experience.situation;
+    this._startDate = getFormattedDate(experience.startDate);
+    this._endDate = getFormattedDate(experience.endDate);
+    this._experienceStatus = experience.experienceStatus;
+    this._capability = experience.User.Capability.map((capability) => {
+      return { id: capability.id, keyword: capability.keyword };
+    });
+    // this._aiRecommend =
+    // this._experienceSummary =
+  }
+
+  @Expose()
+  @ApiProperty({
+    description: '경험카드 id',
+    example: 1234,
+    type: Number,
+  })
+  @IsInt()
+  @IsPositive()
+  @IsNotEmpty()
+  get id(): number {
+    return this._id;
+  }
+
+  @Expose()
+  @ApiPropertyOptional({
+    description: '경험카드 제목',
+    example: '디프만 13기 UX/UI 디자이너',
+    type: String,
+  })
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  get title(): string | undefined {
+    return this._title;
+  }
+
+  @Expose()
+  @ApiPropertyOptional({
+    description: '경험 분해 S에 속하는 situation 내용',
+    example: '디자이너가 한 명 나간 고독과 싸움',
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  get situation(): string | undefined {
+    return this._situation;
+  }
+
+  @Expose()
+  @ApiPropertyOptional({
+    description: '경험 시작 연월. 경험을 처음 시작한 일자를 나타냅니다. YYYY-MM의 string을 반환합니다.',
+    example: '2023-04',
+  })
+  @IsString()
+  @IsOptional()
+  @Matches(dateValidation.YYYY_MM)
+  get startDate(): string | undefined {
+    return this._startDate;
+  }
+
+  @Expose()
+  @ApiPropertyOptional({
+    description: '경험 종료 연월. 경험을 종료한 일자를 나타냅니다. YYYY-MM의 string을 반환합니다.',
+    example: '2023-07',
+  })
+  @IsString()
+  @IsOptional()
+  @Matches(dateValidation.YYYY_MM)
+  get endDate(): string | undefined {
+    return this._endDate;
+  }
+
+  @Expose()
+  @ApiProperty({
+    description: '경험분해의 진척 상황을 나타냅니다. INPROGRESS면 작성중, DONE이면 완료입니다.',
+    example: ExperienceStatus.INPROGRESS,
+    enum: ExperienceStatus,
+    type: ExperienceStatus,
+  })
+  @IsEnum(ExperienceStatus)
+  @IsString()
+  @IsNotEmpty()
+  get experienceStatus(): ExperienceStatus {
+    return this._experienceStatus;
+  }
+
+  @Expose()
+  @ApiPropertyOptional({
+    description: '해당 경험 카드의 역량 키워드입니다.',
+    example: {
+      id: 1234,
+      keyword: '리더십',
+    },
+    type: _Capability,
+    isArray: true,
+  })
+  get capability(): Omit<Capability, 'userId'>[] | undefined {
+    return this._capability;
+  }
 }
 
 export class GetExperienceNotFoundErrorResDto {
