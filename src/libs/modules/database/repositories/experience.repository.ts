@@ -28,6 +28,13 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
     });
   }
 
+  public async findManyByUserId(userId: number, select: ExperienceSelect) {
+    return await this.prisma.experience.findMany({
+      select,
+      orderBy: { createdAt: 'desc' },
+    });
+  }
+
   public async findOneByUserId(userId: number): Promise<Experience> {
     return await this.prisma.experience.findFirst({
       include: { ExperienceInfo: true },
@@ -38,6 +45,15 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
   public async countExperience(userId: number): Promise<number> {
     return await this.prisma.experience.count({
       where: { userId },
+    });
+  }
+
+  public async getExperienceByCapability(capabilityId: number) {
+    // TODO ai 역량 키워드가 적용되면 해당 키워드도 함께 쿼리로 가져와야 함.
+    return await this.prisma.experience.findMany({
+      where: { ExperienceCapability: { some: { capabilityId: { equals: capabilityId } } } },
+      include: { User: { select: { Capability: { where: { id: capabilityId } } } } },
+      orderBy: { createdAt: 'desc' },
     });
   }
 }
