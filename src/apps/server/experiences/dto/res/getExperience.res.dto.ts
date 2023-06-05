@@ -176,7 +176,7 @@ export class GetExperienceByCapabilityResponseDto {
   constructor(
     experience: Experience & {
       User: {
-        Capability: Capability[];
+        Capability: Omit<Capability, 'userId'>[];
       };
     },
   ) {
