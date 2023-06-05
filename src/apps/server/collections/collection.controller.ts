@@ -9,7 +9,10 @@ import {
   GetCountOfExperienceAndResumeResponseDescriptionMd,
   GetCountOfExperienceAndResumeSummaryMd,
 } from '🔥apps/server/collections/docs/get-count-of-experience-and-resume.doc';
-import { GetCountOfExperienceAndResumeResponseDto } from '🔥apps/server/collections/dtos/get-count-of-experience-and-resume.dto';
+import {
+  GetCountOfExperienceAndCapabilityResponseDto,
+  GetCountOfExperienceAndResumeResponseDto,
+} from '🔥apps/server/collections/dtos/get-count-of-experience-and-resume.dto';
 import { User } from '🔥apps/server/common/decorators/request/user.decorator';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
 import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
@@ -40,14 +43,18 @@ export class CollectionsController {
 
   @Route({
     request: {
-      path: 'capability',
+      path: 'experience',
       method: Method.GET,
     },
     response: {
       code: HttpStatus.OK,
+      type: GetCountOfExperienceAndCapabilityResponseDto,
+      isArray: true,
     },
   })
-  async getCountOfExperienceAndCapability(@User() user: UserJwtToken) {
+  async getCountOfExperienceAndCapability(
+    @User() user: UserJwtToken,
+  ): Promise<ResponseEntity<GetCountOfExperienceAndCapabilityResponseDto[]>> {
     const countOfExperienceAndCapability = await this.collectionsService.getCountOfExperienceAndCapability(user.userId);
 
     return ResponseEntity.OK_WITH_DATA(countOfExperienceAndCapability);
