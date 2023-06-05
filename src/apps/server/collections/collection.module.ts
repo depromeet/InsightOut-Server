@@ -1,11 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ExperienceRepository } from '📚libs/modules/database/repositories/experience.repository';
-import { ResumeRepository } from '📚libs/modules/database/repositories/resume.repository';
 import { CollectionsController } from '🔥apps/server/collections/collection.controller';
+import { CollectionProviders } from '🔥apps/server/collections/collection.provider';
 import { CollectionsService } from '🔥apps/server/collections/collection.service';
 
 @Module({
   controllers: [CollectionsController],
-  providers: [CollectionsService, ExperienceRepository, ResumeRepository],
+  providers: [CollectionsService, ...CollectionProviders],
 })
 export class CollectionsModule {}
