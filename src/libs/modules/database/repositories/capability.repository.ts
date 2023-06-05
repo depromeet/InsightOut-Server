@@ -18,8 +18,12 @@ export class CapabilityRepository extends AbstractRepository<
   public async countExperienceAndCapability(userId: number): Promise<Capability[]> {
     return await this.findMany({
       where: { userId },
-      include: { _count: { select: { ExperienceCapability: true } } },
+      include: {
+        _count: { select: { ExperienceCapability: true } },
+        ExperienceCapability: { orderBy: { Experience: { createdAt: 'desc' } } },
+      },
       distinct: 'keyword',
+      orderBy: { ExperienceCapability: { _count: 'desc' } },
     });
   }
 }
