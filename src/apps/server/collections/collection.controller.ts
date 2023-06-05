@@ -5,16 +5,10 @@ import { ResponseEntity } from '📚libs/utils/respone.entity';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
 import { CollectionsService } from '🔥apps/server/collections/collection.service';
 import {
-  GetCountOfExperienceAndCapabilityDescriptionMd,
-  GetCountOfExperienceAndCapabilityResponseDescriptionMd,
-  GetCountOfExperienceAndCapabilitySummaryMd,
-} from '🔥apps/server/collections/docs/get-count-of-experience-and-capability.doc';
-import {
   GetCountOfExperienceAndResumeDescriptionMd,
   GetCountOfExperienceAndResumeResponseDescriptionMd,
   GetCountOfExperienceAndResumeSummaryMd,
 } from '🔥apps/server/collections/docs/get-count-of-experience-and-resume.doc';
-import { GetCountOfExperienceAndCapabilityResponseDto } from '🔥apps/server/collections/dtos/get-count-of-experience-and-capability.dto';
 import { GetCountOfExperienceAndResumeResponseDto } from '🔥apps/server/collections/dtos/get-count-of-experience-and-resume.dto';
 import { User } from '🔥apps/server/common/decorators/request/user.decorator';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
@@ -42,27 +36,5 @@ export class CollectionsController {
     const countOfExperienceAndResume = await this.collectionsService.getCountOfExperienceAndResume(user.userId);
 
     return ResponseEntity.OK_WITH_DATA(countOfExperienceAndResume);
-  }
-
-  @Route({
-    request: {
-      path: 'experience',
-      method: Method.GET,
-    },
-    response: {
-      code: HttpStatus.OK,
-      type: GetCountOfExperienceAndCapabilityResponseDto,
-      isArray: true,
-      description: GetCountOfExperienceAndCapabilityResponseDescriptionMd,
-    },
-    summary: GetCountOfExperienceAndCapabilitySummaryMd,
-    description: GetCountOfExperienceAndCapabilityDescriptionMd,
-  })
-  async getCountOfExperienceAndCapability(
-    @User() user: UserJwtToken,
-  ): Promise<ResponseEntity<GetCountOfExperienceAndCapabilityResponseDto[]>> {
-    const countOfExperienceAndCapability = await this.collectionsService.getCountOfExperienceAndCapability(user.userId);
-
-    return ResponseEntity.OK_WITH_DATA(countOfExperienceAndCapability);
   }
 }

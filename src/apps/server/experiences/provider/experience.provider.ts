@@ -8,4 +8,5 @@ export const experienceProviders = [
   ExperienceInfoRepository,
   CapabilityRepository,
   ExperienceCapabilityRepository,
+  CapabilityRepository,
 ] as const;
