@@ -82,6 +82,7 @@ export class GetExperienceResDto {
     this._startDate = experience.startDate;
     this._endDate = experience.endDate;
     this._experienceStatus = experience.experienceStatus;
+    this._situation = experience.situation;
     this._task = experience.task;
     this._action = experience.action;
     this._result = experience.result;
