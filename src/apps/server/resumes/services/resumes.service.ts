@@ -2,7 +2,11 @@ import { ApiService } from '📚libs/modules/api/api.service';
 import { SpellCheckResult } from '📚libs/modules/api/api.type';
 import { ResumeRepository } from '📚libs/modules/database/repositories/resume.repository';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { GetAllResumeRequestQueryDto, GetOneResumeResponseDto } from '🔥apps/server/resumes/dtos/get-resume.dto';
+import {
+  GetAllResumeRequestQueryDto,
+  GetOneResumeResponseDto,
+  GetOneResumeWithTitleResponseDto,
+} from '🔥apps/server/resumes/dtos/get-resume.dto';
 import { PatchResumeRequestDto } from '🔥apps/server/resumes/dtos/patch-resume.dto';
 import { PostResumeResponseDto } from '🔥apps/server/resumes/dtos/post-resume.dto';
 import { PostSpellCheckRequestBodyDto } from '🔥apps/server/resumes/dtos/post-spell-check-request.body.dto';
@@ -36,6 +40,25 @@ export class ResumesService {
     }); // Resume 테이블과 Question 타입을 인터섹션한 후에 타입 단언을 통해 해결합니다.
 
     return resumes.map((resume) => new GetOneResumeResponseDto(resume as Resume & { Question: Question[] }));
+  }
+
+  /**
+   * 자기소개서 제목만 조회합니다.
+   *
+   * 모아보기에서 제목을 통해 자기소개서 문항들을 조회하기 위해 사용됩니다.
+   * @param userId 유저 id입니다.
+   * @returns 유저가 작성한 자기소개서의 제목들을 모두 반환합니다.
+   */
+  async getAllResumesTitle(userId: number): Promise<GetOneResumeWithTitleResponseDto[]> {
+    const resumeTitleWithResumeId = await this.resumesRepository.findMany({
+      where: { userId },
+      select: { id: true, title: true, createdAt: true, updatedAt: true },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    const getAllResumesTitleResponseDto = resumeTitleWithResumeId.map((resume) => new GetOneResumeWithTitleResponseDto(resume));
+
+    return getAllResumesTitleResponseDto;
   }
 
   /**

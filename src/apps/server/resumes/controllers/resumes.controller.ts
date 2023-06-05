@@ -8,9 +8,15 @@ import { User } from '🔥apps/server/common/decorators/request/user.decorator';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
 import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
 import {
+  GetAllResumesTitleDescriptionMd,
+  GetAllResumesTitleResponseDescriptionMd,
+  GetAllResumesTitleSummaryMd,
+} from '🔥apps/server/resumes/docs/get-resume.doc';
+import {
   GetAllResumeRequestQueryDto,
   GetOneResumeRequestParamDto,
   GetOneResumeResponseDto,
+  GetOneResumeWithTitleResponseDto,
 } from '🔥apps/server/resumes/dtos/get-resume.dto';
 import { PatchResumeRequestDto } from '🔥apps/server/resumes/dtos/patch-resume.dto';
 import { PostResumeResponseDto } from '🔥apps/server/resumes/dtos/post-resume.dto';
@@ -50,6 +56,26 @@ export class ResumesController {
     const resumes = await this.resumesService.getAllResumes(user.userId, getAllResumeRequestQueryDto);
 
     return ResponseEntity.OK_WITH_DATA(resumes);
+  }
+
+  @Route({
+    request: {
+      path: 'title',
+      method: Method.GET,
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: GetOneResumeWithTitleResponseDto,
+      isArray: true,
+      description: GetAllResumesTitleResponseDescriptionMd,
+    },
+    summary: GetAllResumesTitleSummaryMd,
+    description: GetAllResumesTitleDescriptionMd,
+  })
+  async getAllReumesTitle(@User() user: UserJwtToken): Promise<ResponseEntity<GetOneResumeWithTitleResponseDto[]>> {
+    const resumeTitleWithResumeId = await this.resumesService.getAllResumesTitle(user.userId);
+
+    return ResponseEntity.OK_WITH_DATA(resumeTitleWithResumeId);
   }
 
   @Route({
