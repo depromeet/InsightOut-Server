@@ -1,6 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { Onboarding } from '@prisma/client';
 import { OnboardingRepository } from '📚libs/modules/database/repositories/onboarding.repository';
 import { GetAllOnboardingsResponseDto } from '🔥apps/server/onboarding/dtos/get-onboarding.dto';
+import { PatchOnboardingResponseDto } from '🔥apps/server/onboarding/dtos/patch-onboarding.dto';
 
 @Injectable()
 export class OnboardingsService {
@@ -13,5 +15,19 @@ export class OnboardingsService {
 
     const onboardingResponseDto = new GetAllOnboardingsResponseDto(onboarding);
     return onboardingResponseDto;
+  }
+
+  async updateOnboarding(userId: number, onboardings: Omit<Partial<Onboarding>, 'userId'>): Promise<PatchOnboardingResponseDto> {
+    if (!Object.keys(onboardings).length) {
+      throw new BadRequestException('Please include onboarding at least 1.');
+    }
+
+    const updatedOnboarding = await this.onboardingRepository.update({
+      where: { userId },
+      data: onboardings,
+    });
+
+    const updateOnboardingResponseDto = new PatchOnboardingResponseDto(updatedOnboarding);
+    return updateOnboardingResponseDto;
   }
 }
