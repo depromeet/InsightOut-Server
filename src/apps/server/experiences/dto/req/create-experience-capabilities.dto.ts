@@ -1,14 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { ArrayMaxSize, ArrayMinSize, IsArray, IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsObject } from 'class-validator';
 
+const example = {
+  리더십: true,
+  문제해결력: true,
+  문제해결역량: false,
+  의사소통: false,
+  커뮤니케이션: false,
+  '협상/설득력': false,
+  팀워크: false,
+};
 export class CreateExperienceCapabilitiesdBodyDto {
-  @IsArray()
   @IsNotEmpty()
-  @ArrayMaxSize(4)
-  @ArrayMinSize(0)
-  @IsString({ each: true })
-  @ApiProperty({ example: ['리더십', '협상/설득력', '커뮤니케이션', '팀워크'] })
-  keywords: string[];
+  @IsObject()
+  @ApiProperty({ example })
+  keywords: { [key in string] };
 
   @IsNotEmpty()
   @IsInt()
