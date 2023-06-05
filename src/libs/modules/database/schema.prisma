@@ -222,13 +222,13 @@ model Capability {
 }
 
 model ExperienceCapability {
-  experenceId  Int @map("experience_id")
+  experienceId  Int @map("experience_id")
   capabilityId Int @map("capability_id")
 
-  Experience Experience @relation(references: [id], fields: [experenceId])
+  Experience Experience @relation(references: [id], fields: [experienceId])
   Capability Capability @relation(references: [id], fields: [capabilityId])
 
-  @@id([experenceId, capabilityId])
+  @@id([experienceId, capabilityId])
   @@map("experience_capability")
 }
 

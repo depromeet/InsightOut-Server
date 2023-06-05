@@ -1,19 +1,4 @@
-import {
-  applyDecorators,
-  BadGatewayException,
-  Delete,
-  ForbiddenException,
-  GatewayTimeoutException,
-  Get,
-  HttpStatus,
-  InternalServerErrorException,
-  NotFoundException,
-  Patch,
-  Post,
-  Put,
-  UnauthorizedException,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { applyDecorators, Delete, Get, HttpStatus, Patch, Post, Put } from '@nestjs/common';
 import {
   ApiBadGatewayResponse,
   ApiBadRequestResponse,

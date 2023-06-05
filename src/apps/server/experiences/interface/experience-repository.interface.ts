@@ -1,4 +1,4 @@
-import { Experience, ExperienceInfo } from '@prisma/client';
+import { Experience, ExperienceInfo, Prisma } from '@prisma/client';
 import { UpsertExperienceReqDto } from '../dto/req/upsertExperience.dto';
 import { ExperienceSelect } from './experience-select.interface';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
@@ -20,4 +20,9 @@ export interface ExperienceRepositoryInterface {
     >
   >;
   findOneByUserId(userId: number): Promise<Experience>;
+}
+
+export interface ExperienceCapabilityRepositoryInterface {
+  createMany(createdInfos: { capabilityId: number; experienceId: number }[]): Promise<Prisma.BatchPayload>;
+  deleteByExperienceId(experienceId: number): Promise<Prisma.BatchPayload>;
 }

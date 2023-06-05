@@ -13,7 +13,7 @@ export const getExperienceAttribute: ExperienceSelect = {
   ExperienceInfo: {
     select: {
       experienceId: true,
-      experienceInfoId: true,
+      id: true,
       experienceRole: true,
       motivation: true,
       utilization: true,

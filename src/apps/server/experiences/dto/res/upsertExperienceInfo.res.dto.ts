@@ -6,7 +6,7 @@ import { dateValidation } from '🔥apps/server/common/consts/date-validation.co
 import { IsEnum, IsOptional, Matches } from 'class-validator';
 import { Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
 
-export class UpsertExperienceResDto {
+export class UpsertExperienceInfoResDto {
   @Exclude() private _experienceInfoId: number;
   @Exclude() private _experienceRole: string;
   @Exclude() private _motivation: string;
@@ -72,7 +72,7 @@ export class UpsertExperienceResDto {
   }
 }
 
-export class CreateExperienceResDto {
+export class UpsertExperienceResDto {
   @Exclude() private readonly _experienceId: number;
   @Exclude() private readonly _title: string;
   @Exclude() private readonly _situation: string;
@@ -81,8 +81,8 @@ export class CreateExperienceResDto {
   @Exclude() private readonly _result: string;
   @Exclude() private readonly _startDate: Date;
   @Exclude() private readonly _endDate: Date;
-  @Exclude() _experienceStatus: ExperienceStatus;
-  @Exclude() private readonly _experienceInfo: UpsertExperienceResDto;
+  @Exclude() private readonly _experienceStatus: ExperienceStatus;
+  @Exclude() private readonly _experienceInfo: UpsertExperienceInfoResDto;
 
   constructor(experience: Experience, experienceInfo: ExperienceInfo) {
     this._experienceId = experience.id;
@@ -94,7 +94,7 @@ export class CreateExperienceResDto {
     this._action = experience.action;
     this._result = experience.result;
 
-    const experienceInfoRes = new UpsertExperienceResDto();
+    const experienceInfoRes = new UpsertExperienceInfoResDto();
     experienceInfoRes.setExperienceInfoId = experienceInfo.id;
     experienceInfoRes.setExperienceRole = experienceInfo.experienceRole;
     experienceInfoRes.setMotivation = experienceInfo.motivation;
@@ -164,9 +164,9 @@ export class CreateExperienceResDto {
     return this._experienceStatus;
   }
 
-  @ApiProperty({ type: UpsertExperienceResDto })
+  @ApiProperty({ type: UpsertExperienceInfoResDto })
   @Expose()
-  get experienceInfo(): UpsertExperienceResDto {
+  get experienceInfo(): UpsertExperienceInfoResDto {
     return this._experienceInfo;
   }
 }
