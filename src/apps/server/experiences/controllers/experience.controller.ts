@@ -21,7 +21,15 @@ import {
   GetCountOfExperienceAndCapabilityResponseDescriptionMd,
   GetCountOfExperienceAndCapabilitySummaryMd,
 } from '../markdown/get-count-of-experience-and-capability.doc';
-import { GetCountOfExperienceAndCapabilityResponseDto } from '🔥apps/server/experiences/dto/get-count-of-experience-and-capability.dto';
+import {
+  GetCountOfExperienceAndCapabilityResponseDto,
+  GetCountOfExperienceResponseDto,
+} from '🔥apps/server/experiences/dto/get-count-of-experience-and-capability.dto';
+import {
+  GetCountOfExperienceDescriptionMd,
+  GetCountOfExperienceResponseDescriptionMd,
+  GetCountOfExperienceSummaryMd,
+} from '🔥apps/server/experiences/markdown/get-count-of-experience.md';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -84,7 +92,7 @@ export class ExperienceController {
 
   @Route({
     request: {
-      path: '/count',
+      path: '/capability',
       method: Method.GET,
     },
     response: {
@@ -102,5 +110,24 @@ export class ExperienceController {
     const countOfExperienceAndCapability = await this.experienceService.getCountOfExperienceAndCapability(user.userId);
 
     return ResponseEntity.OK_WITH_DATA(countOfExperienceAndCapability);
+  }
+
+  @Route({
+    request: {
+      path: '/count',
+      method: Method.GET,
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: GetCountOfExperienceResponseDto,
+      description: GetCountOfExperienceResponseDescriptionMd,
+    },
+    summary: GetCountOfExperienceSummaryMd,
+    description: GetCountOfExperienceDescriptionMd,
+  })
+  async getCountOfExperience(@User() user: UserJwtToken): Promise<ResponseEntity<GetCountOfExperienceResponseDto>> {
+    const countOfExperience = await this.experienceService.getCountOfExperience(user.userId);
+
+    return ResponseEntity.OK_WITH_DATA(countOfExperience);
   }
 }

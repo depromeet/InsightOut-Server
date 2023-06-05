@@ -53,3 +53,23 @@ export class GetCountOfExperienceAndCapabilityResponseDto {
     return this._count;
   }
 }
+
+export class GetCountOfExperienceResponseDto {
+  @Exclude() private readonly _experience: number;
+
+  constructor(countOfExperience: number) {
+    this._experience = countOfExperience;
+  }
+
+  @Expose()
+  @ApiProperty({
+    description: '생성된 경험 카드 개수입니다.',
+    example: 1234,
+    type: Number,
+  })
+  @IsInt()
+  @Min(1)
+  get experience(): number {
+    return this._experience;
+  }
+}

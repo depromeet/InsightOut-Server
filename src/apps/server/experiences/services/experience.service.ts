@@ -1,22 +1,23 @@
-import { Inject, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { UpsertExperienceReqDto } from '../dto/req/upsertExperience.dto';
 import { UserJwtToken } from '../../auth/types/jwt-tokwn.type';
-import { ExperienceRepositoryInterface } from '../interface/experience-repository.interface';
 import { UpsertExperienceResDto } from '../dto/res/upsertExperienceInfo.res.dto';
 import { getExperienceAttribute } from '../../common/consts/experience-attribute.const';
 import { GetExperienceResDto } from '../dto/res/getExperience.res.dto';
 import { Experience, ExperienceInfo, ExperienceStatus, Prisma } from '@prisma/client';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
 import { ExperienceRepository } from '📚libs/modules/database/repositories/experience.repository';
-import { GetCountOfExperienceAndCapabilityResponseDto } from '🔥apps/server/experiences/dto/get-count-of-experience-and-capability.dto';
+import {
+  GetCountOfExperienceAndCapabilityResponseDto,
+  GetCountOfExperienceResponseDto,
+} from '🔥apps/server/experiences/dto/get-count-of-experience-and-capability.dto';
 import { CountExperienceAndCapability } from '🔥apps/server/collections/types/count-experience-and-capability.type';
 import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
 
 @Injectable()
 export class ExperienceService {
   constructor(
-    @Inject(ExperienceRepository)
-    private readonly experienceRepository: ExperienceRepositoryInterface,
+    private readonly experienceRepository: ExperienceRepository,
     private readonly prisma: PrismaService,
     private readonly capabilityRepository: CapabilityRepository,
   ) {}
@@ -134,7 +135,7 @@ export class ExperienceService {
 
     // count가 0인 키워드는 필터링합니다.
     const filteredCountOfExperienceAndCapability = countOfExperienceAndCapability.filter(
-      (row: CountExperienceAndCapability) => row._count.ExperienceCapability !== 123,
+      (row: CountExperienceAndCapability) => row._count.ExperienceCapability !== 0,
     );
 
     if (!filteredCountOfExperienceAndCapability.length) {
@@ -145,5 +146,13 @@ export class ExperienceService {
       (count) => new GetCountOfExperienceAndCapabilityResponseDto(count as CountExperienceAndCapability),
     );
     return countOfExperienceAndCapabilityResponseDto;
+  }
+
+  public async getCountOfExperience(userId: number): Promise<GetCountOfExperienceResponseDto> {
+    const countOfExperience = await this.experienceRepository.countExperience(userId);
+
+    const getCountOfExperienceResponseDto = new GetCountOfExperienceResponseDto(countOfExperience);
+
+    return getCountOfExperienceResponseDto;
   }
 }
