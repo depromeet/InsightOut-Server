@@ -50,10 +50,29 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
 
   public async getExperienceByCapability(capabilityId: number) {
     // TODO ai 역량 키워드가 적용되면 해당 키워드도 함께 쿼리로 가져와야 함.
-    return await this.prisma.experience.findMany({
+    const experiences = await this.prisma.experience.findMany({
       where: { ExperienceCapability: { some: { capabilityId: { equals: capabilityId } } } },
-      include: { User: { select: { Capability: { where: { id: capabilityId }, select: { id: true, keyword: true } } } } },
+      include: {
+        ExperienceCapability: true,
+      },
       orderBy: { createdAt: 'desc' },
     });
+
+    const experienceWithCapability = await Promise.all(
+      experiences.map(async (experience) => {
+        const capability = await this.prisma.capability.findMany({
+          where: { ExperienceCapability: { some: { experienceId: experience.id } } },
+          select: { id: true, keyword: true },
+        });
+
+        const { ExperienceCapability, ...rest } = experience;
+
+        return Object.assign(rest, { capability });
+      }),
+    );
+
+    console.log(experienceWithCapability);
+
+    return experienceWithCapability;
   }
 }

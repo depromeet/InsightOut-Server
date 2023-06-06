@@ -175,9 +175,7 @@ export class GetExperienceByCapabilityResponseDto {
 
   constructor(
     experience: Experience & {
-      User: {
-        Capability: Omit<Capability, 'userId'>[];
-      };
+      capability: Omit<Capability, 'userId'>[];
     },
   ) {
     this._id = experience.id;
@@ -186,9 +184,7 @@ export class GetExperienceByCapabilityResponseDto {
     this._startDate = getFormattedDate(experience.startDate);
     this._endDate = getFormattedDate(experience.endDate);
     this._experienceStatus = experience.experienceStatus;
-    this._capability = experience.User.Capability.map((capability) => {
-      return { id: capability.id, keyword: capability.keyword };
-    });
+    this._capability = experience.capability;
     // this._aiRecommend =
     // this._experienceSummary =
   }
