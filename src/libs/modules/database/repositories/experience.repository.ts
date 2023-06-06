@@ -71,8 +71,6 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
       }),
     );
 
-    console.log(experienceWithCapability);
-
     return experienceWithCapability;
   }
 }
