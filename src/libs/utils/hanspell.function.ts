@@ -114,11 +114,7 @@ export const parseJSON = (response: any) => {
  * @param limit 최대 길이
  * @returns 구분자 및 최대 길이로 나뉘어진 글 배열을 반환합니다.
  */
-export const byLength = (
-  string: string,
-  separator: string,
-  limit: number,
-): string[] => {
+export const byLength = (string: string, separator: string, limit: number): string[] => {
   const splitted: string[] = [];
   let lastFound = -1;
   let lastSplitted = -1;
@@ -192,7 +188,7 @@ export const parseJSONFromDaum = (
       token: '',
       suggestions: [],
       context: '',
-      info: '',
+      // info: '',
     };
 
     typo.type = decode(getAttr(line, 'data-error-type='));
@@ -209,16 +205,16 @@ export const parseJSONFromDaum = (
       infoEnd = infoNextEnd;
     }
 
-    typo.info = decode(response.substr(infoBegin, infoEnd + 6 - infoBegin))
-      .replace(/\t/g, '')
-      .replace(/<strong class[^>]*>[^>]*>\n/gi, '')
-      .replace(/<br[^>]*>/gi, '\n')
-      .replace(/<[^>]*>/g, '')
-      .replace(/\n\n\n\n\n/g, '\n(예)\n')
-      .replace(/\n\n*$/g, '')
-      .replace(/^[ \n][ \n]*/g, '');
+    // typo.info = decode(response.substr(infoBegin, infoEnd + 6 - infoBegin))
+    //   .replace(/\t/g, '')
+    //   .replace(/<strong class[^>]*>[^>]*>\n/gi, '')
+    //   .replace(/<br[^>]*>/gi, '\n')
+    //   .replace(/<[^>]*>/g, '')
+    //   .replace(/\n\n\n\n\n/g, '\n(예)\n')
+    //   .replace(/\n\n*$/g, '')
+    //   .replace(/^[ \n][ \n]*/g, '');
 
-    if (typo.info === '도움말이 없습니다.') delete typo.info;
+    // if (typo.info === '도움말이 없습니다.') delete typo.info;
 
     typos.push(typo);
   }

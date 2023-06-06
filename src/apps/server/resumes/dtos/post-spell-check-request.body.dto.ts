@@ -9,6 +9,6 @@ export class PostSpellCheckRequestBodyDto {
   })
   @IsString()
   @IsNotEmpty()
-  @MaxLength(2000)
+  @MaxLength(2500)
   sentence: string;
 }
