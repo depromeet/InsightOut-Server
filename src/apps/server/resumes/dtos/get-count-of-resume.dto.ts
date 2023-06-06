@@ -2,25 +2,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 import { IsInt, Min } from 'class-validator';
 
-export class GetCountOfExperienceAndResumeResponseDto {
-  @Exclude() private readonly _experience: number;
+export class GetCountOfResumeResponseDto {
   @Exclude() private readonly _resume: number;
 
-  constructor(countOfExperience: number, countOfResume: number) {
-    this._experience = countOfExperience;
+  constructor(countOfResume: number) {
     this._resume = countOfResume;
-  }
-
-  @Expose()
-  @ApiProperty({
-    description: '생성된 경험 카드 개수입니다.',
-    example: 1234,
-    type: Number,
-  })
-  @IsInt()
-  @Min(0)
-  get experience(): number {
-    return this._experience;
   }
 
   @Expose()

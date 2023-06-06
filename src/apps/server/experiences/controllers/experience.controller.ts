@@ -17,6 +17,20 @@ import { GetExperienceNotFoundErrorResDto, GetExperienceResDto } from '../dto/re
 import { Method } from '📚libs/enums/method.enum';
 import { getExperienceSuccMd, upsertExperienceSuccMd } from '🔥apps/server/experiences/markdown/experience.md';
 import { GetExperienceRequestQueryDto } from '🔥apps/server/experiences/dto/req/get-experience.dto';
+import {
+  GetCountOfExperienceAndCapabilityDescriptionMd,
+  GetCountOfExperienceAndCapabilityResponseDescriptionMd,
+  GetCountOfExperienceAndCapabilitySummaryMd,
+} from '../markdown/get-count-of-experience-and-capability.doc';
+import {
+  GetCountOfExperienceAndCapabilityResponseDto,
+  GetCountOfExperienceResponseDto,
+} from '🔥apps/server/experiences/dto/get-count-of-experience-and-capability.dto';
+import {
+  GetCountOfExperienceDescriptionMd,
+  GetCountOfExperienceResponseDescriptionMd,
+  GetCountOfExperienceSummaryMd,
+} from '🔥apps/server/experiences/markdown/get-count-of-experience.md';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -86,5 +100,46 @@ export class ExperienceController {
     }
 
     return ResponseEntity.OK_WITH_DATA(experience);
+  }
+
+  @Route({
+    request: {
+      path: '/capability',
+      method: Method.GET,
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: GetCountOfExperienceAndCapabilityResponseDto,
+      isArray: true,
+      description: GetCountOfExperienceAndCapabilityResponseDescriptionMd,
+    },
+    summary: GetCountOfExperienceAndCapabilitySummaryMd,
+    description: GetCountOfExperienceAndCapabilityDescriptionMd,
+  })
+  async getCountOfExperienceAndCapability(
+    @User() user: UserJwtToken,
+  ): Promise<ResponseEntity<GetCountOfExperienceAndCapabilityResponseDto[]>> {
+    const countOfExperienceAndCapability = await this.experienceService.getCountOfExperienceAndCapability(user.userId);
+
+    return ResponseEntity.OK_WITH_DATA(countOfExperienceAndCapability);
+  }
+
+  @Route({
+    request: {
+      path: '/count',
+      method: Method.GET,
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: GetCountOfExperienceResponseDto,
+      description: GetCountOfExperienceResponseDescriptionMd,
+    },
+    summary: GetCountOfExperienceSummaryMd,
+    description: GetCountOfExperienceDescriptionMd,
+  })
+  async getCountOfExperience(@User() user: UserJwtToken): Promise<ResponseEntity<GetCountOfExperienceResponseDto>> {
+    const countOfExperience = await this.experienceService.getCountOfExperience(user.userId);
+
+    return ResponseEntity.OK_WITH_DATA(countOfExperience);
   }
 }

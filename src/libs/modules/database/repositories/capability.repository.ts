@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Capability, Prisma } from '@prisma/client';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
 import { AbstractRepository, DelegateArgs, DelegateReturnTypes } from '📚libs/modules/database/repositories/abstract.repository';
 
@@ -13,5 +13,19 @@ export class CapabilityRepository extends AbstractRepository<
 > {
   constructor(private readonly prisma: PrismaService) {
     super(prisma.capability);
+  }
+
+  public async countExperienceAndCapability(userId: number): Promise<Capability[]> {
+    return await this.findMany({
+      where: { userId },
+      orderBy: { ExperienceCapability: { _count: 'desc' } },
+      select: {
+        _count: { select: { ExperienceCapability: true } },
+        id: true,
+        keyword: true,
+        ExperienceCapability: { orderBy: { Experience: { createdAt: 'desc' } } },
+      },
+      distinct: 'keyword',
+    });
   }
 }
