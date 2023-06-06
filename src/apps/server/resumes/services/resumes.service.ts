@@ -68,8 +68,14 @@ export class ResumesService {
   public async getOneResume(userId: number, resumeId: number): Promise<GetOneResumeResponseDto> {
     const resume = await this.resumesRepository.findFirst({
       where: { userId, id: resumeId },
-      include: { Question: { select: { id: true, title: true, answer: true, updatedAt: true }, orderBy: { createdAt: 'desc' } } }, // 자기소개서 문항을 left join, select 하며, 생성일자 기준 내림차순으로 모두 가져옵니다.
+      include: {
+        Question: { select: { id: true, title: true, answer: true, createdAt: true, updatedAt: true }, orderBy: { createdAt: 'desc' } },
+      }, // 자기소개서 문항을 left join, select 하며, 생성일자 기준 내림차순으로 모두 가져옵니다.
     });
+
+    if (!resume) {
+      throw new NotFoundException('Resume not found');
+    }
 
     // Entity -> DTO
     const getOneResumeDto = new GetOneResumeResponseDto(resume as Resume & { Question: Question[] });

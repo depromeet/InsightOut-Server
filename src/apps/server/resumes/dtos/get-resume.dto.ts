@@ -113,7 +113,7 @@ export class GetOneResumeResponseDto {
     this._createdAt = resume.createdAt;
     this._updatedAt = resume.updatedAt;
     this._question = resume.Question.map((question) => {
-      const { resumeId, createdAt, ...rest } = question;
+      const { resumeId, ...rest } = question;
       return rest;
     });
   }
