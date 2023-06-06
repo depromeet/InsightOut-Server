@@ -1,4 +1,4 @@
-import { Body, HttpStatus, UseGuards } from '@nestjs/common';
+import { Body, HttpStatus, Query, UseGuards } from '@nestjs/common';
 import { Route } from '../../common/decorators/router/route.decorator';
 import { RouteTable } from '../../common/decorators/router/route-table.decorator';
 import { UpsertExperienceReqDto } from '../dto/req/upsertExperience.dto';
@@ -16,6 +16,7 @@ import { ResponseEntity } from '📚libs/utils/respone.entity';
 import { GetExperienceNotFoundErrorResDto, GetExperienceResDto } from '../dto/res/getExperience.res.dto';
 import { Method } from '📚libs/enums/method.enum';
 import { getExperienceSuccMd, upsertExperienceSuccMd } from '🔥apps/server/experiences/markdown/experience.md';
+import { GetExperienceRequestQueryDto } from '🔥apps/server/experiences/dto/req/get-experience.dto';
 import {
   GetCountOfExperienceAndCapabilityDescriptionMd,
   GetCountOfExperienceAndCapabilityResponseDescriptionMd,
@@ -84,8 +85,19 @@ export class ExperienceController {
     description: '⛔ 해당 경험 카드 ID를 확인해주세요 :)',
     type: GetExperienceNotFoundErrorResDto,
   })
-  public async getExperience(@User() user: UserJwtToken) {
-    const experience = await this.experienceService.getExperienceByUserId(user.userId);
+  public async getExperience(@User() user: UserJwtToken, @Query() getExperienceRequestQueryDto?: GetExperienceRequestQueryDto) {
+    let experience;
+
+    if (getExperienceRequestQueryDto.capabilityId) {
+      experience = await this.experienceService.getExperienceByCapability(getExperienceRequestQueryDto.capabilityId);
+    } else {
+      // TODO 추후 전체 모아보기를 위해 수정 필요
+      experience = await this.experienceService.getExperiencesByUserId(user.userId);
+    }
+
+    if (getExperienceRequestQueryDto.last) {
+      experience = experience[0];
+    }
 
     return ResponseEntity.OK_WITH_DATA(experience);
   }
