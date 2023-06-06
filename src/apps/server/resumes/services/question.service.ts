@@ -4,10 +4,17 @@ import { ResumeRepository } from '📚libs/modules/database/repositories/resume.
 import { PostQuestionResponseDto } from '../dtos/post-question.dto';
 import { PatchQuestionRequestBodyDto } from '🔥apps/server/resumes/dtos/patch-question-request.dto';
 import { GetOneQuestionResponseDto } from '🔥apps/server/resumes/dtos/get-question.dto';
+import { PostSpellCheckRequestBodyDto } from '🔥apps/server/resumes/dtos/post-spell-check-request.body.dto';
+import { SpellCheckResult } from '📚libs/modules/api/api.type';
+import { ApiService } from '📚libs/modules/api/api.service';
 
 @Injectable()
 export class QuestionsService {
-  constructor(private readonly resumeRepository: ResumeRepository, private readonly questionRepository: QuestionRepository) {}
+  constructor(
+    private readonly resumeRepository: ResumeRepository,
+    private readonly questionRepository: QuestionRepository,
+    private readonly apiService: ApiService,
+  ) {}
 
   /**
    * 자기소개서의 문항을 한 개 생성합니다.
@@ -30,6 +37,13 @@ export class QuestionsService {
 
     const questionReponseDto = new PostQuestionResponseDto(question);
     return questionReponseDto;
+  }
+
+  public async spellCheck(body: PostSpellCheckRequestBodyDto): Promise<SpellCheckResult[][]> {
+    const { sentence } = body;
+    const checkedSpellByDAUM = await this.apiService.spellCheckByDaum(sentence);
+
+    return checkedSpellByDAUM;
   }
 
   async updateOneQuestion(body: PatchQuestionRequestBodyDto, questionId: number, userId: number): Promise<void> {

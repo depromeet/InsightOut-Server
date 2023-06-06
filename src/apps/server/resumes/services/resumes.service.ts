@@ -1,5 +1,3 @@
-import { ApiService } from '📚libs/modules/api/api.service';
-import { SpellCheckResult } from '📚libs/modules/api/api.type';
 import { ResumeRepository } from '📚libs/modules/database/repositories/resume.repository';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import {
@@ -9,18 +7,13 @@ import {
 } from '🔥apps/server/resumes/dtos/get-resume.dto';
 import { PatchResumeRequestDto } from '🔥apps/server/resumes/dtos/patch-resume.dto';
 import { PostResumeResponseDto } from '🔥apps/server/resumes/dtos/post-resume.dto';
-import { PostSpellCheckRequestBodyDto } from '🔥apps/server/resumes/dtos/post-spell-check-request.body.dto';
 import { Question, Resume } from '@prisma/client';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
 import { GetCountOfResumeResponseDto } from '🔥apps/server/resumes/dtos/get-count-of-resume.dto';
 
 @Injectable()
 export class ResumesService {
-  constructor(
-    private readonly resumesRepository: ResumeRepository,
-    private readonly apiService: ApiService,
-    private readonly prisma: PrismaService,
-  ) {}
+  constructor(private readonly resumesRepository: ResumeRepository, private readonly prisma: PrismaService) {}
 
   /**
    * 유저가 작성한 모든 자기소개서를 가져옵니다. 문항의 답안(answer)은 payload가 크기 때문에 option으로 선택해 가져옵니다.
@@ -75,8 +68,14 @@ export class ResumesService {
   public async getOneResume(userId: number, resumeId: number): Promise<GetOneResumeResponseDto> {
     const resume = await this.resumesRepository.findFirst({
       where: { userId, id: resumeId },
-      include: { Question: { select: { id: true, title: true, answer: true, updatedAt: true }, orderBy: { createdAt: 'desc' } } }, // 자기소개서 문항을 left join, select 하며, 생성일자 기준 내림차순으로 모두 가져옵니다.
+      include: {
+        Question: { select: { id: true, title: true, answer: true, createdAt: true, updatedAt: true }, orderBy: { createdAt: 'desc' } },
+      }, // 자기소개서 문항을 left join, select 하며, 생성일자 기준 내림차순으로 모두 가져옵니다.
     });
+
+    if (!resume) {
+      throw new NotFoundException('Resume not found');
+    }
 
     // Entity -> DTO
     const getOneResumeDto = new GetOneResumeResponseDto(resume as Resume & { Question: Question[] });
@@ -110,13 +109,6 @@ export class ResumesService {
     // Entity -> DTO
     const resumeResponseDto = new PostResumeResponseDto(resume);
     return resumeResponseDto;
-  }
-
-  public async spellCheck(body: PostSpellCheckRequestBodyDto): Promise<SpellCheckResult[][]> {
-    const { sentence } = body;
-    const checkedSpellByDAUM = await this.apiService.spellCheckByDaum(sentence);
-
-    return checkedSpellByDAUM;
   }
 
   async deleteResume({ resumeId, userId }: { resumeId: number; userId: number }): Promise<void> {

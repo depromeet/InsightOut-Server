@@ -89,10 +89,10 @@ model UserInfo {
 model Onboarding {
   userId Int @id
 
-  experience Boolean @default(false) // 경험분해 온보딩 여부
+  experience        Boolean @default(false) // 경험분해 온보딩 여부
   experienceStepper Boolean @default(false) @map("experience_stepper") // 경험분해 stepper 온보딩 여부
-  resume Boolean @default(false) // 자기소개서 작성 온보딩 여부
-  collection Boolean @default(false) // 모아보기 온보딩 여부
+  resume            Boolean @default(false) // 자기소개서 작성 온보딩 여부
+  collection        Boolean @default(false) // 모아보기 온보딩 여부
 
   User User @relation(references: [id], fields: [userId])
 
@@ -106,7 +106,7 @@ model Onboarding {
 // 자기소개서 제목
 model Resume {
   id    Int    @id @default(autoincrement())
-  title String @db.VarChar(13) @default("새 자기소개서") // 자기소개서 제목
+  title String @default("새 자기소개서") @db.VarChar(13) // 자기소개서 제목
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
@@ -148,7 +148,7 @@ model Question {
   id       Int @id @default(autoincrement())
   resumeId Int @map("resume_id") // 자기소개서 제목 pfk
 
-  title  String?  @db.VarChar(300) // 문항 제목
+  title  String? @db.VarChar(300) // 문항 제목
   answer String? @db.VarChar(2500) // 문항 내용
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
@@ -267,7 +267,7 @@ model AiCapability {
 }
 
 model ExperienceCapability {
-  experienceId  Int @map("experience_id")
+  experienceId Int @map("experience_id")
   capabilityId Int @map("capability_id")
 
   Experience Experience @relation(references: [id], fields: [experienceId])
