@@ -166,6 +166,9 @@ export class GetExperienceByCapabilityResponseDto {
   @Exclude() private readonly _id: number;
   @Exclude() private readonly _title?: string;
   @Exclude() private readonly _situation?: string;
+  @Exclude() private readonly _task?: string;
+  @Exclude() private readonly _action?: string;
+  @Exclude() private readonly _result?: string;
   @Exclude() private readonly _startDate?: string;
   @Exclude() private readonly _endDate?: string;
   @Exclude() private readonly _experienceStatus: ExperienceStatus;
@@ -181,6 +184,9 @@ export class GetExperienceByCapabilityResponseDto {
     this._id = experience.id;
     this._title = experience.title;
     this._situation = experience.situation;
+    this._task = experience.task;
+    this._action = experience.action;
+    this._result = experience.result;
     this._startDate = getFormattedDate(experience.startDate);
     this._endDate = getFormattedDate(experience.endDate);
     this._experienceStatus = experience.experienceStatus;
@@ -217,14 +223,50 @@ export class GetExperienceByCapabilityResponseDto {
 
   @Expose()
   @ApiPropertyOptional({
-    description: '경험 분해 S에 속하는 situation 내용',
-    example: '디자이너가 한 명 나간 고독과 싸움',
+    description: '경험 분해 S에 속하는 situation, 상황 내용',
+    example: '디프만 13기에 들어갔어요',
     type: String,
   })
   @IsString()
   @IsOptional()
   get situation(): string | undefined {
     return this._situation;
+  }
+
+  @Expose()
+  @ApiPropertyOptional({
+    description: '경험 분해 T에 속하는 task, 문제 내용',
+    example: '디자이너가 한 명 나가서 고독과 싸움을 했어요',
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  get task(): string | undefined {
+    return this._task;
+  }
+
+  @Expose()
+  @ApiPropertyOptional({
+    description: '경험 분해 A에 속하는 action, 해결 내용',
+    example: '위기를 기회로 오히려 좋다는 마음가짐으로 도전했어요',
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  get action(): string | undefined {
+    return this._action;
+  }
+
+  @Expose()
+  @ApiPropertyOptional({
+    description: '경험 분해 R에 속하는 result, 결과 내용',
+    example: 'insight-out이라는 예쁜 서비스가 탄생했어요',
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  get result(): string | undefined {
+    return this._result;
   }
 
   @Expose()

@@ -8,12 +8,21 @@ import { User } from '🔥apps/server/common/decorators/request/user.decorator';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
 import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
 import {
+  PatchQuestionDescriptionMd,
+  PatchQuestionResponseDescriptionMd,
+  PatchQuestionSummaryMd,
+} from '🔥apps/server/resumes/docs/patch-question.doc';
+import {
   PostSpellCheckDescriptionMd,
   PostSpellCheckResponseDescriptionMd,
   PostSpellCheckSummaryMd,
 } from '🔥apps/server/resumes/docs/post-spell-check.doc';
 import { GetOneQuestionRequestParamDto, GetOneQuestionResponseDto } from '🔥apps/server/resumes/dtos/get-question.dto';
-import { PatchQuestionRequestParamDto, PatchQuestionRequestBodyDto } from '🔥apps/server/resumes/dtos/patch-question-request.dto';
+import {
+  PatchQuestionRequestParamDto,
+  PatchQuestionRequestBodyDto,
+  PatchQuestionResponseDto,
+} from '🔥apps/server/resumes/dtos/patch-question-request.dto';
 import { PostQuestionResponseDto, PostQuestionRequestBodyDto } from '🔥apps/server/resumes/dtos/post-question.dto';
 import { PostSpellCheckRequestBodyDto } from '🔥apps/server/resumes/dtos/post-spell-check-request.body.dto';
 import { QuestionsService } from '🔥apps/server/resumes/services/question.service';
@@ -104,18 +113,20 @@ export class QuestionsController {
     },
     response: {
       code: HttpStatus.OK,
+      type: PatchQuestionResponseDto,
+      description: PatchQuestionResponseDescriptionMd,
     },
-    summary: '자기소개서 문항 수정',
-    description: '자기소개서 문항 제목 및 내용 수정',
+    summary: PatchQuestionSummaryMd,
+    description: PatchQuestionDescriptionMd,
   })
   async updateOneQuestion(
     @Param() patchQuestionRequestParamDto: PatchQuestionRequestParamDto,
     @Body() body: PatchQuestionRequestBodyDto,
     @User() user: UserJwtToken,
-  ): Promise<ResponseEntity<string>> {
-    await this.questionService.updateOneQuestion(body, patchQuestionRequestParamDto.questionId, user.userId);
+  ): Promise<ResponseEntity<PatchQuestionResponseDto>> {
+    const updatedQuestion = await this.questionService.updateOneQuestion(body, patchQuestionRequestParamDto.questionId, user.userId);
 
-    return ResponseEntity.OK_WITH_MESSAGE('Resume question updated');
+    return ResponseEntity.OK_WITH_DATA(updatedQuestion);
   }
 
   @Route({
