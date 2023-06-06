@@ -6,6 +6,11 @@ import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
 import { User } from '🔥apps/server/common/decorators/request/user.decorator';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
 import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
+import {
+  PatchUserInfoDescriptionMd,
+  PatchUserInfoResponseDescriptionMd,
+  PatchUserInfoSummaryMd,
+} from '🔥apps/server/users/docs/patch-user-info.doc';
 import { PatchUserInfoRequestBodyDto } from '🔥apps/server/users/dtos/patch-user-info.dto';
 import { PostSendFeedbackRequestBodyDto } from '🔥apps/server/users/dtos/post-feedback.dto';
 import { UserService } from '🔥apps/server/users/user.service';
@@ -51,7 +56,10 @@ export class UserController {
     },
     response: {
       code: HttpStatus.OK,
+      description: PatchUserInfoResponseDescriptionMd,
     },
+    summary: PatchUserInfoSummaryMd,
+    description: PatchUserInfoDescriptionMd,
   })
   async updateUserInfo(
     @User() user: UserJwtToken,
