@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { FeedbackRepository } from '📚libs/modules/database/repositories/feedback.repository';
 import { UserRepository } from '📚libs/modules/database/repositories/user.repository';
+import { PatchUserInfoRequestBodyDto } from '🔥apps/server/users/dtos/patch-user-info.dto';
 import { PostSendFeedbackRequestBodyDto } from '🔥apps/server/users/dtos/post-feedback.dto';
 
 @Injectable()
@@ -16,6 +17,17 @@ export class UserService {
     const { contents } = body;
     await this.feedbackRepository.create({
       data: { contents },
+    });
+  }
+
+  async updateUserInfo(userId: number, body: PatchUserInfoRequestBodyDto): Promise<void> {
+    if (!Object.keys(body).length) {
+      throw new BadRequestException('Please input information to be updated');
+    }
+
+    await this.userRepository.update({
+      data: { nickname: body.nickname, UserInfo: { update: { field: body.field } } },
+      where: { id: userId },
     });
   }
 }

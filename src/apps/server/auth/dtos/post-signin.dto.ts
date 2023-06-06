@@ -20,7 +20,7 @@ export class UserPayload {
   @IsString()
   @IsNotEmpty()
   @IsUrl()
-  picture: string;
+  picture?: string | undefined;
 
   @ApiProperty({ description: '소셜 로그인 OAuth2 제공업체에서의 고유한 id입니다.' })
   @IsString()

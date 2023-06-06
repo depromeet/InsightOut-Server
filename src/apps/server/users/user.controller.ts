@@ -1,8 +1,17 @@
-import { Body, Controller, HttpStatus } from '@nestjs/common';
+import { Body, Controller, HttpStatus, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Method } from '📚libs/enums/method.enum';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
+import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
+import { User } from '🔥apps/server/common/decorators/request/user.decorator';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
+import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
+import {
+  PatchUserInfoDescriptionMd,
+  PatchUserInfoResponseDescriptionMd,
+  PatchUserInfoSummaryMd,
+} from '🔥apps/server/users/docs/patch-user-info.doc';
+import { PatchUserInfoRequestBodyDto } from '🔥apps/server/users/dtos/patch-user-info.dto';
 import { PostSendFeedbackRequestBodyDto } from '🔥apps/server/users/dtos/post-feedback.dto';
 import { UserService } from '🔥apps/server/users/user.service';
 
@@ -37,5 +46,27 @@ export class UserController {
     await this.userService.sendFeedback(postSendFeedbackRequestBodyDto);
 
     return ResponseEntity.CREATED_WITH_MESSAGE('Feedback has been sent');
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Route({
+    request: {
+      path: '',
+      method: Method.PATCH,
+    },
+    response: {
+      code: HttpStatus.OK,
+      description: PatchUserInfoResponseDescriptionMd,
+    },
+    summary: PatchUserInfoSummaryMd,
+    description: PatchUserInfoDescriptionMd,
+  })
+  async updateUserInfo(
+    @User() user: UserJwtToken,
+    @Body() patchUserInfoRequestBodyDto: PatchUserInfoRequestBodyDto,
+  ): Promise<ResponseEntity<string>> {
+    await this.userService.updateUserInfo(user.userId, patchUserInfoRequestBodyDto);
+
+    return ResponseEntity.OK_WITH_MESSAGE('Update success');
   }
 }
