@@ -257,10 +257,10 @@ model AiCapability {
   keyword String @db.VarChar(7) // 역량 키워드
 
   userId Int @map("user_id")
-  AiResumeId Int @map("ai_resume_id")
+  aiResumeId Int @map("ai_resume_id")
 
   User        User         @relation(references: [id], fields: [userId], onDelete: Cascade)
-  AiResume    AiResume     @relation(references: [id], fields: [AiResumeId], onDelete: Cascade)
+  AiResume    AiResume     @relation(references: [id], fields: [aiResumeId], onDelete: Cascade)
   
 
   @@map("ai_capability")
