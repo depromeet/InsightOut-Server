@@ -11,8 +11,8 @@ import {
   GetCountOfExperienceAndCapabilityResponseDto,
   GetCountOfExperienceResponseDto,
 } from '🔥apps/server/experiences/dto/get-count-of-experience-and-capability.dto';
-import { CountExperienceAndCapability } from '🔥apps/server/collections/types/count-experience-and-capability.type';
 import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
+import { CountExperienceAndCapability } from '🔥apps/server/experiences/types/count-experience-and-capability.type';
 
 @Injectable()
 export class ExperienceService {
