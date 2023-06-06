@@ -1,6 +1,7 @@
 import { UseGuards, HttpStatus, Param, Body, ParseIntPipe, Controller } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Method } from '📚libs/enums/method.enum';
+import { SpellCheckResult } from '📚libs/modules/api/api.type';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
 import { User } from '🔥apps/server/common/decorators/request/user.decorator';
@@ -11,6 +12,11 @@ import {
   PatchQuestionResponseDescriptionMd,
   PatchQuestionSummaryMd,
 } from '🔥apps/server/resumes/docs/patch-question.doc';
+import {
+  PostSpellCheckDescriptionMd,
+  PostSpellCheckResponseDescriptionMd,
+  PostSpellCheckSummaryMd,
+} from '🔥apps/server/resumes/docs/post-spell-check.doc';
 import { GetOneQuestionRequestParamDto, GetOneQuestionResponseDto } from '🔥apps/server/resumes/dtos/get-question.dto';
 import {
   PatchQuestionRequestParamDto,
@@ -18,6 +24,7 @@ import {
   PatchQuestionResponseDto,
 } from '🔥apps/server/resumes/dtos/patch-question-request.dto';
 import { PostQuestionResponseDto, PostQuestionRequestBodyDto } from '🔥apps/server/resumes/dtos/post-question.dto';
+import { PostSpellCheckRequestBodyDto } from '🔥apps/server/resumes/dtos/post-spell-check-request.body.dto';
 import { QuestionsService } from '🔥apps/server/resumes/services/question.service';
 
 @ApiTags('📑 자기소개서 문항 API')
@@ -45,6 +52,26 @@ export class QuestionsController {
     const question = await this.questionService.createOneQuestion(user.userId, postQuestionRequestParamDto.resumeId);
 
     return ResponseEntity.CREATED_WITH_DATA(question);
+  }
+
+  @Route({
+    request: {
+      path: 'spell-check',
+      method: Method.POST,
+    },
+    response: {
+      code: HttpStatus.OK,
+      description: PostSpellCheckResponseDescriptionMd,
+      type: SpellCheckResult,
+      isArray: true,
+    },
+    summary: PostSpellCheckSummaryMd,
+    description: PostSpellCheckDescriptionMd,
+  })
+  async spellCheck(@Body() body: PostSpellCheckRequestBodyDto) {
+    const checkedSpell = await this.questionService.spellCheck(body);
+
+    return ResponseEntity.OK_WITH_DATA(checkedSpell);
   }
 
   /**

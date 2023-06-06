@@ -22,6 +22,7 @@ export class PatchQuestionRequestBodyDto {
   @IsString()
   @IsNotEmpty()
   @IsOptional()
+  @MaxLength(300)
   title?: string | undefined;
 
   @ApiPropertyOptional({
@@ -31,7 +32,7 @@ export class PatchQuestionRequestBodyDto {
   @IsString()
   @IsNotEmpty()
   @IsOptional()
-  @MaxLength(2000)
+  @MaxLength(2500)
   answer?: string | undefined;
 }
 
