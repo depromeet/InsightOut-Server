@@ -28,7 +28,7 @@ model User {
   UserInfo    UserInfo?
   Onboarding  Onboarding?
   Resume      Resume[]
-  AiResume      AIResume[]
+  AiResumes      AiResume[]
   Experiences Experience[]
   Capability  Capability[]
 
@@ -123,7 +123,7 @@ model Resume {
 // ****************************
 
 // 자기소개서 제목
-model AIResume {
+model AiResume {
   id    Int    @id @default(autoincrement())
   title String @db.VarChar(13) @default("새 자기소개서") // 자기소개서 제목
 
@@ -131,8 +131,10 @@ model AIResume {
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
   userId Int @map("user_id")
+  experienceId Int @unique @map("experience_id") // 경험 id
 
   User     User       @relation(references: [id], fields: [userId], onDelete: Cascade)
+  Experience   Experience @relation(references: [id], fields: [experienceId], onDelete: Cascade)
 
   @@map("ai_resume")
 }
@@ -182,6 +184,7 @@ model Experience {
 
   User                 User?                  @relation(references: [id], fields: [userId], onDelete: Cascade)
   ExperienceInfo       ExperienceInfo?
+  AiResume       AiResume?
   ExperienceSummary    ExperienceSummary[]
   ExperienceCapability ExperienceCapability[]
 
@@ -222,7 +225,7 @@ model ExperienceInfo {
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
   experienceId Int        @id @map("experience_id") // 경험 id
-  experience   Experience @relation(references: [id], fields: [experienceId])
+  Experience   Experience @relation(references: [id], fields: [experienceId])
 
   @@map("experience_info")
 }
