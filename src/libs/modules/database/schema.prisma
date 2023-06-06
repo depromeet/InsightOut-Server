@@ -28,6 +28,7 @@ model User {
   UserInfo    UserInfo?
   Onboarding  Onboarding?
   Resume      Resume[]
+  AiResume      AIResume[]
   Experiences Experience[]
   Capability  Capability[]
 
@@ -115,6 +116,25 @@ model Resume {
   Question Question[]
 
   @@map("resume")
+}
+
+// ****************************
+// **** AI 추천 자기소개서 ****
+// ****************************
+
+// 자기소개서 제목
+model AIResume {
+  id    Int    @id @default(autoincrement())
+  title String @db.VarChar(13) @default("새 자기소개서") // 자기소개서 제목
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  userId Int @map("user_id")
+
+  User     User       @relation(references: [id], fields: [userId], onDelete: Cascade)
+
+  @@map("ai_resume")
 }
 
 // ********************************
