@@ -123,7 +123,7 @@ model Resume {
 // **** AI 추천 자기소개서 ****
 // ****************************
 
-// 자기소개서 제목
+
 model AiResume {
   id    Int    @id @default(autoincrement())
   content String @db.VarChar(700) // AI가 추천해주는 자기소개서 내용
@@ -238,7 +238,7 @@ model ExperienceInfo {
 
 model Capability {
   id      Int    @id @default(autoincrement()) // 역량 id
-  keyword String @db.VarChar(7) // 역량 키워드
+  keyword String @db.VarChar(10) // 역량 키워드
 
   userId Int @map("user_id")
 
@@ -254,7 +254,7 @@ model Capability {
 
 model AiCapability {
   id      Int    @id @default(autoincrement()) // 역량 id
-  keyword String @db.VarChar(7) // 역량 키워드
+  keyword String @db.VarChar(10) // 역량 키워드
 
   userId Int @map("user_id")
   aiResumeId Int @map("ai_resume_id")
