@@ -123,7 +123,7 @@ model Resume {
 // **** AI 추천 자기소개서 ****
 // ****************************
 
-
+// 자기소개서 내용
 model AiResume {
   id    Int    @id @default(autoincrement())
   content String @db.VarChar(700) // AI가 추천해주는 자기소개서 내용
