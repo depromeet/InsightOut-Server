@@ -8,10 +8,16 @@ import { User } from '🔥apps/server/common/decorators/request/user.decorator';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
 import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
 import {
+  GetCountOfResumeDescriptionMd,
+  GetCountOfResumeResponseDescriptionMd,
+  GetCountOfResumeSummaryMd,
+} from '🔥apps/server/resumes/docs/get-count-of-resume.dto';
+import {
   GetAllResumesTitleDescriptionMd,
   GetAllResumesTitleResponseDescriptionMd,
   GetAllResumesTitleSummaryMd,
 } from '🔥apps/server/resumes/docs/get-resume.doc';
+import { GetCountOfResumeResponseDto } from '🔥apps/server/resumes/dtos/get-count-of-resume.dto';
 import {
   GetAllResumeRequestQueryDto,
   GetOneResumeRequestParamDto,
@@ -76,6 +82,25 @@ export class ResumesController {
     const resumeTitleWithResumeId = await this.resumesService.getAllResumesTitle(user.userId);
 
     return ResponseEntity.OK_WITH_DATA(resumeTitleWithResumeId);
+  }
+
+  @Route({
+    request: {
+      path: 'count',
+      method: Method.GET,
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: GetCountOfResumeResponseDto,
+      description: GetCountOfResumeResponseDescriptionMd,
+    },
+    summary: GetCountOfResumeSummaryMd,
+    description: GetCountOfResumeDescriptionMd,
+  })
+  async getCountOfResume(@User() user: UserJwtToken): Promise<ResponseEntity<GetCountOfResumeResponseDto>> {
+    const countOfResume = await this.resumesService.getCountOfResume(user.userId);
+
+    return ResponseEntity.OK_WITH_DATA(countOfResume);
   }
 
   @Route({
