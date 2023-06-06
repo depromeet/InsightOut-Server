@@ -1,6 +1,7 @@
 import { UseGuards, HttpStatus, Param, Body, ParseIntPipe, Controller } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Method } from '📚libs/enums/method.enum';
+import { SpellCheckResult } from '📚libs/modules/api/api.type';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
 import { User } from '🔥apps/server/common/decorators/request/user.decorator';
@@ -9,6 +10,7 @@ import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
 import { GetOneQuestionRequestParamDto, GetOneQuestionResponseDto } from '🔥apps/server/resumes/dtos/get-question.dto';
 import { PatchQuestionRequestParamDto, PatchQuestionRequestBodyDto } from '🔥apps/server/resumes/dtos/patch-question-request.dto';
 import { PostQuestionResponseDto, PostQuestionRequestBodyDto } from '🔥apps/server/resumes/dtos/post-question.dto';
+import { PostSpellCheckRequestBodyDto } from '🔥apps/server/resumes/dtos/post-spell-check-request.body.dto';
 import { QuestionsService } from '🔥apps/server/resumes/services/question.service';
 
 @ApiTags('📑 자기소개서 문항 API')
@@ -36,6 +38,27 @@ export class QuestionsController {
     const question = await this.questionService.createOneQuestion(user.userId, postQuestionRequestParamDto.resumeId);
 
     return ResponseEntity.CREATED_WITH_DATA(question);
+  }
+
+  @Route({
+    request: {
+      path: 'spell-check',
+      method: Method.POST,
+    },
+    response: {
+      code: HttpStatus.OK,
+      description: '자기소개서 맞춤법 검사에 성공했습니다. 다음 맞춤법 검사의 결과입니다.',
+      type: SpellCheckResult,
+      isArray: true,
+    },
+    summary: '자기소개서 답안 맞춤법 검사 API',
+    description:
+      '# 자기소개서 답안 맞춤법 검사 API\n## Description\n맞춤법을 검사하여 맞춤법에 맞지 않은 토큰을 모두 반환합니다.\n## etc.\n⛳️ [맞춤법 검사-로딩...](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1263-19185&t=zKwSWoPmdDHGzQV4-4)   \n⛳️ [맞춤법 검사-오류 없음](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1263-19553&t=zKwSWoPmdDHGzQV4-4)   \n⛳️ [맞춤법 검사 - 오류 있음](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1221-11498&t=zKwSWoPmdDHGzQV4-4)   \n⛳️ [맞춤법 검사-오류 보기](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1263-20990&t=zKwSWoPmdDHGzQV4-4)',
+  })
+  async spellCheck(@Body() body: PostSpellCheckRequestBodyDto) {
+    const checkedSpell = await this.questionService.spellCheck(body);
+
+    return ResponseEntity.OK_WITH_DATA(checkedSpell);
   }
 
   /**
