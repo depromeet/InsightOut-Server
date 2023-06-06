@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { QuestionRepository } from '📚libs/modules/database/repositories/question.repository';
 import { ResumeRepository } from '📚libs/modules/database/repositories/resume.repository';
 import { PostQuestionResponseDto } from '../dtos/post-question.dto';
-import { PatchQuestionRequestBodyDto } from '🔥apps/server/resumes/dtos/patch-question-request.dto';
+import { PatchQuestionRequestBodyDto, PatchQuestionResponseDto } from '🔥apps/server/resumes/dtos/patch-question-request.dto';
 import { GetOneQuestionResponseDto } from '🔥apps/server/resumes/dtos/get-question.dto';
 
 @Injectable()
@@ -32,7 +32,7 @@ export class QuestionsService {
     return questionReponseDto;
   }
 
-  async updateOneQuestion(body: PatchQuestionRequestBodyDto, questionId: number, userId: number): Promise<void> {
+  async updateOneQuestion(body: PatchQuestionRequestBodyDto, questionId: number, userId: number): Promise<PatchQuestionResponseDto> {
     const { title, answer } = body;
 
     const question = await this.questionRepository.findFirst({
@@ -44,10 +44,13 @@ export class QuestionsService {
     }
 
     if (title || answer) {
-      await this.questionRepository.update({
-        data: { title, answer },
-        where: { id: questionId },
-      });
+      return new PatchQuestionResponseDto(
+        await this.questionRepository.update({
+          data: { title, answer },
+          where: { id: questionId },
+          select: { updatedAt: true },
+        }),
+      );
     }
   }
 
