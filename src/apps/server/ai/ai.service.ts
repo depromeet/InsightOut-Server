@@ -4,6 +4,7 @@ import { PrismaService } from '📚libs/modules/database/prisma.service';
 import { AiCapabilityRepository } from '📚libs/modules/database/repositories/ai-capability.repository';
 import { AiResumeRepository } from '📚libs/modules/database/repositories/ai-resume.repository';
 import { CreateAiKeywordsAndResumeBodyReqDto } from '🔥apps/server/ai/dto/req/createAiKeywordsAndResume.req.dto';
+import { CreateAiKeywordsAndResumeResDto } from '🔥apps/server/ai/dto/res/createAiKeywordsAndResume.res.dto';
 import { AiCapabilityRepositoryInterface, AiResumeRepositoryInterface } from '🔥apps/server/ai/interface/ai-repository.interface';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
 
@@ -14,7 +15,7 @@ export class AiService {
     @Inject(AiCapabilityRepository) private readonly aiCapabilityRepository: AiCapabilityRepositoryInterface,
     private readonly prisma: PrismaService,
   ) {}
-  public async create(body: CreateAiKeywordsAndResumeBodyReqDto, user: UserJwtToken) {
+  public async create(body: CreateAiKeywordsAndResumeBodyReqDto, user: UserJwtToken): Promise<CreateAiKeywordsAndResumeResDto> {
     try {
       return await this.prisma.$transaction(async (tx) => {
         // aiResume생성
@@ -27,8 +28,9 @@ export class AiService {
         });
         // aiCapability생성
         const newAiCapability = await tx.aiCapability.createMany({ data: capabilityInfos });
+        const result = { content: newAiResume.content, aiCapabilityCreatedCount: newAiCapability.count, keywords: body.keywords };
 
-        return { content: newAiResume.content, aiCapabilityCreatedCount: newAiCapability.count, keywords: body.keywords };
+        return new CreateAiKeywordsAndResumeResDto(result);
       });
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) throw new ConflictException('이미 해당 AI 추천 자기소개서가 존재합니다.');
