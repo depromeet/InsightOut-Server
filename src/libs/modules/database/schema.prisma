@@ -126,7 +126,7 @@ model Resume {
 // 자기소개서 제목
 model AiResume {
   id    Int    @id @default(autoincrement())
-  title String @db.VarChar(13) @default("새 자기소개서") // 자기소개서 제목
+  content String @db.VarChar(700) // AI가 추천해주는 자기소개서 내용
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
