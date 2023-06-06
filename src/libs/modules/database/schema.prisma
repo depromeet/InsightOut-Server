@@ -31,6 +31,7 @@ model User {
   AiResumes      AiResume[]
   Experiences Experience[]
   Capability  Capability[]
+  AiCapability  AiCapability[]
 
   @@map("user")
 }
@@ -133,7 +134,8 @@ model AiResume {
   userId Int @map("user_id")
   experienceId Int @unique @map("experience_id") // 경험 id
 
-  User     User       @relation(references: [id], fields: [userId], onDelete: Cascade)
+  AiCapabilities   AiCapability[]
+  User         User       @relation(references: [id], fields: [userId], onDelete: Cascade)
   Experience   Experience @relation(references: [id], fields: [experienceId], onDelete: Cascade)
 
   @@map("ai_resume")
@@ -183,8 +185,8 @@ model Experience {
   userId Int @map("user_id")
 
   User                 User?                  @relation(references: [id], fields: [userId], onDelete: Cascade)
+  AiResume             AiResume?
   ExperienceInfo       ExperienceInfo?
-  AiResume       AiResume?
   ExperienceSummary    ExperienceSummary[]
   ExperienceCapability ExperienceCapability[]
 
@@ -244,6 +246,24 @@ model Capability {
   ExperienceCapability ExperienceCapability[]
 
   @@map("capability")
+}
+
+// ********************************
+// ******** AI 역량 키워드 ********
+// ********************************
+
+model AiCapability {
+  id      Int    @id @default(autoincrement()) // 역량 id
+  keyword String @db.VarChar(7) // 역량 키워드
+
+  userId Int @map("user_id")
+  AiResumeId Int @map("ai_resume_id")
+
+  User        User         @relation(references: [id], fields: [userId], onDelete: Cascade)
+  AiResume    AiResume     @relation(references: [id], fields: [AiResumeId], onDelete: Cascade)
+  
+
+  @@map("ai_capability")
 }
 
 model ExperienceCapability {
