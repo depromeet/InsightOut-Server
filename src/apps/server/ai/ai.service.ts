@@ -1,18 +1,13 @@
 import { BadRequestException, ConflictException, Inject, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
-import { AiCapabilityRepository } from '📚libs/modules/database/repositories/ai-capability.repository';
-import { AiResumeRepository } from '📚libs/modules/database/repositories/ai-resume.repository';
 import { CreateAiKeywordsAndResumeBodyReqDto } from '🔥apps/server/ai/dto/req/createAiKeywordsAndResume.req.dto';
 import { CreateAiKeywordsAndResumeResDto } from '🔥apps/server/ai/dto/res/createAiKeywordsAndResume.res.dto';
-import { AiCapabilityRepositoryInterface, AiResumeRepositoryInterface } from '🔥apps/server/ai/interface/ai-repository.interface';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
 
 @Injectable()
 export class AiService {
   constructor(
-    @Inject(AiResumeRepository) private readonly aiResumeRepository: AiResumeRepositoryInterface,
-    @Inject(AiCapabilityRepository) private readonly aiCapabilityRepository: AiCapabilityRepositoryInterface,
     private readonly prisma: PrismaService,
   ) {}
   public async create(body: CreateAiKeywordsAndResumeBodyReqDto, user: UserJwtToken): Promise<CreateAiKeywordsAndResumeResDto> {

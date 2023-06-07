@@ -4,7 +4,7 @@ import { ArrayMaxSize, ArrayMinSize, IsArray, IsInt, IsNotEmpty, IsString, MaxLe
 export class CreateAiKeywordsAndResumeBodyReqDto {
   @IsInt()
   @IsNotEmpty()
-  @Min(0)
+  @Min(1)
   @ApiProperty({ example: 1, type: Number })
   experienceId: number;
 
@@ -18,7 +18,7 @@ export class CreateAiKeywordsAndResumeBodyReqDto {
 
   @IsString()
   @MaxLength(700)
-  @MinLength(0)
+  @MinLength(1)
   @IsNotEmpty()
   @ApiProperty({ example: '저는 UI/UX 직무에 지원하는 .....', type: String })
   content: string;

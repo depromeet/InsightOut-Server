@@ -39,7 +39,7 @@ export class CreateAiKeywordsAndResumeResDto {
   @IsNotEmpty()
   @Min(0)
   @Max(2)
-  @ApiProperty({ example: [2], type: Number })
+  @ApiProperty({ example: 2, type: Number })
   get aiCapabilityCreatedCount(): number {
     return this._aiCapabilityCreatedCount;
   }
