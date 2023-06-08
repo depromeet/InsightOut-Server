@@ -29,6 +29,11 @@ import {
   GetOneResumeResponseDescriptionMd,
   GetOneResumeSummaryMd,
 } from '🔥apps/server/resumes/docs/get-resume.doc';
+import {
+  PatchResumeDescriptionMd,
+  PatchResumeResponseDescriptionMd,
+  PatchResumeSummaryMd,
+} from '🔥apps/server/resumes/docs/patch-resume.doc';
 import { PostResumeDescriptionMd, PostResumeResponseDescriptionMd, PostResumeSummaryMd } from '🔥apps/server/resumes/docs/post-resume.doc';
 import { GetCountOfResumeResponseDto } from '🔥apps/server/resumes/dtos/get-count-of-resume.dto';
 import {
@@ -198,6 +203,7 @@ export class ResumesController {
     return ResponseEntity.OK_WITH_MESSAGE('Resume deleted');
   }
 
+  // ✅ 자기소개서 제목 수정 API
   @Route({
     request: {
       path: ':resumeId',
@@ -205,10 +211,11 @@ export class ResumesController {
     },
     response: {
       code: HttpStatus.OK,
+      description: PatchResumeResponseDescriptionMd,
+      type: String,
     },
-    summary: '자기소개서 제목 수정 API',
-    description:
-      '# 자기소개서 제목 수정 API\n## Description\n미트볼 버튼을 눌러서 자기소개서 폴더를 수정합니다.\n## etc.\n⛳️ [폴더 이름 미트볼 클릭](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1221-10307&t=PibZzDLncZrUbrLe-4)',
+    summary: PatchResumeSummaryMd,
+    description: PatchResumeDescriptionMd,
   })
   @ApiParam({
     name: 'resumeId',
