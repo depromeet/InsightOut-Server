@@ -20,6 +20,9 @@ import {
   GetAllResumesTitleDescriptionMd,
   GetAllResumesTitleResponseDescriptionMd,
   GetAllResumesTitleSummaryMd,
+  GetOneResumeDescriptionMd,
+  GetOneResumeResponseDescriptionMd,
+  GetOneResumeSummaryMd,
 } from '🔥apps/server/resumes/docs/get-resume.doc';
 import { GetCountOfResumeResponseDto } from '🔥apps/server/resumes/dtos/get-count-of-resume.dto';
 import {
@@ -39,6 +42,7 @@ import { ResumesService } from '🔥apps/server/resumes/services/resumes.service
 export class ResumesController {
   constructor(private readonly resumesService: ResumesService) {}
 
+  // ✅ 자기소개서 전체 조회
   @SuccessResponse(HttpStatus.OK, [
     {
       model: GetOneResumeResponseDto,
@@ -78,6 +82,7 @@ export class ResumesController {
     return ResponseEntity.OK_WITH_DATA(resumes);
   }
 
+  // ✅ 자기소개서 제목 조회 -> 모아보기 제목별 필터링에 사용
   @Route({
     request: {
       path: 'title',
@@ -98,6 +103,7 @@ export class ResumesController {
     return ResponseEntity.OK_WITH_DATA(resumeTitleWithResumeId);
   }
 
+  // ✅ 자기소개서 개수 조회 -> 모아보기 최상단 자기소개서 개수 출력에 사용
   @Route({
     request: {
       path: 'count',
@@ -117,6 +123,7 @@ export class ResumesController {
     return ResponseEntity.OK_WITH_DATA(countOfResume);
   }
 
+  // ✅ 특정 자기소개서 조회 API
   @Route({
     request: {
       path: ':resumeId',
@@ -125,11 +132,10 @@ export class ResumesController {
     response: {
       code: HttpStatus.OK,
       type: GetOneResumeResponseDto,
-      description:
-        '### ✅ 특정 자기소개서 조회에 성공했습니다.\n한 개의 자기소개서를 가져오며, 자기소개서에 속한 자기소개서 문항도 생성일자 기준 내림차순으로 가져옵니다.',
+      description: GetOneResumeResponseDescriptionMd,
     },
-    summary: '특정 자기소개서 조회 API (2023.6.6. Updated)',
-    description: `# 자기소개서 조회 API\n## Description\n**userId**와 **resumeId** path parameter를 통해서 특정 자기소개서 한 개를 조회합니다. 자기소개서는 그 자기소개서에 속한 모든 문항를 가져옵니다.   \n자기소개서 문항은 **생성일자 기준 내림차순(최신순)으로 정렬**되어 출력됩니다. 주로 \`모아보기\`에서 사용됩니다.\n## Picture\n![image](https://github.com/depromeet/13th-4team-backend/assets/83271772/90712fb4-7c1e-4b8c-845e-2139dd6deca9)\n## Figma.\n⛳️ [자기소개서 모아보기](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1403-11728&t=oMTkLrgQjXJOPb8D-4)`,
+    summary: GetOneResumeSummaryMd,
+    description: GetOneResumeDescriptionMd,
   })
   public async getOneResume(
     @User() user: UserJwtToken,

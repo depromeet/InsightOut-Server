@@ -10,7 +10,7 @@ export const GetAllResumesTitleDescriptionMd = `
 
 ## Description
 
-자기소개서 제목을 전체 가져옵니다. 해당 API는 모아보기 페이지에서 자기소개서를 탭했을 때,\n
+자기소개서 **제목**을 전체 가져옵니다. 해당 API는 모아보기 페이지에서 자기소개서를 탭했을 때,
 유저가 자기소개서 제목으로 자신이 작성한 자기소개서를 찾아낼 수 있도록 자기소개서 제목을 응답으로 전달합니다.
 
 각 자기소개서 제목은 key 값으로 응답받은 id를 사용합니다.
@@ -59,3 +59,29 @@ export const GetAllResumeDescriptionMd = `
 ## Figma
 
 ⛳️[자기소개서 작성 첫 화면](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1221-8169&t=bY8GHCeIQEeC8L6e-4)`;
+
+export const GetOneResumeResponseDescriptionMd = `
+### ✅ 특정 자기소개서 조회에 성공했습니다.
+**한 개**의 자기소개서를 가져오며, 자기소개서에 속한 자기소개서 문항도 **생성일자 기준 내림차순**\`(최신순)\`으로 가져옵니다.
+`;
+
+export const GetOneResumeSummaryMd = `
+특정 자기소개서 조회 API (2023.6.6. Updated)
+`;
+
+export const GetOneResumeDescriptionMd = `
+# 자기소개서 조회 API
+
+## Description
+
+**userId**와 **resumeId** path parameter를 통해서 특정 자기소개서 한 개를 조회합니다. 자기소개서는 그 자기소개서에 속한 모든 문항를 가져옵니다.
+자기소개서 문항은 **생성일자 기준 내림차순(최신순)으로 정렬**되어 출력됩니다. 주로 \`모아보기\`에서 사용됩니다.
+
+## Picture
+
+![image](https://github.com/depromeet/13th-4team-backend/assets/83271772/90712fb4-7c1e-4b8c-845e-2139dd6deca9)
+
+## Figma
+
+⛳️ [자기소개서 모아보기](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1403-11728&t=oMTkLrgQjXJOPb8D-4)
+`;
