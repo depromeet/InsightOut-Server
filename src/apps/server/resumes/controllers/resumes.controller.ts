@@ -9,6 +9,11 @@ import { User } from '🔥apps/server/common/decorators/request/user.decorator';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
 import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
 import {
+  DeleteResumeDescriptionMd,
+  DeleteResumeResponseDescriptionMd,
+  DeleteResumeSummaryMd,
+} from '🔥apps/server/resumes/docs/delete-resume.doc';
+import {
   GetCountOfResumeDescriptionMd,
   GetCountOfResumeResponseDescriptionMd,
   GetCountOfResumeSummaryMd,
@@ -167,6 +172,7 @@ export class ResumesController {
     return ResponseEntity.CREATED_WITH_DATA(resume);
   }
 
+  // ✅ 자기소개서 삭제 API
   @Route({
     request: {
       path: ':resumeId',
@@ -174,10 +180,11 @@ export class ResumesController {
     },
     response: {
       code: HttpStatus.OK,
+      description: DeleteResumeResponseDescriptionMd,
+      type: String,
     },
-    summary: '자기소개서 삭제 API',
-    description:
-      '# 자기소개서 삭제 API\n## Description\n자기소개서 폴더를 삭제합니다. 폴더 하위에 있는 문항도 같이 삭제됩니다.\n## etc.\n⛳️ [폴더 이름 미트볼 클릭](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1221-10307&t=PibZzDLncZrUbrLe-4)',
+    summary: DeleteResumeSummaryMd,
+    description: DeleteResumeDescriptionMd,
   })
   @ApiParam({
     name: 'resumeId',
