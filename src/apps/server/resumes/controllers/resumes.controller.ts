@@ -35,6 +35,7 @@ import {
   PatchResumeSummaryMd,
 } from '🔥apps/server/resumes/docs/patch-resume.doc';
 import { PostResumeDescriptionMd, PostResumeResponseDescriptionMd, PostResumeSummaryMd } from '🔥apps/server/resumes/docs/post-resume.doc';
+import { DeleteResumeRequestParamDto } from '🔥apps/server/resumes/dtos/delete-resume.dto';
 import { GetCountOfResumeResponseDto } from '🔥apps/server/resumes/dtos/get-count-of-resume.dto';
 import {
   GetAllResumeRequestQueryDto,
@@ -197,8 +198,11 @@ export class ResumesController {
     example: 1234,
     type: Number,
   })
-  async deleteResume(@Param('resumeId', ParseIntPipe) resumeId: number, @User() user: UserJwtToken): Promise<ResponseEntity<string>> {
-    await this.resumesService.deleteResume({ resumeId, userId: user.userId });
+  async deleteResume(
+    @Param() deleteResumeRequestParamDto: DeleteResumeRequestParamDto,
+    @User() user: UserJwtToken,
+  ): Promise<ResponseEntity<string>> {
+    await this.resumesService.deleteResume({ resumeId: deleteResumeRequestParamDto.resumeId, userId: user.userId });
 
     return ResponseEntity.OK_WITH_MESSAGE('Resume deleted');
   }
