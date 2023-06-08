@@ -1,5 +1,5 @@
 import { UseGuards, Controller, Query, HttpStatus, Body, Param, ParseIntPipe } from '@nestjs/common';
-import { ApiTags, ApiQuery, ApiParam, ApiProduces } from '@nestjs/swagger';
+import { ApiTags, ApiQuery, ApiParam } from '@nestjs/swagger';
 import { SuccessResponse } from '📚libs/decorators/success-response.dto';
 
 import { Method } from '📚libs/enums/method.enum';
@@ -43,7 +43,7 @@ import {
   GetOneResumeWithAnswerResponseDto,
   GetOneResumeWithTitleResponseDto,
 } from '🔥apps/server/resumes/dtos/get-resume.dto';
-import { PatchResumeRequestDto } from '🔥apps/server/resumes/dtos/patch-resume.dto';
+import { PatchResumeRequestBodyDto, PatchResumeRequestParamDto } from '🔥apps/server/resumes/dtos/patch-resume.dto';
 import { PostResumeResponseDto } from '🔥apps/server/resumes/dtos/post-resume.dto';
 import { ResumesService } from '🔥apps/server/resumes/services/resumes.service';
 
@@ -224,11 +224,11 @@ export class ResumesController {
     type: Number,
   })
   async updateResumeFolder(
-    @Param('resumeId', ParseIntPipe) resumeId: number,
+    @Param() patchResumeRequestParamDto: PatchResumeRequestParamDto,
     @User() user: UserJwtToken,
-    @Body() patchResumeRequestDto: PatchResumeRequestDto,
+    @Body() patchResumeRequestDto: PatchResumeRequestBodyDto,
   ): Promise<ResponseEntity<string>> {
-    await this.resumesService.updateResumeFolder(patchResumeRequestDto, resumeId, user.userId);
+    await this.resumesService.updateResumeFolder(patchResumeRequestDto, patchResumeRequestParamDto.resumeId, user.userId);
 
     return ResponseEntity.OK_WITH_MESSAGE('Resume updated');
   }
