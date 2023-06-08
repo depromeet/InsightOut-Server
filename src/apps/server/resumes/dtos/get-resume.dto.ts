@@ -91,7 +91,7 @@ class QuestionResponse {
   })
   @IsDate()
   @IsNotEmpty()
-  get updatedAt() {
+  get updatedAt(): Date {
     return this._updatedAt;
   }
 
@@ -144,6 +144,7 @@ export class GetOneResumeResponseDto {
   @Expose()
   @ApiProperty({
     description: '자기소개서 생성 일자',
+    type: Date,
     example: new Date(),
   })
   @IsDate()
@@ -155,6 +156,7 @@ export class GetOneResumeResponseDto {
   @Expose()
   @ApiProperty({
     description: '자기소개서 작성 일자',
+    type: Date,
     example: new Date(),
   })
   @IsDate()
