@@ -35,8 +35,9 @@ export class PostResumeResponseDto {
 
   @Expose()
   @ApiProperty({
-    description: '자기소개서 생성일자입니다.',
+    description: '자기소개서 생성일자입니다. Date 객체 값이 전달됩니다.',
     example: new Date(),
+    type: Date,
   })
   get createdAt(): Date {
     return this._createdAt;
@@ -44,8 +45,9 @@ export class PostResumeResponseDto {
 
   @Expose()
   @ApiProperty({
-    description: '자기소개서 수정일자입니다.',
+    description: '자기소개서 수정일자입니다. Date 객체 값이 전달됩니다.',
     example: new Date(),
+    type: Date,
   })
   get updatedAt(): Date {
     return this._updatedAt;

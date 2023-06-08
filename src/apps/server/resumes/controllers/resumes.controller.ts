@@ -24,6 +24,7 @@ import {
   GetOneResumeResponseDescriptionMd,
   GetOneResumeSummaryMd,
 } from '🔥apps/server/resumes/docs/get-resume.doc';
+import { PostResumeDescriptionMd, PostResumeResponseDescriptionMd, PostResumeSummaryMd } from '🔥apps/server/resumes/docs/post-resume.doc';
 import { GetCountOfResumeResponseDto } from '🔥apps/server/resumes/dtos/get-count-of-resume.dto';
 import {
   GetAllResumeRequestQueryDto,
@@ -146,6 +147,7 @@ export class ResumesController {
     return ResponseEntity.OK_WITH_DATA(resume);
   }
 
+  // ✅ 자기소개서 추가 API
   @Route({
     request: {
       path: '',
@@ -153,13 +155,11 @@ export class ResumesController {
     },
     response: {
       code: HttpStatus.CREATED,
-      description:
-        '### ✅ 자기소개서 추가에 성공했습니다.\ntitle이 존재하지 않고 빈 폴더를 생성하기 때문에 이름(제목, title)은 응답으로 보내지 않습니다.',
+      description: PostResumeResponseDescriptionMd,
       type: PostResumeResponseDto,
     },
-    summary: '자기소개서 추가 API (2023.6.3. Updated)',
-    description:
-      '# 자기소개서 추가 API\n## Description\n새로 추가 버튼을 눌러 자기소개서를 추가합니다. 단순히 추가하는 것이므로 별도로 **request body가 필요하지 않습니다**. 기본적으로 **"새 자기소개서"**라는 제목으로 추가됩니다.\n## Picture\n![image](https://github.com/depromeet/13th-4team-backend/assets/83271772/480c339f-f8eb-4960-a0a2-59162193a2d8)\n## Figma\n⛳️[새 폴더 추가한 경우](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1221-8662&t=zKwSWoPmdDHGzQV4-4)',
+    summary: PostResumeSummaryMd,
+    description: PostResumeDescriptionMd,
   })
   async createResumeFolder(@User() user: UserJwtToken): Promise<ResponseEntity<PostResumeResponseDto>> {
     const resume = await this.resumesService.createResumeFolder(user.userId);
