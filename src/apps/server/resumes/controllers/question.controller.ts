@@ -8,6 +8,11 @@ import { User } from '🔥apps/server/common/decorators/request/user.decorator';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
 import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
 import {
+  DeleteQuestionDescriptionMd,
+  DeleteQuestionResponseDescriptionMd,
+  DeleteQuestionSummaryMd,
+} from '🔥apps/server/resumes/docs/questions/delete-question.doc';
+import {
   GetOneQuestionDescriptionMd,
   GetOneQuestionResponseDescriptionMd,
   GetOneQuestionSummaryMd,
@@ -118,6 +123,7 @@ export class QuestionsController {
     return ResponseEntity.OK_WITH_DATA(question);
   }
 
+  // ✅ 자기소개서 문항 수정 API
   @Route({
     request: {
       path: ':questionId',
@@ -141,6 +147,7 @@ export class QuestionsController {
     return ResponseEntity.OK_WITH_DATA(updatedQuestion);
   }
 
+  // ✅ 자기소개서 문항 삭제 API
   @Route({
     request: {
       path: ':questionId',
@@ -148,9 +155,11 @@ export class QuestionsController {
     },
     response: {
       code: HttpStatus.OK,
+      type: String,
+      description: DeleteQuestionResponseDescriptionMd,
     },
-    summary: '자기소개서 문항 삭제 API',
-    description: '자기소개서 문항을 삭제합니다.',
+    summary: DeleteQuestionSummaryMd,
+    description: DeleteQuestionDescriptionMd,
   })
   async deleteQuestion(@Param('questionId', ParseIntPipe) questionId: number, @User() user: UserJwtToken): Promise<ResponseEntity<string>> {
     await this.questionService.deleteQuestion({
