@@ -32,6 +32,7 @@ import {
   PostSpellCheckResponseDescriptionMd,
   PostSpellCheckSummaryMd,
 } from '🔥apps/server/resumes/docs/questions/post-spell-check.doc';
+import { DeleteQuestionRequestParamDto } from '🔥apps/server/resumes/dtos/questions/delete-question.dto';
 import { GetOneQuestionRequestParamDto, GetOneQuestionResponseDto } from '🔥apps/server/resumes/dtos/questions/get-question.dto';
 import {
   PatchQuestionRequestParamDto,
@@ -161,9 +162,12 @@ export class QuestionsController {
     summary: DeleteQuestionSummaryMd,
     description: DeleteQuestionDescriptionMd,
   })
-  async deleteQuestion(@Param('questionId', ParseIntPipe) questionId: number, @User() user: UserJwtToken): Promise<ResponseEntity<string>> {
+  async deleteQuestion(
+    @Param() deleteQuestionRequestParamDto: DeleteQuestionRequestParamDto,
+    @User() user: UserJwtToken,
+  ): Promise<ResponseEntity<string>> {
     await this.questionService.deleteQuestion({
-      questionId,
+      questionId: deleteQuestionRequestParamDto.questionId,
       userId: user.userId,
     });
 
