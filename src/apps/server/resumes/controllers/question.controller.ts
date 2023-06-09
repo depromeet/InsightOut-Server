@@ -32,14 +32,14 @@ import {
   PostSpellCheckResponseDescriptionMd,
   PostSpellCheckSummaryMd,
 } from '🔥apps/server/resumes/docs/questions/post-spell-check.doc';
-import { GetOneQuestionRequestParamDto, GetOneQuestionResponseDto } from '🔥apps/server/resumes/dtos/get-question.dto';
+import { GetOneQuestionRequestParamDto, GetOneQuestionResponseDto } from '🔥apps/server/resumes/dtos/questions/get-question.dto';
 import {
   PatchQuestionRequestParamDto,
   PatchQuestionRequestBodyDto,
   PatchQuestionResponseDto,
-} from '🔥apps/server/resumes/dtos/patch-question-request.dto';
-import { PostQuestionResponseDto, PostQuestionRequestBodyDto } from '🔥apps/server/resumes/dtos/post-question.dto';
-import { PostSpellCheckRequestBodyDto } from '🔥apps/server/resumes/dtos/post-spell-check-request.body.dto';
+} from '🔥apps/server/resumes/dtos/questions/patch-question-request.dto';
+import { PostQuestionResponseDto, PostQuestionRequestBodyDto } from '🔥apps/server/resumes/dtos/questions/post-question.dto';
+import { PostSpellCheckRequestBodyDto } from '🔥apps/server/resumes/dtos/questions/post-spell-check-request.body.dto';
 import { QuestionsService } from '🔥apps/server/resumes/services/question.service';
 
 @ApiTags('📑 자기소개서 문항 API')
