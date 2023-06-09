@@ -13,6 +13,11 @@ import {
   PatchQuestionSummaryMd,
 } from '🔥apps/server/resumes/docs/questions/patch-question.doc';
 import {
+  PostQuestionDesciptionMd,
+  PostQuestionResponseDescriptionMd,
+  PostQuestionSummaryMd,
+} from '🔥apps/server/resumes/docs/questions/post-question.doc';
+import {
   PostSpellCheckDescriptionMd,
   PostSpellCheckResponseDescriptionMd,
   PostSpellCheckSummaryMd,
@@ -41,9 +46,10 @@ export class QuestionsController {
     response: {
       code: HttpStatus.CREATED,
       type: PostQuestionResponseDto,
+      description: PostQuestionResponseDescriptionMd,
     },
-    summary: '자기소개서 문항 추가',
-    description: '자기소개서 폴더 아래 문항 추가 버튼을 눌러서 문항을 추가합니다. 빈 문항만 추가됩니다.',
+    summary: PostQuestionSummaryMd,
+    description: PostQuestionDesciptionMd,
   })
   async createOneQuestion(
     @Body() postQuestionRequestParamDto: PostQuestionRequestBodyDto,
