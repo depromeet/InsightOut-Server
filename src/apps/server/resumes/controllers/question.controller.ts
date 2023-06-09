@@ -8,6 +8,11 @@ import { User } from '🔥apps/server/common/decorators/request/user.decorator';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
 import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
 import {
+  GetOneQuestionDescriptionMd,
+  GetOneQuestionResponseDescriptionMd,
+  GetOneQuestionSummaryMd,
+} from '🔥apps/server/resumes/docs/questions/get-question.doc';
+import {
   PatchQuestionDescriptionMd,
   PatchQuestionResponseDescriptionMd,
   PatchQuestionSummaryMd,
@@ -38,6 +43,7 @@ import { QuestionsService } from '🔥apps/server/resumes/services/question.serv
 export class QuestionsController {
   constructor(private readonly questionService: QuestionsService) {}
 
+  // ✅ 자기소개서 문항 추가 API
   @Route({
     request: {
       path: '',
@@ -81,7 +87,7 @@ export class QuestionsController {
   }
 
   /**
-   * 자기소개서 문항 한 개를 조회합니다.
+   * ✅ 한 개의 자기소개서 문항 조회 API
    *
    * 자기소개서 id(resumeId)와 유저 id(userId)를 통해서 자기소개서 문항을 한 개 가져옵니다.
    * 응답으로는 해당 문항에 대한 정보를 반환합니다.
@@ -97,11 +103,11 @@ export class QuestionsController {
     },
     response: {
       code: HttpStatus.OK,
-      description: '### ✅ 자기소개서 문항 조회에 성공헀습니다.\n',
+      type: GetOneQuestionResponseDto,
+      description: GetOneQuestionResponseDescriptionMd,
     },
-    summary: '자기소개서 문항 조회 API',
-    description:
-      '# 자기소개서 문항 조회 API\n## Description\n자기소개서 문항을 한 개 조회합니다. 리소스를 식별하기에 path parameter를 요청으로 기대합니다. 자기소개서 문항의 id 값과, 제목, 답안, 생성일자, 수정일자를 응답으로 전달합니다.\n## Picture\n![image](https://github.com/depromeet/13th-4team-backend/assets/83271772/bd82d7bf-4744-4a48-81d5-85c7481d5d77)\n## Figma\n⛳️ [자기소개서 조회 - 자기소개서 작성 첫 화면](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1221-8169&t=oMTkLrgQjXJOPb8D-4)',
+    summary: GetOneQuestionSummaryMd,
+    description: GetOneQuestionDescriptionMd,
   })
   async getOneQuestion(
     @Param() getOneQuestionRequestParamDto: GetOneQuestionRequestParamDto,
