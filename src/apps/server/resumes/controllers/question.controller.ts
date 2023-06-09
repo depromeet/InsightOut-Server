@@ -11,12 +11,12 @@ import {
   PatchQuestionDescriptionMd,
   PatchQuestionResponseDescriptionMd,
   PatchQuestionSummaryMd,
-} from '🔥apps/server/resumes/docs/patch-question.doc';
+} from '🔥apps/server/resumes/docs/questions/patch-question.doc';
 import {
   PostSpellCheckDescriptionMd,
   PostSpellCheckResponseDescriptionMd,
   PostSpellCheckSummaryMd,
-} from '🔥apps/server/resumes/docs/post-spell-check.doc';
+} from '🔥apps/server/resumes/docs/questions/post-spell-check.doc';
 import { GetOneQuestionRequestParamDto, GetOneQuestionResponseDto } from '🔥apps/server/resumes/dtos/get-question.dto';
 import {
   PatchQuestionRequestParamDto,
