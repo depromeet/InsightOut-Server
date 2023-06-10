@@ -13,6 +13,7 @@ import {
 } from '🔥apps/server/experiences/dto/get-count-of-experience-and-capability.dto';
 import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
 import { CountExperienceAndCapability } from '🔥apps/server/experiences/types/count-experience-and-capability.type';
+import { GetExperienceRequestQueryDto } from '🔥apps/server/experiences/dto/req/get-experience.dto';
 
 @Injectable()
 export class ExperienceService {
@@ -51,8 +52,9 @@ export class ExperienceService {
     }
   }
 
-  public async getExperienceByCapability(capabilityId: number): Promise<GetExperienceByCapabilityResponseDto[]> {
-    const experience = await this.experienceRepository.getExperienceByCapability(capabilityId);
+  public async getExperienceByCapability(query: GetExperienceRequestQueryDto): Promise<GetExperienceByCapabilityResponseDto[]> {
+    const { capabilityId, last, ...select } = query;
+    const experience = await this.experienceRepository.getExperienceByCapability(capabilityId, select);
     if (!experience.length) {
       throw new NotFoundException('Experience not found');
     }
@@ -74,9 +76,10 @@ export class ExperienceService {
     }
   }
 
-  public async getExperiencesByUserId(userId: number): Promise<GetExperienceResDto[] | string> {
+  public async getExperiencesByUserId(userId: number, query: GetExperienceRequestQueryDto): Promise<GetExperienceResDto[] | string> {
     try {
-      const experience = await this.experienceRepository.findManyByUserId(userId, getExperienceAttribute);
+      const { capabilityId, last, ...select } = query;
+      const experience = await this.experienceRepository.findManyByUserId(userId, Object.assign(getExperienceAttribute, select));
       if (!experience.length) return 'INPROGRESS 상태의 경험카드가 없습니다';
 
       return experience.map((experience) => new GetExperienceResDto(experience));

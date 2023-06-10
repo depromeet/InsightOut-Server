@@ -177,7 +177,7 @@ export class GetExperienceByCapabilityResponseDto {
   @Exclude() private readonly _experienceSummary: ExperienceSummary[];
 
   constructor(
-    experience: Experience & {
+    experience: Partial<Experience> & {
       capability: Omit<Capability, 'userId'>[];
     },
   ) {
