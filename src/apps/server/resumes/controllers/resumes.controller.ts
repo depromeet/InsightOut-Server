@@ -1,4 +1,4 @@
-import { UseGuards, Controller, Query, HttpStatus, Body, Param, ParseIntPipe } from '@nestjs/common';
+import { UseGuards, Controller, Query, HttpStatus, Body, Param } from '@nestjs/common';
 import { ApiTags, ApiQuery, ApiParam } from '@nestjs/swagger';
 import { SuccessResponse } from '📚libs/decorators/success-response.dto';
 
