@@ -69,4 +69,13 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
 
     return experienceWithCapability;
   }
+
+  public async getStarFromExperienceByExperienceId(experienceId: number) {
+    return await this.prisma.experience.findUnique({
+      where: {
+        id: experienceId,
+      },
+      select: { situation: true, task: true, action: true, result: true },
+    });
+  }
 }
