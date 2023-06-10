@@ -25,13 +25,13 @@ model User {
   deletedAt DateTime? @map("deleted_at") @db.Timestamptz
   nickname  String    @db.VarChar(10)
 
-  UserInfo    UserInfo?
-  Onboarding  Onboarding?
-  Resume      Resume[]
-  AiResumes      AiResume[]
-  Experiences Experience[]
-  Capability  Capability[]
-  AiCapability  AiCapability[]
+  UserInfo     UserInfo?
+  Onboarding   Onboarding?
+  Resume       Resume[]
+  AiResumes    AiResume[]
+  Experiences  Experience[]
+  Capability   Capability[]
+  AiCapability AiCapability[]
 
   @@map("user")
 }
@@ -46,7 +46,6 @@ enum Provider {
 enum Field {
   DEVELOPMENT // 개발
   MANAGEMENT // 경영
-  BUSINESS // 비즈니스
   MARKETING // 마케팅
   ADVERTISING // 광고
   DESIGN // 디자인
@@ -66,7 +65,6 @@ enum Field {
   EDUCATION // 교육
   LAW // 법률
   CONSTRUCTION // 건설
-  CIVIL_ENGINEERING // 토목
   PUBLIC_WELFARE // 공공 & 복지
 }
 
@@ -125,18 +123,18 @@ model Resume {
 
 // 자기소개서 내용
 model AiResume {
-  id    Int    @id @default(autoincrement())
+  id      Int    @id @default(autoincrement())
   content String @db.VarChar(700) // AI가 추천해주는 자기소개서 내용
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
-  userId Int @map("user_id")
+  userId       Int @map("user_id")
   experienceId Int @unique @map("experience_id") // 경험 id
 
-  AiCapabilities   AiCapability[]
-  User         User       @relation(references: [id], fields: [userId], onDelete: Cascade)
-  Experience   Experience @relation(references: [id], fields: [experienceId], onDelete: Cascade)
+  AiCapabilities AiCapability[]
+  User           User           @relation(references: [id], fields: [userId], onDelete: Cascade)
+  Experience     Experience     @relation(references: [id], fields: [experienceId], onDelete: Cascade)
 
   @@map("ai_resume")
 }
@@ -256,12 +254,11 @@ model AiCapability {
   id      Int    @id @default(autoincrement()) // 역량 id
   keyword String @db.VarChar(10) // 역량 키워드
 
-  userId Int @map("user_id")
+  userId     Int @map("user_id")
   aiResumeId Int @map("ai_resume_id")
 
-  User        User         @relation(references: [id], fields: [userId], onDelete: Cascade)
-  AiResume    AiResume     @relation(references: [id], fields: [aiResumeId], onDelete: Cascade)
-  
+  User     User     @relation(references: [id], fields: [userId], onDelete: Cascade)
+  AiResume AiResume @relation(references: [id], fields: [aiResumeId], onDelete: Cascade)
 
   @@map("ai_capability")
 }
