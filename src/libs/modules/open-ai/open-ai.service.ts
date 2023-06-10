@@ -18,7 +18,7 @@ export class OpenAiService {
     };
   }
 
-  public async promptChatGPT(prompt: string): Promise<{ text: string }> {
+  public async promptChatGPT(prompt: string) {
     /*
      * max_tokens 프로퍼티는 GPT 모델 답변의 길이를 제한합니다. Ex) max_tokens가 50이면 50개의 토큰을 생성 한 후 모델의 응답이 잘리게 됩니다.
      * temperature 프로퍼티는 창의성의 정도입니다. temperature가 낮으면 가장 가능성이 높고 보수적인 응답을 뱉어내고 1.0과 같이 높으면 창의적인 답변이 나오게 됩니다.
@@ -37,8 +37,7 @@ export class OpenAiService {
         }),
       ),
     );
-    const responseData = response.data; //.choices[0].text;
-    if (typeof responseData === 'string') return { text: responseData };
+    const responseData = response.data;
     return responseData;
   }
 }

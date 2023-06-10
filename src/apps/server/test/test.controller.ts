@@ -54,7 +54,7 @@ export class TestController {
     description: testApiSuccMd,
     summary: '✅openai 프롬프트 테스트 API',
   })
-  async test(@Body() body: PromptTestBodyReqDto): Promise<{ text: string }> {
+  async test(@Body() body: PromptTestBodyReqDto) {
     return await this.openAiService.promptChatGPT(body.prompt);
   }
 }
