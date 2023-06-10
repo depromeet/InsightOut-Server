@@ -89,10 +89,10 @@ export class ExperienceController {
     let experience;
 
     if (getExperienceRequestQueryDto.capabilityId) {
-      experience = await this.experienceService.getExperienceByCapability(getExperienceRequestQueryDto.capabilityId);
+      experience = await this.experienceService.getExperienceByCapability(getExperienceRequestQueryDto);
     } else {
       // TODO 추후 전체 모아보기를 위해 수정 필요
-      experience = await this.experienceService.getExperiencesByUserId(user.userId);
+      experience = await this.experienceService.getExperiencesByUserId(user.userId, getExperienceRequestQueryDto);
     }
 
     if (getExperienceRequestQueryDto.last) {
