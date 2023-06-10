@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, MaxLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 const example =
@@ -6,6 +6,7 @@ const example =
 
 export class PromptTestBodyReqDto {
   @IsNotEmpty()
+  @MaxLength(3000)
   @ApiProperty({ example })
   content: string;
 }

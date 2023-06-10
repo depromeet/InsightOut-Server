@@ -8,7 +8,7 @@ import { openAIModelEnum } from '📚libs/modules/open-ai/openAIModel.enum';
 @Injectable()
 export class OpenAiService {
   private openAIHeader: { [key in string] };
-  private OPEN_AI_URL = 'https://api.openai.com/v1/chat/completions';
+  private OPEN_AI_URL: string;
   private OPEN_AI_MODEL = openAIModelEnum.GPT_3DOT5_TERBO;
 
   constructor(private readonly envService: EnvService, private readonly httpService: HttpService) {
@@ -16,6 +16,7 @@ export class OpenAiService {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${this.envService.get(EnvEnum.OPENAI_API_KEY)}`,
     };
+    this.OPEN_AI_URL = this.envService.get(EnvEnum.OPENAI_CHAT_URL);
   }
 
   public async promptChatGPT(content: string) {
