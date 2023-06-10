@@ -1,5 +1,7 @@
 import { UseGuards, Controller, Query, HttpStatus, Body, Param, ParseIntPipe } from '@nestjs/common';
 import { ApiTags, ApiQuery, ApiParam } from '@nestjs/swagger';
+import { SuccessResponse } from '📚libs/decorators/success-response.dto';
+
 import { Method } from '📚libs/enums/method.enum';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
@@ -21,6 +23,7 @@ import {
   GetAllResumeRequestQueryDto,
   GetOneResumeRequestParamDto,
   GetOneResumeResponseDto,
+  GetOneResumeWithAnswerResponseDto,
   GetOneResumeWithTitleResponseDto,
 } from '🔥apps/server/resumes/dtos/get-resume.dto';
 import { PatchResumeRequestDto } from '🔥apps/server/resumes/dtos/patch-resume.dto';
@@ -33,6 +36,18 @@ import { ResumesService } from '🔥apps/server/resumes/services/resumes.service
 export class ResumesController {
   constructor(private readonly resumesService: ResumesService) {}
 
+  @SuccessResponse(HttpStatus.OK, [
+    {
+      model: GetOneResumeResponseDto,
+      exampleDescription: 'answer가 false인 경우, 답안을 반환하지 않습니다.',
+      exampleTitle: 'answer가 false인 경우',
+    },
+    {
+      model: GetOneResumeWithAnswerResponseDto,
+      exampleDescription: 'answer가 true인 경우, 답안을 함께 반환합니다.',
+      exampleTitle: 'answer가 true인 경우',
+    },
+  ])
   @Route({
     request: {
       path: '',
