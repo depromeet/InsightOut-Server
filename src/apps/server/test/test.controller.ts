@@ -52,9 +52,9 @@ export class TestController {
       description: '### ✅ openai prompt 테스트입니다.',
     },
     description: testApiSuccMd,
-    summary: '✅openai 프롬프트 테스트 API',
+    summary: '✅ openai 프롬프트 테스트 API',
   })
   async test(@Body() body: PromptTestBodyReqDto) {
-    return await this.openAiService.promptChatGPT(body.prompt);
+    return await this.openAiService.promptChatGPT(body.content);
   }
 }

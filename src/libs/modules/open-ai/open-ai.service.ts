@@ -3,13 +3,13 @@ import { EnvService } from '📚libs/modules/env/env.service';
 import { EnvEnum } from '📚libs/modules/env/env.enum';
 import { HttpService } from '@nestjs/axios';
 import { catchError, firstValueFrom } from 'rxjs';
+import { openAIModelEnum } from '📚libs/modules/open-ai/openAIModel.enum';
 
 @Injectable()
 export class OpenAiService {
   private openAIHeader: { [key in string] };
-  private OPEN_AI_MODEL = 'text-ada-001';
-  private OPEN_AI_MAX_TOKEN = 50;
-  private OPEN_AI_TEMPERATURE = 0;
+  private OPEN_AI_URL = 'https://api.openai.com/v1/chat/completions';
+  private OPEN_AI_MODEL = openAIModelEnum.GPT_3DOT5_TERBO;
 
   constructor(private readonly envService: EnvService, private readonly httpService: HttpService) {
     this.openAIHeader = {
@@ -18,26 +18,28 @@ export class OpenAiService {
     };
   }
 
-  public async promptChatGPT(prompt: string) {
-    /*
-     * max_tokens 프로퍼티는 GPT 모델 답변의 길이를 제한합니다. Ex) max_tokens가 50이면 50개의 토큰을 생성 한 후 모델의 응답이 잘리게 됩니다.
-     * temperature 프로퍼티는 창의성의 정도입니다. temperature가 낮으면 가장 가능성이 높고 보수적인 응답을 뱉어내고 1.0과 같이 높으면 창의적인 답변이 나오게 됩니다.
-     */
+  public async promptChatGPT(content: string) {
     const data = {
       model: this.OPEN_AI_MODEL,
-      prompt,
-      max_tokens: this.OPEN_AI_MAX_TOKEN,
-      temperature: this.OPEN_AI_TEMPERATURE,
+      messages: [
+        {
+          role: 'user',
+          content,
+        },
+      ],
     };
 
     const response = await firstValueFrom(
-      this.httpService.post('https://api.openai.com/v1/completions', data, { headers: this.openAIHeader }).pipe(
+      this.httpService.post(this.OPEN_AI_URL, data, { headers: this.openAIHeader }).pipe(
         catchError((error) => {
+          console.error(error.response.data);
           throw error;
         }),
       ),
     );
+
     const responseData = response.data;
+
     return responseData;
   }
 }

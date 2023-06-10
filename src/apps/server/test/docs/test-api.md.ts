@@ -3,24 +3,25 @@ export const testApiSuccMd = `
 성공 시 openai에서 내려주는 값이 들어 있습니다. 예시는 아래와 같습니다. \n
 \`\`\`
 {
-    "id": "cmpl-7PnupHcqfEw23gp2Oof1a4yXaEsng",
-    "object": "text_completion",
-    "created": 1686384431,
-    "model": "text-ada-001",
-    "choices": [
+  "id": "chatcmpl-7PpCBk4dyiTgDOGUKJsDAt6kRGcmf",
+  "object": "chat.completion",
+  "created": 1686389351,
+  "model": "gpt-3.5-turbo-0301",
+  "usage": {
+    "prompt_tokens": 493,
+    "completion_tokens": 517,
+    "total_tokens": 1010
+  },
+  "choices": [
     {
-        // 결과는 아래 text 프로퍼티 안에 들어 있습니다.
-        "text": "There are many ways someone can learn English. There are dozens of websites and videos that can be found online that teach English, or how to use English-related technologies, or how to be a better English speaker. There are also many English",
-        "index": 0,
-        "logprobs": null,
-        "finish_reason": "length"
+      "message": {
+        "role": "assistant",
+        "content": "상황: 프로그래머를 꿈꾸던 저는, 개발 동아리에 가야 한다는 조언을 듣고 디프만이라는 동아리에 지원하게 되었습니다. 이 동아리는 디자이너와 개발자가 협업하여 서비스를 만들기 때문에 저에게 매우 매력적으로 다가왔습니다.\\n\\n과제: 제가 맡은 과제는 구글, 네이버, 카카오 세 가지 소셜 로그인 제공자의 SDK를 사용해 OAuth2.0 로그인을 구현하는 것이었으며, 로그인/회원가입/회원탈퇴/로그아웃 등의 기능을 구현해야 했습니다.\\n\\n행동: 해당 API에서 제공하는 명세를 모두 학습한 뒤에 세션 쿠키와 JWT의 인가 방식 차이와 인가 방법을 배워 API를 정확하게 구현하기 위해 노력했습니다.\\n\\n결과: 이 과제를 수행하면서, 프론트엔드와 백엔드가 어떻게 상호 통신하는지에 대한 개념을 확립할 수 있었습니다. 또한, JWT 방식의 RTR을 통해 보안을 강화하는 방법 등에 대한 새로운 인사이트를 얻을 수 있었습니다.\\n\\n\`협업 능력\`과 \`API 구현 능력\` 두 가지 역량을 모두 발휘해 이 과제에서 좋은 성과를 이뤄냈습니다. 이제는 더욱 발전하기 위해 노력하며, 좀 더 복잡하고 흥미로운 과제를 수행해 더 많은 경험을 쌓고 싶습니다."
+      },
+      "finish_reason": "stop",
+      "index": 0
     }
-    ],
-        "usage": {
-        "prompt_tokens": 6,
-            "completion_tokens": 50,
-            "total_tokens": 56
-    }
+  ]
 }
 \`\`\`
 
