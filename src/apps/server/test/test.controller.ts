@@ -7,11 +7,15 @@ import { Route } from '🔥apps/server/common/decorators/router/route.decorator'
 import { Method } from '📚libs/enums/method.enum';
 import { PostIssueTestTokenRequestBodyDto } from '🔥apps/server/test/dtos/post-issue-test-token.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { OpenAiService } from '📚libs/modules/open-ai/open-ai.service';
+import { PromptTestBodyReqDto } from '🔥apps/server/test/dtos/prompt-test-body-req.dto';
+import { upsertExperienceSuccMd } from '🔥apps/server/experiences/markdown/experience.md';
+import { testApiSuccMd } from '🔥apps/server/test/docs/test-api.md';
 
 @ApiTags('🧑🏻‍💻 개발용 API')
 @Controller('test')
 export class TestController {
-  constructor(private readonly testService: TestService) {}
+  constructor(private readonly testService: TestService, private readonly openAiService: OpenAiService) {}
 
   @Route({
     request: {
@@ -36,5 +40,21 @@ export class TestController {
       httpOnly: true,
     });
     return ResponseEntity.CREATED_WITH_DATA(jwtToken);
+  }
+
+  @Route({
+    request: {
+      path: 'openai',
+      method: Method.POST,
+    },
+    response: {
+      code: HttpStatus.OK,
+      description: '### ✅ openai prompt 테스트입니다.',
+    },
+    description: testApiSuccMd,
+    summary: '✅ openai 프롬프트 테스트 API',
+  })
+  async test(@Body() body: PromptTestBodyReqDto) {
+    return await this.openAiService.promptChatGPT(body.content);
   }
 }
