@@ -31,7 +31,59 @@ export class GetAllResumeRequestQueryDto {
   answer = false;
 }
 
-class QuestionResponse {
+export class QuestionResponse {
+  @Exclude() private _id: number;
+  @Exclude() private _title: string;
+  @Exclude() private _updatedAt: Date;
+
+  @ApiProperty({
+    description: '자기소개서 문항 id',
+    type: Number,
+    example: 1234,
+  })
+  @IsInt()
+  @IsPositive()
+  @IsNotEmpty()
+  get id(): number {
+    return this._id;
+  }
+
+  set id(value) {
+    this._id = value;
+  }
+
+  @ApiProperty({
+    description: '자기소개서 문항 제목',
+    type: String,
+    example: '디프만 13기 지원동기',
+  })
+  @IsString()
+  @IsNotEmpty()
+  get title(): string {
+    return this._title;
+  }
+
+  set title(value) {
+    this._title = value;
+  }
+
+  @ApiProperty({
+    description: '자기소개서 문항 최종 작성일자',
+    type: Date,
+    example: new Date(),
+  })
+  @IsDate()
+  @IsNotEmpty()
+  get updatedAt(): Date {
+    return this._updatedAt;
+  }
+
+  set updatedAt(value) {
+    this._updatedAt = value;
+  }
+}
+
+export class QuestionWithAnswerResponse {
   @Exclude() private _id: number;
   @Exclude() private _title: string;
   @Exclude() private _answer: string;
@@ -91,7 +143,7 @@ class QuestionResponse {
   })
   @IsDate()
   @IsNotEmpty()
-  get updatedAt() {
+  get updatedAt(): Date {
     return this._updatedAt;
   }
 
@@ -144,6 +196,7 @@ export class GetOneResumeResponseDto {
   @Expose()
   @ApiProperty({
     description: '자기소개서 생성 일자',
+    type: Date,
     example: new Date(),
   })
   @IsDate()
@@ -155,6 +208,7 @@ export class GetOneResumeResponseDto {
   @Expose()
   @ApiProperty({
     description: '자기소개서 작성 일자',
+    type: Date,
     example: new Date(),
   })
   @IsDate()
@@ -172,7 +226,87 @@ export class GetOneResumeResponseDto {
   @IsArray()
   @IsObject({ each: true })
   @ValidateNested({ each: true })
-  @Type(() => QuestionResponse)
+  @Type(() => QuestionWithAnswerResponse)
+  get question(): Partial<Question>[] {
+    return this._question;
+  }
+}
+
+export class GetOneResumeWithAnswerResponseDto {
+  @Exclude() private readonly _id: number;
+  @Exclude() private readonly _title: string;
+  @Exclude() private readonly _createdAt: Date;
+  @Exclude() private readonly _updatedAt: Date;
+  @Exclude() private readonly _question?: Partial<QuestionWithAnswerResponse>[];
+
+  constructor(resume: Resume & { Question: Question[] }) {
+    this._id = resume.id;
+    this._title = resume.title;
+    this._createdAt = resume.createdAt;
+    this._updatedAt = resume.updatedAt;
+    this._question = resume.Question.map((question) => {
+      const { resumeId, ...rest } = question;
+      return rest;
+    });
+  }
+
+  @Expose()
+  @ApiProperty({
+    description: '자기소개서 폴더 id',
+    example: 1234,
+  })
+  @IsInt()
+  @IsPositive()
+  @IsNotEmpty()
+  get id(): number {
+    return this._id;
+  }
+
+  @Expose()
+  @ApiProperty({
+    description: '자기소개서 폴더 제목',
+    example: '디프만 13기',
+  })
+  @IsString()
+  @IsNotEmpty()
+  get title(): string {
+    return this._title;
+  }
+
+  @Expose()
+  @ApiProperty({
+    description: '자기소개서 생성 일자',
+    type: Date,
+    example: new Date(),
+  })
+  @IsDate()
+  @IsNotEmpty()
+  get createdAt(): Date {
+    return this._createdAt;
+  }
+
+  @Expose()
+  @ApiProperty({
+    description: '자기소개서 작성 일자',
+    type: Date,
+    example: new Date(),
+  })
+  @IsDate()
+  @IsNotEmpty()
+  get updatedAt(): Date {
+    return this._updatedAt;
+  }
+
+  @Expose()
+  @ApiProperty({
+    description: '자기소개서 문항',
+    type: QuestionWithAnswerResponse,
+    isArray: true,
+  })
+  @IsArray()
+  @IsObject({ each: true })
+  @ValidateNested({ each: true })
+  @Type(() => QuestionWithAnswerResponse)
   get question(): Partial<Question>[] {
     return this._question;
   }

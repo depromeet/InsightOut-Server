@@ -1,5 +1,7 @@
-import { UseGuards, Controller, Query, HttpStatus, Body, Param, ParseIntPipe } from '@nestjs/common';
+import { UseGuards, Controller, Query, HttpStatus, Body, Param } from '@nestjs/common';
 import { ApiTags, ApiQuery, ApiParam } from '@nestjs/swagger';
+import { SuccessResponse } from '📚libs/decorators/success-response.dto';
+
 import { Method } from '📚libs/enums/method.enum';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
@@ -7,24 +9,47 @@ import { User } from '🔥apps/server/common/decorators/request/user.decorator';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
 import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
 import {
+  DeleteResumeDescriptionMd,
+  DeleteResumeResponseDescriptionMd,
+  DeleteResumeSummaryMd,
+} from '🔥apps/server/resumes/docs/resumes/delete-resume.doc';
+import {
   GetCountOfResumeDescriptionMd,
   GetCountOfResumeResponseDescriptionMd,
   GetCountOfResumeSummaryMd,
-} from '🔥apps/server/resumes/docs/get-count-of-resume.dto';
+} from '🔥apps/server/resumes/docs/resumes/get-count-of-resume.dto';
 import {
+  GetAllResumeDescriptionMd,
+  GetAllResumeResponseDescriptionMd,
+  GetAllResumeSummaryMd,
   GetAllResumesTitleDescriptionMd,
   GetAllResumesTitleResponseDescriptionMd,
   GetAllResumesTitleSummaryMd,
-} from '🔥apps/server/resumes/docs/get-resume.doc';
-import { GetCountOfResumeResponseDto } from '🔥apps/server/resumes/dtos/get-count-of-resume.dto';
+  GetOneResumeDescriptionMd,
+  GetOneResumeResponseDescriptionMd,
+  GetOneResumeSummaryMd,
+} from '🔥apps/server/resumes/docs/resumes/get-resume.doc';
+import {
+  PatchResumeDescriptionMd,
+  PatchResumeResponseDescriptionMd,
+  PatchResumeSummaryMd,
+} from '🔥apps/server/resumes/docs/resumes/patch-resume.doc';
+import {
+  PostResumeDescriptionMd,
+  PostResumeResponseDescriptionMd,
+  PostResumeSummaryMd,
+} from '🔥apps/server/resumes/docs/resumes/post-resume.doc';
+import { DeleteResumeRequestParamDto } from '🔥apps/server/resumes/dtos/resumes/delete-resume.dto';
+import { GetCountOfResumeResponseDto } from '🔥apps/server/resumes/dtos/resumes/get-count-of-resume.dto';
 import {
   GetAllResumeRequestQueryDto,
   GetOneResumeRequestParamDto,
   GetOneResumeResponseDto,
+  GetOneResumeWithAnswerResponseDto,
   GetOneResumeWithTitleResponseDto,
-} from '🔥apps/server/resumes/dtos/get-resume.dto';
-import { PatchResumeRequestDto } from '🔥apps/server/resumes/dtos/patch-resume.dto';
-import { PostResumeResponseDto } from '🔥apps/server/resumes/dtos/post-resume.dto';
+} from '🔥apps/server/resumes/dtos/resumes/get-resume.dto';
+import { PatchResumeRequestBodyDto, PatchResumeRequestParamDto } from '🔥apps/server/resumes/dtos/resumes/patch-resume.dto';
+import { PostResumeResponseDto } from '🔥apps/server/resumes/dtos/resumes/post-resume.dto';
 import { ResumesService } from '🔥apps/server/resumes/services/resumes.service';
 
 @ApiTags('🗂️ 자기소개서 API')
@@ -33,6 +58,19 @@ import { ResumesService } from '🔥apps/server/resumes/services/resumes.service
 export class ResumesController {
   constructor(private readonly resumesService: ResumesService) {}
 
+  // ✅ 자기소개서 전체 조회
+  @SuccessResponse(HttpStatus.OK, [
+    {
+      model: GetOneResumeResponseDto,
+      exampleDescription: 'answer가 false인 경우, 답안을 반환하지 않습니다.',
+      exampleTitle: 'answer가 false인 경우',
+    },
+    {
+      model: GetOneResumeWithAnswerResponseDto,
+      exampleDescription: 'answer가 true인 경우, 답안을 함께 반환합니다.',
+      exampleTitle: 'answer가 true인 경우',
+    },
+  ])
   @Route({
     request: {
       path: '',
@@ -42,12 +80,10 @@ export class ResumesController {
       code: HttpStatus.OK,
       type: GetOneResumeResponseDto,
       isArray: true,
-      description:
-        '### ✅ 자기소개서 전체 조회에 성공했습니다.\n유저가 작성한 모든 자기소개서를 반환하며, 각각의 자기소개서는 문항을 포함하고 문항의 답안은 Optional로 선택하여 가져올 수 있습니다.   \n자기소개서가 출력되는 기준은 모두 생성일자로부터 내림차순입니다. 자기소개서에 속한 자기소개서 문항도 마찬가지입니다.',
+      description: GetAllResumeResponseDescriptionMd,
     },
-    summary: '자기소개서 전체 조회 API (2023.6.3. Updated)',
-    description: `# 자기소개서 조회 API\n## Description\n자기소개서를 생성한 날짜 기준 내림차순(최신순)으로 조회합니다. 자기소개서 목록과 각 자기소개서 별 문항을 모두 출력합니다.   \n문항에 대한 답안이 payload가 크기 때문에 기본적으로 문항 제목만 조회하며, answer 쿼리스트링 값에 따라서 문항에 대한 답안도 추가적으로 가져옵니다.\n- POST /resumes - 자기소개서(Resumes)와 문항들(Questions)을 가져오며, 문항의 답안(answer)은 가져오지 않습니다.\n- POST /resumes?answer=true - 자기소개서(Resumes)와 문항들(Questions)을 가져오며, 자기소개서 문항의 제목과 답안을 가져옵니다.\n## Keyword\n용어가 통일되지 않아 명세합니다.\n1. 자기소개서: 디프만 13기\n2. 문항: 디프만 13기 지원 동기\n## Picture\n![image](https://github.com/depromeet/13th-4team-backend/assets/83271772/61edf279-1e15-46de-a974-561eac58b4a3)\n\n## Figma.\n⛳️[자기소개서 작성 첫 화면](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1221-8169&t=bY8GHCeIQEeC8L6e-4)
-      `,
+    summary: GetAllResumeSummaryMd,
+    description: GetAllResumeDescriptionMd,
   })
   @ApiQuery({
     description: '자기소개서를 조회할 때 사용할 쿼리입니다. false를 입력 시 자기소개서만 조회하고, true를 입력 시 문항도 함께 조회합니다.',
@@ -62,6 +98,7 @@ export class ResumesController {
     return ResponseEntity.OK_WITH_DATA(resumes);
   }
 
+  // ✅ 자기소개서 제목 조회 -> 모아보기 제목별 필터링에 사용
   @Route({
     request: {
       path: 'title',
@@ -82,6 +119,7 @@ export class ResumesController {
     return ResponseEntity.OK_WITH_DATA(resumeTitleWithResumeId);
   }
 
+  // ✅ 자기소개서 개수 조회 -> 모아보기 최상단 자기소개서 개수 출력에 사용
   @Route({
     request: {
       path: 'count',
@@ -101,6 +139,7 @@ export class ResumesController {
     return ResponseEntity.OK_WITH_DATA(countOfResume);
   }
 
+  // ✅ 특정 자기소개서 조회 API
   @Route({
     request: {
       path: ':resumeId',
@@ -109,11 +148,10 @@ export class ResumesController {
     response: {
       code: HttpStatus.OK,
       type: GetOneResumeResponseDto,
-      description:
-        '### ✅ 특정 자기소개서 조회에 성공했습니다.\n한 개의 자기소개서를 가져오며, 자기소개서에 속한 자기소개서 문항도 생성일자 기준 내림차순으로 가져옵니다.',
+      description: GetOneResumeResponseDescriptionMd,
     },
-    summary: '특정 자기소개서 조회 API (2023.6.6. Updated)',
-    description: `# 자기소개서 조회 API\n## Description\n**userId**와 **resumeId** path parameter를 통해서 특정 자기소개서 한 개를 조회합니다. 자기소개서는 그 자기소개서에 속한 모든 문항를 가져옵니다.   \n자기소개서 문항은 **생성일자 기준 내림차순(최신순)으로 정렬**되어 출력됩니다. 주로 \`모아보기\`에서 사용됩니다.\n## Picture\n![image](https://github.com/depromeet/13th-4team-backend/assets/83271772/90712fb4-7c1e-4b8c-845e-2139dd6deca9)\n## Figma.\n⛳️ [자기소개서 모아보기](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1403-11728&t=oMTkLrgQjXJOPb8D-4)`,
+    summary: GetOneResumeSummaryMd,
+    description: GetOneResumeDescriptionMd,
   })
   public async getOneResume(
     @User() user: UserJwtToken,
@@ -124,6 +162,7 @@ export class ResumesController {
     return ResponseEntity.OK_WITH_DATA(resume);
   }
 
+  // ✅ 자기소개서 추가 API
   @Route({
     request: {
       path: '',
@@ -131,13 +170,11 @@ export class ResumesController {
     },
     response: {
       code: HttpStatus.CREATED,
-      description:
-        '### ✅ 자기소개서 추가에 성공했습니다.\ntitle이 존재하지 않고 빈 폴더를 생성하기 때문에 이름(제목, title)은 응답으로 보내지 않습니다.',
+      description: PostResumeResponseDescriptionMd,
       type: PostResumeResponseDto,
     },
-    summary: '자기소개서 추가 API (2023.6.3. Updated)',
-    description:
-      '# 자기소개서 추가 API\n## Description\n새로 추가 버튼을 눌러 자기소개서를 추가합니다. 단순히 추가하는 것이므로 별도로 **request body가 필요하지 않습니다**. 기본적으로 **"새 자기소개서"**라는 제목으로 추가됩니다.\n## Picture\n![image](https://github.com/depromeet/13th-4team-backend/assets/83271772/480c339f-f8eb-4960-a0a2-59162193a2d8)\n## Figma\n⛳️[새 폴더 추가한 경우](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1221-8662&t=zKwSWoPmdDHGzQV4-4)',
+    summary: PostResumeSummaryMd,
+    description: PostResumeDescriptionMd,
   })
   async createResumeFolder(@User() user: UserJwtToken): Promise<ResponseEntity<PostResumeResponseDto>> {
     const resume = await this.resumesService.createResumeFolder(user.userId);
@@ -145,6 +182,7 @@ export class ResumesController {
     return ResponseEntity.CREATED_WITH_DATA(resume);
   }
 
+  // ✅ 자기소개서 삭제 API
   @Route({
     request: {
       path: ':resumeId',
@@ -152,10 +190,11 @@ export class ResumesController {
     },
     response: {
       code: HttpStatus.OK,
+      description: DeleteResumeResponseDescriptionMd,
+      type: String,
     },
-    summary: '자기소개서 삭제 API',
-    description:
-      '# 자기소개서 삭제 API\n## Description\n자기소개서 폴더를 삭제합니다. 폴더 하위에 있는 문항도 같이 삭제됩니다.\n## etc.\n⛳️ [폴더 이름 미트볼 클릭](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1221-10307&t=PibZzDLncZrUbrLe-4)',
+    summary: DeleteResumeSummaryMd,
+    description: DeleteResumeDescriptionMd,
   })
   @ApiParam({
     name: 'resumeId',
@@ -163,12 +202,16 @@ export class ResumesController {
     example: 1234,
     type: Number,
   })
-  async deleteResume(@Param('resumeId', ParseIntPipe) resumeId: number, @User() user: UserJwtToken): Promise<ResponseEntity<string>> {
-    await this.resumesService.deleteResume({ resumeId, userId: user.userId });
+  async deleteResume(
+    @Param() deleteResumeRequestParamDto: DeleteResumeRequestParamDto,
+    @User() user: UserJwtToken,
+  ): Promise<ResponseEntity<string>> {
+    await this.resumesService.deleteResume({ resumeId: deleteResumeRequestParamDto.resumeId, userId: user.userId });
 
     return ResponseEntity.OK_WITH_MESSAGE('Resume deleted');
   }
 
+  // ✅ 자기소개서 제목 수정 API
   @Route({
     request: {
       path: ':resumeId',
@@ -176,10 +219,11 @@ export class ResumesController {
     },
     response: {
       code: HttpStatus.OK,
+      description: PatchResumeResponseDescriptionMd,
+      type: String,
     },
-    summary: '자기소개서 제목 수정 API',
-    description:
-      '# 자기소개서 제목 수정 API\n## Description\n미트볼 버튼을 눌러서 자기소개서 폴더를 수정합니다.\n## etc.\n⛳️ [폴더 이름 미트볼 클릭](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1221-10307&t=PibZzDLncZrUbrLe-4)',
+    summary: PatchResumeSummaryMd,
+    description: PatchResumeDescriptionMd,
   })
   @ApiParam({
     name: 'resumeId',
@@ -188,11 +232,11 @@ export class ResumesController {
     type: Number,
   })
   async updateResumeFolder(
-    @Param('resumeId', ParseIntPipe) resumeId: number,
+    @Param() patchResumeRequestParamDto: PatchResumeRequestParamDto,
     @User() user: UserJwtToken,
-    @Body() patchResumeRequestDto: PatchResumeRequestDto,
+    @Body() patchResumeRequestDto: PatchResumeRequestBodyDto,
   ): Promise<ResponseEntity<string>> {
-    await this.resumesService.updateResumeFolder(patchResumeRequestDto, resumeId, user.userId);
+    await this.resumesService.updateResumeFolder(patchResumeRequestDto, patchResumeRequestParamDto.resumeId, user.userId);
 
     return ResponseEntity.OK_WITH_MESSAGE('Resume updated');
   }
