@@ -35,6 +35,11 @@ import {
   GetStarFromExperienceRequestParamDto,
   GetStarFromExperienceResponseDto,
 } from '🔥apps/server/experiences/dto/get-star-from-experience.dto';
+import {
+  GetStarFromExperienceDescriptionMd,
+  GetStarFromExperienceResponseDescriptionMd,
+  GetStarFromExperienceSummaryMd,
+} from '🔥apps/server/experiences/markdown/get-star-from-experience.md';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -156,7 +161,10 @@ export class ExperienceController {
     response: {
       code: HttpStatus.OK,
       type: GetStarFromExperienceResponseDto,
+      description: GetStarFromExperienceResponseDescriptionMd,
     },
+    summary: GetStarFromExperienceSummaryMd,
+    description: GetStarFromExperienceDescriptionMd,
   })
   public async getStarFromExperienceByExperienceId(
     @Param() getStarFromExperienceRequestParamDto: GetStarFromExperienceRequestParamDto,
