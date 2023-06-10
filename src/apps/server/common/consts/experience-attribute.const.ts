@@ -6,10 +6,10 @@ export const getExperienceAttribute: ExperienceSelect = {
   startDate: true,
   endDate: true,
   experienceStatus: true,
-  situation: true,
-  task: true,
-  action: true,
-  result: true,
+  // situation: true,
+  // task: true,
+  // action: true,
+  // result: true,
   ExperienceInfo: {
     select: {
       experienceId: true,
