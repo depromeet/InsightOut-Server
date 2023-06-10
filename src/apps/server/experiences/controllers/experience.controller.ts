@@ -1,4 +1,4 @@
-import { Body, HttpStatus, Query, UseGuards } from '@nestjs/common';
+import { Body, HttpStatus, Param, Query, UseGuards } from '@nestjs/common';
 import { Route } from '../../common/decorators/router/route.decorator';
 import { RouteTable } from '../../common/decorators/router/route-table.decorator';
 import { UpsertExperienceReqDto } from '../dto/req/upsertExperience.dto';
@@ -31,6 +31,10 @@ import {
   GetCountOfExperienceResponseDescriptionMd,
   GetCountOfExperienceSummaryMd,
 } from '🔥apps/server/experiences/markdown/get-count-of-experience.md';
+import {
+  GetStarFromExperienceRequestParamDto,
+  GetStarFromExperienceResponseDto,
+} from '🔥apps/server/experiences/dto/get-star-from-experience.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -116,7 +120,7 @@ export class ExperienceController {
     summary: GetCountOfExperienceAndCapabilitySummaryMd,
     description: GetCountOfExperienceAndCapabilityDescriptionMd,
   })
-  async getCountOfExperienceAndCapability(
+  public async getCountOfExperienceAndCapability(
     @User() user: UserJwtToken,
   ): Promise<ResponseEntity<GetCountOfExperienceAndCapabilityResponseDto[]>> {
     const countOfExperienceAndCapability = await this.experienceService.getCountOfExperienceAndCapability(user.userId);
@@ -137,9 +141,28 @@ export class ExperienceController {
     summary: GetCountOfExperienceSummaryMd,
     description: GetCountOfExperienceDescriptionMd,
   })
-  async getCountOfExperience(@User() user: UserJwtToken): Promise<ResponseEntity<GetCountOfExperienceResponseDto>> {
+  public async getCountOfExperience(@User() user: UserJwtToken): Promise<ResponseEntity<GetCountOfExperienceResponseDto>> {
     const countOfExperience = await this.experienceService.getCountOfExperience(user.userId);
 
     return ResponseEntity.OK_WITH_DATA(countOfExperience);
+  }
+
+  // ✅ 경험카드 star 조회
+  @Route({
+    request: {
+      path: '/star/:experienceId',
+      method: Method.GET,
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: GetStarFromExperienceResponseDto,
+    },
+  })
+  public async getStarFromExperienceByExperienceId(
+    @Param() getStarFromExperienceRequestParamDto: GetStarFromExperienceRequestParamDto,
+  ): Promise<ResponseEntity<GetStarFromExperienceResponseDto>> {
+    const star = await this.experienceService.getStarFromExperienceByExperienceId(getStarFromExperienceRequestParamDto.experienceId);
+
+    return ResponseEntity.OK_WITH_DATA(star);
   }
 }
