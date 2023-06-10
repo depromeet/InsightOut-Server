@@ -71,11 +71,12 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
   }
 
   public async getStarFromExperienceByExperienceId(experienceId: number) {
-    return await this.prisma.experience.findUnique({
+    return await this.prisma.experience.findFirst({
       where: {
         id: experienceId,
+        experienceStatus: ExperienceStatus.DONE,
       },
-      select: { situation: true, task: true, action: true, result: true },
+      select: { id: true, title: true, situation: true, task: true, action: true, result: true },
     });
   }
 }
