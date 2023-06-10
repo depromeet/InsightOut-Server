@@ -7,11 +7,12 @@ import { Route } from '🔥apps/server/common/decorators/router/route.decorator'
 import { Method } from '📚libs/enums/method.enum';
 import { PostIssueTestTokenRequestBodyDto } from '🔥apps/server/test/dtos/post-issue-test-token.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { OpenAiService } from '📚libs/modules/open-ai/open-ai.service';
 
 @ApiTags('🧑🏻‍💻 개발용 API')
 @Controller('test')
 export class TestController {
-  constructor(private readonly testService: TestService) {}
+  constructor(private readonly testService: TestService, private readonly openAiService: OpenAiService) {}
 
   @Route({
     request: {
@@ -36,5 +37,20 @@ export class TestController {
       httpOnly: true,
     });
     return ResponseEntity.CREATED_WITH_DATA(jwtToken);
+  }
+
+  @Route({
+    request: {
+      path: 'openai',
+      method: Method.POST,
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: String,
+      description: '### ✅ openai테스트입니다.',
+    },
+  })
+  async test() {
+    return await this.openAiService.send();
   }
 }
