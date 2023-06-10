@@ -8,23 +8,39 @@ import { User } from '🔥apps/server/common/decorators/request/user.decorator';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
 import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
 import {
+  DeleteQuestionDescriptionMd,
+  DeleteQuestionResponseDescriptionMd,
+  DeleteQuestionSummaryMd,
+} from '🔥apps/server/resumes/docs/questions/delete-question.doc';
+import {
+  GetOneQuestionDescriptionMd,
+  GetOneQuestionResponseDescriptionMd,
+  GetOneQuestionSummaryMd,
+} from '🔥apps/server/resumes/docs/questions/get-question.doc';
+import {
   PatchQuestionDescriptionMd,
   PatchQuestionResponseDescriptionMd,
   PatchQuestionSummaryMd,
-} from '🔥apps/server/resumes/docs/patch-question.doc';
+} from '🔥apps/server/resumes/docs/questions/patch-question.doc';
+import {
+  PostQuestionDesciptionMd,
+  PostQuestionResponseDescriptionMd,
+  PostQuestionSummaryMd,
+} from '🔥apps/server/resumes/docs/questions/post-question.doc';
 import {
   PostSpellCheckDescriptionMd,
   PostSpellCheckResponseDescriptionMd,
   PostSpellCheckSummaryMd,
-} from '🔥apps/server/resumes/docs/post-spell-check.doc';
-import { GetOneQuestionRequestParamDto, GetOneQuestionResponseDto } from '🔥apps/server/resumes/dtos/get-question.dto';
+} from '🔥apps/server/resumes/docs/questions/post-spell-check.doc';
+import { DeleteQuestionRequestParamDto } from '🔥apps/server/resumes/dtos/questions/delete-question.dto';
+import { GetOneQuestionRequestParamDto, GetOneQuestionResponseDto } from '🔥apps/server/resumes/dtos/questions/get-question.dto';
 import {
   PatchQuestionRequestParamDto,
   PatchQuestionRequestBodyDto,
   PatchQuestionResponseDto,
-} from '🔥apps/server/resumes/dtos/patch-question-request.dto';
-import { PostQuestionResponseDto, PostQuestionRequestBodyDto } from '🔥apps/server/resumes/dtos/post-question.dto';
-import { PostSpellCheckRequestBodyDto } from '🔥apps/server/resumes/dtos/post-spell-check-request.body.dto';
+} from '🔥apps/server/resumes/dtos/questions/patch-question-request.dto';
+import { PostQuestionResponseDto, PostQuestionRequestBodyDto } from '🔥apps/server/resumes/dtos/questions/post-question.dto';
+import { PostSpellCheckRequestBodyDto } from '🔥apps/server/resumes/dtos/questions/post-spell-check-request.body.dto';
 import { QuestionsService } from '🔥apps/server/resumes/services/question.service';
 
 @ApiTags('📑 자기소개서 문항 API')
@@ -33,6 +49,7 @@ import { QuestionsService } from '🔥apps/server/resumes/services/question.serv
 export class QuestionsController {
   constructor(private readonly questionService: QuestionsService) {}
 
+  // ✅ 자기소개서 문항 추가 API
   @Route({
     request: {
       path: '',
@@ -41,9 +58,10 @@ export class QuestionsController {
     response: {
       code: HttpStatus.CREATED,
       type: PostQuestionResponseDto,
+      description: PostQuestionResponseDescriptionMd,
     },
-    summary: '자기소개서 문항 추가',
-    description: '자기소개서 폴더 아래 문항 추가 버튼을 눌러서 문항을 추가합니다. 빈 문항만 추가됩니다.',
+    summary: PostQuestionSummaryMd,
+    description: PostQuestionDesciptionMd,
   })
   async createOneQuestion(
     @Body() postQuestionRequestParamDto: PostQuestionRequestBodyDto,
@@ -75,7 +93,7 @@ export class QuestionsController {
   }
 
   /**
-   * 자기소개서 문항 한 개를 조회합니다.
+   * ✅ 한 개의 자기소개서 문항 조회 API
    *
    * 자기소개서 id(resumeId)와 유저 id(userId)를 통해서 자기소개서 문항을 한 개 가져옵니다.
    * 응답으로는 해당 문항에 대한 정보를 반환합니다.
@@ -91,11 +109,11 @@ export class QuestionsController {
     },
     response: {
       code: HttpStatus.OK,
-      description: '### ✅ 자기소개서 문항 조회에 성공헀습니다.\n',
+      type: GetOneQuestionResponseDto,
+      description: GetOneQuestionResponseDescriptionMd,
     },
-    summary: '자기소개서 문항 조회 API',
-    description:
-      '# 자기소개서 문항 조회 API\n## Description\n자기소개서 문항을 한 개 조회합니다. 리소스를 식별하기에 path parameter를 요청으로 기대합니다. 자기소개서 문항의 id 값과, 제목, 답안, 생성일자, 수정일자를 응답으로 전달합니다.\n## Picture\n![image](https://github.com/depromeet/13th-4team-backend/assets/83271772/bd82d7bf-4744-4a48-81d5-85c7481d5d77)\n## Figma\n⛳️ [자기소개서 조회 - 자기소개서 작성 첫 화면](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1221-8169&t=oMTkLrgQjXJOPb8D-4)',
+    summary: GetOneQuestionSummaryMd,
+    description: GetOneQuestionDescriptionMd,
   })
   async getOneQuestion(
     @Param() getOneQuestionRequestParamDto: GetOneQuestionRequestParamDto,
@@ -106,6 +124,7 @@ export class QuestionsController {
     return ResponseEntity.OK_WITH_DATA(question);
   }
 
+  // ✅ 자기소개서 문항 수정 API
   @Route({
     request: {
       path: ':questionId',
@@ -129,6 +148,7 @@ export class QuestionsController {
     return ResponseEntity.OK_WITH_DATA(updatedQuestion);
   }
 
+  // ✅ 자기소개서 문항 삭제 API
   @Route({
     request: {
       path: ':questionId',
@@ -136,13 +156,18 @@ export class QuestionsController {
     },
     response: {
       code: HttpStatus.OK,
+      type: String,
+      description: DeleteQuestionResponseDescriptionMd,
     },
-    summary: '자기소개서 문항 삭제 API',
-    description: '자기소개서 문항을 삭제합니다.',
+    summary: DeleteQuestionSummaryMd,
+    description: DeleteQuestionDescriptionMd,
   })
-  async deleteQuestion(@Param('questionId', ParseIntPipe) questionId: number, @User() user: UserJwtToken): Promise<ResponseEntity<string>> {
+  async deleteQuestion(
+    @Param() deleteQuestionRequestParamDto: DeleteQuestionRequestParamDto,
+    @User() user: UserJwtToken,
+  ): Promise<ResponseEntity<string>> {
     await this.questionService.deleteQuestion({
-      questionId,
+      questionId: deleteQuestionRequestParamDto.questionId,
       userId: user.userId,
     });
 

@@ -1,4 +1,4 @@
-import { UseGuards, Controller, Query, HttpStatus, Body, Param, ParseIntPipe } from '@nestjs/common';
+import { UseGuards, Controller, Query, HttpStatus, Body, Param } from '@nestjs/common';
 import { ApiTags, ApiQuery, ApiParam } from '@nestjs/swagger';
 import { SuccessResponse } from '📚libs/decorators/success-response.dto';
 
@@ -12,12 +12,12 @@ import {
   DeleteResumeDescriptionMd,
   DeleteResumeResponseDescriptionMd,
   DeleteResumeSummaryMd,
-} from '🔥apps/server/resumes/docs/delete-resume.doc';
+} from '🔥apps/server/resumes/docs/resumes/delete-resume.doc';
 import {
   GetCountOfResumeDescriptionMd,
   GetCountOfResumeResponseDescriptionMd,
   GetCountOfResumeSummaryMd,
-} from '🔥apps/server/resumes/docs/get-count-of-resume.dto';
+} from '🔥apps/server/resumes/docs/resumes/get-count-of-resume.dto';
 import {
   GetAllResumeDescriptionMd,
   GetAllResumeResponseDescriptionMd,
@@ -28,24 +28,28 @@ import {
   GetOneResumeDescriptionMd,
   GetOneResumeResponseDescriptionMd,
   GetOneResumeSummaryMd,
-} from '🔥apps/server/resumes/docs/get-resume.doc';
+} from '🔥apps/server/resumes/docs/resumes/get-resume.doc';
 import {
   PatchResumeDescriptionMd,
   PatchResumeResponseDescriptionMd,
   PatchResumeSummaryMd,
-} from '🔥apps/server/resumes/docs/patch-resume.doc';
-import { PostResumeDescriptionMd, PostResumeResponseDescriptionMd, PostResumeSummaryMd } from '🔥apps/server/resumes/docs/post-resume.doc';
-import { DeleteResumeRequestParamDto } from '🔥apps/server/resumes/dtos/delete-resume.dto';
-import { GetCountOfResumeResponseDto } from '🔥apps/server/resumes/dtos/get-count-of-resume.dto';
+} from '🔥apps/server/resumes/docs/resumes/patch-resume.doc';
+import {
+  PostResumeDescriptionMd,
+  PostResumeResponseDescriptionMd,
+  PostResumeSummaryMd,
+} from '🔥apps/server/resumes/docs/resumes/post-resume.doc';
+import { DeleteResumeRequestParamDto } from '🔥apps/server/resumes/dtos/resumes/delete-resume.dto';
+import { GetCountOfResumeResponseDto } from '🔥apps/server/resumes/dtos/resumes/get-count-of-resume.dto';
 import {
   GetAllResumeRequestQueryDto,
   GetOneResumeRequestParamDto,
   GetOneResumeResponseDto,
   GetOneResumeWithAnswerResponseDto,
   GetOneResumeWithTitleResponseDto,
-} from '🔥apps/server/resumes/dtos/get-resume.dto';
-import { PatchResumeRequestBodyDto, PatchResumeRequestParamDto } from '🔥apps/server/resumes/dtos/patch-resume.dto';
-import { PostResumeResponseDto } from '🔥apps/server/resumes/dtos/post-resume.dto';
+} from '🔥apps/server/resumes/dtos/resumes/get-resume.dto';
+import { PatchResumeRequestBodyDto, PatchResumeRequestParamDto } from '🔥apps/server/resumes/dtos/resumes/patch-resume.dto';
+import { PostResumeResponseDto } from '🔥apps/server/resumes/dtos/resumes/post-resume.dto';
 import { ResumesService } from '🔥apps/server/resumes/services/resumes.service';
 
 @ApiTags('🗂️ 자기소개서 API')

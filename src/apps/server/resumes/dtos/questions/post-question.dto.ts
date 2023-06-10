@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Question } from '@prisma/client';
 import { Exclude, Expose, Type } from 'class-transformer';
 import { IsInt, IsPositive } from 'class-validator';
@@ -17,7 +17,7 @@ export class PostQuestionRequestBodyDto {
 export class PostQuestionResponseDto {
   @Exclude() readonly _id: number;
   @Exclude() readonly _resumeId: number;
-  @Exclude() readonly _title: string;
+  @Exclude() readonly _title?: string | undefined;
   @Exclude() readonly _createdAt: Date;
   @Exclude() readonly _updatedAt: Date;
 
@@ -33,6 +33,7 @@ export class PostQuestionResponseDto {
   @ApiProperty({
     description: '자기소개서 문항 id',
     example: 1234,
+    type: Number,
   })
   get id(): number {
     return this._id;
@@ -42,17 +43,19 @@ export class PostQuestionResponseDto {
   @ApiProperty({
     description: '자기소개서 id',
     example: 1234,
+    type: Number,
   })
   get resumeId(): number {
     return this._resumeId;
   }
 
   @Expose()
-  @ApiProperty({
+  @ApiPropertyOptional({
     description: '자기소개서 문항 제목',
     example: '디프만 13기 지원동기',
+    type: String,
   })
-  get title(): string {
+  get title(): string | undefined {
     return this._title;
   }
 
@@ -60,6 +63,7 @@ export class PostQuestionResponseDto {
   @ApiProperty({
     description: '자기소개서 문항 생성일자',
     example: new Date(),
+    type: Date,
   })
   get createdAt(): Date {
     return this._createdAt;
@@ -69,6 +73,7 @@ export class PostQuestionResponseDto {
   @ApiProperty({
     description: '자기소개서 문항 작성일자(수정일자)',
     example: new Date(),
+    type: Date,
   })
   get updatedAt(): Date {
     return this._updatedAt;
