@@ -10,7 +10,7 @@ export class PatchResumeRequestBodyDto {
   })
   @IsString()
   @IsNotEmpty()
-  @MaxLength(13)
+  @MaxLength(20)
   title: string;
 }
 
