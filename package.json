@@ -104,11 +104,9 @@
       "<rootDir>"
     ],
     "moduleNameMapper": {
-      "^src/(.*)$": "<rootDir>/$1"
+      "^📚libs/(.*)$": "<rootDir>/libs/$1",
+      "^🔥apps/(.*)$": "<rootDir>/apps/$1"
     },
-    "setupFiles": [
-      "<rootDir>/../jest.setup.ts"
-    ],
     "testTimeout": 10000
   }
 }
