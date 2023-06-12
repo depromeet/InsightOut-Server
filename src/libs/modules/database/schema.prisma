@@ -104,7 +104,7 @@ model Onboarding {
 // 자기소개서 제목
 model Resume {
   id    Int    @id @default(autoincrement())
-  title String @default("새 자기소개서") @db.VarChar(13) // 자기소개서 제목
+  title String @default("새 자기소개서") @db.VarChar(20) // 자기소개서 제목
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
