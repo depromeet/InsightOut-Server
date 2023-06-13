@@ -14,6 +14,7 @@ import {
 import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
 import { CountExperienceAndCapability } from '🔥apps/server/experiences/types/count-experience-and-capability.type';
 import { GetExperienceRequestQueryDto } from '🔥apps/server/experiences/dto/req/get-experience.dto';
+import { GetStarFromExperienceResponseDto } from '🔥apps/server/experiences/dto/get-star-from-experience.dto';
 
 @Injectable()
 export class ExperienceService {
@@ -180,5 +181,18 @@ export class ExperienceService {
     const getCountOfExperienceResponseDto = new GetCountOfExperienceResponseDto(countOfExperience);
 
     return getCountOfExperienceResponseDto;
+  }
+
+  // ✅ 경험카드 star 조회
+  public async getStarFromExperienceByExperienceId(experienceId: number): Promise<GetStarFromExperienceResponseDto> {
+    const star = await this.experienceRepository.getStarFromExperienceByExperienceId(experienceId);
+
+    // 만약 situation, task, action, result 중에서 하나라도 누락됐다면
+    if (!(star.situation && star.task && star.action && star.result)) {
+      throw new NotFoundException('There are missing info about S, T, A, R');
+    }
+
+    const getStarFromExperienceResponseDto = new GetStarFromExperienceResponseDto(star);
+    return getStarFromExperienceResponseDto;
   }
 }

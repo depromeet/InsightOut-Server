@@ -157,14 +157,14 @@ export class GetOneResumeResponseDto {
   @Exclude() private readonly _title: string;
   @Exclude() private readonly _createdAt: Date;
   @Exclude() private readonly _updatedAt: Date;
-  @Exclude() private readonly _question?: Partial<QuestionResponse>[];
+  @Exclude() private readonly _questions?: Partial<QuestionResponse>[];
 
   constructor(resume: Resume & { Question: Question[] }) {
     this._id = resume.id;
     this._title = resume.title;
     this._createdAt = resume.createdAt;
     this._updatedAt = resume.updatedAt;
-    this._question = resume.Question.map((question) => {
+    this._questions = resume.Question.map((question) => {
       const { resumeId, ...rest } = question;
       return rest;
     });
@@ -227,8 +227,8 @@ export class GetOneResumeResponseDto {
   @IsObject({ each: true })
   @ValidateNested({ each: true })
   @Type(() => QuestionWithAnswerResponse)
-  get question(): Partial<Question>[] {
-    return this._question;
+  get questions(): Partial<Question>[] {
+    return this._questions;
   }
 }
 
@@ -237,14 +237,14 @@ export class GetOneResumeWithAnswerResponseDto {
   @Exclude() private readonly _title: string;
   @Exclude() private readonly _createdAt: Date;
   @Exclude() private readonly _updatedAt: Date;
-  @Exclude() private readonly _question?: Partial<QuestionWithAnswerResponse>[];
+  @Exclude() private readonly _questions?: Partial<QuestionWithAnswerResponse>[];
 
   constructor(resume: Resume & { Question: Question[] }) {
     this._id = resume.id;
     this._title = resume.title;
     this._createdAt = resume.createdAt;
     this._updatedAt = resume.updatedAt;
-    this._question = resume.Question.map((question) => {
+    this._questions = resume.Question.map((question) => {
       const { resumeId, ...rest } = question;
       return rest;
     });
@@ -307,8 +307,8 @@ export class GetOneResumeWithAnswerResponseDto {
   @IsObject({ each: true })
   @ValidateNested({ each: true })
   @Type(() => QuestionWithAnswerResponse)
-  get question(): Partial<Question>[] {
-    return this._question;
+  get questions(): Partial<Question>[] {
+    return this._questions;
   }
 }
 

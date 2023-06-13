@@ -1,4 +1,4 @@
-import { UseGuards, HttpStatus, Param, Body, ParseIntPipe, Controller } from '@nestjs/common';
+import { UseGuards, HttpStatus, Param, Body, Controller } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Method } from '📚libs/enums/method.enum';
 import { SpellCheckResult } from '📚libs/modules/api/api.type';
