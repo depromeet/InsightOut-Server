@@ -108,6 +108,9 @@
       "^📚libs/(.*)$": "<rootDir>/libs/$1",
       "^🔥apps/(.*)$": "<rootDir>/apps/$1"
     },
+    "setupFilesAfterEnv": [
+      "<rootDir>/singleton.ts"
+    ],
     "testTimeout": 10000
   }
 }
