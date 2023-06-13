@@ -43,4 +43,6 @@ export enum EnvEnum {
   OPENAI_API_KEY,
   OPENAI_ORGANIZATION_ID,
   OPENAI_CHAT_URL,
+
+  FRONTEND_URL,
 }
