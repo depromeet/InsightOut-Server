@@ -9,12 +9,14 @@ import {
   CreateAiKeywordsAndResumeConfiltErrorResDto,
   CreateAiKeywordsAndResumeResDto,
 } from '🔥apps/server/ai/dto/res/createAiKeywordsAndResume.res.dto';
-import { createAiResumeAndCapabilitiesSuccMd } from '🔥apps/server/ai/markdown/ai.md';
+import { createAiResumeAndCapabilitiesSuccMd, postKeywordPromptSuccMd } from '🔥apps/server/ai/markdown/ai.md';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
 import { User } from '🔥apps/server/common/decorators/request/user.decorator';
 import { RouteTable } from '🔥apps/server/common/decorators/router/route-table.decorator';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
 import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
+import { PromptKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptKeyword.req.dto';
+import { PromptKeywordResDto } from '🔥apps/server/ai/dto/res/promptKeyword.res.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -54,5 +56,24 @@ export class AiController {
     const newAi = await this.aiService.create(createAiKeywordsAndResumeBodyReqDto, user);
 
     return ResponseEntity.CREATED_WITH_DATA(newAi);
+  }
+
+  @Route({
+    request: {
+      method: Method.POST,
+      path: '/keyword',
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: PromptKeywordResDto,
+      description: 'ChatGPT 추천 키워드가 생성되었습니다 :)',
+    },
+    description: postKeywordPromptSuccMd,
+    summary: '✅ ChatGPT 추천 키워드 생성 프롬프트 API',
+  })
+  public async postKeywordPrompt(@Body() promptKeywordBodyReqDto: PromptKeywordBodyReqDto): Promise<ResponseEntity<PromptKeywordResDto>> {
+    const newAi = await this.aiService.postKeywordPrompt(promptKeywordBodyReqDto);
+
+    return ResponseEntity.OK_WITH_DATA(newAi);
   }
 }
