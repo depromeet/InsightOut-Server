@@ -19,7 +19,7 @@
     "build": "nest build",
     "prod": "node start dist/apps/server/main.js",
     "lint": "eslint \"{src,test}/**/*.ts\"",
-    "test": "jest 'src\\/.*\\.(controller|service|repository)\\.spec\\.ts$'"
+    "test": "npx cross-env NODE_ENV=test jest 'src\\/.*\\.(controller|service|repository)\\.spec\\.ts$'"
   },
   "dependencies": {
     "@liaoliaots/nestjs-redis": "^9.0.5",

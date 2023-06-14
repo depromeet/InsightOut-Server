@@ -5,10 +5,12 @@ import { PrismaClient } from '@prisma/client';
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
   constructor(readonly configService: ConfigService) {
+    const url =
+      configService.get('NODE_ENV') === 'test' ? configService.getOrThrow('TEST_DATABASE_URL') : configService.getOrThrow('DATABASE_URL');
     super({
       datasources: {
         db: {
-          url: configService.getOrThrow('DATABASE_URL'),
+          url,
         },
       },
       log: [
