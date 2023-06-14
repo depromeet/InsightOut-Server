@@ -9,8 +9,8 @@ import { PromptKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptKeywor
 import { OpenAiService } from '📚libs/modules/open-ai/open-ai.service';
 import { generateKeywordPrompt, generateResumePrompt } from '🔥apps/server/ai/prompt/keywordPrompt';
 import { PromptKeywordResDto } from '🔥apps/server/ai/dto/res/promptKeyword.res.dto';
-import { PromptResumeBodyResDto } from '\uD83D\uDD25apps/server/ai/dto/req/promptResume.req.dto';
 import { PromptResumeResDto } from '🔥apps/server/ai/dto/res/promptResume.res.dto';
+import { PromptResumeBodyResDto } from '🔥apps/server/ai/dto/req/promptResume.req.dto';
 
 @Injectable()
 export class AiService {
