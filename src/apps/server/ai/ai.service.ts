@@ -7,8 +7,10 @@ import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
 import { CreateAiKeywordsAndResumeBodyReqDto } from '🔥apps/server/ai/dto/req/createAiKeywordsAndResume.req.dto';
 import { PromptKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptKeyword.req.dto';
 import { OpenAiService } from '📚libs/modules/open-ai/open-ai.service';
-import { generateKeywordPrompt } from '🔥apps/server/ai/prompt/keywordPrompt';
+import { generateKeywordPrompt, generateResumePrompt } from '🔥apps/server/ai/prompt/keywordPrompt';
 import { PromptKeywordResDto } from '🔥apps/server/ai/dto/res/promptKeyword.res.dto';
+import { PromptResumeBodyResDto } from '\uD83D\uDD25apps/server/ai/dto/req/promptResume.req.dto';
+import { PromptResumeResDto } from '🔥apps/server/ai/dto/res/promptResume.res.dto';
 
 @Injectable()
 export class AiService {
@@ -48,5 +50,13 @@ export class AiService {
     }
 
     return new PromptKeywordResDto(result.choices[CHOICES_IDX].message.content);
+  }
+
+  public async postResumePrompt(body: PromptResumeBodyResDto): Promise<PromptResumeResDto> {
+    const CHOICES_IDX = 0;
+    const prompt = generateResumePrompt(body);
+    const result = await this.openAiService.promptChatGPT(prompt);
+
+    return new PromptResumeResDto(result.choices[CHOICES_IDX].message.content as string);
   }
 }

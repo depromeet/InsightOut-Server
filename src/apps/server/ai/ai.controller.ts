@@ -9,7 +9,7 @@ import {
   CreateAiKeywordsAndResumeConfiltErrorResDto,
   CreateAiKeywordsAndResumeResDto,
 } from '🔥apps/server/ai/dto/res/createAiKeywordsAndResume.res.dto';
-import { createAiResumeAndCapabilitiesSuccMd, postKeywordPromptSuccMd } from '🔥apps/server/ai/markdown/ai.md';
+import { createAiResumeAndCapabilitiesSuccMd, postKeywordPromptSuccMd, postResumePromptSuccMd } from '🔥apps/server/ai/markdown/ai.md';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
 import { User } from '🔥apps/server/common/decorators/request/user.decorator';
 import { RouteTable } from '🔥apps/server/common/decorators/router/route-table.decorator';
@@ -17,6 +17,8 @@ import { Route } from '🔥apps/server/common/decorators/router/route.decorator'
 import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
 import { PromptKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptKeyword.req.dto';
 import { PromptKeywordResDto } from '🔥apps/server/ai/dto/res/promptKeyword.res.dto';
+import { PromptResumeBodyResDto } from '🔥apps/server/ai/dto/req/promptResume.req.dto';
+import { PromptResumeResDto } from '🔥apps/server/ai/dto/res/promptResume.res.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -73,6 +75,25 @@ export class AiController {
   })
   public async postKeywordPrompt(@Body() promptKeywordBodyReqDto: PromptKeywordBodyReqDto): Promise<ResponseEntity<PromptKeywordResDto>> {
     const newAi = await this.aiService.postKeywordPrompt(promptKeywordBodyReqDto);
+
+    return ResponseEntity.OK_WITH_DATA(newAi);
+  }
+
+  @Route({
+    request: {
+      method: Method.POST,
+      path: '/resume',
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: PromptResumeResDto,
+      description: 'ChatGPT 추천 자기소개서가 생성되었습니다 :)',
+    },
+    description: postResumePromptSuccMd,
+    summary: '✅ ChatGPT 추천 자기소개서 생성 프롬프트 API',
+  })
+  public async postResumePrompt(@Body() promptKeywordBodyReqDto: PromptResumeBodyResDto): Promise<ResponseEntity<PromptResumeResDto>> {
+    const newAi = await this.aiService.postResumePrompt(promptKeywordBodyReqDto);
 
     return ResponseEntity.OK_WITH_DATA(newAi);
   }

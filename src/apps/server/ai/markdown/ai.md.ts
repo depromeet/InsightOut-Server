@@ -9,4 +9,15 @@ export const postKeywordPromptSuccMd = `
 ### ✅ ChatGPT 추천 키워드 생성 프롬프트 API 생성에 성공하였습니다.
 ChatGPT API를 사용하여 키워드를 생성할 때 2~3초 정도 소요됩니다.\n
 키워드 개수는 2개를 반환합니다 :)\n
+
+## Picture
+<img width="377" alt="image" src="https://github.com/depromeet/InsightOut-Server/assets/97580759/cbd1c90e-0365-41d4-b7fc-850d5b09a860">
+`;
+
+export const postResumePromptSuccMd = `
+### ✅ ChatGPT 추천 자기소개서 생성 프롬프트 API 생성에 성공하였습니다.
+ChatGPT API를 사용하여 추천 자기소개서를 생성할 때 30~40초 정도 소요됩니다.\n
+
+## Picture
+<img width="383" alt="image" src="https://github.com/depromeet/InsightOut-Server/assets/97580759/139996dc-b750-43a6-a493-3352f9d868f3">
 `;
