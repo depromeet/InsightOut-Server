@@ -9,7 +9,16 @@ import {
   CreateAiKeywordsAndResumeConfiltErrorResDto,
   CreateAiKeywordsAndResumeResDto,
 } from '🔥apps/server/ai/dto/res/createAiKeywordsAndResume.res.dto';
-import { createAiResumeAndCapabilitiesSuccMd, postKeywordPromptSuccMd, postResumePromptSuccMd } from '🔥apps/server/ai/markdown/ai.md';
+import {
+  createAiResumeAndCapabilitiesDescriptionMd,
+  createAiResumeAndCapabilitiesSummaryMd,
+  postKeywordPromptDescriptionMd,
+  postKeywordPromptSuccMd,
+  postKeywordPromptSummaryMd,
+  postResumePromptDescriptionMd,
+  postResumePromptSuccMd,
+  postResumePromptSummaryMd,
+} from '🔥apps/server/ai/markdown/ai.md';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
 import { User } from '🔥apps/server/common/decorators/request/user.decorator';
 import { RouteTable } from '🔥apps/server/common/decorators/router/route-table.decorator';
@@ -48,8 +57,8 @@ export class AiController {
       code: HttpStatus.CREATED,
       type: CreateAiKeywordsAndResumeResDto,
     },
-    description: createAiResumeAndCapabilitiesSuccMd,
-    summary: '✅ Ai 추천 키워드, 자기소개서 추가 API',
+    description: createAiResumeAndCapabilitiesDescriptionMd,
+    summary: createAiResumeAndCapabilitiesSummaryMd,
   })
   public async createAiResumeAndCapabilities(
     @Body() createAiKeywordsAndResumeBodyReqDto: CreateAiKeywordsAndResumeBodyReqDto,
@@ -68,10 +77,10 @@ export class AiController {
     response: {
       code: HttpStatus.OK,
       type: PromptKeywordResDto,
-      description: 'ChatGPT 추천 키워드가 생성되었습니다 :)',
+      description: postKeywordPromptSuccMd,
     },
-    description: postKeywordPromptSuccMd,
-    summary: '✅ ChatGPT 추천 키워드 생성 프롬프트 API',
+    description: postKeywordPromptDescriptionMd,
+    summary: postKeywordPromptSummaryMd,
   })
   public async postKeywordPrompt(@Body() promptKeywordBodyReqDto: PromptKeywordBodyReqDto): Promise<ResponseEntity<PromptKeywordResDto>> {
     const newAi = await this.aiService.postKeywordPrompt(promptKeywordBodyReqDto);
@@ -87,10 +96,10 @@ export class AiController {
     response: {
       code: HttpStatus.OK,
       type: PromptResumeResDto,
-      description: 'ChatGPT 추천 자기소개서가 생성되었습니다 :)',
+      description: postResumePromptSuccMd,
     },
-    description: postResumePromptSuccMd,
-    summary: '✅ ChatGPT 추천 자기소개서 생성 프롬프트 API',
+    description: postResumePromptDescriptionMd,
+    summary: postResumePromptSummaryMd,
   })
   public async postResumePrompt(@Body() promptKeywordBodyReqDto: PromptResumeBodyResDto): Promise<ResponseEntity<PromptResumeResDto>> {
     const newAi = await this.aiService.postResumePrompt(promptKeywordBodyReqDto);

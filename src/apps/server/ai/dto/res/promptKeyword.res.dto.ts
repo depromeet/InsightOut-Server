@@ -1,5 +1,5 @@
 import { Exclude, Expose } from 'class-transformer';
-import { IsArray, IsNotEmpty, IsString } from 'class-validator';
+import { ArrayMaxSize, IsArray, IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class PromptKeywordResDto {
@@ -11,10 +11,11 @@ export class PromptKeywordResDto {
 
   @Expose()
   @IsArray()
+  @ArrayMaxSize(2)
   @IsNotEmpty()
   @IsString({ each: true })
   @ApiProperty({ example: ['협업', '린하게 개발'] })
-  get keywords() {
+  get keywords(): string[] {
     return this._keywords;
   }
 }
