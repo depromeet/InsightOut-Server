@@ -8,7 +8,7 @@ import { ResumesService } from '🔥apps/server/resumes/services/resumes.service
 const mockCreatedAt = new Date();
 const mockUpdatedAt = new Date();
 
-const mockAllResumeData: (Resume & { Question: Question[] })[] = [
+const mockAllResumeData: (Resume & { Question: Omit<Question, 'resumeId' | 'answer'>[] })[] = [
   {
     id: 1,
     title: '새 자기소개서',
@@ -18,7 +18,24 @@ const mockAllResumeData: (Resume & { Question: Question[] })[] = [
     Question: [
       {
         id: 1,
-        resumeId: 1,
+        title: '',
+        createdAt: mockCreatedAt,
+        updatedAt: mockUpdatedAt,
+      },
+    ],
+  },
+];
+
+const mockAllResumeDataWithAnswer: (Resume & { Question: Omit<Question, 'resumeId'>[] })[] = [
+  {
+    id: 1,
+    title: '새 자기소개서',
+    createdAt: mockCreatedAt,
+    updatedAt: mockUpdatedAt,
+    userId: 1,
+    Question: [
+      {
+        id: 1,
         title: '',
         answer: '',
         createdAt: mockCreatedAt,
@@ -31,9 +48,14 @@ const mockAllResumeData: (Resume & { Question: Question[] })[] = [
 describe('Resume Service', () => {
   let service: ResumesService;
   let repository: ResumeRepository;
+  let mockResumeRepository: Partial<ResumeRepository>;
 
   // 각각 테스트 수행 이전
   beforeEach(async () => {
+    mockResumeRepository = {
+      findMany: jest.fn().mockReturnValue(mockAllResumeData),
+    };
+
     // 테스팅 모듈 생성
     const module: TestingModule = await Test.createTestingModule({
       imports: [DatabaseModule],
@@ -41,9 +63,7 @@ describe('Resume Service', () => {
         ResumesService,
         {
           provide: ResumeRepository,
-          useValue: {
-            findMany: jest.fn().mockReturnValue(mockAllResumeData),
-          },
+          useValue: mockResumeRepository,
         },
       ],
     }).compile();
@@ -66,16 +86,21 @@ describe('Resume Service', () => {
     it('should get all resumes', async () => {
       const resumes = await service.getAllResumes(1, { answer: false });
 
-      const mockResumesReponseDto = mockAllResumeData.map((resume) => new GetOneResumeResponseDto(resume));
+      const mockResumesReponseDto = mockAllResumeData.map(
+        (resume) => new GetOneResumeResponseDto(resume as Resume & { Question: Question[] }),
+      );
 
       // 서비스 레이어의 결과 객체가 같은지 깊게 비교
       expect(resumes).toStrictEqual(mockResumesReponseDto);
     });
 
     it('should get all resumes with answer', async () => {
+      mockResumeRepository.findMany = jest.fn().mockResolvedValue(mockAllResumeDataWithAnswer);
       const resumes = await service.getAllResumes(1, { answer: true });
 
-      const mockResumesReponseDto = mockAllResumeData.map((resume) => new GetOneResumeResponseDto(resume));
+      const mockResumesReponseDto = mockAllResumeDataWithAnswer.map(
+        (resume) => new GetOneResumeResponseDto(resume as Resume & { Question: Question[] }),
+      );
 
       // 서비스 레이어의 결과 객체가 같은지 깊게 비교
       expect(resumes).toStrictEqual(mockResumesReponseDto);
