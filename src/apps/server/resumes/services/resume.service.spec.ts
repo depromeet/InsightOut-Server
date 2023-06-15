@@ -45,6 +45,15 @@ const mockAllResumeDataWithAnswer: (Resume & { Question: Omit<Question, 'resumeI
   },
 ];
 
+const mockAllTitleOfResumes: { id: number; title: string; createdAt: Date; updatedAt: Date }[] = [
+  {
+    id: 1,
+    title: '자기소개서1',
+    createdAt: mockCreatedAt,
+    updatedAt: mockUpdatedAt,
+  },
+];
+
 describe('Resume Service', () => {
   let service: ResumesService;
   let repository: ResumeRepository;
@@ -120,5 +129,15 @@ describe('Resume Service', () => {
       expect(resumes).toStrictEqual([]);
       expect(resuemsWithAnswer).toStrictEqual([]);
     });
+
+    it('should get all title of resumes', async () => {
+      mockResumeRepository.findMany = jest.fn().mockResolvedValue(mockAllTitleOfResumes);
+
+      const resumeTitleWithResumeId = await service.getAllResumesTitle(1);
+
+      const mockResumeTitleWithResumeId = mockAllTitleOfResumes.map((resume) => new GetOneResumeWithTitleResponseDto(resume as Resume));
+      expect(resumeTitleWithResumeId).toStrictEqual(mockResumeTitleWithResumeId);
+    });
+
   });
 });
