@@ -82,6 +82,9 @@ describe('Resume Service', () => {
     expect(repository).toBeDefined();
   });
 
+  /*************************
+   ********** Get **********
+   *************************/
   describe('get all resumes', () => {
     it('should get all resumes', async () => {
       const resumes = await service.getAllResumes(1, { answer: false });
@@ -104,6 +107,18 @@ describe('Resume Service', () => {
 
       // 서비스 레이어의 결과 객체가 같은지 깊게 비교
       expect(resumes).toStrictEqual(mockResumesReponseDto);
+    });
+
+    it('should not find any raw', async () => {
+      mockResumeRepository.findMany = jest.fn().mockResolvedValue([]);
+
+      // 존재하지 않는 유저로 쿼리 진행
+      const resumes = await service.getAllResumes(2, { answer: true });
+      const resuemsWithAnswer = await service.getAllResumes(2, { answer: true });
+
+      // 값을 찾지 못해야 한다.
+      expect(resumes).toStrictEqual([]);
+      expect(resuemsWithAnswer).toStrictEqual([]);
     });
   });
 });
