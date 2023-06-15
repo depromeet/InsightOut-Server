@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Question, Resume } from '@prisma/client';
 import { DatabaseModule } from '📚libs/modules/database/database.module';
 import { ResumeRepository } from '📚libs/modules/database/repositories/resume.repository';
-import { GetOneResumeResponseDto } from '🔥apps/server/resumes/dtos/resumes/get-resume.dto';
+import { GetOneResumeResponseDto, GetOneResumeWithTitleResponseDto } from '🔥apps/server/resumes/dtos/resumes/get-resume.dto';
 import { ResumesService } from '🔥apps/server/resumes/services/resumes.service';
 
 const mockCreatedAt = new Date();
@@ -130,14 +130,12 @@ describe('Resume Service', () => {
       expect(resuemsWithAnswer).toStrictEqual([]);
     });
 
-    it('should get all title of resumes', async () => {
-      mockResumeRepository.findMany = jest.fn().mockResolvedValue(mockAllTitleOfResumes);
+    it('should get no title of resumes data', async () => {
+      mockResumeRepository.findMany = jest.fn().mockResolvedValue([]);
 
       const resumeTitleWithResumeId = await service.getAllResumesTitle(1);
 
-      const mockResumeTitleWithResumeId = mockAllTitleOfResumes.map((resume) => new GetOneResumeWithTitleResponseDto(resume as Resume));
-      expect(resumeTitleWithResumeId).toStrictEqual(mockResumeTitleWithResumeId);
+      expect(resumeTitleWithResumeId).toStrictEqual([]);
     });
-
   });
 });
