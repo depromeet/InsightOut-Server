@@ -7,10 +7,12 @@ import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
 import { CreateAiKeywordsAndResumeBodyReqDto } from '🔥apps/server/ai/dto/req/createAiKeywordsAndResume.req.dto';
 import { PromptKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptKeyword.req.dto';
 import { OpenAiService } from '📚libs/modules/open-ai/open-ai.service';
-import { generateKeywordPrompt, generateResumePrompt } from '🔥apps/server/ai/prompt/keywordPrompt';
+import { generateKeywordPrompt, generateResumePrompt, generateSummaryPrompt } from '🔥apps/server/ai/prompt/keywordPrompt';
 import { PromptKeywordResDto } from '🔥apps/server/ai/dto/res/promptKeyword.res.dto';
 import { PromptResumeResDto } from '🔥apps/server/ai/dto/res/promptResume.res.dto';
 import { PromptResumeBodyResDto } from '🔥apps/server/ai/dto/req/promptResume.req.dto';
+import { PromptSummaryBodyReqDto } from '🔥apps/server/ai/dto/req/promptSummary.req.dto';
+import { PromptSummaryResDto } from '🔥apps/server/ai/dto/res/promptSummary.res.dto';
 
 @Injectable()
 export class AiService {
@@ -58,5 +60,13 @@ export class AiService {
     const result = await this.openAiService.promptChatGPT(prompt);
 
     return new PromptResumeResDto(result.choices[CHOICES_IDX].message.content as string);
+  }
+
+  public async postSummaryPrompt(body: PromptSummaryBodyReqDto) {
+    const CHOICES_IDX = 0;
+    const prompt = generateSummaryPrompt(body);
+    const result = await this.openAiService.promptChatGPT(prompt);
+
+    return new PromptSummaryResDto(result.choices[CHOICES_IDX].message.content as string);
   }
 }
