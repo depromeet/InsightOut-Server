@@ -9,12 +9,25 @@ import {
   CreateAiKeywordsAndResumeConfiltErrorResDto,
   CreateAiKeywordsAndResumeResDto,
 } from '🔥apps/server/ai/dto/res/createAiKeywordsAndResume.res.dto';
-import { createAiResumeAndCapabilitiesSuccMd } from '🔥apps/server/ai/markdown/ai.md';
+import {
+  createAiResumeAndCapabilitiesDescriptionMd,
+  createAiResumeAndCapabilitiesSummaryMd,
+  postKeywordPromptDescriptionMd,
+  postKeywordPromptSuccMd,
+  postKeywordPromptSummaryMd,
+  postResumePromptDescriptionMd,
+  postResumePromptSuccMd,
+  postResumePromptSummaryMd,
+} from '🔥apps/server/ai/markdown/ai.md';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
 import { User } from '🔥apps/server/common/decorators/request/user.decorator';
 import { RouteTable } from '🔥apps/server/common/decorators/router/route-table.decorator';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
 import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
+import { PromptKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptKeyword.req.dto';
+import { PromptKeywordResDto } from '🔥apps/server/ai/dto/res/promptKeyword.res.dto';
+import { PromptResumeBodyResDto } from '🔥apps/server/ai/dto/req/promptResume.req.dto';
+import { PromptResumeResDto } from '🔥apps/server/ai/dto/res/promptResume.res.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -44,8 +57,8 @@ export class AiController {
       code: HttpStatus.CREATED,
       type: CreateAiKeywordsAndResumeResDto,
     },
-    description: createAiResumeAndCapabilitiesSuccMd,
-    summary: '✅ Ai 추천 키워드, 자기소개서 추가 API',
+    description: createAiResumeAndCapabilitiesDescriptionMd,
+    summary: createAiResumeAndCapabilitiesSummaryMd,
   })
   public async createAiResumeAndCapabilities(
     @Body() createAiKeywordsAndResumeBodyReqDto: CreateAiKeywordsAndResumeBodyReqDto,
@@ -54,5 +67,43 @@ export class AiController {
     const newAi = await this.aiService.create(createAiKeywordsAndResumeBodyReqDto, user);
 
     return ResponseEntity.CREATED_WITH_DATA(newAi);
+  }
+
+  @Route({
+    request: {
+      method: Method.POST,
+      path: '/keyword',
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: PromptKeywordResDto,
+      description: postKeywordPromptSuccMd,
+    },
+    description: postKeywordPromptDescriptionMd,
+    summary: postKeywordPromptSummaryMd,
+  })
+  public async postKeywordPrompt(@Body() promptKeywordBodyReqDto: PromptKeywordBodyReqDto): Promise<ResponseEntity<PromptKeywordResDto>> {
+    const newAi = await this.aiService.postKeywordPrompt(promptKeywordBodyReqDto);
+
+    return ResponseEntity.OK_WITH_DATA(newAi);
+  }
+
+  @Route({
+    request: {
+      method: Method.POST,
+      path: '/resume',
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: PromptResumeResDto,
+      description: postResumePromptSuccMd,
+    },
+    description: postResumePromptDescriptionMd,
+    summary: postResumePromptSummaryMd,
+  })
+  public async postResumePrompt(@Body() promptKeywordBodyReqDto: PromptResumeBodyResDto): Promise<ResponseEntity<PromptResumeResDto>> {
+    const newAi = await this.aiService.postResumePrompt(promptKeywordBodyReqDto);
+
+    return ResponseEntity.OK_WITH_DATA(newAi);
   }
 }

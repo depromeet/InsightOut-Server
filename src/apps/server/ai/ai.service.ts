@@ -1,15 +1,20 @@
-import { BadRequestException, ConflictException, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
-import { CreateAiKeywordsAndResumeBodyReqDto } from '🔥apps/server/ai/dto/req/createAiKeywordsAndResume.req.dto';
+
 import { CreateAiKeywordsAndResumeResDto } from '🔥apps/server/ai/dto/res/createAiKeywordsAndResume.res.dto';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
+import { CreateAiKeywordsAndResumeBodyReqDto } from '🔥apps/server/ai/dto/req/createAiKeywordsAndResume.req.dto';
+import { PromptKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptKeyword.req.dto';
+import { OpenAiService } from '📚libs/modules/open-ai/open-ai.service';
+import { generateKeywordPrompt, generateResumePrompt } from '🔥apps/server/ai/prompt/keywordPrompt';
+import { PromptKeywordResDto } from '🔥apps/server/ai/dto/res/promptKeyword.res.dto';
+import { PromptResumeResDto } from '🔥apps/server/ai/dto/res/promptResume.res.dto';
+import { PromptResumeBodyResDto } from '🔥apps/server/ai/dto/req/promptResume.req.dto';
 
 @Injectable()
 export class AiService {
-  constructor(
-    private readonly prisma: PrismaService,
-  ) {}
+  constructor(private readonly prisma: PrismaService, private readonly openAiService: OpenAiService) {}
   public async create(body: CreateAiKeywordsAndResumeBodyReqDto, user: UserJwtToken): Promise<CreateAiKeywordsAndResumeResDto> {
     try {
       return await this.prisma.$transaction(async (tx) => {
@@ -33,5 +38,25 @@ export class AiService {
         throw new BadRequestException('AI 생성하는 데 실패했습니다. 타입을 확인해주세요');
       }
     }
+  }
+
+  public async postKeywordPrompt(body: PromptKeywordBodyReqDto): Promise<PromptKeywordResDto> {
+    const CHOICES_IDX = 0;
+    const prompt = generateKeywordPrompt(body);
+    const result = await this.openAiService.promptChatGPT(prompt);
+
+    if (typeof result.choices[CHOICES_IDX].message.content === 'string') {
+      return new PromptKeywordResDto(JSON.parse(result.choices[CHOICES_IDX].message.content));
+    }
+
+    return new PromptKeywordResDto(result.choices[CHOICES_IDX].message.content);
+  }
+
+  public async postResumePrompt(body: PromptResumeBodyResDto): Promise<PromptResumeResDto> {
+    const CHOICES_IDX = 0;
+    const prompt = generateResumePrompt(body);
+    const result = await this.openAiService.promptChatGPT(prompt);
+
+    return new PromptResumeResDto(result.choices[CHOICES_IDX].message.content as string);
   }
 }
