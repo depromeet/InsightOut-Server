@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Question, Resume } from '@prisma/client';
 import { DatabaseModule } from '📚libs/modules/database/database.module';
 import { ResumeRepository } from '📚libs/modules/database/repositories/resume.repository';
-import { GetOneResumeResponseDto } from '🔥apps/server/resumes/dtos/resumes/get-resume.dto';
+import { GetOneResumeResponseDto, GetOneResumeWithTitleResponseDto } from '🔥apps/server/resumes/dtos/resumes/get-resume.dto';
 import { ResumesService } from '🔥apps/server/resumes/services/resumes.service';
 
 const mockCreatedAt = new Date();
@@ -42,6 +42,15 @@ const mockAllResumeDataWithAnswer: (Resume & { Question: Omit<Question, 'resumeI
         updatedAt: mockUpdatedAt,
       },
     ],
+  },
+];
+
+const mockAllTitleOfResumes: { id: number; title: string; createdAt: Date; updatedAt: Date }[] = [
+  {
+    id: 1,
+    title: '자기소개서1',
+    createdAt: mockCreatedAt,
+    updatedAt: mockUpdatedAt,
   },
 ];
 
@@ -119,6 +128,14 @@ describe('Resume Service', () => {
       // 값을 찾지 못해야 한다.
       expect(resumes).toStrictEqual([]);
       expect(resuemsWithAnswer).toStrictEqual([]);
+    });
+
+    it('should get no title of resumes data', async () => {
+      mockResumeRepository.findMany = jest.fn().mockResolvedValue([]);
+
+      const resumeTitleWithResumeId = await service.getAllResumesTitle(1);
+
+      expect(resumeTitleWithResumeId).toStrictEqual([]);
     });
   });
 });
