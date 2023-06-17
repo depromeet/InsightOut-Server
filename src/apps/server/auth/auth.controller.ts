@@ -52,7 +52,7 @@ export class AuthController {
 
     await this.authService.setRefreshToken(userId, refreshToken);
 
-    const cookieOptions = this.authService.getCookieOptions(TokenType.RefreshToken);
+    const cookieOptions = this.authService.getCookieOptions();
 
     response.cookie('refreshToken', refreshToken, cookieOptions);
 
@@ -88,7 +88,7 @@ export class AuthController {
   ): Promise<ResponseEntity<PostReissueResponseDto>> {
     const { accessToken, refreshToken } = await this.authService.rotateRefreshToken(user);
 
-    const cookieOptions = this.authService.getCookieOptions(TokenType.RefreshToken);
+    const cookieOptions = this.authService.getCookieOptions();
 
     response.cookie('refreshToken', refreshToken, cookieOptions);
     return ResponseEntity.CREATED_WITH_DATA(new PostReissueResponseDto(accessToken));
