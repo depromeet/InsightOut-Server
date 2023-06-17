@@ -8,5 +8,6 @@ import { ExperienceKeywordController } from '🔥apps/server/experiences/control
 @Module({
   controllers: [ExperienceController, ExperienceKeywordController],
   providers: [ExperienceService, ExperienceCapabilityService, ...experienceProviders],
+  exports: [ExperienceService],
 })
 export class ExperienceModule {}

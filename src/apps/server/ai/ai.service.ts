@@ -1,7 +1,6 @@
 import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma, KeywordType, Capability } from '@prisma/client';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
-
 import { CreateAiKeywordsAndResumeResDto } from '🔥apps/server/ai/dto/res/createAiKeywordsAndResume.res.dto';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
 import { CreateAiKeywordsAndResumeBodyReqDto } from '🔥apps/server/ai/dto/req/createAiKeywordsAndResume.req.dto';
@@ -11,26 +10,41 @@ import { generateKeywordPrompt, generateResumePrompt, generateSummaryPrompt } fr
 import { PromptKeywordResDto } from '🔥apps/server/ai/dto/res/promptKeyword.res.dto';
 import { PromptResumeResDto } from '🔥apps/server/ai/dto/res/promptResume.res.dto';
 import { PromptResumeBodyResDto } from '🔥apps/server/ai/dto/req/promptResume.req.dto';
-import { PromptSummaryBodyReqDto } from '🔥apps/server/ai/dto/req/promptSummary.req.dto';
-import { PromptSummaryResDto } from '🔥apps/server/ai/dto/res/promptSummary.res.dto';
+import { PromptSummaryBodyReqDto } from './dto/req/promptSummary.req.dto';
+import { PromptSummaryResDto } from './dto/res/promptSummary.res.dto';
+import { ExperienceService } from '🔥apps/server/experiences/services/experience.service';
+import { UpsertExperienceReqDto } from '🔥apps/server/experiences/dto/req/upsertExperience.dto';
 
 @Injectable()
 export class AiService {
-  constructor(private readonly prisma: PrismaService, private readonly openAiService: OpenAiService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly openAiService: OpenAiService,
+    private readonly experienceService: ExperienceService,
+  ) {}
   public async create(body: CreateAiKeywordsAndResumeBodyReqDto, user: UserJwtToken): Promise<CreateAiKeywordsAndResumeResDto> {
     try {
       return await this.prisma.$transaction(async (tx) => {
-        // aiResume생성
+        // aiResume 생성
         const newAiResume = await tx.aiResume.create({
           data: { userId: user.userId, content: body.content, experienceId: body.experienceId },
         });
 
         const capabilityInfos = body.keywords.map((keyword) => {
-          return { userId: user.userId, aiResumeId: newAiResume.id, keyword };
+          return { userId: user.userId, keyword, keywordType: KeywordType.AI };
         });
-        // aiCapability생성
-        const newAiCapability = await tx.aiCapability.createMany({ data: capabilityInfos });
-        const result = { content: newAiResume.content, aiCapabilityCreatedCount: newAiCapability.count, keywords: body.keywords };
+
+        // capability를 map으로 생성 -> 최대 2개이기 때문에 가능
+        const capabilityids: { id: number }[] = await Promise.all(
+          capabilityInfos.map(async (capabilityInfo) => await tx.capability.create({ data: capabilityInfo, select: { id: true } })),
+        );
+        const aiResumeCapabilityInfos = capabilityids.map((capabilityId) => {
+          return { capabilityId: capabilityId.id, aiResumeId: newAiResume.id };
+        });
+
+        // aiResumeCapability 생성
+        await tx.aiResumeCapability.createMany({ data: aiResumeCapabilityInfos });
+        const result = { resume: newAiResume.content, keywords: body.keywords };
 
         return new CreateAiKeywordsAndResumeResDto(result);
       });
@@ -62,11 +76,24 @@ export class AiService {
     return new PromptResumeResDto(result.choices[CHOICES_IDX].message.content as string);
   }
 
-  public async postSummaryPrompt(body: PromptSummaryBodyReqDto) {
+  public async postSummaryPrompt(body: PromptSummaryBodyReqDto, user: UserJwtToken) {
     const CHOICES_IDX = 0;
-    const prompt = generateSummaryPrompt(body);
-    const result = await this.openAiService.promptChatGPT(prompt);
+    const summaryPrompt = generateSummaryPrompt(body);
+    const keywordPrompt = generateKeywordPrompt(body);
 
-    return new PromptSummaryResDto(result.choices[CHOICES_IDX].message.content as string);
+    const [summary, keyword] = await Promise.all([
+      this.openAiService.promptChatGPT(summaryPrompt),
+      this.openAiService.promptChatGPT(keywordPrompt),
+    ]);
+
+    // analysis 업데이트
+    const upsertExperienceReqDto = new UpsertExperienceReqDto();
+    upsertExperienceReqDto.analysis = summary.choices[CHOICES_IDX].message.content as string;
+
+    await this.experienceService.upsertExperience(upsertExperienceReqDto, user);
+
+    // find로 내려주기
+
+    return new PromptSummaryResDto(summary.choices[CHOICES_IDX].message.content as string);
   }
 }

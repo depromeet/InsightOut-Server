@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Capability, Experience, ExperienceInfo, ExperienceStatus, ExperienceSummary } from '@prisma/client';
+import { Capability, Experience, ExperienceInfo, ExperienceStatus, KeywordType } from '@prisma/client';
 import { Exclude, Expose } from 'class-transformer';
 import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsPositive, IsString, Matches } from 'class-validator';
 import { getFormattedDate } from '📚libs/utils/date';
@@ -160,6 +160,7 @@ class _Capability {
   id: number;
   keyword: string;
   userId: number;
+  keywordType: KeywordType;
 }
 
 export class GetExperienceByCapabilityResponseDto {
@@ -174,7 +175,6 @@ export class GetExperienceByCapabilityResponseDto {
   @Exclude() private readonly _experienceStatus: ExperienceStatus;
   @Exclude() private readonly _capability?: Omit<Capability, 'userId'>[] | undefined;
   @Exclude() private readonly _aiRecommend: any[]; // AI 역량 키워드
-  @Exclude() private readonly _experienceSummary: ExperienceSummary[];
 
   constructor(
     experience: Partial<Experience> & {
@@ -191,8 +191,8 @@ export class GetExperienceByCapabilityResponseDto {
     this._endDate = getFormattedDate(experience.endDate);
     this._experienceStatus = experience.experienceStatus;
     this._capability = experience.capability;
+
     // this._aiRecommend =
-    // this._experienceSummary =
   }
 
   @Expose()
@@ -313,6 +313,7 @@ export class GetExperienceByCapabilityResponseDto {
     example: {
       id: 1234,
       keyword: '리더십',
+      keywordType: KeywordType.USER,
     },
     type: _Capability,
     isArray: true,
