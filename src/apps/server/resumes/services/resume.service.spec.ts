@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Question, Resume } from '@prisma/client';
 import { DatabaseModule } from '📚libs/modules/database/database.module';
@@ -63,6 +64,8 @@ describe('Resume Service', () => {
   beforeEach(async () => {
     mockResumeRepository = {
       findMany: jest.fn().mockReturnValue(mockAllResumeData),
+      findFirst: ((query: any) =>
+        mockAllResumeData.find((resume) => resume.id === query.where.id && resume.userId === query.where.userId)) as any,
     };
 
     // 테스팅 모듈 생성
@@ -146,6 +149,19 @@ describe('Resume Service', () => {
       const resumeTitleWithResumeId = await service.getAllResumesTitle(987654321);
 
       expect(resumeTitleWithResumeId).toStrictEqual([]);
+    });
+
+    it('should get one resume', async () => {
+      const resume = await service.getOneResume(1, 1);
+
+      const mockOneResume = new GetOneResumeResponseDto(mockAllResumeData[0] as Resume & { Question: Question[] });
+
+      expect(resume).toBeDefined();
+      expect(resume).toStrictEqual(mockOneResume);
+    });
+
+    it('throw if resume not found', async () => {
+      expect(service.getOneResume(987654321, 123456789)).rejects.toThrow(NotFoundException);
     });
   });
 });
