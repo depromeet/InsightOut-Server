@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { UserRepository } from '📚libs/modules/database/repositories/user.repository';
 import { CookieOptions } from 'express';
-import { Provider } from '@prisma/client';
+import { KeywordType, Provider } from '@prisma/client';
 import { Request } from 'express';
 import { AccessTokenAndRefreshToken, UserWithRefreshTokenPayload } from './types/jwt-tokwn.type';
 import { ApiService } from '📚libs/modules/api/api.service';
@@ -116,6 +116,7 @@ export class AuthService {
           await prisma.capability.createMany({
             data: DEFAULT_CAPABILITIES.map((capability) => {
               return {
+                keywordType: KeywordType.USER,
                 keyword: capability,
                 userId: user.id,
               };

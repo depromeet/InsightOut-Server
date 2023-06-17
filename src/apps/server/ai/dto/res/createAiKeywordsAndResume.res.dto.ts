@@ -5,12 +5,10 @@ import { ArrayMaxSize, ArrayMinSize, IsArray, IsInt, IsNotEmpty, IsString, Max, 
 export class CreateAiKeywordsAndResumeResDto {
   @Exclude() _content: string;
   @Exclude() _keywords: string[];
-  @Exclude() _aiCapabilityCreatedCount: number;
 
-  constructor(data: { content: string; keywords: string[]; aiCapabilityCreatedCount: number }) {
+  constructor(data: { content: string; keywords: string[] }) {
     this._content = data.content;
     this._keywords = data.keywords;
-    this._aiCapabilityCreatedCount = data.aiCapabilityCreatedCount;
   }
 
   @Expose()
@@ -32,16 +30,6 @@ export class CreateAiKeywordsAndResumeResDto {
   @ApiProperty({ example: ['협동력', '창의력'], type: Array })
   get keyword(): string[] {
     return this._keywords;
-  }
-
-  @Expose()
-  @IsInt()
-  @IsNotEmpty()
-  @Min(0)
-  @Max(2)
-  @ApiProperty({ example: 2, type: Number })
-  get aiCapabilityCreatedCount(): number {
-    return this._aiCapabilityCreatedCount;
   }
 }
 

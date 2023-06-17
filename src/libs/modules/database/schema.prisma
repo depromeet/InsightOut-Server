@@ -31,7 +31,6 @@ model User {
   AiResumes    AiResume[]
   Experiences  Experience[]
   Capability   Capability[]
-  AiCapability AiCapability[]
 
   @@map("user")
 }
@@ -132,9 +131,10 @@ model AiResume {
   userId       Int @map("user_id")
   experienceId Int @unique @map("experience_id") // 경험 id
 
-  AiCapabilities AiCapability[]
   User           User           @relation(references: [id], fields: [userId], onDelete: Cascade)
   Experience     Experience     @relation(references: [id], fields: [experienceId], onDelete: Cascade)
+
+  AiResumeCapability AiResumeCapability[]
 
   @@map("ai_resume")
 }
@@ -176,6 +176,7 @@ model Experience {
   task      String? @db.VarChar(100) // T: Task, 과제 및 목표
   action    String? @db.VarChar(100) // A: Action, 행동
   result    String? @db.VarChar(100) // R: Result, 결과
+  keywords  String[] // 요약 키워드 배열
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
@@ -185,7 +186,6 @@ model Experience {
   User                 User?                  @relation(references: [id], fields: [userId], onDelete: Cascade)
   AiResume             AiResume?
   ExperienceInfo       ExperienceInfo?
-  ExperienceSummary    ExperienceSummary[]
   ExperienceCapability ExperienceCapability[]
 
   @@map("experience")
@@ -197,17 +197,6 @@ enum ExperienceStatus {
   DONE // 끝
 }
 
-// ********************************
-// *********** 역량 키워드 ***********
-// ********************************
-model ExperienceSummary {
-  experienceId Int    @id @map("experience_id")
-  keyword      String @db.VarChar(10) // 키워드 이름
-
-  Experience Experience @relation(references: [id], fields: [experienceId])
-
-  @@map("experience_summary")
-}
 
 // ********************************
 // *********** 경험 정보 ************
@@ -237,31 +226,22 @@ model ExperienceInfo {
 model Capability {
   id      Int    @id @default(autoincrement()) // 역량 id
   keyword String @db.VarChar(10) // 역량 키워드
-
+  keywordType KeywordType
   userId Int @map("user_id")
 
   User                 User                   @relation(references: [id], fields: [userId], onDelete: Cascade)
   ExperienceCapability ExperienceCapability[]
+  AiResumeCapability AiResumeCapability[]
 
   @@map("capability")
 }
 
-// ********************************
-// ******** AI 역량 키워드 ********
-// ********************************
-
-model AiCapability {
-  id      Int    @id @default(autoincrement()) // 역량 id
-  keyword String @db.VarChar(10) // 역량 키워드
-
-  userId     Int @map("user_id")
-  aiResumeId Int @map("ai_resume_id")
-
-  User     User     @relation(references: [id], fields: [userId], onDelete: Cascade)
-  AiResume AiResume @relation(references: [id], fields: [aiResumeId], onDelete: Cascade)
-
-  @@map("ai_capability")
+// 경험 분해 진행 상태
+enum KeywordType {
+  AI // ai 역량 키워드
+  USER // user가 선택한 키워드
 }
+
 
 model ExperienceCapability {
   experienceId Int @map("experience_id")
@@ -272,6 +252,18 @@ model ExperienceCapability {
 
   @@id([experienceId, capabilityId])
   @@map("experience_capability")
+}
+
+
+model AiResumeCapability {
+  aiResumeId Int @map("ai_resume_id")
+  capabilityId Int @map("capability_id")
+
+  AiResume AiResume @relation(references: [id], fields: [aiResumeId])
+  Capability Capability @relation(references: [id], fields: [capabilityId])
+
+  @@id([aiResumeId, capabilityId])
+  @@map("ai_resume_capability")
 }
 
 // *******************************

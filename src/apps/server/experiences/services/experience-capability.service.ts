@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { CreateExperienceCapabilitiesdBodyDto } from '🔥apps/server/experiences/dto/req/create-experience-capabilities.dto';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
-import { Capability, ExperienceCapability, Prisma } from '@prisma/client';
+import { Capability, ExperienceCapability, KeywordType, Prisma } from '@prisma/client';
 import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
 import { AddCapabilitydBodyDto } from '🔥apps/server/experiences/dto/req/add-capability.dto';
 import { AddCapabilityResDto } from '🔥apps/server/experiences/dto/res/addCapability.res.dto';
@@ -87,7 +87,9 @@ export class ExperienceCapabilityService {
     const capability = await this.capabilityRepository.findFirst({ where: { userId: user.userId, keyword: body.keyword } });
     if (capability) throw new ConflictException(`${body.keyword} 해당 키워드가 이미 존재합니다. 확인 부탁드립니다.`);
 
-    const newCapability = await this.capabilityRepository.create({ data: { userId: user.userId, keyword: body.keyword } });
+    const newCapability = await this.capabilityRepository.create({
+      data: { userId: user.userId, keyword: body.keyword, keywordType: KeywordType.USER },
+    });
 
     return new AddCapabilityResDto(newCapability);
   }

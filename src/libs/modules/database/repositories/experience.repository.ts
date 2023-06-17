@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
+import { Capability, Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
 import { ExperienceSelect } from '🔥apps/server/experiences/interface/experience-select.interface';
 import { ExperienceRepositoryInterface } from '🔥apps/server/experiences/interface/experience-repository.interface';
 
@@ -52,7 +52,14 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
     // TODO ai 역량 키워드가 적용되면 해당 키워드도 함께 쿼리로 가져와야 함.
     const experiences = await this.prisma.experience.findMany({
       where: { ExperienceCapability: { some: { capabilityId: { equals: capabilityId } } } },
-      select: { id: true, title: true, startDate: true, endDate: true, experienceStatus: true, ...select },
+      select: {
+        id: true,
+        title: true,
+        startDate: true,
+        endDate: true,
+        experienceStatus: true,
+        ...select,
+      },
       orderBy: { createdAt: 'desc' },
     });
 
@@ -60,7 +67,7 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
       experiences.map(async (experience) => {
         const capability = await this.prisma.capability.findMany({
           where: { ExperienceCapability: { some: { experienceId: experience.id } } },
-          select: { id: true, keyword: true },
+          select: { id: true, keyword: true, keywordType: true },
         });
 
         return Object.assign(experience, { capability });

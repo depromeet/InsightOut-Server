@@ -31,8 +31,8 @@ import { PromptKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptKeywor
 import { PromptKeywordResDto } from '🔥apps/server/ai/dto/res/promptKeyword.res.dto';
 import { PromptResumeBodyResDto } from '🔥apps/server/ai/dto/req/promptResume.req.dto';
 import { PromptResumeResDto } from '🔥apps/server/ai/dto/res/promptResume.res.dto';
-import { PromptSummaryBodyReqDto } from '🔥apps/server/ai/dto/req/promptSummary.req.dto';
-import { PromptSummaryResDto } from '🔥apps/server/ai/dto/res/promptSummary.res.dto';
+import { PromptSummaryBodyReqDto } from './dto/req/promptSummary.req.dto';
+import { PromptSummaryResDto } from './dto/res/promptSummary.res.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -125,8 +125,11 @@ export class AiController {
     description: postSummaryPromptDescriptionMd,
     summary: postResumeSummarySummaryMd,
   })
-  public async postSummaryPrompt(@Body() promptSummaryBodyReqDto: PromptSummaryBodyReqDto): Promise<ResponseEntity<PromptSummaryResDto>> {
-    const newAi = await this.aiService.postSummaryPrompt(promptSummaryBodyReqDto);
+  public async postSummaryPrompt(
+    @Body() promptSummaryBodyReqDto: PromptSummaryBodyReqDto,
+    @User() user: UserJwtToken,
+  ): Promise<ResponseEntity<PromptSummaryResDto>> {
+    const newAi = await this.aiService.postSummaryPrompt(promptSummaryBodyReqDto, user);
 
     return ResponseEntity.OK_WITH_DATA(newAi);
   }
