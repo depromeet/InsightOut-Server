@@ -35,7 +35,7 @@ async function bootstrap() {
   //Winston
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
 
-  app.setGlobalPrefix('/api');
+  app.setGlobalPrefix('/api', { exclude: ['/'] });
 
   app.enableCors({
     origin: ['http://localhost:3000', envService.get(EnvEnum.FRONTEND_URL)],
