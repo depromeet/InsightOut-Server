@@ -18,8 +18,8 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('13기 4팀 서버')
     .setDescription('자기소개서 관리 시스템 🚨🚨🚨🚨 모든 성공 response 값은 메세지 또는 data 프로퍼티 안에 있습니다.🚨🚨🚨')
-    .addServer(`${envService.get(EnvEnum.DEV_SERVER)}`, '개발서버')
-    .addServer(`http://localhost:${envService.get(EnvEnum.PORT)}`, '로컬서버')
+    .addServer(`${envService.get(EnvEnum.DEV_SERVER)}/api`, '개발서버')
+    .addServer(`http://localhost:${envService.get(EnvEnum.PORT)}/api`, '로컬서버')
     .addSecurity('bearer', {
       type: 'http',
       scheme: 'bearer',
@@ -34,6 +34,8 @@ async function bootstrap() {
 
   //Winston
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
+
+  app.setGlobalPrefix('/api', { exclude: ['/'] });
 
   app.enableCors({
     origin: ['http://localhost:3000', envService.get(EnvEnum.FRONTEND_URL)],
