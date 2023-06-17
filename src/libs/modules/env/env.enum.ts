@@ -55,4 +55,5 @@ export enum EnvEnum {
   // prompt
   CHATGPT_KEYWORD_PROMPT,
   CHATGPT_RESUME_PROMPT,
+  CHATGPT_SUMMARY_PROMPT,
 }

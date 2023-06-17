@@ -46,3 +46,21 @@ ChatGPT 추천 자기소개서가 생성되었습니다 :)
 `;
 
 // -- ChatGPT 추천 자기소개서 생성 API
+
+export const postSummaryPromptDescriptionMd = `
+### ✅ ChatGPT STAR 경험이 요약에 성공하였습니다.
+ChatGPT API를 사용하여 추천 자기소개서를 생성할 때 5~15초 정도 소요됩니다.\n
+
+## Picture
+<img width="515" alt="image" src="https://github.com/depromeet/InsightOut-Server/assets/97580759/b765db66-e16b-4698-99fe-f8e51f487955">
+`;
+
+export const postResumeSummarySummaryMd = `
+✅ ChatGPT 경험 요약 프롬프트 API
+`;
+
+export const postResumeSummarySuccMd = `
+ChatGPT STAR 경험이 요약 되었습니다. :)
+`;
+
+// -- ChatGPT 경험 요약 프롬프트 API
