@@ -130,10 +130,20 @@ describe('Resume Service', () => {
       expect(resuemsWithAnswer).toStrictEqual([]);
     });
 
+    it('should get all title of resumes', async () => {
+      mockResumeRepository.findMany = jest.fn().mockResolvedValue(mockAllTitleOfResumes);
+
+      const resumeTitleWithResumeId = await service.getAllResumesTitle(1);
+
+      const mockResumes = mockAllTitleOfResumes.map((resume) => new GetOneResumeWithTitleResponseDto(resume as Resume));
+
+      expect(resumeTitleWithResumeId).toStrictEqual(mockResumes);
+    });
+
     it('should get no title of resumes data', async () => {
       mockResumeRepository.findMany = jest.fn().mockResolvedValue([]);
 
-      const resumeTitleWithResumeId = await service.getAllResumesTitle(1);
+      const resumeTitleWithResumeId = await service.getAllResumesTitle(987654321);
 
       expect(resumeTitleWithResumeId).toStrictEqual([]);
     });
