@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { ACCESS_TOKEN_EXPIRES_IN } from '../common/consts/jwt.const';
-import { ConfigService } from '@nestjs/config';
+import { CookieOptions } from 'express';
 import { RedisCacheService } from '📚libs/modules/cache/redis/redis.service';
+import { EnvEnum } from '📚libs/modules/env/env.enum';
+import { EnvService } from '📚libs/modules/env/env.service';
+import { ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } from '🔥apps/server/common/consts/jwt.const';
 import { PostIssueTestTokenRequestBodyDto } from '🔥apps/server/test/dtos/post-issue-test-token.dto';
 
 @Injectable()
@@ -15,14 +17,36 @@ export class TestService {
 
   async issueTestToken(body: PostIssueTestTokenRequestBodyDto) {
     const { userId } = body;
-    const token = this.jwtService.sign(
+    const accessToken = this.jwtService.sign(
       { userId },
       {
-        expiresIn: ACCESS_TOKEN_EXPIRES_IN,
-        secret: this.configService.get('JWT_SECRET'),
+        expiresIn: ACCESS_TOKEN_EXPIRES_IN * 1000,
+        secret: this.envService.get<string>(EnvEnum.JWT_ACCEE_TOKEN_SECRET),
       },
     );
-    await this.redisService.set(String(userId), token);
-    return token;
+    const refreshToken = this.jwtService.sign(
+      { userId },
+      {
+        expiresIn: REFRESH_TOKEN_EXPIRES_IN * 1000,
+        secret: this.envService.get<string>(EnvEnum.JWT_REFRESH_TOKEN_SECRET),
+      },
+    );
+    await this.redisService.set(String(userId), refreshToken);
+    return { accessToken, refreshToken };
+  }
+
+  getRefreshTokenCookieOptions(): CookieOptions {
+    const cookieOptions: CookieOptions =
+      this.envService.get<string>(EnvEnum.NODE_ENV) === 'main'
+        ? {
+            secure: true,
+            sameSite: 'none',
+          }
+        : {
+            secure: false,
+            sameSite: 'lax',
+          };
+
+    return cookieOptions;
   }
 }

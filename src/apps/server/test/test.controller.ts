@@ -2,14 +2,13 @@ import { Body, Controller, HttpStatus, Res } from '@nestjs/common';
 import { TestService } from './test.service';
 import { Response } from 'express';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
-import { ACCESS_TOKEN_EXPIRES_IN } from '../common/consts/jwt.const';
+import { REFRESH_TOKEN_EXPIRES_IN } from '../common/consts/jwt.const';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
 import { Method } from '📚libs/enums/method.enum';
 import { PostIssueTestTokenRequestBodyDto } from '🔥apps/server/test/dtos/post-issue-test-token.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { OpenAiService } from '📚libs/modules/open-ai/open-ai.service';
 import { PromptTestBodyReqDto } from '🔥apps/server/test/dtos/prompt-test-body-req.dto';
-import { upsertExperienceSuccMd } from '🔥apps/server/experiences/markdown/experience.md';
 import { testApiSuccMd } from '🔥apps/server/test/docs/test-api.md';
 
 @ApiTags('🧑🏻‍💻 개발용 API')
@@ -33,13 +32,13 @@ export class TestController {
     @Body() postIssueTestTokenRequestBodyDto: PostIssueTestTokenRequestBodyDto,
     @Res({ passthrough: true }) response: Response,
   ): Promise<ResponseEntity<string>> {
-    const jwtToken = await this.testService.issueTestToken(postIssueTestTokenRequestBodyDto);
+    const { accessToken, refreshToken } = await this.testService.issueTestToken(postIssueTestTokenRequestBodyDto);
 
-    response.cookie('refreshToken', jwtToken, {
-      maxAge: ACCESS_TOKEN_EXPIRES_IN * 1000,
+    response.cookie('refreshToken', refreshToken, {
+      maxAge: REFRESH_TOKEN_EXPIRES_IN * 1000,
       httpOnly: true,
     });
-    return ResponseEntity.CREATED_WITH_DATA(jwtToken);
+    return ResponseEntity.CREATED_WITH_DATA(accessToken);
   }
 
   @Route({
