@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Question, Resume } from '@prisma/client';
 import { DatabaseModule } from '📚libs/modules/database/database.module';
@@ -149,5 +150,8 @@ describe('Resume Service', () => {
       expect(resume).toStrictEqual(mockOneResume);
     });
 
+    it('throw if resume not found', async () => {
+      expect(service.getOneResume(987654321, 123456789)).rejects.toThrow(NotFoundException);
+    });
   });
 });
