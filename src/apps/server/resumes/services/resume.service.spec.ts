@@ -63,6 +63,8 @@ describe('Resume Service', () => {
   beforeEach(async () => {
     mockResumeRepository = {
       findMany: jest.fn().mockReturnValue(mockAllResumeData),
+      findFirst: ((query: any) =>
+        mockAllResumeData.find((resume) => resume.id === query.where.id && resume.userId === query.where.userId)) as any,
     };
 
     // 테스팅 모듈 생성
