@@ -90,7 +90,7 @@ export class AiService {
     const experience = await this.validationExperinece(body.experienceId);
     if (experience.AiResume) throw new BadRequestException('해당 experienceId에 추천 AI 자기소개서가 이미 존재합니다.');
     const capabilities = await this.prisma.capability.findMany({ where: { id: { in: body.capabilityIds } }, select: { keyword: true } });
-    if (capabilities.length !== body.capabilityIds.length) throw new NotFoundException('역량 ID들 중 존재하지 않는 것이 있습니다.');
+    if (capabilities.length !== body.capabilityIds.length) throw new ConflictException('역량 ID들 중 존재하지 않는 것이 있습니다.');
     const keywords = capabilities.map((capability) => capability.keyword);
     // -- 유효성 검사
 

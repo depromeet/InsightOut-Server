@@ -19,3 +19,36 @@ export class PromptResumeResDto {
     return this._resume;
   }
 }
+
+export class PromptResumeBadRequestErrorDto {
+  @ApiProperty({ example: 400 })
+  statusCode: number;
+  @ApiProperty({ example: 'BadRequestException' })
+  title: string;
+  @ApiProperty({
+    example: 'AI 추천 자기소개서 타입을 확인해주세요',
+  })
+  message: string;
+}
+
+export class PromptResumeNotFoundErrorDto {
+  @ApiProperty({ example: 404 })
+  statusCode: number;
+  @ApiProperty({ example: 'NotFoundException' })
+  title: string;
+  @ApiProperty({
+    example: '역량 ID들 중 존재하지 않는 것이 있습니다.',
+  })
+  message: string;
+}
+
+export class PromptResumeConflictErrorDto {
+  @ApiProperty({ example: 409 })
+  statusCode: number;
+  @ApiProperty({ example: 'ConflictException' })
+  title: string;
+  @ApiProperty({
+    example: '해당 experienceId에 추천 AI 자기소개서가 이미 존재합니다.',
+  })
+  message: string;
+}
