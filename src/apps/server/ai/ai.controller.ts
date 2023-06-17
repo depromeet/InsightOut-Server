@@ -80,6 +80,10 @@ export class AiController {
     return ResponseEntity.CREATED_WITH_DATA(newAi);
   }
 
+  @ApiConflictResponse({
+    description: '⛔ 해당 experienceId에 추천 AI Capability가 이미 존재합니다. :)',
+    type: PromptResumeConflictErrorDto,
+  })
   @Route({
     request: {
       method: Method.POST,

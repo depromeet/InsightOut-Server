@@ -33,3 +33,14 @@ export class PromptKeywordResDto {
     return this._capabilities;
   }
 }
+
+export class PromptResumeConflictErrorDto {
+  @ApiProperty({ example: 409 })
+  statusCode: number;
+  @ApiProperty({ example: 'ConflictException' })
+  title: string;
+  @ApiProperty({
+    example: '이미 ai Capability가 존재합니다.',
+  })
+  message: string;
+}

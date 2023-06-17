@@ -14,6 +14,7 @@ export const createAiResumeAndCapabilitiesSummaryMd = `
 export const postKeywordPromptDescriptionMd = `
 ### ✅ ChatGPT 추천 키워드 생성 프롬프트 API 생성 및 업데이트에 성공하였습니다.
 ChatGPT API를 사용하여 키워드를 생성할 때 2~3초 정도 소요됩니다.\n
+이미 AI 추천 Keyword가 있다면 \`409\`에러를 반환합니다.\n
 두 개의 키워드를 생성한 후 DB에 업데이트 합니다. \n
 결과 값으로 id와 keyword를 리턴합니다. \n
 키워드는 이 후 추천 자기소개서를 생성할 때 반환해 주셔야 합니다 :)

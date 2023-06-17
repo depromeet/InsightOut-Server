@@ -59,6 +59,12 @@ export class AiService {
 
   public async postAiKeywordPrompt(body: PromptAiKeywordBodyReqDto, user: UserJwtToken): Promise<PromptKeywordResDto> {
     await this.validationExperinece(body.experienceId);
+    const aiCapability = await this.prisma.experience.findUniqueOrThrow({
+      where: { id: body.experienceId },
+      include: { AiResume: { include: { AiResumeCapability: true } } },
+    });
+    if (aiCapability) throw new ConflictException('이미 ai Capability가 존재합니다.');
+
     const CHOICES_IDX = 0;
     const prompt = generateAiKeywordPrompt(body);
     const result = await this.openAiService.promptChatGPT(prompt);
