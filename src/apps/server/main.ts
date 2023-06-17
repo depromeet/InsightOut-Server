@@ -38,6 +38,7 @@ async function bootstrap() {
   app.setGlobalPrefix('/api', { exclude: ['/'] });
 
   app.enableCors();
+  
   //서버 시작
   await app.listen(PORT);
 }
