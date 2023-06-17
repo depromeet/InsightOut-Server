@@ -1,20 +1,22 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { RedisCacheService } from '📚libs/modules/cache/redis/redis.service';
 import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
 import { UserRepository } from '📚libs/modules/database/repositories/user.repository';
 import { CookieOptions } from 'express';
 import { Provider } from '@prisma/client';
 import { Request } from 'express';
 import { AccessTokenAndRefreshToken, UserWithRefreshTokenPayload } from './types/jwt-tokwn.type';
 import { ApiService } from '📚libs/modules/api/api.service';
-import { TokenType } from '📚libs/enums/token.enum';
 import { ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } from '🔥apps/server/common/consts/jwt.const';
 import { UserPayload } from '🔥apps/server/auth/dtos/post-signin.dto';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
 import { DEFAULT_CAPABILITIES } from '🔥apps/server/common/consts/default-capability.const';
 import { isFirebaseAuthError } from '🔥apps/server/common/types/firebase-auth.type';
 import { FirebaseService } from '📚libs/modules/firebase/firebase.service';
+import { EnvService } from '📚libs/modules/env/env.service';
+import { EnvEnum } from '📚libs/modules/env/env.enum';
+import { TokenType } from '📚libs/enums/token.enum';
+import { TokenExpiredException } from '🔥apps/server/common/exceptions/token-expired.exception';
 
 @Injectable()
 export class AuthService {
@@ -22,7 +24,7 @@ export class AuthService {
     private readonly prismaService: PrismaService,
     private readonly redisService: RedisCacheService,
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
+    private readonly envService: EnvService,
     private readonly userRepository: UserRepository,
     private readonly apiService: ApiService,
     private readonly firebaseService: FirebaseService,
@@ -144,8 +146,8 @@ export class AuthService {
     return this.jwtService.sign(
       { userId },
       {
-        secret: this.configService.get<string>('JWT_SECRET'),
         expiresIn: ACCESS_TOKEN_EXPIRES_IN,
+        secret: this.envService.get<string>(EnvEnum.JWT_ACCEE_TOKEN_SECRET),
       },
     );
   }
@@ -155,8 +157,8 @@ export class AuthService {
     return this.jwtService.sign(
       { userId },
       {
-        secret: this.configService.get<string>('JWT_SECRET'), // TODO Access token과 Refresh token의 secret 분리하기
         expiresIn: REFRESH_TOKEN_EXPIRES_IN,
+        secret: this.envService.get<string>(EnvEnum.JWT_REFRESH_TOKEN_SECRET),
       },
     );
   }
@@ -167,11 +169,11 @@ export class AuthService {
   }
 
   // 쿠키 옵션을 가져옵니다.
-  getCookieOptions(): Partial<CookieOptions> {
-    const maxAge = REFRESH_TOKEN_EXPIRES_IN * 1000;
+  getCookieOptions(tokenType: TokenType): Partial<CookieOptions> {
+    const maxAge = tokenType === TokenType.AccessToken ? ACCESS_TOKEN_EXPIRES_IN * 1000 : REFRESH_TOKEN_EXPIRES_IN * 1000;
 
     const cookieOption: CookieOptions =
-      this.configService.get<string>('NODE_ENV') === 'main'
+      this.envService.get<string>(EnvEnum.NODE_ENV) === 'main'
         ? {
             maxAge,
             httpOnly: true,
@@ -185,7 +187,6 @@ export class AuthService {
             secure: false,
           };
 
-    // TODO https 설정 후 추가 작성
     return cookieOption;
   }
 
@@ -200,7 +201,7 @@ export class AuthService {
     const savedRefreshToken = await this.redisService.get(String(userId));
 
     if (refreshToken !== savedRefreshToken) {
-      throw new UnauthorizedException('유효하지 않은 refresh token입니다.');
+      throw new TokenExpiredException(TokenType.RefreshToken);
     }
 
     const newAccessToken = this.issueAccessToken(userId);

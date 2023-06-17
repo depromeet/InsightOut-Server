@@ -15,6 +15,8 @@ import { FirebaseModule } from '📚libs/modules/firebase/firebase.module';
 import { ResumeRepository } from '📚libs/modules/database/repositories/resume.repository';
 import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
 import { OnboardingsModule } from '🔥apps/server/onboarding/onboarding.module';
+import { EnvService } from '📚libs/modules/env/env.service';
+import { EnvEnum } from '📚libs/modules/env/env.enum';
 
 @Module({
   imports: [
@@ -22,9 +24,9 @@ import { OnboardingsModule } from '🔥apps/server/onboarding/onboarding.module'
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => {
+      useFactory: async (envService: EnvService) => {
         return {
-          secret: configService.get<string>('JWT_SECRET'),
+          secret: envService.get<string>(EnvEnum.JWT_ACCEE_TOKEN_SECRET),
         };
       },
     }),

@@ -10,7 +10,7 @@ export class TestService {
   constructor(
     private readonly redisService: RedisCacheService,
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
+    private readonly envService: EnvService,
   ) {}
 
   async issueTestToken(body: PostIssueTestTokenRequestBodyDto) {
