@@ -37,7 +37,12 @@ async function bootstrap() {
 
   app.setGlobalPrefix('/api', { exclude: ['/'] });
 
-  app.enableCors();
+  app.enableCors({
+    origin: ['http://localhost:3000', envService.get(EnvEnum.FRONTEND_URL)],
+    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE'],
+    allowedHeaders: ['Access-Control-Allow-Origin', 'X-Request-With', 'Content-Type', 'Accept'],
+    credentials: true,
+  });
   //서버 시작
   await app.listen(PORT);
 }
