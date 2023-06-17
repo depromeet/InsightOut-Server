@@ -6,4 +6,4 @@ yarn
 yarn prisma generate
 yarn build
 
-pm2 start "node dist/apps/server/main.js" --name api
+pm2 start "npx cross-env NODE_ENV=main nest start --entryFile ./apps/server/main --watch --watchAssets" --name api
