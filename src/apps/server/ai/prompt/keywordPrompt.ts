@@ -2,7 +2,7 @@ import { PromptKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptKeywor
 import { PromptResumeBodyResDto } from '🔥apps/server/ai/dto/req/promptResume.req.dto';
 import { PromptSummaryBodyReqDto } from '🔥apps/server/ai/dto/req/promptSummary.req.dto';
 
-export const generateKeywordPrompt = (body: PromptKeywordBodyReqDto): string => {
+export const generateAiKeywordPrompt = (body: PromptKeywordBodyReqDto): string => {
   const keywordPrompt = process.env.CHATGPT_KEYWORD_PROMPT;
   return `${keywordPrompt}\n\`\`\`\\nsituation: \`${body.situation}\`\\ntask: \`${body.task}\`\\naction: \`${body.action}\`\\nresult: \`${body.result}\`\\n\`\`\``;
 };

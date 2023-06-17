@@ -87,8 +87,11 @@ export class AiController {
     description: postKeywordPromptDescriptionMd,
     summary: postKeywordPromptSummaryMd,
   })
-  public async postKeywordPrompt(@Body() promptKeywordBodyReqDto: PromptKeywordBodyReqDto): Promise<ResponseEntity<PromptKeywordResDto>> {
-    const newAi = await this.aiService.postKeywordPrompt(promptKeywordBodyReqDto);
+  public async postAiKeywordPrompt(
+    @Body() promptKeywordBodyReqDto: PromptKeywordBodyReqDto,
+    @User() user: UserJwtToken,
+  ): Promise<ResponseEntity<PromptKeywordResDto>> {
+    const newAi = await this.aiService.postAiKeywordPrompt(promptKeywordBodyReqDto, user);
 
     return ResponseEntity.OK_WITH_DATA(newAi);
   }

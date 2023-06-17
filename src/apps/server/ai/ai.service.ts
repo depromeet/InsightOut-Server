@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma, KeywordType, Capability } from '@prisma/client';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
 import { CreateAiKeywordsAndResumeResDto } from '🔥apps/server/ai/dto/res/createAiKeywordsAndResume.res.dto';
@@ -6,7 +6,7 @@ import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
 import { CreateAiKeywordsAndResumeBodyReqDto } from '🔥apps/server/ai/dto/req/createAiKeywordsAndResume.req.dto';
 import { PromptKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptKeyword.req.dto';
 import { OpenAiService } from '📚libs/modules/open-ai/open-ai.service';
-import { generateKeywordPrompt, generateResumePrompt, generateSummaryPrompt } from '🔥apps/server/ai/prompt/keywordPrompt';
+import { generateAiKeywordPrompt, generateResumePrompt, generateSummaryPrompt } from '🔥apps/server/ai/prompt/keywordPrompt';
 import { PromptKeywordResDto } from '🔥apps/server/ai/dto/res/promptKeyword.res.dto';
 import { PromptResumeResDto } from '🔥apps/server/ai/dto/res/promptResume.res.dto';
 import { PromptResumeBodyResDto } from '🔥apps/server/ai/dto/req/promptResume.req.dto';
@@ -56,16 +56,33 @@ export class AiService {
     }
   }
 
-  public async postKeywordPrompt(body: PromptKeywordBodyReqDto): Promise<PromptKeywordResDto> {
+  public async postAiKeywordPrompt(body: PromptKeywordBodyReqDto, user: UserJwtToken): Promise<PromptKeywordResDto> {
+    const experience = await this.experienceService.findOneById(body.experienceId);
+    if (!experience) throw new NotFoundException('해당 ID의 경험 카드를 찾을 수 없습니다.');
     const CHOICES_IDX = 0;
-    const prompt = generateKeywordPrompt(body);
+    const prompt = generateAiKeywordPrompt(body);
     const result = await this.openAiService.promptChatGPT(prompt);
 
+    let keywords;
     if (typeof result.choices[CHOICES_IDX].message.content === 'string') {
-      return new PromptKeywordResDto(JSON.parse(result.choices[CHOICES_IDX].message.content));
+      keywords = JSON.parse(result.choices[CHOICES_IDX].message.content);
     }
 
-    return new PromptKeywordResDto(result.choices[CHOICES_IDX].message.content);
+    // capability생성
+    const capabilityInfos = keywords.map((keyword) => {
+      return {
+        keywordType: KeywordType.AI,
+        keyword,
+        userId: user.userId,
+      };
+    });
+    const capabilities: Capability[] = await Promise.all(
+      capabilityInfos.map(
+        async (capabilityInfo) => await this.prisma.capability.create({ data: capabilityInfo, select: { id: true, keyword: true } }),
+      ),
+    );
+
+    return new PromptKeywordResDto(capabilities);
   }
 
   public async postResumePrompt(body: PromptResumeBodyResDto): Promise<PromptResumeResDto> {
@@ -79,11 +96,11 @@ export class AiService {
   public async postSummaryPrompt(body: PromptSummaryBodyReqDto, user: UserJwtToken) {
     const CHOICES_IDX = 0;
     const summaryPrompt = generateSummaryPrompt(body);
-    const keywordPrompt = generateKeywordPrompt(body);
+    // const keywordPrompt = generateKeywordPrompt(body);
 
-    const [summary, keyword] = await Promise.all([
+    const [summary] = await Promise.all([
       this.openAiService.promptChatGPT(summaryPrompt),
-      this.openAiService.promptChatGPT(keywordPrompt),
+      // this.openAiService.promptChatGPT(keywordPrompt),
     ]);
 
     // analysis 업데이트

@@ -12,20 +12,22 @@ export const createAiResumeAndCapabilitiesSummaryMd = `
 //-- 키워드 생성 API
 
 export const postKeywordPromptDescriptionMd = `
-### ✅ ChatGPT 추천 키워드 생성 프롬프트 API 생성에 성공하였습니다.
+### ✅ ChatGPT 추천 키워드 생성 프롬프트 API 생성 및 업데이트에 성공하였습니다.
 ChatGPT API를 사용하여 키워드를 생성할 때 2~3초 정도 소요됩니다.\n
-키워드 개수는 2개를 반환합니다 :)\n
+두 개의 키워드를 생성한 후 DB에 업데이트 합니다. \n
+결과 값으로 id와 keyword를 리턴합니다. \n
+키워드는 이 후 추천 자기소개서를 생성할 때 반환해 주셔야 합니다 :)
 
 ## Picture
 <img width="377" alt="image" src="https://github.com/depromeet/InsightOut-Server/assets/97580759/cbd1c90e-0365-41d4-b7fc-850d5b09a860">
 `;
 
 export const postKeywordPromptSummaryMd = `
-✅ ChatGPT 추천 키워드 생성 프롬프트 API
+✅ ChatGPT 추천 키워드 생성 및 저장 프롬프트 API
 `;
 
 export const postKeywordPromptSuccMd = `
-ChatGPT 추천 키워드가 생성되었습니다 :)
+ChatGPT 추천 키워드가 생성 및 저장 되었습니다 :)
 `;
 
 // -- ChatGPT AI Keyword 생성 API

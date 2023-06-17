@@ -1,7 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmptyString } from '🔥apps/server/common/decorators/validation/isOptionalString.decorator';
+import { IsInt, IsNotEmpty, Min } from 'class-validator';
 
 export class PromptKeywordBodyReqDto {
+  @IsInt()
+  @IsNotEmpty()
+  @Min(1)
+  @ApiProperty({ example: 1, type: Number })
+  experienceId: number;
+
   @ApiProperty({ example: '개발자와 협업 역량을 쌓기 위해 IT 동아리에 들어감' })
   @IsNotEmptyString(0, 100)
   situation: string;

@@ -67,6 +67,12 @@ export class UpsertExperienceReqDto {
   @IsOptionalString(0, 100)
   analysis?: string;
 
+  @ApiPropertyOptional({
+    example: '["협력", "리더십"]',
+  })
+  @IsOptionalString(0, 100)
+  keywords?: string[];
+
   public compareProperty(experience: Experience & { ExperienceInfo?: ExperienceInfo }) {
     if (this.title) experience.title = this.title;
     if (this.startDate) experience.startDate = new Date(this.startDate);
@@ -75,6 +81,7 @@ export class UpsertExperienceReqDto {
     if (this.task) experience.task = this.task;
     if (this.action) experience.action = this.action;
     if (this.result) experience.result = this.result;
+    if (this.keywords) experience.keywords = this.keywords;
     if (this.experienceStatus) experience.experienceStatus = this.experienceStatus;
     if (this.experienceRole) experience.ExperienceInfo.experienceRole = this.experienceRole;
     if (this.motivation) experience.ExperienceInfo.motivation = this.motivation;
