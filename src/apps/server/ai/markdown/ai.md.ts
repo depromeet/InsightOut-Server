@@ -34,6 +34,9 @@ ChatGPT 추천 키워드가 생성 및 저장 되었습니다 :)
 export const postResumePromptDescriptionMd = `
 ### ✅ ChatGPT 추천 자기소개서 생성 프롬프트 API 생성에 성공하였습니다.
 ChatGPT API를 사용하여 추천 자기소개서를 생성할 때 30~40초 정도 소요됩니다.\n
+전달 받은 역량 IDs 중 없는 것있다면 \`404\` 에러를 반환합니다.\n
+이미 추천 AI가 생성된 것이 있다면 \`409\` 에러를 반환합니다.\n
+키워드 및 추천 자기소개서 타입이 맞지 않다면 \`400\` 에러를 반환합니다.
 
 ## Picture
 <img width="383" alt="image" src="https://github.com/depromeet/InsightOut-Server/assets/97580759/139996dc-b750-43a6-a493-3352f9d868f3">
@@ -52,9 +55,7 @@ ChatGPT 추천 자기소개서가 생성되었습니다 :)
 export const postSummaryPromptDescriptionMd = `
 ### ✅ ChatGPT STAR 경험이 요약 및 데이터 베이스 저장에 성공하였습니다.
 ChatGPT API를 사용하여 추천 자기소개서를 생성할 때 5~15초 정도 소요됩니다.\n
-전달 받은 역량 IDs 중 없는 것있다면 \`404\` 에러를 반환합니다.\n
-이미 추천 AI가 생성된 것이 있다면 \`409\` 에러를 반환합니다.\n
-키워드 및 추천 자기소개서 타입이 맞지 않다면 \`400\` 에러를 반환합니다.
+
 
 ## Picture
 <img width="515" alt="image" src="https://github.com/depromeet/InsightOut-Server/assets/97580759/b765db66-e16b-4698-99fe-f8e51f487955">
