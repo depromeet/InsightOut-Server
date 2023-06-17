@@ -167,14 +167,26 @@ export class AuthService {
   }
 
   // 쿠키 옵션을 가져옵니다.
-  getCookieOptions(tokenType: TokenType): CookieOptions {
-    const maxAge = tokenType === TokenType.AccessToken ? ACCESS_TOKEN_EXPIRES_IN * 1000 : REFRESH_TOKEN_EXPIRES_IN * 1000;
+  getCookieOptions(): Partial<CookieOptions> {
+    const maxAge = REFRESH_TOKEN_EXPIRES_IN * 1000;
+
+    const cookieOption: CookieOptions =
+      this.configService.get<string>('NODE_ENV') === 'main'
+        ? {
+            maxAge,
+            httpOnly: true,
+            sameSite: 'none',
+            secure: true,
+          }
+        : {
+            maxAge,
+            httpOnly: true,
+            sameSite: 'lax',
+            secure: false,
+          };
 
     // TODO https 설정 후 추가 작성
-    return {
-      maxAge,
-      httpOnly: false,
-    };
+    return cookieOption;
   }
 
   // 요청 객체에 리프레시 토큰이 있는지 탐색합니다.
