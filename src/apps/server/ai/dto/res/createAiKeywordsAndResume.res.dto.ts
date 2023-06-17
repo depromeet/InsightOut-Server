@@ -3,11 +3,11 @@ import { Exclude, Expose } from 'class-transformer';
 import { ArrayMaxSize, ArrayMinSize, IsArray, IsInt, IsNotEmpty, IsString, Max, Min } from 'class-validator';
 
 export class CreateAiKeywordsAndResumeResDto {
-  @Exclude() _content: string;
+  @Exclude() _resume: string;
   @Exclude() _keywords: string[];
 
-  constructor(data: { content: string; keywords: string[] }) {
-    this._content = data.content;
+  constructor(data: { resume: string; keywords: string[] }) {
+    this._resume = data.resume;
     this._keywords = data.keywords;
   }
 
@@ -17,8 +17,8 @@ export class CreateAiKeywordsAndResumeResDto {
   @Max(700)
   @Min(0)
   @ApiProperty({ example: '저는 UI/UX 직무에 지원하는 .....', type: String })
-  get content(): string {
-    return this._content;
+  get resume(): string {
+    return this._resume;
   }
 
   @Expose()

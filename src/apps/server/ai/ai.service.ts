@@ -35,17 +35,16 @@ export class AiService {
         });
 
         // capability를 map으로 생성 -> 최대 2개이기 때문에 가능
-        const capabilities: Capability[] = await Promise.all(
-          capabilityInfos.map(async (capabilityInfo) => await tx.capability.create({ data: capabilityInfo })),
+        const capabilityids: { id: number }[] = await Promise.all(
+          capabilityInfos.map(async (capabilityInfo) => await tx.capability.create({ data: capabilityInfo, select: { id: true } })),
         );
-        const capabilitiyIds = capabilities.map((capability) => capability.id);
-        const aiResumeCapabilityInfos = capabilitiyIds.map((capabilityId) => {
-          return { capabilityId, aiResumeId: newAiResume.id };
+        const aiResumeCapabilityInfos = capabilityids.map((capabilityId) => {
+          return { capabilityId: capabilityId.id, aiResumeId: newAiResume.id };
         });
 
         // aiResumeCapability 생성
         await tx.aiResumeCapability.createMany({ data: aiResumeCapabilityInfos });
-        const result = { content: newAiResume.content, keywords: body.keywords };
+        const result = { resume: newAiResume.content, keywords: body.keywords };
 
         return new CreateAiKeywordsAndResumeResDto(result);
       });
