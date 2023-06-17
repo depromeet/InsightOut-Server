@@ -139,5 +139,15 @@ describe('Resume Service', () => {
 
       expect(resumeTitleWithResumeId).toStrictEqual([]);
     });
+
+    it('should get one resume', async () => {
+      const resume = await service.getOneResume(1, 1);
+
+      const mockOneResume = new GetOneResumeResponseDto(mockAllResumeData[0] as Resume & { Question: Question[] });
+
+      expect(resume).toBeDefined();
+      expect(resume).toStrictEqual(mockOneResume);
+    });
+
   });
 });
