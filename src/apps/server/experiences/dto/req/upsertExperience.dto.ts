@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
-import { IsEnum, IsOptional, Matches } from 'class-validator';
+import { IsArray, IsEnum, IsNotEmpty, IsOptional, IsString, Matches } from 'class-validator';
 import { dateValidation } from '🔥apps/server/common/consts/date-validation.const';
 import { IsOptionalString } from '🔥apps/server/common/decorators/validation/isOptionalString.decorator';
 
@@ -67,6 +67,11 @@ export class UpsertExperienceReqDto {
   @IsOptionalString(0, 100)
   analysis?: string;
 
+  // keyowrds는 prisma의 특성상 옵셔널이 존재하지 않습니다. 생성시에는 따로 넣어주지 않아도 되지만 업데이트 시 아래 compareProperty에서는 사용되어야 합니다.
+  // 그렇기에 따로 데코레이터로 받지 않고 선언만 해줍니다.
+  // 키워드 요약 후 저장할 떄 필요하기 떄문입니다 :)
+  keywords?: string[];
+
   public compareProperty(experience: Experience & { ExperienceInfo?: ExperienceInfo }) {
     if (this.title) experience.title = this.title;
     if (this.startDate) experience.startDate = new Date(this.startDate);
@@ -75,6 +80,7 @@ export class UpsertExperienceReqDto {
     if (this.task) experience.task = this.task;
     if (this.action) experience.action = this.action;
     if (this.result) experience.result = this.result;
+    if (this.keywords) experience.keywords = this.keywords;
     if (this.experienceStatus) experience.experienceStatus = this.experienceStatus;
     if (this.experienceRole) experience.ExperienceInfo.experienceRole = this.experienceRole;
     if (this.motivation) experience.ExperienceInfo.motivation = this.motivation;

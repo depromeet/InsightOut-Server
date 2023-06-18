@@ -53,6 +53,16 @@ export class ExperienceService {
     }
   }
 
+  public async findOneById(experienceId: number) {
+    try {
+      const experience = await this.experienceRepository.findOneById(experienceId);
+
+      return experience;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) throw new NotFoundException('해당 ID의 경험카드는 존재하지 않습니다.');
+    }
+  }
+
   public async getExperienceByCapability(
     userId: number,
     query: GetExperienceRequestQueryDto,
@@ -93,8 +103,7 @@ export class ExperienceService {
     }
   }
 
-  // Private
-  private async processCreateExperience(body: UpsertExperienceReqDto, user: UserJwtToken): Promise<UpsertExperienceResDto> {
+  public async processCreateExperience(body: UpsertExperienceReqDto, user: UserJwtToken): Promise<UpsertExperienceResDto> {
     const [experience, experienceInfo] = await this.prisma.$transaction(async (tx) => {
       const experience = await tx.experience.create({
         data: {
@@ -107,6 +116,7 @@ export class ExperienceService {
           action: body.action,
           result: body.result,
           userId: user.userId,
+          keywords: [],
         },
       });
 
@@ -125,7 +135,7 @@ export class ExperienceService {
     return new UpsertExperienceResDto(experience, experienceInfo);
   }
 
-  private async processUpdateExperience(
+  public async processUpdateExperience(
     id: number,
     updatedExperienceInfo: Experience & {
       ExperienceInfo?: ExperienceInfo;
@@ -153,6 +163,7 @@ export class ExperienceService {
           task: updatedExperienceInfo.task,
           action: updatedExperienceInfo.action,
           result: updatedExperienceInfo.result,
+          keywords: updatedExperienceInfo.keywords,
         },
       });
       return [experience, experienceInfo];

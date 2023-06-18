@@ -1,21 +1,46 @@
-import { Exclude, Expose } from 'class-transformer';
-import { ArrayMaxSize, IsArray, IsNotEmpty, IsString } from 'class-validator';
+import { Exclude, Expose, Type } from 'class-transformer';
+import { ArrayMaxSize, IsArray, IsNotEmpty, IsNumber, IsString, ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Capability } from '@prisma/client';
+
+class Keyword {
+  @IsNumber()
+  id: number;
+  @IsString()
+  keyword: string;
+}
 
 export class PromptKeywordResDto {
-  @Exclude() _keywords: string[];
+  @Exclude() _capabilities: Capability[];
 
-  constructor(keywords: string[]) {
-    this._keywords = keywords;
+  constructor(capabilities: Capability[]) {
+    this._capabilities = capabilities;
   }
 
   @Expose()
   @IsArray()
-  @ArrayMaxSize(2)
   @IsNotEmpty()
-  @IsString({ each: true })
-  @ApiProperty({ example: ['협업', '린하게 개발'] })
-  get keywords(): string[] {
-    return this._keywords;
+  @ArrayMaxSize(2)
+  @ValidateNested({ each: true })
+  @Type(() => Keyword)
+  @ApiProperty({
+    example: [
+      { id: 1, keyword: '협업' },
+      { id: 1, keyword: '리더십' },
+    ],
+  })
+  get capabilities(): Capability[] {
+    return this._capabilities;
   }
+}
+
+export class PromptResumeConflictErrorDto {
+  @ApiProperty({ example: 409 })
+  statusCode: number;
+  @ApiProperty({ example: 'ConflictException' })
+  title: string;
+  @ApiProperty({
+    example: '이미 ai Capability가 존재합니다.',
+  })
+  message: string;
 }
