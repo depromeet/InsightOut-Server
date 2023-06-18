@@ -80,7 +80,6 @@ export class PromptSummaryResDto {
   @Exclude() _ExperienceInfo: ExperienceInfo;
   @Exclude() _ExperienceCapability: ExperienceCapability[];
   @Exclude() _AiResume: AiResume;
-  @Exclude() _AiResumeCapability: AiResumeCapability[];
   @Exclude() _AiRecommendQuestion: AiRecommendQuestion[];
 
   constructor(experienceCardInfo: ExperienceCardType) {
@@ -89,7 +88,6 @@ export class PromptSummaryResDto {
     this._ExperienceInfo = experienceCardInfo.ExperienceInfo;
     this._ExperienceCapability = experienceCardInfo.ExperienceCapability;
     this._AiResume = experienceCardInfo.AiResume;
-    this._AiResumeCapability = experienceCardInfo.AiResume.AiResumeCapability;
     this._AiRecommendQuestion = experienceCardInfo.AiRecommendQuestion;
   }
 
@@ -170,27 +168,6 @@ export class PromptSummaryResDto {
   })
   get AiResume(): AiResume {
     return this._AiResume;
-  }
-
-  @Expose()
-  @ApiProperty({
-    example: [
-      {
-        Capability: {
-          keyword: '협업',
-          keywordType: 'AI',
-        },
-      },
-      {
-        Capability: {
-          keyword: '빠른 기간 내 개발',
-          keywordType: 'AI',
-        },
-      },
-    ],
-  })
-  get AiResumeCapability(): AiResumeCapability[] {
-    return this._AiResumeCapability;
   }
 
   @Expose()

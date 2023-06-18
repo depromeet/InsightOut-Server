@@ -1,9 +1,7 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { Capability, Experience, KeywordType, Prisma } from '@prisma/client';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
-import { CreateAiKeywordsAndResumeResDto } from '🔥apps/server/ai/dto/res/createAiKeywordsAndResume.res.dto';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
-import { CreateAiKeywordsAndResumeBodyReqDto } from '🔥apps/server/ai/dto/req/createAiKeywordsAndResume.req.dto';
 import { OpenAiService } from '📚libs/modules/open-ai/open-ai.service';
 import {
   generateAiKeywordPrompt,
@@ -29,40 +27,6 @@ export class AiService {
     private readonly openAiService: OpenAiService,
     private readonly experienceService: ExperienceService,
   ) {}
-  public async create(body: CreateAiKeywordsAndResumeBodyReqDto, user: UserJwtToken): Promise<CreateAiKeywordsAndResumeResDto> {
-    try {
-      return await this.prisma.$transaction(async (tx) => {
-        // aiResume 생성
-        const newAiResume = await tx.aiResume.create({
-          data: { userId: user.userId, content: body.content, experienceId: body.experienceId },
-        });
-
-        const capabilityInfos = body.keywords.map((keyword) => {
-          return { userId: user.userId, keyword, keywordType: KeywordType.AI };
-        });
-
-        // capability를 map으로 생성 -> 최대 2개이기 때문에 가능
-        const capabilityids: { id: number }[] = await Promise.all(
-          capabilityInfos.map(async (capabilityInfo) => await tx.capability.create({ data: capabilityInfo, select: { id: true } })),
-        );
-
-        const aiResumeCapabilityInfos = capabilityids.map((capabilityId) => {
-          return { capabilityId: capabilityId.id, aiResumeId: newAiResume.id };
-        });
-
-        // aiResumeCapability 생성
-        await tx.aiResumeCapability.createMany({ data: aiResumeCapabilityInfos });
-        const result = { resume: newAiResume.content, keywords: body.keywords };
-
-        return new CreateAiKeywordsAndResumeResDto(result);
-      });
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) throw new ConflictException('이미 해당 AI 추천 자기소개서가 존재합니다.');
-      if (error instanceof Prisma.PrismaClientValidationError) {
-        throw new BadRequestException('AI 생성하는 데 실패했습니다. 타입을 확인해주세요');
-      }
-    }
-  }
 
   public async postAiKeywordPrompt(body: PromptAiKeywordBodyReqDto, user: UserJwtToken): Promise<PromptKeywordResDto> {
     await this.validationExperinece(body.experienceId);
@@ -151,6 +115,15 @@ export class AiService {
     const parseKeywords = this.parsingPromptResult(keywords);
     const aiRecommendResume = generateRecommendQuestionsPrompt(parseKeywords);
 
+    // analysis, keyword 업데이트
+    const upsertExperienceReqDto = new UpsertExperienceReqDto();
+    upsertExperienceReqDto.analysis = summary.choices[CHOICES_IDX].message.content as string;
+    upsertExperienceReqDto.summaryKeywords = parseKeywords;
+    const updateInfo = upsertExperienceReqDto.compareProperty(experience);
+
+    await this.experienceService.processUpdateExperience(body.experienceId, updateInfo);
+    // analysis, keyword 업데이트 Done
+
     // 추천 Resume 저장 Start
     const recommendQuestions = await this.openAiService.promptChatGPT(aiRecommendResume);
     const parseRecommendQuestions: string[] = this.parsingPromptResult(recommendQuestions);
@@ -162,15 +135,6 @@ export class AiService {
     });
     await this.prisma.aiRecommendQuestion.createMany({ data: aiRecommendInfos });
     // 추천 Resume 저장 Done
-
-    // analysis, keyword 업데이트
-    const upsertExperienceReqDto = new UpsertExperienceReqDto();
-    upsertExperienceReqDto.analysis = summary.choices[CHOICES_IDX].message.content as string;
-    upsertExperienceReqDto.summaryKeywords = parseKeywords;
-    const updateInfo = upsertExperienceReqDto.compareProperty(experience);
-
-    await this.experienceService.processUpdateExperience(body.experienceId, updateInfo);
-    //// analysis, keyword 업데이트 Done
 
     // 생성된 경험 분해 키드에 들어갈 데이터 return
     return new PromptSummaryResDto(await this.experienceService.getExperienceCardInfo(body.experienceId));
