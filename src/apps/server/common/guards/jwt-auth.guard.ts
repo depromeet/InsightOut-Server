@@ -19,7 +19,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       throw new UnauthorizedException(info.message);
     }
 
-    if (info.message === 'No auth token') {
+    if (info?.message === 'No auth token') {
       throw new NoAuthTokenException();
     }
 
