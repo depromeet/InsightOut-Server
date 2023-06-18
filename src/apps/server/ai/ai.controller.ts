@@ -153,11 +153,8 @@ export class AiController {
     description: postSummaryPromptDescriptionMd,
     summary: postResumeSummarySummaryMd,
   })
-  public async postSummaryPrompt(
-    @Body() promptSummaryBodyReqDto: PromptSummaryBodyReqDto,
-    @User() user: UserJwtToken,
-  ): Promise<ResponseEntity<PromptSummaryResDto>> {
-    const newAi = await this.aiService.postSummaryPrompt(promptSummaryBodyReqDto, user);
+  public async postSummaryPrompt(@Body() promptSummaryBodyReqDto: PromptSummaryBodyReqDto) {
+    const newAi = await this.aiService.postSummaryPrompt(promptSummaryBodyReqDto);
 
     return ResponseEntity.OK_WITH_DATA(newAi);
   }

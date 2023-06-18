@@ -8,6 +8,18 @@ import { ExperienceRepositoryInterface } from '🔥apps/server/experiences/inter
 export class ExperienceRepository implements ExperienceRepositoryInterface {
   constructor(private readonly prisma: PrismaService) {}
 
+  public async getExperienceCardInfo(experienceId: number) {
+    return await this.prisma.experience.findUniqueOrThrow({
+      where: { id: experienceId },
+      // select: { summaryKeywords: true, title: true },
+      include: {
+        ExperienceInfo: { select: { analysis: true } },
+        ExperienceCapability: { include: { Capability: { select: { keyword: true, keywordType: true } } } },
+        AiRecommendQuestion: { select: { title: true } },
+      },
+    });
+  }
+
   public async findOneById(experienceId: number): Promise<Experience & { AiResume; ExperienceInfo }> {
     return await this.prisma.experience.findUniqueOrThrow({
       where: { id: experienceId },

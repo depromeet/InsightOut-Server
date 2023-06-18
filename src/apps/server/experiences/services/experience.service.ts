@@ -24,6 +24,10 @@ export class ExperienceService {
     private readonly capabilityRepository: CapabilityRepository,
   ) {}
 
+  public async getExperienceCardInfo(experienceId: number) {
+    return this.experienceRepository.getExperienceCardInfo(experienceId);
+  }
+
   public async upsertExperience(body: UpsertExperienceReqDto, user: UserJwtToken): Promise<UpsertExperienceResDto> {
     // 생성 중인 경험 카드가 있는지 확인
     const experinece = await this.experienceRepository.findOneByUserId(user.userId);

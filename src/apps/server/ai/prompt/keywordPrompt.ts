@@ -21,3 +21,8 @@ export const generateAiSummaryKeywordPrompt = (body: PromptSummaryBodyReqDto): s
   const summayKeywordPrompt = process.env.CHATGPT_SUMMARY_KEYWORD_PROMPT;
   return `${summayKeywordPrompt}Action: ${body.task}\\n\\nResult: ${body.result}\\n\n\`\`\`\\n"`;
 };
+
+export const generateRecommendQuestionsPrompt = (body: string[]): string => {
+  const summayKeywordPrompt = process.env.CHATGPT_RECOMMEND_QUESTIONS_PROMPT;
+  return summayKeywordPrompt.replace('변수', JSON.stringify(body));
+};

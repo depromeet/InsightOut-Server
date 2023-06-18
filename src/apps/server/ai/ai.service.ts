@@ -4,11 +4,11 @@ import { PrismaService } from '📚libs/modules/database/prisma.service';
 import { CreateAiKeywordsAndResumeResDto } from '🔥apps/server/ai/dto/res/createAiKeywordsAndResume.res.dto';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
 import { CreateAiKeywordsAndResumeBodyReqDto } from '🔥apps/server/ai/dto/req/createAiKeywordsAndResume.req.dto';
-
 import { OpenAiService } from '📚libs/modules/open-ai/open-ai.service';
 import {
   generateAiKeywordPrompt,
   generateAiSummaryKeywordPrompt,
+  generateRecommendQuestionsPrompt,
   generateResumePrompt,
   generateSummaryPrompt,
 } from '🔥apps/server/ai/prompt/keywordPrompt';
@@ -20,6 +20,7 @@ import { PromptSummaryResDto } from './dto/res/promptSummary.res.dto';
 import { ExperienceService } from '🔥apps/server/experiences/services/experience.service';
 import { UpsertExperienceReqDto } from '🔥apps/server/experiences/dto/req/upsertExperience.dto';
 import { PromptAiKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptAiKeyword.req.dto';
+import { OpenAiResponseInterface } from '📚libs/modules/open-ai/interface/openAiResponse.interface';
 
 @Injectable()
 export class AiService {
@@ -72,15 +73,16 @@ export class AiService {
 
     const CHOICES_IDX = 0;
     const prompt = generateAiKeywordPrompt(body);
-    const result = await this.openAiService.promptChatGPT(prompt);
+    const aiKeywords = await this.openAiService.promptChatGPT(prompt);
 
+    const parseAiKeywords = this.parsingPromptResult(aiKeywords);
     let keywords;
-    if (typeof result.choices[CHOICES_IDX].message.content === 'string') {
-      keywords = JSON.parse(result.choices[CHOICES_IDX].message.content);
+    if (typeof aiKeywords.choices[CHOICES_IDX].message.content === 'string') {
+      keywords = JSON.parse(aiKeywords.choices[CHOICES_IDX].message.content);
     }
 
     // capability생성
-    const capabilityInfos = keywords.map((keyword) => {
+    const capabilityInfos = parseAiKeywords.map((keyword) => {
       return {
         keyword,
         userId: user.userId,
@@ -88,7 +90,7 @@ export class AiService {
       };
     });
     // 저장할 키워드 Info 정보 생성
-    const capabilities: Capability[] = await Promise.all(
+    const capabilities: Omit<Capability, 'userId' | 'keywordType'>[] = await Promise.all(
       capabilityInfos.map(
         async (capabilityInfo) => await this.prisma.capability.create({ data: capabilityInfo, select: { id: true, keyword: true } }),
       ),
@@ -132,7 +134,7 @@ export class AiService {
     return new PromptResumeResDto(result.choices[CHOICES_IDX].message.content as string);
   }
 
-  public async postSummaryPrompt(body: PromptSummaryBodyReqDto, user: UserJwtToken) {
+  public async postSummaryPrompt(body: PromptSummaryBodyReqDto) {
     const experience = await this.validationExperinece(body.experienceId);
     if (experience.summaryKeywords.length !== 0) throw new ConflictException('이미 요약된 키워드가 있습니다.');
 
@@ -145,31 +147,50 @@ export class AiService {
       this.openAiService.promptChatGPT(aiSummaryKeywords),
     ]);
 
-    console.log(summary);
-    console.log(keywords.choices[CHOICES_IDX].message.content);
-    console.log(typeof keywords.choices[CHOICES_IDX].message.content);
+    const parseKeywords = this.parsingPromptResult(keywords);
+    const aiRecommendResume = generateRecommendQuestionsPrompt(parseKeywords);
 
-    // analysis 업데이트
+    // 추천 Resume 저장 Start
+    const recommendQuestions = await this.openAiService.promptChatGPT(aiRecommendResume);
+    const parseRecommendQuestions: string[] = this.parsingPromptResult(recommendQuestions);
+    console.log(parseRecommendQuestions);
+    console.log(typeof parseRecommendQuestions);
+    const aiRecommendInfos = parseRecommendQuestions.map((question) => {
+      return {
+        experienceId: body.experienceId,
+        title: question,
+      };
+    });
+    await this.prisma.aiRecommendQuestion.createMany({ data: aiRecommendInfos });
+    // 추천 Resume 저장 Done
+
+    // analysis, keyword 업데이트
     const upsertExperienceReqDto = new UpsertExperienceReqDto();
-
     upsertExperienceReqDto.analysis = summary.choices[CHOICES_IDX].message.content as string;
-    upsertExperienceReqDto.summaryKeywords =
-      typeof keywords.choices[CHOICES_IDX].message.content === 'string'
-        ? JSON.parse(keywords.choices[CHOICES_IDX].message.content)
-        : keywords.choices[CHOICES_IDX].message.content;
-
+    upsertExperienceReqDto.summaryKeywords = parseKeywords;
     const updateInfo = upsertExperienceReqDto.compareProperty(experience);
 
     await this.experienceService.processUpdateExperience(body.experienceId, updateInfo);
+    //// analysis, keyword 업데이트 Done
 
-    // find로 내려주기
-
-    return new PromptSummaryResDto(summary.choices[CHOICES_IDX].message.content as string);
+    // 생성된 경험 분해 키드에 들어갈 데이터 return
+    return await this.experienceService.getExperienceCardInfo(body.experienceId);
   }
 
+  // private
   private async validationExperinece(experienceId: number): Promise<Experience & { AiResume; ExperienceInfo }> {
     const experience = await this.experienceService.findOneById(experienceId);
     if (!experience) throw new NotFoundException('해당 ID의 경험 카드를 찾을 수 없습니다.');
     return experience;
+  }
+
+  private parsingPromptResult(promptResult: OpenAiResponseInterface): string[] {
+    const CHOICES_IDX = 0;
+
+    if (typeof promptResult.choices[CHOICES_IDX].message.content === 'string') {
+      return JSON.parse(promptResult.choices[CHOICES_IDX].message.content);
+    } else {
+      return promptResult.choices[CHOICES_IDX].message.content as string[];
+    }
   }
 }
