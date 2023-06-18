@@ -1,17 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UserRepository } from '📚libs/modules/database/repositories/user.repository';
+import { EnvEnum } from '📚libs/modules/env/env.enum';
+import { EnvService } from '📚libs/modules/env/env.service';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private readonly configService: ConfigService, private readonly userRepository: UserRepository) {
+  constructor(readonly envService: EnvService, private readonly userRepository: UserRepository) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExipration: false,
-      secretOrKey: configService.get<string>('JWT_SECRET'),
+      secretOrKey: envService.get<string>(EnvEnum.JWT_ACCESS_TOKEN_SECRET),
     });
   }
 
