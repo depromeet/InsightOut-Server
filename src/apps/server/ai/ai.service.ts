@@ -45,6 +45,7 @@ export class AiService {
         const capabilityids: { id: number }[] = await Promise.all(
           capabilityInfos.map(async (capabilityInfo) => await tx.capability.create({ data: capabilityInfo, select: { id: true } })),
         );
+
         const aiResumeCapabilityInfos = capabilityids.map((capabilityId) => {
           return { capabilityId: capabilityId.id, aiResumeId: newAiResume.id };
         });
@@ -65,9 +66,9 @@ export class AiService {
 
   public async postAiKeywordPrompt(body: PromptAiKeywordBodyReqDto, user: UserJwtToken): Promise<PromptKeywordResDto> {
     await this.validationExperinece(body.experienceId);
-    const aiCapability = await this.prisma.experience.findUniqueOrThrow({
-      where: { id: body.experienceId },
-      include: { AiResume: { include: { AiResumeCapability: true } } },
+    const aiCapability = await this.prisma.aiResume.findUnique({
+      where: { experienceId: body.experienceId },
+      select: { AiResumeCapability: true },
     });
     if (aiCapability) throw new ConflictException('이미 ai Capability가 존재합니다.');
 
@@ -89,12 +90,15 @@ export class AiService {
         keywordType: KeywordType.AI,
       };
     });
+
     // 저장할 키워드 Info 정보 생성
-    const capabilities: Omit<Capability, 'userId' | 'keywordType'>[] = await Promise.all(
-      capabilityInfos.map(
-        async (capabilityInfo) => await this.prisma.capability.create({ data: capabilityInfo, select: { id: true, keyword: true } }),
-      ),
-    );
+    const capabilities: Omit<Capability, 'userId' | 'keywordType'>[] = await this.prisma.$transaction(async (tx) => {
+      return await Promise.all(
+        capabilityInfos.map(
+          async (capabilityInfo) => await tx.capability.create({ data: capabilityInfo, select: { id: true, keyword: true } }),
+        ),
+      );
+    });
 
     return new PromptKeywordResDto(capabilities);
   }

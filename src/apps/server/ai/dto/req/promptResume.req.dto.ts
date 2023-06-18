@@ -13,7 +13,7 @@ export class PromptResumeBodyResDto {
   @IsNotEmpty()
   @ArrayMaxSize(2)
   @IsInt({ each: true })
-  @ApiProperty({ example: [1, 2] })
+  @ApiProperty({ example: [1, 2], description: '추천 자기소개서 프롬프트를 진행할 때 필요한 역량 ID들입니다.' })
   capabilityIds: number[];
 
   @ApiProperty({ example: '개발자와 협업 역량을 쌓기 위해 IT 동아리에 들어감' })
