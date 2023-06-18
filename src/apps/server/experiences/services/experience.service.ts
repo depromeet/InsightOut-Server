@@ -13,7 +13,7 @@ import {
 } from '🔥apps/server/experiences/dto/get-count-of-experience-and-capability.dto';
 import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
 import { CountExperienceAndCapability } from '🔥apps/server/experiences/types/count-experience-and-capability.type';
-import { GetExperienceRequestQueryDto } from '🔥apps/server/experiences/dto/req/get-experience.dto';
+import { GetExperienceRequestQueryDtoWithPagination } from '🔥apps/server/experiences/dto/req/get-experience.dto';
 import { GetStarFromExperienceResponseDto } from '🔥apps/server/experiences/dto/get-star-from-experience.dto';
 import { ExperienceCardType } from '🔥apps/server/experiences/types/experience-card.type';
 
@@ -72,10 +72,10 @@ export class ExperienceService {
 
   public async getExperienceByCapability(
     userId: number,
-    query: GetExperienceRequestQueryDto,
+    query: GetExperienceRequestQueryDtoWithPagination,
   ): Promise<GetExperienceByCapabilityResponseDto[]> {
-    const { capabilityId, last, ...select } = query;
-    const experience = await this.experienceRepository.getExperienceByCapability(userId, capabilityId, select);
+    const { pagination, capabilityId, ...select } = query;
+    const experience = await this.experienceRepository.getExperienceByCapability(userId, capabilityId, select, pagination);
     if (!experience.length) {
       throw new NotFoundException('Experience not found');
     }
@@ -97,10 +97,17 @@ export class ExperienceService {
     }
   }
 
-  public async getExperiencesByUserId(userId: number, query: GetExperienceRequestQueryDto): Promise<GetExperienceResDto[] | string> {
+  public async getExperiencesByUserId(
+    userId: number,
+    query: GetExperienceRequestQueryDtoWithPagination,
+  ): Promise<GetExperienceResDto[] | string> {
     try {
-      const { capabilityId, last, ...select } = query;
-      const experience = await this.experienceRepository.findManyByUserId(userId, Object.assign(getExperienceAttribute, select));
+      const { pagination, capabilityId, ...select } = query;
+      const experience = await this.experienceRepository.findManyByUserId(
+        userId,
+        Object.assign(getExperienceAttribute, select),
+        pagination,
+      );
       if (!experience.length) return 'INPROGRESS 상태의 경험카드가 없습니다';
 
       return experience.map((experience) => new GetExperienceResDto(experience));
