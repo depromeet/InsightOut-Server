@@ -55,10 +55,10 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
     });
   }
 
-  public async getExperienceByCapability(capabilityId: number, select: Partial<ExperienceSelect>) {
+  public async getExperienceByCapability(userId: number, capabilityId: number, select: Partial<ExperienceSelect>) {
     // TODO ai 역량 키워드가 적용되면 해당 키워드도 함께 쿼리로 가져와야 함.
     const experiences = await this.prisma.experience.findMany({
-      where: { ExperienceCapability: { some: { capabilityId: { equals: capabilityId } } } },
+      where: { userId, ExperienceCapability: { some: { capabilityId: { equals: capabilityId } } } },
       select: {
         id: true,
         title: true,
