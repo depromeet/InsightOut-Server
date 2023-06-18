@@ -53,9 +53,12 @@ export class ExperienceService {
     }
   }
 
-  public async getExperienceByCapability(query: GetExperienceRequestQueryDto): Promise<GetExperienceByCapabilityResponseDto[]> {
+  public async getExperienceByCapability(
+    userId: number,
+    query: GetExperienceRequestQueryDto,
+  ): Promise<GetExperienceByCapabilityResponseDto[]> {
     const { capabilityId, last, ...select } = query;
-    const experience = await this.experienceRepository.getExperienceByCapability(capabilityId, select);
+    const experience = await this.experienceRepository.getExperienceByCapability(userId, capabilityId, select);
     if (!experience.length) {
       throw new NotFoundException('Experience not found');
     }
