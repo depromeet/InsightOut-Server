@@ -6,7 +6,7 @@ export class UnknownException extends BaseException {
     super({
       statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
       title: properties.title,
-      message: properties.message,
+      message: properties?.message,
       raw: properties.raw,
     });
   }
