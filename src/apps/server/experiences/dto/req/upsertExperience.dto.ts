@@ -67,11 +67,9 @@ export class UpsertExperienceReqDto {
   @IsOptionalString(0, 100)
   analysis?: string;
 
-  @ApiPropertyOptional({
-    example: [],
-  })
-  @IsArray()
-  @IsString({ each: true })
+  // keyowrds는 prisma의 특성상 옵셔널이 존재하지 않습니다. 생성시에는 따로 넣어주지 않아도 되지만 업데이트 시 아래 compareProperty에서는 사용되어야 합니다.
+  // 그렇기에 따로 데코레이터로 받지 않고 선언만 해줍니다.
+  // 키워드 요약 후 저장할 떄 필요하기 떄문입니다 :)
   keywords?: string[];
 
   public compareProperty(experience: Experience & { ExperienceInfo?: ExperienceInfo }) {

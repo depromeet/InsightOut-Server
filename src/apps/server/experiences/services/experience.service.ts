@@ -113,7 +113,7 @@ export class ExperienceService {
           action: body.action,
           result: body.result,
           userId: user.userId,
-          keywords: body.keywords,
+          keywords: [],
         },
       });
 
