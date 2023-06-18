@@ -15,6 +15,7 @@ import { CapabilityRepository } from '📚libs/modules/database/repositories/cap
 import { CountExperienceAndCapability } from '🔥apps/server/experiences/types/count-experience-and-capability.type';
 import { GetExperienceRequestQueryDto } from '🔥apps/server/experiences/dto/req/get-experience.dto';
 import { GetStarFromExperienceResponseDto } from '🔥apps/server/experiences/dto/get-star-from-experience.dto';
+import { ExperienceCardType } from '🔥apps/server/experiences/types/experience-card.type';
 
 @Injectable()
 export class ExperienceService {
@@ -24,8 +25,10 @@ export class ExperienceService {
     private readonly capabilityRepository: CapabilityRepository,
   ) {}
 
-  public async getExperienceCardInfo(experienceId: number) {
-    return this.experienceRepository.getExperienceCardInfo(experienceId);
+  public async getExperienceCardInfo(experienceId: number): Promise<ExperienceCardType> {
+    const experience = this.experienceRepository.getExperienceCardInfo(experienceId);
+    if (!experience) throw new NotFoundException('해당 ID의 experience가 없습니다.');
+    return experience;
   }
 
   public async upsertExperience(body: UpsertExperienceReqDto, user: UserJwtToken): Promise<UpsertExperienceResDto> {
@@ -57,7 +60,7 @@ export class ExperienceService {
     }
   }
 
-  public async findOneById(experienceId: number) {
+  public async findOneById(experienceId: number): Promise<Experience & { AiResume; ExperienceInfo; AiRecommendQuestion }> {
     try {
       const experience = await this.experienceRepository.findOneById(experienceId);
 

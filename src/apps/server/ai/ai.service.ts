@@ -72,15 +72,10 @@ export class AiService {
     });
     if (aiCapability) throw new ConflictException('이미 ai Capability가 존재합니다.');
 
-    const CHOICES_IDX = 0;
     const prompt = generateAiKeywordPrompt(body);
     const aiKeywords = await this.openAiService.promptChatGPT(prompt);
 
     const parseAiKeywords = this.parsingPromptResult(aiKeywords);
-    let keywords;
-    if (typeof aiKeywords.choices[CHOICES_IDX].message.content === 'string') {
-      keywords = JSON.parse(aiKeywords.choices[CHOICES_IDX].message.content);
-    }
 
     // capability생성
     const capabilityInfos = parseAiKeywords.map((keyword) => {
@@ -138,9 +133,11 @@ export class AiService {
     return new PromptResumeResDto(result.choices[CHOICES_IDX].message.content as string);
   }
 
-  public async postSummaryPrompt(body: PromptSummaryBodyReqDto) {
+  public async postSummaryPrompt(body: PromptSummaryBodyReqDto): Promise<PromptSummaryResDto> {
     const experience = await this.validationExperinece(body.experienceId);
     if (experience.summaryKeywords.length !== 0) throw new ConflictException('이미 요약된 키워드가 있습니다.');
+    if (experience.ExperienceInfo.analysis) throw new ConflictException('이미 요약된 정보가 있습니다.');
+    if (experience.AiRecommendQuestion.length !== 0) throw new ConflictException('이미 추천된 자기소개서 항목이 있습니다.');
 
     const CHOICES_IDX = 0;
     const summaryPrompt = generateSummaryPrompt(body);
@@ -157,8 +154,6 @@ export class AiService {
     // 추천 Resume 저장 Start
     const recommendQuestions = await this.openAiService.promptChatGPT(aiRecommendResume);
     const parseRecommendQuestions: string[] = this.parsingPromptResult(recommendQuestions);
-    console.log(parseRecommendQuestions);
-    console.log(typeof parseRecommendQuestions);
     const aiRecommendInfos = parseRecommendQuestions.map((question) => {
       return {
         experienceId: body.experienceId,
@@ -178,11 +173,12 @@ export class AiService {
     //// analysis, keyword 업데이트 Done
 
     // 생성된 경험 분해 키드에 들어갈 데이터 return
-    return await this.experienceService.getExperienceCardInfo(body.experienceId);
+    return new PromptSummaryResDto(await this.experienceService.getExperienceCardInfo(body.experienceId));
   }
+  // ---public done
 
   // private
-  private async validationExperinece(experienceId: number): Promise<Experience & { AiResume; ExperienceInfo }> {
+  private async validationExperinece(experienceId: number): Promise<Experience & { AiResume; ExperienceInfo; AiRecommendQuestion }> {
     const experience = await this.experienceService.findOneById(experienceId);
     if (!experience) throw new NotFoundException('해당 ID의 경험 카드를 찾을 수 없습니다.');
     return experience;

@@ -27,7 +27,6 @@ import { User } from '🔥apps/server/common/decorators/request/user.decorator';
 import { RouteTable } from '🔥apps/server/common/decorators/router/route-table.decorator';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
 import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
-
 import { PromptKeywordResDto } from '🔥apps/server/ai/dto/res/promptKeyword.res.dto';
 import { PromptResumeBodyResDto } from '🔥apps/server/ai/dto/req/promptResume.req.dto';
 import {
@@ -153,7 +152,7 @@ export class AiController {
     description: postSummaryPromptDescriptionMd,
     summary: postResumeSummarySummaryMd,
   })
-  public async postSummaryPrompt(@Body() promptSummaryBodyReqDto: PromptSummaryBodyReqDto) {
+  public async postSummaryPrompt(@Body() promptSummaryBodyReqDto: PromptSummaryBodyReqDto): Promise<ResponseEntity<PromptSummaryResDto>> {
     const newAi = await this.aiService.postSummaryPrompt(promptSummaryBodyReqDto);
 
     return ResponseEntity.OK_WITH_DATA(newAi);
