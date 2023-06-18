@@ -19,7 +19,7 @@ export class JwtRefreshGuard extends AuthGuard('refresh') {
     }
 
     if (info.message === 'No auth token') {
-      throw new NoAuthTokenException();
+      throw new NoAuthTokenException('Token not exist. It could be because it expired past its maxage.');
     }
 
     if (!user) {
