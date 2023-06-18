@@ -16,6 +16,8 @@ import { CountExperienceAndCapability } from '🔥apps/server/experiences/types/
 import { GetExperienceRequestQueryDtoWithPagination } from '🔥apps/server/experiences/dto/req/get-experience.dto';
 import { GetStarFromExperienceResponseDto } from '🔥apps/server/experiences/dto/get-star-from-experience.dto';
 import { ExperienceCardType } from '🔥apps/server/experiences/types/experience-card.type';
+import { PaginationDto } from '📚libs/pagination/pagination.dto';
+import { PaginationMetaDto } from '📚libs/pagination/pagination-meta.dto';
 
 @Injectable()
 export class ExperienceService {
@@ -73,16 +75,25 @@ export class ExperienceService {
   public async getExperienceByCapability(
     userId: number,
     query: GetExperienceRequestQueryDtoWithPagination,
-  ): Promise<GetExperienceByCapabilityResponseDto[]> {
+  ): Promise<PaginationDto<GetExperienceByCapabilityResponseDto>> {
     const { pagination, capabilityId, ...select } = query;
     const experience = await this.experienceRepository.getExperienceByCapability(userId, capabilityId, select, pagination);
     if (!experience.length) {
       throw new NotFoundException('Experience not found');
     }
 
-    const getExperienceByCapabilityResponseDto = experience.map((experience) => new GetExperienceByCapabilityResponseDto(experience));
+    const getExperienceByCapabilityResponseDto: GetExperienceByCapabilityResponseDto[] = experience.map(
+      (experience) => new GetExperienceByCapabilityResponseDto(experience),
+    );
 
-    return getExperienceByCapabilityResponseDto;
+    const itemCount = await this.experienceRepository.getCount(userId);
+
+    const experienceDto = new PaginationDto(
+      getExperienceByCapabilityResponseDto,
+      new PaginationMetaDto({ itemCount, paginationOptionsDto: pagination }),
+    );
+
+    return experienceDto;
   }
 
   public async getExperienceByUserId(userId: number): Promise<GetExperienceResDto | string> {
@@ -100,7 +111,7 @@ export class ExperienceService {
   public async getExperiencesByUserId(
     userId: number,
     query: GetExperienceRequestQueryDtoWithPagination,
-  ): Promise<GetExperienceResDto[] | string> {
+  ): Promise<PaginationDto<GetExperienceResDto> | string> {
     try {
       const { pagination, capabilityId, ...select } = query;
       const experience = await this.experienceRepository.findManyByUserId(
@@ -110,7 +121,16 @@ export class ExperienceService {
       );
       if (!experience.length) return 'INPROGRESS 상태의 경험카드가 없습니다';
 
-      return experience.map((experience) => new GetExperienceResDto(experience));
+      const getExperiencesByUserIdDto = experience.map((experience) => new GetExperienceResDto(experience));
+
+      const itemCount = await this.experienceRepository.getCount(userId);
+
+      const experienceDto = new PaginationDto(
+        getExperiencesByUserIdDto,
+        new PaginationMetaDto({ itemCount, paginationOptionsDto: pagination }),
+      );
+
+      return experienceDto;
     } catch (error) {
       console.log('error', error);
       if (error instanceof Prisma.PrismaClientKnownRequestError) throw new NotFoundException('INPROGRESS 상태의 경험카드가 없습니다.');

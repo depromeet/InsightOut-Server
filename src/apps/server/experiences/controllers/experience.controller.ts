@@ -80,6 +80,8 @@ export class ExperienceController {
     response: {
       code: HttpStatus.OK,
       type: GetExperienceResDto,
+      // TODO: Swagger에서 Pagination에 따라 다른 Example 보여주기
+      // type: PaginationDto<GetExperienceResDto>,
     },
     description: getExperienceSuccMd,
     summary: '✅ 경험 분해 조회 API',

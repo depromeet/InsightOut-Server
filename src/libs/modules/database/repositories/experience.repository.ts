@@ -33,6 +33,10 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
     });
   }
 
+  public async getCount(userId: number) {
+    return await this.prisma.experience.count({ where: { userId } });
+  }
+
   public async selectOneById(
     experienceId: number,
     select: ExperienceSelect,
