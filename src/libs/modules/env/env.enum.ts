@@ -14,7 +14,7 @@ export enum EnvEnum {
   DB_DATABASE,
 
   //jwt
-  JWT_ACCEE_TOKEN_SECRET,
+  JWT_ACCESS_TOKEN_SECRET,
   JWT_REFRESH_TOKEN_SECRET,
 
   //aws

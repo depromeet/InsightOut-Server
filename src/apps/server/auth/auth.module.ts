@@ -26,7 +26,7 @@ import { EnvEnum } from '📚libs/modules/env/env.enum';
       inject: [ConfigService],
       useFactory: async (envService: EnvService) => {
         return {
-          secret: envService.get<string>(EnvEnum.JWT_ACCEE_TOKEN_SECRET),
+          secret: envService.get<string>(EnvEnum.JWT_ACCESS_TOKEN_SECRET),
         };
       },
     }),

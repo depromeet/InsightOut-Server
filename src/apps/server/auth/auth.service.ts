@@ -147,7 +147,7 @@ export class AuthService {
       { userId },
       {
         expiresIn: ACCESS_TOKEN_EXPIRES_IN,
-        secret: this.envService.get<string>(EnvEnum.JWT_ACCEE_TOKEN_SECRET),
+        secret: this.envService.get<string>(EnvEnum.JWT_ACCESS_TOKEN_SECRET),
       },
     );
   }

@@ -21,7 +21,7 @@ export class TestService {
       { userId },
       {
         expiresIn: ACCESS_TOKEN_EXPIRES_IN * 1000,
-        secret: this.envService.get<string>(EnvEnum.JWT_ACCEE_TOKEN_SECRET),
+        secret: this.envService.get<string>(EnvEnum.JWT_ACCESS_TOKEN_SECRET),
       },
     );
     const refreshToken = this.jwtService.sign(
