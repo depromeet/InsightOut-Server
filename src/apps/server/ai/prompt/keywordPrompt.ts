@@ -13,6 +13,6 @@ export const generateResumePrompt = (body: PromptResumeBodyResDto, keywords: str
 };
 
 export const generateSummaryPrompt = (body: PromptSummaryBodyReqDto): string => {
-  const resumePrompt = process.env.CHATGPT_SUMMARY_PROMPT;
+  const resumePrompt = process.env.CHATGPT_AI_KEYWORD_PROMPT;
   return `${resumePrompt}Situation: ${body.situation}\\n\\nTask: ${body.task}\\n\\nAction: ${body.task}\\n\\nResult: ${body.result}\\n\n\`\`\`\\n"`;
 };
