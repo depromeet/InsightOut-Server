@@ -61,10 +61,8 @@ export class UpsertExperienceReqDto {
   @IsOptionalString(0, 100)
   utilization?: string;
 
-  @ApiPropertyOptional({
-    example: '저는 UX 디자인 직무에 지원하려는 [이름 입니다.]...~',
-  })
-  @IsOptionalString(0, 100)
+  // analysis는 따로 body 값으로 받지 않고 요약 프롬프트가 생성되면 저장됩니다.
+  // 따로 데코레이터를 넣지 않습니다.
   analysis?: string;
 
   // keyowrds는 prisma의 특성상 옵셔널이 존재하지 않습니다. 생성시에는 따로 넣어주지 않아도 되지만 업데이트 시 아래 compareProperty에서는 사용되어야 합니다.

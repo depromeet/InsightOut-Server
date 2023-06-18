@@ -1,12 +1,17 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { Prisma, KeywordType, Capability, Experience } from '@prisma/client';
+import { Capability, Experience, KeywordType, Prisma } from '@prisma/client';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
 import { CreateAiKeywordsAndResumeResDto } from '🔥apps/server/ai/dto/res/createAiKeywordsAndResume.res.dto';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
 import { CreateAiKeywordsAndResumeBodyReqDto } from '🔥apps/server/ai/dto/req/createAiKeywordsAndResume.req.dto';
 
 import { OpenAiService } from '📚libs/modules/open-ai/open-ai.service';
-import { generateAiKeywordPrompt, generateResumePrompt, generateSummaryPrompt } from '🔥apps/server/ai/prompt/keywordPrompt';
+import {
+  generateAiKeywordPrompt,
+  generateAiSummaryKeywordPrompt,
+  generateResumePrompt,
+  generateSummaryPrompt,
+} from '🔥apps/server/ai/prompt/keywordPrompt';
 import { PromptKeywordResDto } from '🔥apps/server/ai/dto/res/promptKeyword.res.dto';
 import { PromptResumeResDto } from '🔥apps/server/ai/dto/res/promptResume.res.dto';
 import { PromptResumeBodyResDto } from '🔥apps/server/ai/dto/req/promptResume.req.dto';
@@ -128,20 +133,34 @@ export class AiService {
   }
 
   public async postSummaryPrompt(body: PromptSummaryBodyReqDto, user: UserJwtToken) {
+    const experience = await this.validationExperinece(body.experienceId);
+    if (experience.keywords.length !== 0) throw new ConflictException('이미 요약된 키워드가 있습니다.');
+
     const CHOICES_IDX = 0;
     const summaryPrompt = generateSummaryPrompt(body);
-    // const keywordPrompt = generateKeywordPrompt(body);
+    const aiSummaryKeywords = generateAiSummaryKeywordPrompt(body);
 
-    const [summary] = await Promise.all([
+    const [summary, keywords] = await Promise.all([
       this.openAiService.promptChatGPT(summaryPrompt),
-      // this.openAiService.promptChatGPT(keywordPrompt),
+      this.openAiService.promptChatGPT(aiSummaryKeywords),
     ]);
+
+    console.log(summary);
+    console.log(keywords.choices[CHOICES_IDX].message.content);
+    console.log(typeof keywords.choices[CHOICES_IDX].message.content);
 
     // analysis 업데이트
     const upsertExperienceReqDto = new UpsertExperienceReqDto();
-    upsertExperienceReqDto.analysis = summary.choices[CHOICES_IDX].message.content as string;
 
-    await this.experienceService.upsertExperience(upsertExperienceReqDto, user);
+    upsertExperienceReqDto.analysis = summary.choices[CHOICES_IDX].message.content as string;
+    upsertExperienceReqDto.keywords =
+      typeof keywords.choices[CHOICES_IDX].message.content === 'string'
+        ? JSON.parse(keywords.choices[CHOICES_IDX].message.content)
+        : keywords.choices[CHOICES_IDX].message.content;
+
+    const updateInfo = upsertExperienceReqDto.compareProperty(experience);
+
+    await this.experienceService.processUpdateExperience(body.experienceId, updateInfo);
 
     // find로 내려주기
 
