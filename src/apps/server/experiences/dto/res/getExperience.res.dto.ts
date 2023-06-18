@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Capability, Experience, ExperienceInfo, ExperienceStatus, KeywordType } from '@prisma/client';
 import { Exclude, Expose } from 'class-transformer';
-import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsPositive, IsString, Matches } from 'class-validator';
+import { ArrayMaxSize, IsArray, IsEnum, IsInt, IsNotEmpty, IsOptional, IsPositive, IsString, Matches } from 'class-validator';
 import { getFormattedDate } from '📚libs/utils/date';
 import { dateValidation } from '🔥apps/server/common/consts/date-validation.const';
 import { IsOptionalNumber } from '🔥apps/server/common/decorators/validation/isOptionalNumber.decorator';
@@ -70,6 +70,7 @@ export class GetExperienceResDto {
   @Exclude() _task: string;
   @Exclude() _action: string;
   @Exclude() _result: string;
+  @Exclude() _summaryKeywords: string[];
 
   constructor(
     experience: Partial<
@@ -87,6 +88,7 @@ export class GetExperienceResDto {
     this._task = experience.task;
     this._action = experience.action;
     this._result = experience.result;
+    this._summaryKeywords = experience.summaryKeywords;
     this.experienceInfo = experience.experienceInfo;
   }
 
@@ -149,6 +151,15 @@ export class GetExperienceResDto {
   @IsOptionalString(0, 100)
   get result(): string {
     return this._result;
+  }
+
+  @ApiPropertyOptional({ example: ['협업', '리더십'] })
+  @IsArray()
+  @IsString({ each: true })
+  @ArrayMaxSize(2)
+  @IsOptional()
+  get summaryKeywords(): string[] {
+    return this._summaryKeywords;
   }
 
   @Expose()

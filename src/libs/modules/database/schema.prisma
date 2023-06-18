@@ -139,6 +139,24 @@ model AiResume {
   @@map("ai_resume")
 }
 
+
+// ********************************
+// ****** AI 추천 자기소개서 문항 ******
+// ********************************
+model AiRecommendQuestion {
+  id      Int    @id @default(autoincrement())
+  title  String? @db.VarChar(300) // 문항 제목
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  experienceId Int @map("experience_id") // 경험 id
+
+  Experience     Experience     @relation(references: [id], fields: [experienceId], onDelete: Cascade)
+
+  @@map("ai_recommend_question")
+}
+
 // ********************************
 // ********** 자기소개서 문항 *********
 // ********************************
@@ -176,7 +194,7 @@ model Experience {
   task      String? @db.VarChar(100) // T: Task, 과제 및 목표
   action    String? @db.VarChar(100) // A: Action, 행동
   result    String? @db.VarChar(100) // R: Result, 결과
-  keywords  String[] // 요약 키워드 배열
+  summaryKeywords  String[] @map("summary_keywords")// 요약 키워드 배열
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
@@ -186,6 +204,7 @@ model Experience {
   User                 User?                  @relation(references: [id], fields: [userId], onDelete: Cascade)
   AiResume             AiResume?
   ExperienceInfo       ExperienceInfo?
+  AiRecommendQuestion  AiRecommendQuestion[]
   ExperienceCapability ExperienceCapability[]
 
   @@map("experience")

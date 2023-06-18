@@ -15,6 +15,7 @@ import { CapabilityRepository } from '📚libs/modules/database/repositories/cap
 import { CountExperienceAndCapability } from '🔥apps/server/experiences/types/count-experience-and-capability.type';
 import { GetExperienceRequestQueryDto } from '🔥apps/server/experiences/dto/req/get-experience.dto';
 import { GetStarFromExperienceResponseDto } from '🔥apps/server/experiences/dto/get-star-from-experience.dto';
+import { ExperienceCardType } from '🔥apps/server/experiences/types/experience-card.type';
 
 @Injectable()
 export class ExperienceService {
@@ -23,6 +24,12 @@ export class ExperienceService {
     private readonly prisma: PrismaService,
     private readonly capabilityRepository: CapabilityRepository,
   ) {}
+
+  public async getExperienceCardInfo(experienceId: number): Promise<ExperienceCardType> {
+    const experience = this.experienceRepository.getExperienceCardInfo(experienceId);
+    if (!experience) throw new NotFoundException('해당 ID의 experience가 없습니다.');
+    return experience;
+  }
 
   public async upsertExperience(body: UpsertExperienceReqDto, user: UserJwtToken): Promise<UpsertExperienceResDto> {
     // 생성 중인 경험 카드가 있는지 확인
@@ -53,7 +60,7 @@ export class ExperienceService {
     }
   }
 
-  public async findOneById(experienceId: number) {
+  public async findOneById(experienceId: number): Promise<Experience & { AiResume; ExperienceInfo; AiRecommendQuestion }> {
     try {
       const experience = await this.experienceRepository.findOneById(experienceId);
 
@@ -116,7 +123,7 @@ export class ExperienceService {
           action: body.action,
           result: body.result,
           userId: user.userId,
-          keywords: [],
+          summaryKeywords: [],
         },
       });
 
@@ -163,7 +170,7 @@ export class ExperienceService {
           task: updatedExperienceInfo.task,
           action: updatedExperienceInfo.action,
           result: updatedExperienceInfo.result,
-          keywords: updatedExperienceInfo.keywords,
+          summaryKeywords: updatedExperienceInfo.summaryKeywords,
         },
       });
       return [experience, experienceInfo];

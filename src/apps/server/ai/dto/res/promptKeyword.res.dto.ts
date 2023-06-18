@@ -11,9 +11,9 @@ class Keyword {
 }
 
 export class PromptKeywordResDto {
-  @Exclude() _capabilities: Capability[];
+  @Exclude() _capabilities: Omit<Capability, 'userId' | 'keywordType'>[];
 
-  constructor(capabilities: Capability[]) {
+  constructor(capabilities: Omit<Capability, 'userId' | 'keywordType'>[]) {
     this._capabilities = capabilities;
   }
 
@@ -29,7 +29,7 @@ export class PromptKeywordResDto {
       { id: 1, keyword: '리더십' },
     ],
   })
-  get capabilities(): Capability[] {
+  get capabilities(): Omit<Capability, 'userId' | 'keywordType'>[] {
     return this._capabilities;
   }
 }

@@ -1,17 +1,34 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { Capability, Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
+import { Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
 import { ExperienceSelect } from '🔥apps/server/experiences/interface/experience-select.interface';
 import { ExperienceRepositoryInterface } from '🔥apps/server/experiences/interface/experience-repository.interface';
+import { ExperienceCardType } from '🔥apps/server/experiences/types/experience-card.type';
 
 @Injectable()
 export class ExperienceRepository implements ExperienceRepositoryInterface {
   constructor(private readonly prisma: PrismaService) {}
 
-  public async findOneById(experienceId: number): Promise<Experience & { AiResume; ExperienceInfo }> {
+  public async getExperienceCardInfo(experienceId: number): Promise<ExperienceCardType> {
+    return await this.prisma.experience.findUnique({
+      where: { id: experienceId },
+      select: {
+        summaryKeywords: true,
+        title: true,
+        ExperienceInfo: { select: { analysis: true } },
+        ExperienceCapability: { select: { Capability: { select: { keyword: true, keywordType: true } } } },
+        AiResume: {
+          select: { content: true, AiResumeCapability: { select: { Capability: { select: { keyword: true, keywordType: true } } } } },
+        },
+        AiRecommendQuestion: { select: { id: true, title: true } },
+      },
+    });
+  }
+
+  public async findOneById(experienceId: number): Promise<Experience & { AiResume; ExperienceInfo; AiRecommendQuestion }> {
     return await this.prisma.experience.findUniqueOrThrow({
       where: { id: experienceId },
-      include: { ExperienceInfo: true, AiResume: true },
+      include: { ExperienceInfo: true, AiResume: true, AiRecommendQuestion: true },
     });
   }
 

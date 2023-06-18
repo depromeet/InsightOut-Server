@@ -1,17 +1,4 @@
-import { Body, HttpStatus, UseGuards } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiConflictResponse, ApiNotFoundResponse } from '@nestjs/swagger';
-import { Method } from '📚libs/enums/method.enum';
-import { ResponseEntity } from '📚libs/utils/respone.entity';
-import { AiService } from '🔥apps/server/ai/ai.service';
-import { CreateAiKeywordsAndResumeBodyReqDto } from '🔥apps/server/ai/dto/req/createAiKeywordsAndResume.req.dto';
 import {
-  CreateAiKeywordsAndResumeBadRequestErrorResDto,
-  CreateAiKeywordsAndResumeConfiltErrorResDto,
-  CreateAiKeywordsAndResumeResDto,
-} from '🔥apps/server/ai/dto/res/createAiKeywordsAndResume.res.dto';
-import {
-  createAiResumeAndCapabilitiesDescriptionMd,
-  createAiResumeAndCapabilitiesSummaryMd,
   postKeywordPromptDescriptionMd,
   postKeywordPromptSuccMd,
   postKeywordPromptSummaryMd,
@@ -22,12 +9,16 @@ import {
   postResumeSummarySummaryMd,
   postSummaryPromptDescriptionMd,
 } from '🔥apps/server/ai/markdown/ai.md';
+import { Body, HttpStatus, UseGuards } from '@nestjs/common';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiConflictResponse, ApiNotFoundResponse } from '@nestjs/swagger';
+import { Method } from '📚libs/enums/method.enum';
+import { ResponseEntity } from '📚libs/utils/respone.entity';
+import { AiService } from '🔥apps/server/ai/ai.service';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
 import { User } from '🔥apps/server/common/decorators/request/user.decorator';
 import { RouteTable } from '🔥apps/server/common/decorators/router/route-table.decorator';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
 import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
-
 import { PromptKeywordResDto } from '🔥apps/server/ai/dto/res/promptKeyword.res.dto';
 import { PromptResumeBodyResDto } from '🔥apps/server/ai/dto/req/promptResume.req.dto';
 import {
@@ -50,35 +41,6 @@ import { PromptAiKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptAiKe
 })
 export class AiController {
   constructor(private readonly aiService: AiService) {}
-
-  @ApiConflictResponse({
-    description: '⛔ 이미 해당 AI 자기소개서 및 키워드가 생성되었습니다.',
-    type: CreateAiKeywordsAndResumeConfiltErrorResDto,
-  })
-  @ApiBadRequestResponse({
-    description: '⛔ AI 생성하는 데 실패했습니다. 타입을 확인해주세요',
-    type: CreateAiKeywordsAndResumeBadRequestErrorResDto,
-  })
-  @Route({
-    request: {
-      method: Method.POST,
-      path: '/',
-    },
-    response: {
-      code: HttpStatus.CREATED,
-      type: CreateAiKeywordsAndResumeResDto,
-    },
-    description: createAiResumeAndCapabilitiesDescriptionMd,
-    summary: createAiResumeAndCapabilitiesSummaryMd,
-  })
-  public async createAiResumeAndCapabilities(
-    @Body() createAiKeywordsAndResumeBodyReqDto: CreateAiKeywordsAndResumeBodyReqDto,
-    @User() user: UserJwtToken,
-  ): Promise<ResponseEntity<CreateAiKeywordsAndResumeResDto>> {
-    const newAi = await this.aiService.create(createAiKeywordsAndResumeBodyReqDto, user);
-
-    return ResponseEntity.CREATED_WITH_DATA(newAi);
-  }
 
   @ApiConflictResponse({
     description: '⛔ 해당 experienceId에 추천 AI Capability가 이미 존재합니다. :)',
@@ -143,7 +105,7 @@ export class AiController {
   @Route({
     request: {
       method: Method.POST,
-      path: '/summary',
+      path: '/experience-card',
     },
     response: {
       code: HttpStatus.OK,
@@ -153,11 +115,8 @@ export class AiController {
     description: postSummaryPromptDescriptionMd,
     summary: postResumeSummarySummaryMd,
   })
-  public async postSummaryPrompt(
-    @Body() promptSummaryBodyReqDto: PromptSummaryBodyReqDto,
-    @User() user: UserJwtToken,
-  ): Promise<ResponseEntity<PromptSummaryResDto>> {
-    const newAi = await this.aiService.postSummaryPrompt(promptSummaryBodyReqDto, user);
+  public async postSummaryPrompt(@Body() promptSummaryBodyReqDto: PromptSummaryBodyReqDto): Promise<ResponseEntity<PromptSummaryResDto>> {
+    const newAi = await this.aiService.postSummaryPrompt(promptSummaryBodyReqDto);
 
     return ResponseEntity.OK_WITH_DATA(newAi);
   }
