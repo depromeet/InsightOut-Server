@@ -1,7 +1,6 @@
 import { Body, HttpStatus, Param, Query, UseGuards } from '@nestjs/common';
 import { Route } from '../../common/decorators/router/route.decorator';
 import { RouteTable } from '../../common/decorators/router/route-table.decorator';
-import { UpsertExperienceReqDto } from '../dto/req/upsertExperience.dto';
 import { ExperienceService } from '../services/experience.service';
 import { User } from '../../common/decorators/request/user.decorator';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiNotFoundResponse, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
@@ -16,7 +15,6 @@ import { ResponseEntity } from '📚libs/utils/respone.entity';
 import { GetExperienceNotFoundErrorResDto, GetExperienceResDto } from '../dto/res/getExperience.res.dto';
 import { Method } from '📚libs/enums/method.enum';
 import { getExperienceSuccMd, upsertExperienceSuccMd } from '🔥apps/server/experiences/markdown/experience.md';
-import { GetExperienceRequestQueryDto } from '🔥apps/server/experiences/dto/req/get-experience.dto';
 import {
   GetCountOfExperienceAndCapabilityDescriptionMd,
   GetCountOfExperienceAndCapabilityResponseDescriptionMd,
@@ -40,6 +38,7 @@ import {
   GetStarFromExperienceResponseDescriptionMd,
   GetStarFromExperienceSummaryMd,
 } from '🔥apps/server/experiences/markdown/get-star-from-experience.md';
+import { GetExperienceRequestQueryDto, UpsertExperienceReqDto } from '🔥apps/server/experiences/dto/req';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -94,19 +93,17 @@ export class ExperienceController {
     description: '⛔ 해당 경험 카드 ID를 확인해주세요 :)',
     type: GetExperienceNotFoundErrorResDto,
   })
-  public async getExperience(@User() user: UserJwtToken, @Query() getExperienceRequestQueryDto?: GetExperienceRequestQueryDto) {
+  public async getExperience(@User() user: UserJwtToken, @Query() body?: GetExperienceRequestQueryDto) {
     let experience;
 
+    const dto = body.toRequestDto();
+
     // TODO service로 넘어가기 전에 DTO 한 번 더 wrapping하기
-    if (getExperienceRequestQueryDto.capabilityId) {
-      experience = await this.experienceService.getExperienceByCapability(user.userId, getExperienceRequestQueryDto);
+    if (dto.capabilityId) {
+      experience = await this.experienceService.getExperienceByCapability(user.userId, dto);
     } else {
       // TODO 추후 전체 모아보기를 위해 수정 필요
-      experience = await this.experienceService.getExperiencesByUserId(user.userId, getExperienceRequestQueryDto);
-    }
-
-    if (getExperienceRequestQueryDto.last) {
-      experience = experience[0];
+      experience = await this.experienceService.getExperiencesByUserId(user.userId, dto);
     }
 
     return ResponseEntity.OK_WITH_DATA(experience);
