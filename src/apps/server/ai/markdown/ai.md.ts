@@ -45,6 +45,7 @@ export const postSummaryPromptDescriptionMd = `
 ChatGPT API를 사용하여 추천 자기소개서를 생성할 때 20~30초 정도 소요됩니다.\n
 모든 플로우를 실행 시킨 뒤 생성된 경험 카드를 보여주기 위해 필요한 정보를 반환합니다.\n
 
+
 ## Picture
 <img width="515" alt="image" src="https://github.com/depromeet/InsightOut-Server/assets/97580759/b765db66-e16b-4698-99fe-f8e51f487955">
 

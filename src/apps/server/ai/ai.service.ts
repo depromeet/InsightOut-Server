@@ -5,9 +5,9 @@ import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
 import { OpenAiService } from '📚libs/modules/open-ai/open-ai.service';
 import {
   generateAiKeywordPrompt,
-  generateAiSummaryKeywordPrompt,
   generateRecommendQuestionsPrompt,
   generateResumePrompt,
+  generateSummaryKeywordPrompt,
   generateSummaryPrompt,
 } from '🔥apps/server/ai/prompt/keywordPrompt';
 import { PromptKeywordResDto } from '🔥apps/server/ai/dto/res/promptKeyword.res.dto';
@@ -105,7 +105,7 @@ export class AiService {
 
     const CHOICES_IDX = 0;
     const summaryPrompt = generateSummaryPrompt(body);
-    const aiSummaryKeywords = generateAiSummaryKeywordPrompt(body);
+    const aiSummaryKeywords = generateSummaryKeywordPrompt(body);
 
     const [summary, keywords] = await Promise.all([
       this.openAiService.promptChatGPT(summaryPrompt),

@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
-import { IsArray, IsEnum, IsNotEmpty, IsOptional, IsString, Matches } from 'class-validator';
+import { IsEnum, IsOptional, Matches } from 'class-validator';
 import { dateValidation } from '🔥apps/server/common/consts/date-validation.const';
 import { IsOptionalString } from '🔥apps/server/common/decorators/validation/isOptionalString.decorator';
 

@@ -17,7 +17,7 @@ export const generateSummaryPrompt = (body: PromptSummaryBodyReqDto): string => 
   return `${resumePrompt}Situation: ${body.situation}\\n\\nTask: ${body.task}\\n\\nAction: ${body.task}\\n\\nResult: ${body.result}\\n\n\`\`\`\\n"`;
 };
 
-export const generateAiSummaryKeywordPrompt = (body: PromptSummaryBodyReqDto): string => {
+export const generateSummaryKeywordPrompt = (body: PromptSummaryBodyReqDto): string => {
   const summayKeywordPrompt = process.env.CHATGPT_SUMMARY_KEYWORD_PROMPT;
   return `${summayKeywordPrompt}Action: ${body.task}\\n\\nResult: ${body.result}\\n\n\`\`\`\\n"`;
 };
