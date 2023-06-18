@@ -1,8 +1,3 @@
-import { Body, HttpStatus, UseGuards } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiConflictResponse, ApiNotFoundResponse } from '@nestjs/swagger';
-import { Method } from '📚libs/enums/method.enum';
-import { ResponseEntity } from '📚libs/utils/respone.entity';
-import { AiService } from '🔥apps/server/ai/ai.service';
 import {
   postKeywordPromptDescriptionMd,
   postKeywordPromptSuccMd,
@@ -14,6 +9,11 @@ import {
   postResumeSummarySummaryMd,
   postSummaryPromptDescriptionMd,
 } from '🔥apps/server/ai/markdown/ai.md';
+import { Body, HttpStatus, UseGuards } from '@nestjs/common';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiConflictResponse, ApiNotFoundResponse } from '@nestjs/swagger';
+import { Method } from '📚libs/enums/method.enum';
+import { ResponseEntity } from '📚libs/utils/respone.entity';
+import { AiService } from '🔥apps/server/ai/ai.service';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
 import { User } from '🔥apps/server/common/decorators/request/user.decorator';
 import { RouteTable } from '🔥apps/server/common/decorators/router/route-table.decorator';
@@ -105,7 +105,7 @@ export class AiController {
   @Route({
     request: {
       method: Method.POST,
-      path: '/summary',
+      path: '/experience-card',
     },
     response: {
       code: HttpStatus.OK,
