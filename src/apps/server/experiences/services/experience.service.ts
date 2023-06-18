@@ -113,7 +113,7 @@ export class ExperienceService {
           action: body.action,
           result: body.result,
           userId: user.userId,
-          keywords: [],
+          summaryKeywords: [],
         },
       });
 
@@ -160,7 +160,7 @@ export class ExperienceService {
           task: updatedExperienceInfo.task,
           action: updatedExperienceInfo.action,
           result: updatedExperienceInfo.result,
-          keywords: updatedExperienceInfo.keywords,
+          summaryKeywords: updatedExperienceInfo.summaryKeywords,
         },
       });
       return [experience, experienceInfo];

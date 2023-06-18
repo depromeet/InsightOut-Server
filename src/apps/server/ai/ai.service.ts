@@ -134,7 +134,7 @@ export class AiService {
 
   public async postSummaryPrompt(body: PromptSummaryBodyReqDto, user: UserJwtToken) {
     const experience = await this.validationExperinece(body.experienceId);
-    if (experience.keywords.length !== 0) throw new ConflictException('이미 요약된 키워드가 있습니다.');
+    if (experience.summaryKeywords.length !== 0) throw new ConflictException('이미 요약된 키워드가 있습니다.');
 
     const CHOICES_IDX = 0;
     const summaryPrompt = generateSummaryPrompt(body);
@@ -153,7 +153,7 @@ export class AiService {
     const upsertExperienceReqDto = new UpsertExperienceReqDto();
 
     upsertExperienceReqDto.analysis = summary.choices[CHOICES_IDX].message.content as string;
-    upsertExperienceReqDto.keywords =
+    upsertExperienceReqDto.summaryKeywords =
       typeof keywords.choices[CHOICES_IDX].message.content === 'string'
         ? JSON.parse(keywords.choices[CHOICES_IDX].message.content)
         : keywords.choices[CHOICES_IDX].message.content;

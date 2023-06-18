@@ -176,7 +176,7 @@ model Experience {
   task      String? @db.VarChar(100) // T: Task, 과제 및 목표
   action    String? @db.VarChar(100) // A: Action, 행동
   result    String? @db.VarChar(100) // R: Result, 결과
-  keywords  String[] // 요약 키워드 배열
+  summaryKeywords  String[] @map("summary_keywords")// 요약 키워드 배열
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz

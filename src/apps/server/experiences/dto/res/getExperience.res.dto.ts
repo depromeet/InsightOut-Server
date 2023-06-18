@@ -70,7 +70,7 @@ export class GetExperienceResDto {
   @Exclude() _task: string;
   @Exclude() _action: string;
   @Exclude() _result: string;
-  @Exclude() _keywords: string[];
+  @Exclude() _summaryKeywords: string[];
 
   constructor(
     experience: Partial<
@@ -88,7 +88,7 @@ export class GetExperienceResDto {
     this._task = experience.task;
     this._action = experience.action;
     this._result = experience.result;
-    this._keywords = experience.keywords;
+    this._summaryKeywords = experience.summaryKeywords;
     this.experienceInfo = experience.experienceInfo;
   }
 
@@ -158,8 +158,8 @@ export class GetExperienceResDto {
   @IsString({ each: true })
   @ArrayMaxSize(2)
   @IsOptional()
-  get keywords(): string[] {
-    return this._keywords;
+  get summaryKeywords(): string[] {
+    return this._summaryKeywords;
   }
 
   @Expose()
