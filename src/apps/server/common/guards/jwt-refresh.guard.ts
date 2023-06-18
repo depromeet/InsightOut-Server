@@ -18,13 +18,14 @@ export class JwtRefreshGuard extends AuthGuard('refresh') {
       throw new UnauthorizedException(info.message);
     }
 
-    if (info.message === 'No auth token') {
+    if (info?.message === 'No auth token') {
       throw new NoAuthTokenException('Token not exist. It could be because it expired past its maxage.');
     }
 
     if (!user) {
       throw new UnauthorizedException('적절하지 않은 요청입니다.');
     }
+
     return user;
   }
 }
