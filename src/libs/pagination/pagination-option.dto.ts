@@ -38,7 +38,7 @@ export class PaginationOptionsDto {
   @IsString()
   @IsNotEmpty()
   @IsOptional()
-  readonly criteria?: string | undefined;
+  readonly criteria?: string = 'createdAt';
 
   @ApiPropertyOptional({ description: orderDiscription, enum: OrderBy, default: OrderBy.asc })
   @IsEnum(OrderBy)
