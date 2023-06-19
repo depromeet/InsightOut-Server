@@ -4,13 +4,13 @@ import { RouteTable } from '../../common/decorators/router/route-table.decorator
 import { UpsertExperienceReqDto } from '../dto/req/upsertExperience.dto';
 import { ExperienceService } from '../services/experience.service';
 import { User } from '../../common/decorators/request/user.decorator';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiNotFoundResponse, ApiUnprocessableEntityResponse } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiNotFoundResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { UserJwtToken } from '../../auth/types/jwt-tokwn.type';
 import {
   BadRequestErrorResDto,
-  UpsertExperienceInfoUnprocessableErrorResDto,
-  UpsertExperienceResDto,
+  UpsertExperienceInfoNotFoundErrorResDto,
+  UpdateExperienceResDto,
 } from '../dto/res/upsertExperienceInfo.res.dto';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
 import { GetExperienceNotFoundErrorResDto, GetExperienceResDto } from '../dto/res/getExperience.res.dto';
@@ -20,7 +20,9 @@ import {
   createExperienceSuccMd,
   createExperienceSummaryMd,
   getExperienceSuccMd,
-  upsertExperienceSuccMd,
+  updateExperienceDescriptionMd,
+  updateExperienceSuccMd,
+  updateExperienceSummaryMd,
 } from '🔥apps/server/experiences/markdown/experience.md';
 import { GetExperienceRequestQueryDto } from '🔥apps/server/experiences/dto/req/get-experience.dto';
 import {
@@ -82,9 +84,9 @@ export class ExperienceController {
     description: '⛔ 유효성 검사에 실패하였습니다. 타입을 확인해주세요 :)',
     type: BadRequestErrorResDto,
   })
-  @ApiUnprocessableEntityResponse({
+  @ApiNotFoundResponse({
     description: '⛔ 경험 카드 생성 실패 타입 확인해주세요 :)',
-    type: UpsertExperienceInfoUnprocessableErrorResDto,
+    type: UpsertExperienceInfoNotFoundErrorResDto,
   })
   @Route({
     request: {
@@ -93,13 +95,14 @@ export class ExperienceController {
     },
     response: {
       code: HttpStatus.CREATED,
-      type: UpsertExperienceResDto,
+      type: UpdateExperienceResDto,
+      description: updateExperienceSuccMd,
     },
-    description: upsertExperienceSuccMd,
-    summary: '✅ 경험 정보 생성 및 업데이트 API',
+    description: updateExperienceDescriptionMd,
+    summary: updateExperienceSummaryMd,
   })
-  public async upsertExperience(@Body() upsertExperienceReqDto: UpsertExperienceReqDto, @User() user: UserJwtToken) {
-    const experience = await this.experienceService.upsertExperience(upsertExperienceReqDto, user);
+  public async update(@Body() upsertExperienceReqDto: UpsertExperienceReqDto): Promise<ResponseEntity<UpdateExperienceResDto>> {
+    const experience = await this.experienceService.update(upsertExperienceReqDto);
 
     return ResponseEntity.CREATED_WITH_DATA(experience);
   }

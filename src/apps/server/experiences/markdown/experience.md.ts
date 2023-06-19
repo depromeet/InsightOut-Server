@@ -25,14 +25,20 @@ s, t, a, r의 경험 카드 내용을 조회하기 위해서 각각 querystring�
  처음 경험 분해를 생성하는 것이면 \`INPROGRESS 상태의 경험카드가 없습니다\`라는 문구가 나옵니다.
 `;
 
-export const upsertExperienceSuccMd = `
-### ✅ 경험 분해 생성 및 업데이트에 성공했습니다.
-유저가 경험 분해 생성한 내역이 없다면 \`CREATE\`가 진행됩니다.\n
-유저가 경험 분해 생성 중인 내역이 있다면 \`UPDATE\`가 진행됩니다.\n
+// -- getExperience
+
+export const updateExperienceDescriptionMd = `
+### ✅ 경험 분해 업데이트에 성공했습니다.
+전달 받은 아이디의 경험 분해가 없다면 \`404\` 에러를 뱉어냅니다.
 모든 프로퍼티는 Optinal입니다.\n
 변경 되지 않은 사항은 프로퍼티를 넣어 주시지 않으셔도 됩니다.\n
 전달 받은 프로퍼티만 업데이트 됩니다 :)
 `;
+
+export const updateExperienceSummaryMd = '✅ 경험 정보 수정 API';
+export const updateExperienceSuccMd = '✅ 경험 정보 수정에 성공하였습니다.';
+
+// -- updateExperience
 
 export const addCapabilitySuccMd = `
 ### ✅ 경험 분해 키워드 추가하는 데 성공했습니다.

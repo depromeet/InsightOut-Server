@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { UpsertExperienceReqDto } from '../dto/req/upsertExperience.dto';
 import { UserJwtToken } from '../../auth/types/jwt-tokwn.type';
-import { UpsertExperienceResDto } from '../dto/res/upsertExperienceInfo.res.dto';
+import { UpdateExperienceResDto } from '../dto/res/upsertExperienceInfo.res.dto';
 import { getExperienceAttribute } from '../../common/consts/experience-attribute.const';
 import { GetExperienceByCapabilityResponseDto, GetExperienceResDto } from '../dto/res/getExperience.res.dto';
 import { Experience, ExperienceInfo, ExperienceStatus, Prisma } from '@prisma/client';
@@ -64,15 +64,14 @@ export class ExperienceService {
     return experience;
   }
 
-  public async upsertExperience(body: UpsertExperienceReqDto, user: UserJwtToken): Promise<UpsertExperienceResDto> {
+  public async update(body: UpsertExperienceReqDto): Promise<UpdateExperienceResDto> {
     // 생성 중인 경험 카드가 있는지 확인
-    const experinece = await this.experienceRepository.findOneByUserId(user.userId);
-    if (experinece) {
-      // 있으면 업데이트
-      const updatedExperienceInfo = body.compareProperty(experinece);
+    const experinece = await this.experienceRepository.findOneById(body.experienceId);
+    if (!experinece) throw new NotFoundException('해당 ID의 경험카드는 존재하지 않습니다.');
+    // 있으면 업데이트
+    const updatedExperienceInfo = body.compareProperty(experinece);
 
-      return await this.processUpdateExperience(experinece.id, updatedExperienceInfo);
-    }
+    return await this.processUpdateExperience(experinece.id, updatedExperienceInfo);
   }
 
   public async getExperience(experienceId: number): Promise<Partial<GetExperienceResDto>> {
@@ -140,7 +139,7 @@ export class ExperienceService {
     updatedExperienceInfo: Experience & {
       ExperienceInfo?: ExperienceInfo;
     },
-  ): Promise<UpsertExperienceResDto> {
+  ): Promise<UpdateExperienceResDto> {
     const [experience, experienceInfo] = await this.prisma.$transaction(async (tx) => {
       const experienceInfo = await tx.experienceInfo.update({
         where: { experienceId: id },
@@ -168,7 +167,7 @@ export class ExperienceService {
       });
       return [experience, experienceInfo];
     });
-    return new UpsertExperienceResDto(experience, experienceInfo);
+    return new UpdateExperienceResDto(experience, experienceInfo);
   }
 
   public async getCountOfExperienceAndCapability(userId: number): Promise<GetCountOfExperienceAndCapabilityResponseDto[]> {

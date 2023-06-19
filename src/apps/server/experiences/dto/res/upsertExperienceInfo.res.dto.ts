@@ -6,7 +6,7 @@ import { dateValidation } from '🔥apps/server/common/consts/date-validation.co
 import { IsEnum, IsOptional, Matches } from 'class-validator';
 import { Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
 
-export class UpsertExperienceInfoResDto {
+export class UpdateExperienceInfoResDto {
   @Exclude() private _experienceInfoId: number;
   @Exclude() private _experienceRole: string;
   @Exclude() private _motivation: string;
@@ -72,7 +72,7 @@ export class UpsertExperienceInfoResDto {
   }
 }
 
-export class UpsertExperienceResDto {
+export class UpdateExperienceResDto {
   @Exclude() private readonly _experienceId: number;
   @Exclude() private readonly _title: string;
   @Exclude() private readonly _situation: string;
@@ -82,7 +82,7 @@ export class UpsertExperienceResDto {
   @Exclude() private readonly _startDate: Date;
   @Exclude() private readonly _endDate: Date;
   @Exclude() private readonly _experienceStatus: ExperienceStatus;
-  @Exclude() private readonly _experienceInfo: UpsertExperienceInfoResDto;
+  @Exclude() private readonly _experienceInfo: UpdateExperienceInfoResDto;
 
   constructor(experience: Experience, experienceInfo: ExperienceInfo) {
     this._experienceId = experience.id;
@@ -94,7 +94,7 @@ export class UpsertExperienceResDto {
     this._action = experience.action;
     this._result = experience.result;
 
-    const experienceInfoRes = new UpsertExperienceInfoResDto();
+    const experienceInfoRes = new UpdateExperienceInfoResDto();
     experienceInfoRes.setExperienceInfoId = experienceInfo.id;
     experienceInfoRes.setExperienceRole = experienceInfo.experienceRole;
     experienceInfoRes.setMotivation = experienceInfo.motivation;
@@ -164,19 +164,19 @@ export class UpsertExperienceResDto {
     return this._experienceStatus;
   }
 
-  @ApiProperty({ type: UpsertExperienceInfoResDto })
+  @ApiProperty({ type: UpdateExperienceInfoResDto })
   @Expose()
-  get experienceInfo(): UpsertExperienceInfoResDto {
+  get experienceInfo(): UpdateExperienceInfoResDto {
     return this._experienceInfo;
   }
 }
 
-export class UpsertExperienceInfoUnprocessableErrorResDto {
-  @ApiProperty({ example: 422 })
+export class UpsertExperienceInfoNotFoundErrorResDto {
+  @ApiProperty({ example: 404 })
   statusCode: number;
-  @ApiProperty({ example: 'UnprocessableEntityException' })
+  @ApiProperty({ example: 'NotFoundException' })
   title: string;
-  @ApiProperty({ example: '경험 카드 생성하는 데 실패했습니다. 타입을 확인해주세요' })
+  @ApiProperty({ example: '해당 ID의 경험카드는 존재하지 않습니다.' })
   message: string;
 }
 
