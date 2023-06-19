@@ -1,7 +1,10 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
 import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsPositive } from 'class-validator';
+// import { PaginationOptionsDto } from '📚libs/pagination/pagination-option.dto';
 
+// TODO Pagination 상속받아서 속성을 부여받고, Controller에서 dto wrapping하기
+// export class GetExperienceRequestQueryDto extends PaginationOptionsDto {
 export class GetExperienceRequestQueryDto {
   @ApiPropertyOptional({
     description: '역량 키워드 id',

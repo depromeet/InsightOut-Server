@@ -97,6 +97,7 @@ export class ExperienceController {
   public async getExperience(@User() user: UserJwtToken, @Query() getExperienceRequestQueryDto?: GetExperienceRequestQueryDto) {
     let experience;
 
+    // TODO service로 넘어가기 전에 DTO 한 번 더 wrapping하기
     if (getExperienceRequestQueryDto.capabilityId) {
       experience = await this.experienceService.getExperienceByCapability(user.userId, getExperienceRequestQueryDto);
     } else {

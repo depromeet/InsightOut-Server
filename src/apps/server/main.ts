@@ -30,7 +30,17 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('api', app, document, {
+    customSiteTitle: 'InsightOut API',
+    customCss: `
+    .swagger-ui .parameter__extension, .swagger-ui .parameter__in {
+      color: magenta;
+      font-family: monospace;
+      font-size: 12px;
+      font-style: italic;
+      font-weight: 600;
+  }`,
+  });
 
   //Winston
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
@@ -38,7 +48,7 @@ async function bootstrap() {
   app.setGlobalPrefix('/api', { exclude: ['/'] });
 
   app.enableCors();
-  
+
   //서버 시작
   await app.listen(PORT);
 }
