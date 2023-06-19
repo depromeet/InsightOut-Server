@@ -85,7 +85,7 @@ export class ExperienceController {
     type: BadRequestErrorResDto,
   })
   @ApiNotFoundResponse({
-    description: '⛔ 경험 카드 생성 실패 타입 확인해주세요 :)',
+    description: '⛔ 해당 ID의 경험카드는 존재하지 않습니다 아이디를 확인해주세요 :)',
     type: UpsertExperienceInfoNotFoundErrorResDto,
   })
   @Route({
