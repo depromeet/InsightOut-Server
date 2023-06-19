@@ -4,12 +4,32 @@ import { Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
 import { ExperienceSelect } from '🔥apps/server/experiences/interface/experience-select.interface';
 import { ExperienceRepositoryInterface } from '🔥apps/server/experiences/interface/experience-repository.interface';
 import { ExperienceCardType } from '🔥apps/server/experiences/types/experience-card.type';
-import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
 
 @Injectable()
 export class ExperienceRepository implements ExperienceRepositoryInterface {
   constructor(private readonly prisma: PrismaService) {}
 
+  public async getExperienceById(experienceId: number) {
+    return await this.prisma.experience.findUnique({
+      where: { id: experienceId },
+      select: {
+        id: true,
+        title: true,
+        startDate: true,
+        endDate: true,
+        situation: true,
+        task: true,
+        action: true,
+        result: true,
+        experienceStatus: true,
+        summaryKeywords: true,
+        ExperienceInfo: { select: { experienceId: true, experienceRole: true, motivation: true, utilization: true } },
+        AiResume: {
+          select: { content: true, AiResumeCapability: { select: { Capability: { select: { keyword: true, keywordType: true } } } } },
+        },
+      },
+    });
+  }
   public async getExperienceCardInfo(experienceId: number): Promise<ExperienceCardType> {
     return await this.prisma.experience.findUnique({
       where: { id: experienceId },

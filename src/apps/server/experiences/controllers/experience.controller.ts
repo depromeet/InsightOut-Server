@@ -1,7 +1,7 @@
 import { Body, HttpStatus, Param, Query, UseGuards } from '@nestjs/common';
 import { Route } from '../../common/decorators/router/route.decorator';
 import { RouteTable } from '../../common/decorators/router/route-table.decorator';
-import { UpsertExperienceReqDto } from '../dto/req/upsertExperience.dto';
+import { UpdateExperienceReqDto } from '../dto/req/updateExperience.dto';
 import { ExperienceService } from '../services/experience.service';
 import { User } from '../../common/decorators/request/user.decorator';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiNotFoundResponse } from '@nestjs/swagger';
@@ -19,6 +19,9 @@ import {
   createExperienceDescriptionMd,
   createExperienceSuccMd,
   createExperienceSummaryMd,
+  getExperienceByIdDescriptionMd,
+  getExperienceByIdSuccMd,
+  getExperienceByIdSummaryMd,
   getExperienceSuccMd,
   updateExperienceDescriptionMd,
   updateExperienceSuccMd,
@@ -49,6 +52,7 @@ import {
   GetStarFromExperienceSummaryMd,
 } from '🔥apps/server/experiences/markdown/get-star-from-experience.md';
 import { CreateExperienceResDto } from '🔥apps/server/experiences/dto/res/createExperience.res.dto';
+import { ExperienceIdParamReqDto } from '🔥apps/server/experiences/dto/req/experienceIdParam.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -101,7 +105,7 @@ export class ExperienceController {
     description: updateExperienceDescriptionMd,
     summary: updateExperienceSummaryMd,
   })
-  public async update(@Body() upsertExperienceReqDto: UpsertExperienceReqDto): Promise<ResponseEntity<UpdateExperienceResDto>> {
+  public async update(@Body() upsertExperienceReqDto: UpdateExperienceReqDto): Promise<ResponseEntity<UpdateExperienceResDto>> {
     const experience = await this.experienceService.update(upsertExperienceReqDto);
 
     return ResponseEntity.CREATED_WITH_DATA(experience);
@@ -123,7 +127,7 @@ export class ExperienceController {
     description: '⛔ 해당 경험 카드 ID를 확인해주세요 :)',
     type: GetExperienceNotFoundErrorResDto,
   })
-  public async getExperience(@User() user: UserJwtToken, @Query() getExperienceRequestQueryDto?: GetExperienceRequestQueryDto) {
+  public async getExperiences(@User() user: UserJwtToken, @Query() getExperienceRequestQueryDto?: GetExperienceRequestQueryDto) {
     let experience;
 
     // TODO service로 넘어가기 전에 DTO 한 번 더 wrapping하기
@@ -137,6 +141,26 @@ export class ExperienceController {
     if (getExperienceRequestQueryDto.last) {
       experience = experience[0];
     }
+
+    return ResponseEntity.OK_WITH_DATA(experience);
+  }
+
+  //TODO:
+  @Route({
+    request: {
+      method: Method.GET,
+      path: '/:experienceId',
+    },
+    response: {
+      code: HttpStatus.OK,
+      // type: GetExperienceResDto,
+      description: getExperienceByIdSuccMd,
+    },
+    description: getExperienceByIdDescriptionMd,
+    summary: getExperienceByIdSummaryMd,
+  })
+  public async getExperienceById(@Param() experienceIdParamReqDto: ExperienceIdParamReqDto) {
+    const experience = await this.experienceService.getExperienceById(experienceIdParamReqDto);
 
     return ResponseEntity.OK_WITH_DATA(experience);
   }

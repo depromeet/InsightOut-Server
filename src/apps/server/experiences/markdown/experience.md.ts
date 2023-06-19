@@ -27,6 +27,18 @@ s, t, a, r의 경험 카드 내용을 조회하기 위해서 각각 querystring�
 
 // -- getExperience
 
+export const getExperienceByIdDescriptionMd = `
+### ✅ 경험 분해 단일 조회에 성공하였습니다.
+경험 분해가 존재하지 않을 경우 \`404\`에러를 반환합니다.\n
+성공 시 \`Experience\`(경험), \`ExperienceInfo\`(경험 정보), \`AiResume\`(AI 추천 자기소개서), \`AiCapability\`(추천 키워드)를 반환합니다.
+`;
+
+export const getExperienceByIdSuccMd = `✅ 경험 분해 단일 조회에 성공하였습니다 :)`;
+
+export const getExperienceByIdSummaryMd = `✅ 경험 분해 단일 조회 API`;
+
+// -- getExperienceById
+
 export const updateExperienceDescriptionMd = `
 ### ✅ 경험 분해 업데이트에 성공했습니다.
 전달 받은 아이디의 경험 분해가 없다면 \`404\` 에러를 뱉어냅니다.

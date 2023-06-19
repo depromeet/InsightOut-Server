@@ -1,5 +1,5 @@
-import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
-import { UpsertExperienceReqDto } from '../dto/req/upsertExperience.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { UpdateExperienceReqDto } from '../dto/req/updateExperience.dto';
 import { UserJwtToken } from '../../auth/types/jwt-tokwn.type';
 import { UpdateExperienceResDto } from '../dto/res/updateExperienceInfo.res.dto';
 import { getExperienceAttribute } from '../../common/consts/experience-attribute.const';
@@ -17,6 +17,7 @@ import { GetExperienceRequestQueryDto } from '🔥apps/server/experiences/dto/re
 import { GetStarFromExperienceResponseDto } from '🔥apps/server/experiences/dto/get-star-from-experience.dto';
 import { ExperienceCardType } from '🔥apps/server/experiences/types/experience-card.type';
 import { CreateExperienceResDto } from '🔥apps/server/experiences/dto/res/createExperience.res.dto';
+import { ExperienceIdParamReqDto } from '🔥apps/server/experiences/dto/req/experienceIdParam.dto';
 
 @Injectable()
 export class ExperienceService {
@@ -25,6 +26,13 @@ export class ExperienceService {
     private readonly prisma: PrismaService,
     private readonly capabilityRepository: CapabilityRepository,
   ) {}
+
+  public async getExperienceById(param: ExperienceIdParamReqDto) {
+    const experience = await this.experienceRepository.getExperienceById(param.experienceId);
+    if (!experience) throw new NotFoundException('해당 아이디의 경험 분해가 없습니다.');
+
+    return experience;
+  }
 
   public async create(user: UserJwtToken): Promise<CreateExperienceResDto> {
     const [experience, experienceInfo] = await this.prisma.$transaction(async (tx) => {
@@ -64,7 +72,7 @@ export class ExperienceService {
     return experience;
   }
 
-  public async update(body: UpsertExperienceReqDto): Promise<UpdateExperienceResDto> {
+  public async update(body: UpdateExperienceReqDto): Promise<UpdateExperienceResDto> {
     // 생성 중인 경험 카드가 있는지 확인
     const experinece = await this.experienceRepository.findOneById(body.experienceId);
     if (!experinece) throw new NotFoundException('해당 ID의 경험카드는 존재하지 않습니다.');
