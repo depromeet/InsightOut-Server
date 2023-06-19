@@ -9,7 +9,7 @@ import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { UserJwtToken } from '../../auth/types/jwt-tokwn.type';
 import {
   BadRequestErrorResDto,
-  UpsertExperienceInfoNotFoundErrorResDto,
+  UpdateExperienceInfoNotFoundErrorResDto,
   UpdateExperienceResDto,
 } from '../dto/res/updateExperienceInfo.res.dto';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
@@ -53,6 +53,7 @@ import {
 } from '🔥apps/server/experiences/markdown/get-star-from-experience.md';
 import { CreateExperienceResDto } from '🔥apps/server/experiences/dto/res/createExperience.res.dto';
 import { ExperienceIdParamReqDto } from '🔥apps/server/experiences/dto/req/experienceIdParam.dto';
+import { GetExperienceByIdResDto } from '🔥apps/server/experiences/dto/res/getExperienceById.res.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -90,7 +91,7 @@ export class ExperienceController {
   })
   @ApiNotFoundResponse({
     description: '⛔ 해당 ID의 경험카드는 존재하지 않습니다 아이디를 확인해주세요 :)',
-    type: UpsertExperienceInfoNotFoundErrorResDto,
+    type: UpdateExperienceInfoNotFoundErrorResDto,
   })
   @Route({
     request: {
@@ -145,7 +146,10 @@ export class ExperienceController {
     return ResponseEntity.OK_WITH_DATA(experience);
   }
 
-  //TODO:
+  @ApiNotFoundResponse({
+    description: '⛔ 해당 ID의 경험카드는 존재하지 않습니다 아이디를 확인해주세요 :)',
+    type: UpdateExperienceInfoNotFoundErrorResDto,
+  })
   @Route({
     request: {
       method: Method.GET,
@@ -153,13 +157,15 @@ export class ExperienceController {
     },
     response: {
       code: HttpStatus.OK,
-      // type: GetExperienceResDto,
+      type: GetExperienceByIdResDto,
       description: getExperienceByIdSuccMd,
     },
     description: getExperienceByIdDescriptionMd,
     summary: getExperienceByIdSummaryMd,
   })
-  public async getExperienceById(@Param() experienceIdParamReqDto: ExperienceIdParamReqDto) {
+  public async getExperienceById(
+    @Param() experienceIdParamReqDto: ExperienceIdParamReqDto,
+  ): Promise<ResponseEntity<GetExperienceByIdResDto>> {
     const experience = await this.experienceService.getExperienceById(experienceIdParamReqDto);
 
     return ResponseEntity.OK_WITH_DATA(experience);

@@ -9,7 +9,7 @@ import { ExperienceCardType } from '🔥apps/server/experiences/types/experience
 export class ExperienceRepository implements ExperienceRepositoryInterface {
   constructor(private readonly prisma: PrismaService) {}
 
-  public async getExperienceById(experienceId: number) {
+  public async getExperienceById(experienceId: number): Promise<Partial<Experience & { ExperienceInfo; AiResume }>> {
     return await this.prisma.experience.findUnique({
       where: { id: experienceId },
       select: {

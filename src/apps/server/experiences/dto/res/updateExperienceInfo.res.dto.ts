@@ -172,7 +172,7 @@ export class UpdateExperienceResDto {
   }
 }
 
-export class UpsertExperienceInfoNotFoundErrorResDto {
+export class UpdateExperienceInfoNotFoundErrorResDto {
   @ApiProperty({ example: 404 })
   statusCode: number;
   @ApiProperty({ example: 'NotFoundException' })

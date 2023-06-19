@@ -18,6 +18,7 @@ import { GetStarFromExperienceResponseDto } from '🔥apps/server/experiences/dt
 import { ExperienceCardType } from '🔥apps/server/experiences/types/experience-card.type';
 import { CreateExperienceResDto } from '🔥apps/server/experiences/dto/res/createExperience.res.dto';
 import { ExperienceIdParamReqDto } from '🔥apps/server/experiences/dto/req/experienceIdParam.dto';
+import { GetExperienceByIdResDto } from '🔥apps/server/experiences/dto/res/getExperienceById.res.dto';
 
 @Injectable()
 export class ExperienceService {
@@ -27,11 +28,11 @@ export class ExperienceService {
     private readonly capabilityRepository: CapabilityRepository,
   ) {}
 
-  public async getExperienceById(param: ExperienceIdParamReqDto) {
+  public async getExperienceById(param: ExperienceIdParamReqDto): Promise<GetExperienceByIdResDto> {
     const experience = await this.experienceRepository.getExperienceById(param.experienceId);
-    if (!experience) throw new NotFoundException('해당 아이디의 경험 분해가 없습니다.');
+    if (!experience) throw new NotFoundException('해당 ID의 경험카드는 존재하지 않습니다.');
 
-    return experience;
+    return new GetExperienceByIdResDto(experience);
   }
 
   public async create(user: UserJwtToken): Promise<CreateExperienceResDto> {
