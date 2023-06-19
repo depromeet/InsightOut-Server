@@ -16,6 +16,7 @@ import { CountExperienceAndCapability } from '🔥apps/server/experiences/types/
 import { GetExperienceRequestQueryDto } from '🔥apps/server/experiences/dto/req/get-experience.dto';
 import { GetStarFromExperienceResponseDto } from '🔥apps/server/experiences/dto/get-star-from-experience.dto';
 import { ExperienceCardType } from '🔥apps/server/experiences/types/experience-card.type';
+import { CreateExperienceResDto } from '🔥apps/server/experiences/dto/res/createExperience.res.dto';
 
 @Injectable()
 export class ExperienceService {
@@ -24,6 +25,38 @@ export class ExperienceService {
     private readonly prisma: PrismaService,
     private readonly capabilityRepository: CapabilityRepository,
   ) {}
+
+  public async create(user: UserJwtToken): Promise<CreateExperienceResDto> {
+    const [experience, experienceInfo] = await this.prisma.$transaction(async (tx) => {
+      const experience = await tx.experience.create({
+        data: {
+          title: null,
+          startDate: null,
+          endDate: null,
+          experienceStatus: ExperienceStatus.INPROGRESS,
+          situation: null,
+          task: null,
+          action: null,
+          result: null,
+          userId: user.userId,
+          summaryKeywords: [],
+        },
+      });
+
+      const experienceInfo = await tx.experienceInfo.create({
+        data: {
+          experienceRole: null,
+          motivation: null,
+          utilization: null,
+          analysis: null,
+          experienceId: experience.id,
+        },
+      });
+      return [experience, experienceInfo];
+    });
+
+    return new CreateExperienceResDto(experience, experienceInfo);
+  }
 
   public async getExperienceCardInfo(experienceId: number): Promise<ExperienceCardType> {
     const experience = this.experienceRepository.getExperienceCardInfo(experienceId);
@@ -39,14 +72,6 @@ export class ExperienceService {
       const updatedExperienceInfo = body.compareProperty(experinece);
 
       return await this.processUpdateExperience(experinece.id, updatedExperienceInfo);
-    } else {
-      // 없으면 생성
-      try {
-        return await this.processCreateExperience(body, user);
-      } catch (error) {
-        if (error instanceof Prisma.PrismaClientValidationError)
-          throw new UnprocessableEntityException('경험 카드 생성하는 데 실패했습니다. 타입을 확인해주세요');
-      }
     }
   }
 
@@ -108,38 +133,6 @@ export class ExperienceService {
       console.log('error', error);
       if (error instanceof Prisma.PrismaClientKnownRequestError) throw new NotFoundException('INPROGRESS 상태의 경험카드가 없습니다.');
     }
-  }
-
-  public async processCreateExperience(body: UpsertExperienceReqDto, user: UserJwtToken): Promise<UpsertExperienceResDto> {
-    const [experience, experienceInfo] = await this.prisma.$transaction(async (tx) => {
-      const experience = await tx.experience.create({
-        data: {
-          title: body.title,
-          startDate: new Date(body.startDate),
-          endDate: new Date(body.endDate),
-          experienceStatus: ExperienceStatus.INPROGRESS,
-          situation: body.situation,
-          task: body.task,
-          action: body.action,
-          result: body.result,
-          userId: user.userId,
-          summaryKeywords: [],
-        },
-      });
-
-      const experienceInfo = await tx.experienceInfo.create({
-        data: {
-          experienceRole: body.experienceRole,
-          motivation: body.motivation,
-          utilization: body.utilization,
-          analysis: body.analysis,
-          experienceId: experience.id,
-        },
-      });
-      return [experience, experienceInfo];
-    });
-
-    return new UpsertExperienceResDto(experience, experienceInfo);
   }
 
   public async processUpdateExperience(

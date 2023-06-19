@@ -15,7 +15,13 @@ import {
 import { ResponseEntity } from '📚libs/utils/respone.entity';
 import { GetExperienceNotFoundErrorResDto, GetExperienceResDto } from '../dto/res/getExperience.res.dto';
 import { Method } from '📚libs/enums/method.enum';
-import { getExperienceSuccMd, upsertExperienceSuccMd } from '🔥apps/server/experiences/markdown/experience.md';
+import {
+  createExperienceDescriptionMd,
+  createExperienceSuccMd,
+  createExperienceSummaryMd,
+  getExperienceSuccMd,
+  upsertExperienceSuccMd,
+} from '🔥apps/server/experiences/markdown/experience.md';
 import { GetExperienceRequestQueryDto } from '🔥apps/server/experiences/dto/req/get-experience.dto';
 import {
   GetCountOfExperienceAndCapabilityDescriptionMd,
@@ -40,6 +46,7 @@ import {
   GetStarFromExperienceResponseDescriptionMd,
   GetStarFromExperienceSummaryMd,
 } from '🔥apps/server/experiences/markdown/get-star-from-experience.md';
+import { CreateExperienceResDto } from '🔥apps/server/experiences/dto/res/createExperience.res.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -52,6 +59,25 @@ import {
 export class ExperienceController {
   constructor(private readonly experienceService: ExperienceService) {}
 
+  @Route({
+    request: {
+      method: Method.POST,
+      path: '/',
+    },
+    response: {
+      code: HttpStatus.CREATED,
+      type: CreateExperienceResDto,
+      description: createExperienceSuccMd,
+    },
+    description: createExperienceDescriptionMd,
+    summary: createExperienceSummaryMd,
+  })
+  public async create(@User() user: UserJwtToken): Promise<ResponseEntity<CreateExperienceResDto>> {
+    const experience = await this.experienceService.create(user);
+
+    return ResponseEntity.CREATED_WITH_DATA(experience);
+  }
+
   @ApiBadRequestResponse({
     description: '⛔ 유효성 검사에 실패하였습니다. 타입을 확인해주세요 :)',
     type: BadRequestErrorResDto,
@@ -62,7 +88,7 @@ export class ExperienceController {
   })
   @Route({
     request: {
-      method: Method.POST,
+      method: Method.PUT,
       path: '/',
     },
     response: {

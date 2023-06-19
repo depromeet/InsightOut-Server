@@ -1,3 +1,14 @@
+export const createExperienceDescriptionMd = `
+### ✅ 경험 분해 생성에 성공하였습니다.
+해당 API를 사용하시면 아무 내용이 들어가 있지 않은 경험 분해를 생성한 뒤 반환합니다.\n
+최초 상태는 \`INPROGRESS\`입니다.
+`;
+
+export const createExperienceSummaryMd = '✅ 경험 정보 생성 API';
+export const createExperienceSuccMd = '✅ 경험 정보 생성에 성공하였습니다.';
+
+//-- createExperience
+
 export const getExperienceSuccMd = `
 ### ✅ 경험 분해 조회에 성공했습니다.
 s, t, a, r의 경험 카드 내용을 조회하기 위해서 각각 querystring에 boolean 값을 입력합니다.\n

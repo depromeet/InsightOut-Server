@@ -4,6 +4,7 @@ import { Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
 import { ExperienceSelect } from '🔥apps/server/experiences/interface/experience-select.interface';
 import { ExperienceRepositoryInterface } from '🔥apps/server/experiences/interface/experience-repository.interface';
 import { ExperienceCardType } from '🔥apps/server/experiences/types/experience-card.type';
+import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
 
 @Injectable()
 export class ExperienceRepository implements ExperienceRepositoryInterface {
