@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { UpsertExperienceReqDto } from '../dto/req/upsertExperience.dto';
 import { UserJwtToken } from '../../auth/types/jwt-tokwn.type';
-import { UpdateExperienceResDto } from '../dto/res/upsertExperienceInfo.res.dto';
+import { UpdateExperienceResDto } from '../dto/res/updateExperienceInfo.res.dto';
 import { getExperienceAttribute } from '../../common/consts/experience-attribute.const';
 import { GetExperienceByCapabilityResponseDto, GetExperienceResDto } from '../dto/res/getExperience.res.dto';
 import { Experience, ExperienceInfo, ExperienceStatus, Prisma } from '@prisma/client';

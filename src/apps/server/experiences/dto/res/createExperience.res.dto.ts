@@ -93,6 +93,7 @@ export class CreateExperienceResDto {
     this._task = experience.task;
     this._action = experience.action;
     this._result = experience.result;
+    this._experienceStatus = experience.experienceStatus;
 
     const experienceInfoRes = new CreateExperienceInfoResDto();
     experienceInfoRes.setExperienceInfoId = experienceInfo.id;
