@@ -14,6 +14,14 @@ export class CreateExperienceInfoResDto {
   @Exclude() private _utilization: string;
   @Exclude() private _analysis: string;
 
+  constructor(data: ExperienceInfo) {
+    this._experienceInfoId = data.id;
+    this._experienceRole = data.experienceRole;
+    this._motivation = data.motivation;
+    this._utilization = data.utilization;
+    this._analysis = data.analysis;
+  }
+
   set setExperienceInfoId(experienceInfoId: number) {
     this._experienceInfoId = experienceInfoId;
   }
@@ -95,15 +103,7 @@ export class CreateExperienceResDto {
     this._action = experience.action;
     this._result = experience.result;
     this._experienceStatus = experience.experienceStatus;
-
-    const experienceInfoRes = new CreateExperienceInfoResDto();
-    experienceInfoRes.setExperienceInfoId = experienceInfo.id;
-    experienceInfoRes.setExperienceRole = experienceInfo.experienceRole;
-    experienceInfoRes.setMotivation = experienceInfo.motivation;
-    experienceInfoRes.setUtilization = experienceInfo.utilization;
-    experienceInfoRes.setAnalysis = experienceInfo.analysis;
-
-    this._experienceInfo = experienceInfoRes;
+    this._experienceInfo = new CreateExperienceInfoResDto(experienceInfo);
   }
 
   @ApiProperty({ example: 1 })
