@@ -9,6 +9,27 @@ import { ExperienceCardType } from '🔥apps/server/experiences/types/experience
 export class ExperienceRepository implements ExperienceRepositoryInterface {
   constructor(private readonly prisma: PrismaService) {}
 
+  public async getExperienceById(experienceId: number): Promise<Partial<Experience & { ExperienceInfo; AiResume }>> {
+    return await this.prisma.experience.findUnique({
+      where: { id: experienceId },
+      select: {
+        id: true,
+        title: true,
+        startDate: true,
+        endDate: true,
+        situation: true,
+        task: true,
+        action: true,
+        result: true,
+        experienceStatus: true,
+        summaryKeywords: true,
+        ExperienceInfo: { select: { experienceId: true, experienceRole: true, motivation: true, utilization: true } },
+        AiResume: {
+          select: { content: true, AiResumeCapability: { select: { Capability: { select: { keyword: true, keywordType: true } } } } },
+        },
+      },
+    });
+  }
   public async getExperienceCardInfo(experienceId: number): Promise<ExperienceCardType> {
     return await this.prisma.experience.findUnique({
       where: { id: experienceId },
@@ -26,7 +47,7 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
   }
 
   public async findOneById(experienceId: number): Promise<Experience & { AiResume; ExperienceInfo; AiRecommendQuestion }> {
-    return await this.prisma.experience.findUniqueOrThrow({
+    return await this.prisma.experience.findUnique({
       where: { id: experienceId },
       include: { ExperienceInfo: true, AiResume: true, AiRecommendQuestion: true },
     });
