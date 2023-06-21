@@ -2,7 +2,6 @@ import { Body, Controller, HttpStatus, Res } from '@nestjs/common';
 import { TestService } from './test.service';
 import { Response } from 'express';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
-import { REFRESH_TOKEN_EXPIRES_IN } from '../common/consts/jwt.const';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
 import { Method } from '📚libs/enums/method.enum';
 import { PostIssueTestTokenRequestBodyDto } from '🔥apps/server/test/dtos/post-issue-test-token.dto';
@@ -10,11 +9,17 @@ import { ApiTags } from '@nestjs/swagger';
 import { OpenAiService } from '📚libs/modules/open-ai/open-ai.service';
 import { PromptTestBodyReqDto } from '🔥apps/server/test/dtos/prompt-test-body-req.dto';
 import { testApiSuccMd } from '🔥apps/server/test/docs/test-api.md';
+import { AuthService } from '🔥apps/server/auth/auth.service';
+import { TokenType } from '📚libs/enums/token.enum';
 
 @ApiTags('🧑🏻‍💻 개발용 API')
 @Controller('test')
 export class TestController {
-  constructor(private readonly testService: TestService, private readonly openAiService: OpenAiService) {}
+  constructor(
+    private readonly testService: TestService,
+    private readonly authService: AuthService,
+    private readonly openAiService: OpenAiService,
+  ) {}
 
   @Route({
     request: {
@@ -34,10 +39,12 @@ export class TestController {
   ): Promise<ResponseEntity<string>> {
     const { accessToken, refreshToken } = await this.testService.issueTestToken(postIssueTestTokenRequestBodyDto);
 
-    response.cookie('refreshToken', refreshToken, {
-      maxAge: REFRESH_TOKEN_EXPIRES_IN * 1000,
-      httpOnly: true,
-    });
+    const accessTokenCookieOptions = this.authService.getCookieOptions(TokenType.AccessToken);
+    const refreshTokenCookieOptions = this.authService.getCookieOptions(TokenType.RefreshToken);
+
+    response.cookie('accessToken', accessToken, accessTokenCookieOptions);
+    response.cookie('refreshToken', refreshToken, refreshTokenCookieOptions);
+
     return ResponseEntity.CREATED_WITH_DATA(accessToken);
   }
 
