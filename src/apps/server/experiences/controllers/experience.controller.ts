@@ -96,18 +96,21 @@ export class ExperienceController {
   @Route({
     request: {
       method: Method.PUT,
-      path: '/',
+      path: '/:experienceId',
     },
     response: {
-      code: HttpStatus.CREATED,
+      code: HttpStatus.OK,
       type: UpdateExperienceResDto,
       description: updateExperienceSuccMd,
     },
     description: updateExperienceDescriptionMd,
     summary: updateExperienceSummaryMd,
   })
-  public async update(@Body() upsertExperienceReqDto: UpdateExperienceReqDto): Promise<ResponseEntity<UpdateExperienceResDto>> {
-    const experience = await this.experienceService.update(upsertExperienceReqDto);
+  public async update(
+    @Body() upsertExperienceReqDto: UpdateExperienceReqDto,
+    @Param() experienceIdParamReqDto: ExperienceIdParamReqDto,
+  ): Promise<ResponseEntity<UpdateExperienceResDto>> {
+    const experience = await this.experienceService.update(upsertExperienceReqDto, experienceIdParamReqDto);
 
     return ResponseEntity.CREATED_WITH_DATA(experience);
   }

@@ -1,16 +1,10 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
-import { IsEnum, IsInt, IsNotEmpty, IsOptional, Matches, Min } from 'class-validator';
+import { IsEnum, IsOptional, Matches } from 'class-validator';
 import { dateValidation } from '🔥apps/server/common/consts/date-validation.const';
 import { IsOptionalString } from '🔥apps/server/common/decorators/validation/isCustomString.decorator';
 
 export class UpdateExperienceReqDto {
-  @IsInt()
-  @IsNotEmpty()
-  @Min(1)
-  @ApiProperty({ example: 1, type: Number })
-  experienceId: number;
-
   @ApiPropertyOptional({ example: '00직무 디자인 인턴' })
   @IsOptionalString(0, 100)
   title?: string;

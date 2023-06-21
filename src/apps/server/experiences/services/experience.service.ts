@@ -73,9 +73,9 @@ export class ExperienceService {
     return experience;
   }
 
-  public async update(body: UpdateExperienceReqDto): Promise<UpdateExperienceResDto> {
+  public async update(body: UpdateExperienceReqDto, query: ExperienceIdParamReqDto): Promise<UpdateExperienceResDto> {
     // 생성 중인 경험 카드가 있는지 확인
-    const experinece = await this.experienceRepository.findOneById(body.experienceId);
+    const experinece = await this.experienceRepository.findOneById(query.experienceId);
     if (!experinece) throw new NotFoundException('해당 ID의 경험카드는 존재하지 않습니다.');
     // 있으면 업데이트
     const updatedExperienceInfo = body.compareProperty(experinece);
