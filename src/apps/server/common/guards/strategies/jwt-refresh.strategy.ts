@@ -13,7 +13,7 @@ export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request): string => {
-          return authService.trackRefreshToken(request);
+          return authService.extractRefreshToken(request);
         },
       ]),
       ignoreExpiration: false,
@@ -23,7 +23,7 @@ export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
   }
 
   async validate(request: Request, payload: UserJwtToken): Promise<UserWithRefreshTokenPayload> {
-    const refreshToken: string = this.authService.trackRefreshToken(request);
+    const refreshToken: string = this.authService.extractRefreshToken(request);
     return { refreshToken, ...payload };
   }
 }
