@@ -15,7 +15,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request): string => {
           const accessToken = authService.extractAccessToken(request);
-          console.log(accessToken);
           return accessToken;
         },
       ]),
