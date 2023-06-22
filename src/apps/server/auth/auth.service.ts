@@ -191,8 +191,13 @@ export class AuthService {
     return cookieOption;
   }
 
+  // 요청 객체에 액세스 토큰이 있는지 탐색합니다.
+  extractAccessToken(request: Request): string {
+    return request?.cookies?.accessToken;
+  }
+
   // 요청 객체에 리프레시 토큰이 있는지 탐색합니다.
-  trackRefreshToken(request: Request): string {
+  extractRefreshToken(request: Request): string {
     return request?.cookies?.refreshToken;
   }
 
