@@ -1,6 +1,6 @@
 #!/bin/bash
 echo ------------------------------------
-if [ -d /home/ubuntu/13th-4team-backend ]; then
-    sudo rm -rf /home/ubuntu/13th-4team-backend
+if [ -d /var/www/insightout ]; then
+    sudo rm -rf /var/www/insightout
 fi
-sudo mkdir -vp /home/ubuntu/13th-4team-backend
+sudo mkdir -vp /var/www/insightout
