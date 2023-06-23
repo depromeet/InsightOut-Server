@@ -5,9 +5,14 @@
 #fi
 #sudo mkdir -vp /home/ec2-user/InsightOut-Server
 
+ls -al
+
 # cd /var/www/insightout
 echo "🙏 /home/ec2-user/InsightOut-Server"
 cd /home/ec2-user/InsightOut-Server
+
+echo "--- ls -al .."
+ls -al ..
 
 echo "---- ls -al"
 ls -al
