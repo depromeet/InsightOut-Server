@@ -6,7 +6,11 @@ if [ -d /var/www/cdp-server ]; then
 fi
 sudo mkdir -vp /var/www/cdp-server
 
-cp ./ /home/ec2-user/InsightOut-server
+echo "ls"
+ls -al .
+
+echo "copy"
+cp -r ./ /home/ec2-user/InsightOut-server
 
 # cd /var/www/insightout
 echo "🙏 /home/ec2-user/InsightOut-Server"
