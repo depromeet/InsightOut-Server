@@ -8,8 +8,8 @@
 ls -al
 
 # cd /var/www/insightout
-echo "🙏 /home/ec2-user/InsightOut-Server"
-cd /home/ec2-user/InsightOut-Server
+#echo "🙏 /home/ec2-user/InsightOut-Server"
+#cd /home/ec2-user/InsightOut-Server
 
 echo "--- ls -al .."
 ls -al ..
