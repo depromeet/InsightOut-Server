@@ -77,7 +77,7 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./hous.zip s3://hous-build/deploy/
+        run: aws s3 cp --region ap-northeast-2 ./hous.zip s3://insightout-prod-s3/deploy/
 
       - name: deploy with AWS codeDeploy
         run: aws deploy create-deployment
