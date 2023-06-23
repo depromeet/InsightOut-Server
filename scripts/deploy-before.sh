@@ -9,8 +9,10 @@ sudo mkdir -vp /var/www/cdp-server
 echo "ls"
 ls -al .
 
+pwd
+
 echo "copy"
-cp -r ./ /home/ec2-user/InsightOut-server
+#cp -r ./ /home/ec2-user/InsightOut-server
 
 # cd /var/www/insightout
 echo "🙏 /home/ec2-user/InsightOut-Server"
