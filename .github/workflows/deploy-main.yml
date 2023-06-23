@@ -8,13 +8,13 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     env:
       ENVIRONMENT: prod
 
     strategy:
       matrix:
-        node-version: [16.15.1]
+        node-version: [16.20.1]
 
     steps:
 
@@ -58,7 +58,6 @@ jobs:
           echo REDIS_HOST_PROD=${{ secrets.REDIS_HOST_PROD }} >> .env
           echo REDIS_PORT_PROD=${{ secrets.REDIS_PORT_PROD }} >> .env
           echo SLACK_TOKEN=${{ secrets.SLACK_TOKEN }} >> .env
-          
           cat .env
 
       - name: build server files
