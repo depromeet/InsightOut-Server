@@ -84,4 +84,4 @@ jobs:
           --application-name insightout-prod
           --deployment-config-name CodeDeployDefault.OneAtATime
           --deployment-group-name insight-out-prod-group
-          --s3-location bucket=hous-build,bundleType=zip,key=deploy/hous.zip
+          --s3-location bucket=insightout-prod-s3,bundleType=zip,key=deploy/hous.zip
