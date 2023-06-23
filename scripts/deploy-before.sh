@@ -6,7 +6,7 @@ fi
 sudo mkdir -vp /home/ec2-user/InsightOut-Server
 
 # cd /var/www/insightout
-echo "/home/ec2-user/InsightOut-Server"
+echo "🙏 /home/ec2-user/InsightOut-Server"
 cd /home/ec2-user/InsightOut-Server
 
 export NVM_DIR="$HOME/.nvm"
@@ -15,7 +15,7 @@ export NVM_DIR="$HOME/.nvm"
 
 
 # ec2-user 권한 부여
-echo "권한 부여"
+echo "‍👨‍💻 권한 부여"
 sudo chown ec2-user:ec2-user /home/ec2-user/InsightOut-Server
 sudo chmod -R 777 /home/ec2-user/InsightOut-Server
 
@@ -24,7 +24,7 @@ sudo chmod -R 777 /home/ec2-user/InsightOut-Server
 #npm install -g yarn
 
 # yarn install -> node_modules는 복사 안함
-echo "yarn"
+echo "🤏 yarn"
 yarn
 
 # prisma generate
