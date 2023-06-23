@@ -1,18 +1,18 @@
 #!/bin/bash
 #echo ------------------------------------
-echo ------------------------------------
-if [ -d /var/www/cdp-server ]; then
-    sudo rm -rf /var/www/cdp-server
-fi
-sudo mkdir -vp /var/www/cdp-server
+#echo ------------------------------------
+#if [ -d /home/ec2-user/InsightOut-Server ]; then
+#    sudo rm -rf /home/ec2-user/InsightOut-Server
+#fi
+#sudo mkdir -vp /home/ec2-user/InsightOut-Server
 
-echo "ls"
-ls -al .
-
-pwd
+#echo "ls"
+#ls -al .
+#
+#pwd
 
 echo "copy"
-#cp -r ./ /home/ec2-user/InsightOut-server
+#cp -r ./ /home/ec2-user/InsightOut-Server
 
 # cd /var/www/insightout
 echo "🙏 /home/ec2-user/InsightOut-Server"
