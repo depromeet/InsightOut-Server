@@ -1,9 +1,9 @@
 #!/bin/bash
 #echo ------------------------------------
-if [ -d /home/ec2-user/InsightOut-Server ]; then
-    sudo rm -rf /home/ec2-user/InsightOut-Server
-fi
-sudo mkdir -vp /home/ec2-user/InsightOut-Server
+#if [ -d /home/ec2-user/InsightOut-Server ]; then
+#    sudo rm -rf /home/ec2-user/InsightOut-Server
+#fi
+#sudo mkdir -vp /home/ec2-user/InsightOut-Server
 
 # cd /var/www/insightout
 echo "🙏 /home/ec2-user/InsightOut-Server"
