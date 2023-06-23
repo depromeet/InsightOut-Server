@@ -8,16 +8,16 @@ files:
 permissions:
   - object: /home/ec2-user/InsightOut-Server
     pattern: "**"
-    owner: ec2-user
-    group: ec2-user
+    owner: root
+    group: root
 
 
 hooks:
   BeforeInstall:
     - location: ./scripts/deploy-before.sh
-      runas: ec2-user
+      runas: root
   ApplicationStart:
     - location: ./scripts/deploy-run.sh
-      runas: ec2-user
+      runas: root
 
 
