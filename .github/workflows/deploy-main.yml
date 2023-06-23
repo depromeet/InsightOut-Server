@@ -78,7 +78,7 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./hous.zip s3://insightout-prod-s3/deploy/
+        run: aws s3 cp --region ap-northeast-2 ./${{ env.GITHUB_SHA }}.zip s3://insightout-prod-s3/deploy/
 
       - name: deploy with AWS codeDeploy
         run: aws deploy create-deployment --application-name insightout-prod --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name insight-out-prod-group --s3-location bucket=insightout-prod-s3,bundleType=zip,key=deploy/${{ env.GITHUB_SHA }}.zip
