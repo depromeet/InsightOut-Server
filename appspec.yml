@@ -5,7 +5,7 @@ files:
     destination: /var/www/insightout
 
 permissions:
-  - object: /var/www/insightout
+  - object: /
     mode: 755
     pattern: "**"
     owner: ec2-user
