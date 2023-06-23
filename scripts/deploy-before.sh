@@ -27,5 +27,7 @@ sudo chmod -R 777 /home/ec2-user/InsightOut-Server
 echo "🤏 yarn"
 yarn
 
+echo "ls -al!"
+ls -al
 # prisma generate
 yarn prisma generate
