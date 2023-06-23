@@ -1,5 +1,12 @@
 #!/bin/bash
 #echo ------------------------------------
+echo ------------------------------------
+if [ -d /var/www/cdp-server ]; then
+    sudo rm -rf /var/www/cdp-server
+fi
+sudo mkdir -vp /var/www/cdp-server
+
+cp ./ /home/ec2-user/InsightOut-server
 
 # cd /var/www/insightout
 echo "🙏 /home/ec2-user/InsightOut-Server"
