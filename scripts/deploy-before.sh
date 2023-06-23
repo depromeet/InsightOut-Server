@@ -7,7 +7,7 @@
 
 
 # ec2-user 권한 부여
-echo "권한 부여"
+#echo "권한 부여"
 #sudo chown ec2-user:ec2-user /var/www/insightout
 #sudo chmod -R 777 /var/www/insightout
 
@@ -20,8 +20,8 @@ echo "권한 부여"
 #npm install -g yarn
 
 # yarn install -> node_modules는 복사 안함
-echo "yarn"
-yarn
+#echo "yarn"
+#yarn
 
 # prisma generate
 yarn prisma generate
