@@ -80,8 +80,4 @@ jobs:
         run: aws s3 cp --region ap-northeast-2 ./hous.zip s3://insightout-prod-s3/deploy/
 
       - name: deploy with AWS codeDeploy
-        run: aws deploy create-deployment
-          --application-name insightout-prod
-          --deployment-config-name CodeDeployDefault.OneAtATime
-          --deployment-group-name insight-out-prod-group
-          --s3-location bucket=insightout-prod-s3,bundleType=zip,key=deploy/hous.zip
+        run: aws deploy create-deployment --application-name insightout-prod --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name insight-out-prod-group --s3-location bucket=insightout-prod-s3,bundleType=zip,key=deploy/hous.zip
