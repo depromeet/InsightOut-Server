@@ -3,6 +3,7 @@ os: linux
 files:
   - source:  /
     destination: /home/ec2-user/InsightOut-Server
+    overwrite: yes
 
 permissions:
   - object: /
