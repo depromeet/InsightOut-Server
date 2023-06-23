@@ -4,6 +4,7 @@ files:
   - source:  /
     destination: /home/ec2-user/InsightOut-Server
     overwrite: yes
+file_exists_behavior: OVERWRITE
 
 permissions:
   - object: /home/ec2-user
