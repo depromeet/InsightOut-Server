@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source:  /
-    destination: /
+    destination: /home/ec2-user/InsightOut-Server
 
 permissions:
   - object: /

@@ -1,9 +1,13 @@
 #!/bin/bash
 #echo ------------------------------------
-#if [ -d /var/www/insightout ]; then
-#    sudo rm -rf /var/www/insightout
-#fi
-#sudo mkdir -vp /var/www/insightout
+if [ -d /home/ec2-user/InsightOut-Server ]; then
+    sudo rm -rf /home/ec2-user/InsightOut-Server
+fi
+sudo mkdir -vp /home/ec2-user/InsightOut-Server
+
+# cd /var/www/insightout
+echo "/home/ec2-user/InsightOut-Server"
+cd /home/ec2-user/InsightOut-Server
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -14,10 +18,6 @@ export NVM_DIR="$HOME/.nvm"
 #echo "권한 부여"
 #sudo chown ec2-user:ec2-user /var/www/insightout
 #sudo chmod -R 777 /var/www/insightout
-
-# cd /var/www/insightout
-#echo "/var/www/insightout"
-#cd /var/www/insightout
 
 # yarn 설치
 #echo "yarn 설치"
