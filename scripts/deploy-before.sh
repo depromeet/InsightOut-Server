@@ -15,6 +15,10 @@ sudo chmod -R 777 /var/www/insightout
 echo "/var/www/insightout"
 cd /var/www/insightout
 
+# yarn 설치
+echo "yarn 설치"
+npm install -g yarn
+
 # yarn install -> node_modules는 복사 안함
 echo "yarn"
 yarn
