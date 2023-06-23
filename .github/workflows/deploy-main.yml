@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-20.04
     env:
-      ENVIRONMENT: prod
+      environment: prod
 
     strategy:
       matrix:
