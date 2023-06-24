@@ -44,8 +44,8 @@ export class AuthController {
     @Body() _: PostSigninRequestBodyDto,
     @User() user: UserPayload,
     @Res({ passthrough: true }) response: Response,
-  ): Promise<ResponseEntity<PostSigninResponseDto & { onboarding: GetAllOnboardingsResponseDto }>> {
-    const userId = await this.authService.signin(user);
+  ): Promise<ResponseEntity<PostSigninResponseDto>> {
+    const { userId, nickname } = await this.authService.signin(user);
 
     const accessToken = this.authService.issueAccessToken(userId);
     const refreshToken = this.authService.issueRefreshToken(userId);
@@ -60,7 +60,7 @@ export class AuthController {
 
     const onboarding = await this.onboardingsService.getAllOnboardings(userId);
 
-    return ResponseEntity.CREATED_WITH_DATA(Object.assign(new PostSigninResponseDto(accessToken), { onboarding }));
+    return ResponseEntity.CREATED_WITH_DATA(Object.assign(new PostSigninResponseDto(accessToken, onboarding, userId, nickname)));
   }
 
   @UseGuards(JwtRefreshGuard)
