@@ -2,7 +2,7 @@ import { Body, Controller, HttpStatus, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Method } from '📚libs/enums/method.enum';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
-import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
+import { UserJwtToken } from '🔥apps/server/auth/types/jwt-token.type';
 import { User } from '🔥apps/server/common/decorators/request/user.decorator';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
 import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
@@ -19,6 +19,23 @@ import { UserService } from '🔥apps/server/users/user.service';
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @UseGuards(JwtAuthGuard)
+  @Route({
+    request: {
+      path: '',
+      method: Method.GET,
+    },
+    response: {
+      code: HttpStatus.OK,
+      description: '### ✅ 유저 정보 조회에 성공했습니다. accessToken과 온보딩 여부, 유저 아이디, 닉네임',
+    },
+    summary: '유저 정보 조회 API',
+  })
+  async getOneUser(@User() user: UserJwtToken) {
+    const userInfo = await this.userService.getOneUser(user.userId);
+    return ResponseEntity.OK_WITH_DATA(userInfo);
+  }
 
   // TODO RoleGuard 세우거나 Public, Private 스위칭하기
   /**
