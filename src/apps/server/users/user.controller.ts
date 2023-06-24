@@ -12,6 +12,7 @@ import {
   PatchUserInfoResponseDescriptionMd,
   PatchUserInfoSummaryMd,
 } from '🔥apps/server/users/docs/patch-user-info.doc';
+import { GetUserResponseDto } from '🔥apps/server/users/dtos/get-user.dto';
 import { PatchUserInfoRequestBodyDto } from '🔥apps/server/users/dtos/patch-user-info.dto';
 import { PostSendFeedbackRequestBodyDto } from '🔥apps/server/users/dtos/post-feedback.dto';
 import { UserService } from '🔥apps/server/users/user.service';
@@ -35,7 +36,7 @@ export class UserController {
     summary: GetUserSummary,
     description: GetUserDescription,
   })
-  async getOneUser(@User() user: UserJwtToken) {
+  async getOneUser(@User() user: UserJwtToken): Promise<ResponseEntity<GetUserResponseDto>> {
     const userInfo = await this.userService.getOneUser(user.userId);
     return ResponseEntity.OK_WITH_DATA(userInfo);
   }

@@ -18,7 +18,7 @@ export class UserService {
    * @param userId 유저 아이디
    * @returns nickname, email, imageUrl을 DTO로 변환하여 전달합니다.
    */
-  async getOneUser(userId: number) {
+  async getOneUser(userId: number): Promise<GetUserResponseDto> {
     const userInfo = await this.userRepository.getOneUser(userId);
 
     // Entity -> DTO
