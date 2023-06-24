@@ -5,7 +5,7 @@ import { UserRepository } from '📚libs/modules/database/repositories/user.repo
 import { CookieOptions } from 'express';
 import { KeywordType, Provider } from '@prisma/client';
 import { Request } from 'express';
-import { AccessTokenAndRefreshToken, UserWithRefreshTokenPayload } from './types/jwt-tokwn.type';
+import { AccessTokenAndRefreshToken, UserWithRefreshTokenPayload } from './types/jwt-token.type';
 import { ApiService } from '📚libs/modules/api/api.service';
 import { ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } from '🔥apps/server/common/consts/jwt.const';
 import { UserPayload } from '🔥apps/server/auth/dtos/post-signin.dto';

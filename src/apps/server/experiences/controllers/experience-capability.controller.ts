@@ -4,7 +4,7 @@ import { RouteTable } from '../../common/decorators/router/route-table.decorator
 import { User } from '../../common/decorators/request/user.decorator';
 import { ApiBearerAuth, ApiConflictResponse, ApiNotFoundResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { UserJwtToken } from '../../auth/types/jwt-tokwn.type';
+import { UserJwtToken } from '../../auth/types/jwt-token.type';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
 import { Method } from '📚libs/enums/method.enum';
 import { ExperienceCapabilityService } from '🔥apps/server/experiences/services/experience-capability.service';

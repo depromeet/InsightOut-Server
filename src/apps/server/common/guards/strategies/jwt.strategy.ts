@@ -6,7 +6,7 @@ import { UserRepository } from '📚libs/modules/database/repositories/user.repo
 import { EnvEnum } from '📚libs/modules/env/env.enum';
 import { EnvService } from '📚libs/modules/env/env.service';
 import { AuthService } from '🔥apps/server/auth/auth.service';
-import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
+import { UserJwtToken } from '🔥apps/server/auth/types/jwt-token.type';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {

@@ -6,7 +6,7 @@ import { ExperienceService } from '../services/experience.service';
 import { User } from '../../common/decorators/request/user.decorator';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiNotFoundResponse } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
-import { UserJwtToken } from '../../auth/types/jwt-tokwn.type';
+import { UserJwtToken } from '../../auth/types/jwt-token.type';
 import {
   BadRequestErrorResDto,
   UpdateExperienceInfoNotFoundErrorResDto,

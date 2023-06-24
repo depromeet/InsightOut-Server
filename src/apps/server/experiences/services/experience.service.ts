@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateExperienceReqDto } from '../dto/req/updateExperience.dto';
-import { UserJwtToken } from '../../auth/types/jwt-tokwn.type';
+import { UserJwtToken } from '../../auth/types/jwt-token.type';
 import { UpdateExperienceResDto } from '../dto/res/updateExperienceInfo.res.dto';
 import { getExperienceAttribute } from '../../common/consts/experience-attribute.const';
 import { GetExperienceByCapabilityResponseDto, GetExperienceResDto } from '../dto/res/getExperience.res.dto';
