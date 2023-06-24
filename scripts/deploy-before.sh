@@ -6,17 +6,9 @@
 #fi
 #sudo mkdir -vp /home/ec2-user/InsightOut-Server
 
-#echo "ls"
-#ls -al .
-#
-#pwd
-
 # cd /var/www/insightout
 echo "🙏 /home/ec2-user/InsightOut-Server"
 cd /home/ec2-user/InsightOut-Server
-
-#echo "git pull"
-#git pull origin dev
 
 
 export NVM_DIR="$HOME/.nvm"
