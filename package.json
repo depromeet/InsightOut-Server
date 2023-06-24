@@ -17,7 +17,7 @@
     "stage": "npx cross-env NODE_ENV=stage nest start --entryFile ./apps/server/main --watch --watchAssets",
     "main": "npx cross-env NODE_ENV=main nest start --entryFile ./apps/server/main --watch --watchAssets",
     "build": "nest build",
-    "prod": "node start dist/apps/server/main.js",
+    "prod": "npx cross-env NODE_ENV=main node dist/apps/server/main.js",
     "lint": "eslint \"{src,test}/**/*.ts\"",
     "test": "npx cross-env NODE_ENV=test jest 'src\\/.*\\.(controller|service|repository)\\.spec\\.ts$'"
   },

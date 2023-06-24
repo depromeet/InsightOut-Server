@@ -1,0 +1,81 @@
+name: deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    environment: prod
+
+    strategy:
+      matrix:
+        node-version: [18.16.0]
+
+    steps:
+
+      - name: Checkout source code.
+        uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Check yarn -v
+        run: yarn -v
+
+      - name: create env file
+        working-directory: ./
+        run: |
+          pwd
+          touch .env
+          echo PORT=${{ secrets.PORT }} >> .env
+          echo AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} >> .env
+          echo AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} >> .env
+          echo CHATGPT_AI_KEYWORD_PROMPT=${{ secrets.CHATGPT_AI_KEYWORD_PROMPT }} >> .env
+          echo CHATGPT_RECOMMEND_QUESTIONS_PROMPT=${{ secrets.CHATGPT_RECOMMEND_QUESTIONS_PROMPT }} >> .env
+          echo CHATGPT_RESUME_PROMPT=${{ secrets.CHATGPT_RESUME_PROMPT }} >> .env
+          echo CHATGPT_SUMMARY_KEYWORD_PROMPT=${{ secrets.CHATGPT_SUMMARY_KEYWORD_PROMPT }} >> .env
+          echo CHATGPT_SUMMARY_PROMPT=${{ secrets.CHATGPT_SUMMARY_PROMPT }} >> .env
+          echo DATABASE_URL=${{ secrets.DATABASE_URL }} >> .env
+          echo DEV_SERVER=${{ secrets.DEV_SERVER }} >> .env
+          echo FIREBASE_API_KEY=${{ secrets.FIREBASE_API_KEY }} >> .env
+          echo FIREBASE_CLIENT_EMAIL=${{ secrets.FIREBASE_CLIENT_EMAIL }} >> .env
+          echo FIREBASE_CLIENT_ID=${{ secrets.FIREBASE_CLIENT_ID }} >> .env
+          echo FIREBASE_PRIVATE_KEY=${{ secrets.FIREBASE_PRIVATE_KEY }} >> .env
+          echo FIREBASE_PROJECT_ID=${{ secrets.FIREBASE_PROJECT_ID }} >> .env
+          echo FRONTEND_URL=${{ secrets.FRONTEND_URL }} >> .env
+          echo GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} >> .env
+          echo JWT_ACCESS_TOKEN_SECRET=${{ secrets.JWT_ACCESS_TOKEN_SECRET }} >> .env
+          echo JWT_REFRESH_TOKEN_SECRET=${{ secrets.JWT_REFRESH_TOKEN_SECRET }} >> .env
+          echo OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} >> .env
+          echo OPENAI_CHAT_URL=${{ secrets.OPENAI_CHAT_URL }} >> .env
+          echo OPENAI_ORGANIZATION_ID=${{ secrets.OPENAI_ORGANIZATION_ID }} >> .env
+          echo REDIS_HOST_PROD=${{ secrets.REDIS_HOST_PROD }} >> .env
+          echo REDIS_PORT_PROD=${{ secrets.REDIS_PORT_PROD }} >> .env
+          echo SLACK_TOKEN=${{ secrets.SLACK_TOKEN }} >> .env
+          echo NODE_ENV=${{ secrets.NODE_ENV }} >> .env
+
+      - name: build server files
+        working-directory: ./
+        run: |
+          yarn
+          yarn run build
+
+      - name: zip file
+        run: zip -qq -r ./${{ env.GITHUB_SHA }}.zip .
+
+      - name: AWS configure credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: upload to S3
+        run: aws s3 cp --region ap-northeast-2 ./${{ env.GITHUB_SHA }}.zip s3://insightout-prod-s3/deploy/
+
+      - name: deploy with AWS codeDeploy
+        run: aws deploy create-deployment --application-name insightout-prod --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name insight-out-prod-group --s3-location bucket=insightout-prod-s3,bundleType=zip,key=deploy/${{ env.GITHUB_SHA }}.zip
