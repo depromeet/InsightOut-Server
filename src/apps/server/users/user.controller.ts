@@ -6,6 +6,7 @@ import { UserJwtToken } from '🔥apps/server/auth/types/jwt-token.type';
 import { User } from '🔥apps/server/common/decorators/request/user.decorator';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
 import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
+import { GetUserDescription, GetUserResponseDescription, GetUserSummary } from '🔥apps/server/users/docs/get-user.doc';
 import {
   PatchUserInfoDescriptionMd,
   PatchUserInfoResponseDescriptionMd,
@@ -28,9 +29,11 @@ export class UserController {
     },
     response: {
       code: HttpStatus.OK,
-      description: '### ✅ 유저 정보 조회에 성공했습니다. accessToken과 온보딩 여부, 유저 아이디, 닉네임',
+      description: GetUserResponseDescription,
+      type: GetUserResponseDto,
     },
-    summary: '유저 정보 조회 API',
+    summary: GetUserSummary,
+    description: GetUserDescription,
   })
   async getOneUser(@User() user: UserJwtToken) {
     const userInfo = await this.userService.getOneUser(user.userId);
