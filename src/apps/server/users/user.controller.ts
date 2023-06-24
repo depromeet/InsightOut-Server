@@ -2,15 +2,17 @@ import { Body, Controller, HttpStatus, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Method } from '📚libs/enums/method.enum';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
-import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
+import { UserJwtToken } from '🔥apps/server/auth/types/jwt-token.type';
 import { User } from '🔥apps/server/common/decorators/request/user.decorator';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
 import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
+import { GetUserDescription, GetUserResponseDescription, GetUserSummary } from '🔥apps/server/users/docs/get-user.doc';
 import {
   PatchUserInfoDescriptionMd,
   PatchUserInfoResponseDescriptionMd,
   PatchUserInfoSummaryMd,
 } from '🔥apps/server/users/docs/patch-user-info.doc';
+import { GetUserResponseDto } from '🔥apps/server/users/dtos/get-user.dto';
 import { PatchUserInfoRequestBodyDto } from '🔥apps/server/users/dtos/patch-user-info.dto';
 import { PostSendFeedbackRequestBodyDto } from '🔥apps/server/users/dtos/post-feedback.dto';
 import { UserService } from '🔥apps/server/users/user.service';
@@ -19,6 +21,25 @@ import { UserService } from '🔥apps/server/users/user.service';
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @UseGuards(JwtAuthGuard)
+  @Route({
+    request: {
+      path: '',
+      method: Method.GET,
+    },
+    response: {
+      code: HttpStatus.OK,
+      description: GetUserResponseDescription,
+      type: GetUserResponseDto,
+    },
+    summary: GetUserSummary,
+    description: GetUserDescription,
+  })
+  async getOneUser(@User() user: UserJwtToken): Promise<ResponseEntity<GetUserResponseDto>> {
+    const userInfo = await this.userService.getOneUser(user.userId);
+    return ResponseEntity.OK_WITH_DATA(userInfo);
+  }
 
   // TODO RoleGuard 세우거나 Public, Private 스위칭하기
   /**

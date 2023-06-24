@@ -5,7 +5,7 @@ import { UserRepository } from '📚libs/modules/database/repositories/user.repo
 import { CookieOptions } from 'express';
 import { KeywordType, Provider } from '@prisma/client';
 import { Request } from 'express';
-import { AccessTokenAndRefreshToken, UserWithRefreshTokenPayload } from './types/jwt-tokwn.type';
+import { AccessTokenAndRefreshToken, UserWithRefreshTokenPayload } from './types/jwt-token.type';
 import { ApiService } from '📚libs/modules/api/api.service';
 import { ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } from '🔥apps/server/common/consts/jwt.const';
 import { UserPayload } from '🔥apps/server/auth/dtos/post-signin.dto';
@@ -40,13 +40,16 @@ export class AuthService {
    * @param user email, picture, socialId 등이 담긴 객체입니다.
    * @returns
    */
-  public async signin(user: UserPayload): Promise<number> {
+  public async signin(user: UserPayload): Promise<{
+    userId: number;
+    nickname: string;
+  }> {
     try {
       const { email, picture, socialId, uid } = user;
 
       const existUser = await this.userRepository.findFirst({
         where: { socialId, uid },
-        select: { id: true },
+        select: { id: true, nickname: true },
       });
 
       // If user exists, pass to signin
@@ -130,10 +133,10 @@ export class AuthService {
         });
 
         // 액세스 토큰 발급을 위해 id를 반환합니다.
-        return newUser.id;
+        return { userId: newUser.id, nickname: newUser.nickname };
       }
 
-      return existUser.id;
+      return { userId: existUser.id, nickname: existUser.nickname };
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException();

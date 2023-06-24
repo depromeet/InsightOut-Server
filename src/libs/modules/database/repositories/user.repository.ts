@@ -11,6 +11,13 @@ export class UserRepository extends AbstractRepository<UserDelegate, DelegateArg
     super(prisma.user);
   }
 
+  getOneUser(userId: number) {
+    return this.findFirst({
+      where: { id: userId },
+      select: { nickname: true, email: true, UserInfo: { select: { imageUrl: true } } },
+    });
+  }
+
   async insertUser(data: Prisma.UserCreateInput): Promise<User> {
     return await this.prisma.user.create({
       data,

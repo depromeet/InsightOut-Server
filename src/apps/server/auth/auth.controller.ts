@@ -4,7 +4,7 @@ import { SigninGuard } from '../common/guards/signin.guard';
 import { User } from '../common/decorators/request/user.decorator';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
-import { UserWithRefreshTokenPayload } from './types/jwt-tokwn.type';
+import { UserWithRefreshTokenPayload } from './types/jwt-token.type';
 import { TokenType } from '📚libs/enums/token.enum';
 import { JwtRefreshGuard } from '../common/guards/jwt-refresh.guard';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
@@ -13,7 +13,6 @@ import { PostReissueResponseDto } from '🔥apps/server/auth/dtos/post-reissue.d
 import { PostSigninRequestBodyDto, PostSigninResponseDto, UserPayload } from '🔥apps/server/auth/dtos/post-signin.dto';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
 import { OnboardingsService } from '🔥apps/server/onboarding/onboarding.service';
-import { GetAllOnboardingsResponseDto } from '🔥apps/server/onboarding/dtos/get-onboarding.dto';
 
 @ApiTags('🔐 권한 관련 API')
 @Controller('auth')
@@ -44,8 +43,8 @@ export class AuthController {
     @Body() _: PostSigninRequestBodyDto,
     @User() user: UserPayload,
     @Res({ passthrough: true }) response: Response,
-  ): Promise<ResponseEntity<PostSigninResponseDto & { onboarding: GetAllOnboardingsResponseDto }>> {
-    const userId = await this.authService.signin(user);
+  ): Promise<ResponseEntity<PostSigninResponseDto>> {
+    const { userId, nickname } = await this.authService.signin(user);
 
     const accessToken = this.authService.issueAccessToken(userId);
     const refreshToken = this.authService.issueRefreshToken(userId);
@@ -60,7 +59,7 @@ export class AuthController {
 
     const onboarding = await this.onboardingsService.getAllOnboardings(userId);
 
-    return ResponseEntity.CREATED_WITH_DATA(Object.assign(new PostSigninResponseDto(accessToken), { onboarding }));
+    return ResponseEntity.CREATED_WITH_DATA(Object.assign(new PostSigninResponseDto(accessToken, onboarding, userId, nickname)));
   }
 
   @UseGuards(JwtRefreshGuard)
