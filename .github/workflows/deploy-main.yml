@@ -2,9 +2,9 @@ name: deploy
 
 on:
   push:
-    branches: [feature/#218/cicd]
+    branches: [main]
   pull_request:
-    branches: [feature/#218/cicd]
+    branches: [main]
 
 jobs:
   build:
