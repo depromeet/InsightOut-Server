@@ -2,7 +2,7 @@ name: deploy
 
 on:
   push:
-    branches: [main]
+    branches: [feature/#218/cicd]
 
 jobs:
   build:
@@ -23,8 +23,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Check Npm -v
-        run: npm -v
+      - name: Check yarn -v
+        run: yarn -v
 
       - name: create env file
         working-directory: ./
@@ -57,7 +57,6 @@ jobs:
           echo REDIS_PORT_PROD=${{ secrets.REDIS_PORT_PROD }} >> .env
           echo SLACK_TOKEN=${{ secrets.SLACK_TOKEN }} >> .env
           echo NODE_ENV=${{ secrets.NODE_ENV }} >> .env
-          cat .env
 
       - name: build server files
         working-directory: ./
