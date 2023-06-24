@@ -2,9 +2,9 @@ name: deploy
 
 on:
   push:
-    branches: [feature/#218/cicd]
+    branches: [main]
   pull_request:
-    branches: [feature/#218/cicd]
+    branches: [main]
 
 jobs:
   build:
@@ -68,8 +68,7 @@ jobs:
           yarn run build
 
       - name: zip file
-        run: zip -qq -r ./${{ env.GITHUB_SHA }}.zip .
-        #zip -r hous.zip ./dist ./scripts ./appspec.yml ./.env ./package.json
+        run: zip -r ./${{ env.GITHUB_SHA }}.zip ./dist ./scripts ./appspec.yml ./.env ./package.json
 
       - name: AWS configure credentials
         uses: aws-actions/configure-aws-credentials@v1
