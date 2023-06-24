@@ -40,13 +40,16 @@ export class AuthService {
    * @param user email, picture, socialId 등이 담긴 객체입니다.
    * @returns
    */
-  public async signin(user: UserPayload): Promise<number> {
+  public async signin(user: UserPayload): Promise<{
+    userId: number;
+    nickname: string;
+  }> {
     try {
       const { email, picture, socialId, uid } = user;
 
       const existUser = await this.userRepository.findFirst({
         where: { socialId, uid },
-        select: { id: true },
+        select: { id: true, nickname: true },
       });
 
       // If user exists, pass to signin
@@ -130,10 +133,10 @@ export class AuthService {
         });
 
         // 액세스 토큰 발급을 위해 id를 반환합니다.
-        return newUser.id;
+        return { userId: newUser.id, nickname: newUser.nickname };
       }
 
-      return existUser.id;
+      return { userId: existUser.id, nickname: existUser.nickname };
     } catch (error) {
       if (error instanceof NotFoundException) {
         throw new NotFoundException();
