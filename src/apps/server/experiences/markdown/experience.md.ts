@@ -1,3 +1,14 @@
+export const createExperienceDescriptionMd = `
+### ✅ 경험 분해 생성에 성공하였습니다.
+해당 API를 사용하시면 아무 내용이 들어가 있지 않은 경험 분해를 생성한 뒤 반환합니다.\n
+최초 상태는 \`INPROGRESS\`입니다.
+`;
+
+export const createExperienceSummaryMd = '✅ 경험 정보 생성 API';
+export const createExperienceSuccMd = '✅ 경험 정보 생성에 성공하였습니다.';
+
+//-- createExperience
+
 export const getExperienceSuccMd = `
 ### ✅ 경험 분해 조회에 성공했습니다.
 s, t, a, r의 경험 카드 내용을 조회하기 위해서 각각 querystring에 boolean 값을 입력합니다.\n
@@ -65,10 +76,34 @@ export const upsertExperienceSuccMd = `
 ### ✅ 경험 분해 생성 및 업데이트에 성공했습니다.
 유저가 경험 분해 생성한 내역이 없다면 \`CREATE\`가 진행됩니다.\n
 유저가 경험 분해 생성 중인 내역이 있다면 \`UPDATE\`가 진행됩니다.\n
+`;
+
+// -- getExperience
+
+export const getExperienceByIdDescriptionMd = `
+### ✅ 경험 분해 단일 조회에 성공하였습니다.
+경험 분해가 존재하지 않을 경우 \`404\`에러를 반환합니다.\n
+성공 시 \`Experience\`(경험), \`ExperienceInfo\`(경험 정보), \`AiResume\`(AI 추천 자기소개서), \`AiCapability\`(추천 키워드)를 반환합니다.
+`;
+
+export const getExperienceByIdSuccMd = `✅ 경험 분해 단일 조회에 성공하였습니다 :)`;
+
+export const getExperienceByIdSummaryMd = `✅ 경험 분해 단일 조회 API`;
+
+// -- getExperienceById
+
+export const updateExperienceDescriptionMd = `
+### ✅ 경험 분해 업데이트에 성공했습니다.
+전달 받은 아이디의 경험 분해가 없다면 \`404\` 에러를 뱉어냅니다.
 모든 프로퍼티는 Optinal입니다.\n
 변경 되지 않은 사항은 프로퍼티를 넣어 주시지 않으셔도 됩니다.\n
 전달 받은 프로퍼티만 업데이트 됩니다 :)
 `;
+
+export const updateExperienceSummaryMd = '✅ 경험 정보 수정 API';
+export const updateExperienceSuccMd = '✅ 경험 정보 수정에 성공하였습니다.';
+
+// -- updateExperience
 
 export const addCapabilitySuccMd = `
 ### ✅ 경험 분해 키워드 추가하는 데 성공했습니다.

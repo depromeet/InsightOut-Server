@@ -4,10 +4,10 @@ import { Exclude, Expose } from 'class-transformer';
 import { ArrayMaxSize, IsArray, IsEnum, IsInt, IsNotEmpty, IsOptional, IsPositive, IsString, Matches } from 'class-validator';
 import { getFormattedDate } from '📚libs/utils/date';
 import { dateValidation } from '🔥apps/server/common/consts/date-validation.const';
-import { IsOptionalNumber } from '🔥apps/server/common/decorators/validation/isOptionalNumber.decorator';
-import { IsOptionalString } from '🔥apps/server/common/decorators/validation/isOptionalString.decorator';
+import { IsOptionalNumber } from '🔥apps/server/common/decorators/validation/isCustomNumber.decorator';
+import { IsOptionalString } from '🔥apps/server/common/decorators/validation/isCustomString.decorator';
 
-export class GetExperienceInfoResDto {
+class GetExperienceInfoResDto {
   @Exclude() _experienceInfoId: number;
   @Exclude() _experienceId: number;
   @Exclude() _motivation: string;

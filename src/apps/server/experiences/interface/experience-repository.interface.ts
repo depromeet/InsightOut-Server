@@ -1,10 +1,10 @@
 import { Experience, ExperienceCapability, ExperienceInfo, Prisma } from '@prisma/client';
-import { UpsertExperienceReqDto } from '../dto/req/upsertExperience.dto';
+import { UpdateExperienceReqDto } from '../dto/req/updateExperience.dto';
 import { ExperienceSelect } from './experience-select.interface';
-import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
+import { UserJwtToken } from '🔥apps/server/auth/types/jwt-token.type';
 
 export interface ExperienceTransactionInterface {
-  createExperienceInfo(body: UpsertExperienceReqDto, user: UserJwtToken): Promise<[Experience, ExperienceInfo]>;
+  createExperienceInfo(body: UpdateExperienceReqDto, user: UserJwtToken): Promise<[Experience, ExperienceInfo]>;
 }
 
 export interface ExperienceRepositoryInterface {

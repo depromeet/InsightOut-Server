@@ -49,5 +49,6 @@ import { EnvEnum } from '📚libs/modules/env/env.enum';
     ResumeRepository,
     CapabilityRepository,
   ],
+  exports: [AuthService],
 })
 export class AuthModule {}

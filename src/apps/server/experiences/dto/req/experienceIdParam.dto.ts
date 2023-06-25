@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptionalNumber } from '🔥apps/server/common/decorators/validation/isOptionalNumber.decorator';
+import { IsNotEmptyNumber } from '🔥apps/server/common/decorators/validation/isCustomNumber.decorator';
 
 export class ExperienceIdParamReqDto {
   @ApiProperty({ example: 1 })
-  @IsOptionalNumber()
+  @IsNotEmptyNumber()
   experienceId: number;
 }

@@ -1,7 +1,7 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { Capability, Experience, KeywordType, Prisma } from '@prisma/client';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
-import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
+import { UserJwtToken } from '🔥apps/server/auth/types/jwt-token.type';
 import { OpenAiService } from '📚libs/modules/open-ai/open-ai.service';
 import {
   generateAiKeywordPrompt,
@@ -16,9 +16,10 @@ import { PromptResumeBodyResDto } from '🔥apps/server/ai/dto/req/promptResume.
 import { PromptSummaryBodyReqDto } from './dto/req/promptSummary.req.dto';
 import { PromptSummaryResDto } from './dto/res/promptSummary.res.dto';
 import { ExperienceService } from '🔥apps/server/experiences/services/experience.service';
-import { UpsertExperienceReqDto } from '🔥apps/server/experiences/dto/req/upsertExperience.dto';
+
 import { PromptAiKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptAiKeyword.req.dto';
 import { OpenAiResponseInterface } from '📚libs/modules/open-ai/interface/openAiResponse.interface';
+import { UpdateExperienceReqDto } from '🔥apps/server/experiences/dto/req/updateExperience.dto';
 
 @Injectable()
 export class AiService {
@@ -116,7 +117,7 @@ export class AiService {
     const aiRecommendResume = generateRecommendQuestionsPrompt(parseKeywords);
 
     // analysis, keyword 업데이트
-    const upsertExperienceReqDto = new UpsertExperienceReqDto();
+    const upsertExperienceReqDto = new UpdateExperienceReqDto();
     upsertExperienceReqDto.analysis = summary.choices[CHOICES_IDX].message.content as string;
     upsertExperienceReqDto.summaryKeywords = parseKeywords;
     const updateInfo = upsertExperienceReqDto.compareProperty(experience);

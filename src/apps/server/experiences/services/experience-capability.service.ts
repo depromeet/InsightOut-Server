@@ -7,7 +7,7 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { CreateExperienceCapabilitiesdBodyDto } from '🔥apps/server/experiences/dto/req/create-experience-capabilities.dto';
-import { UserJwtToken } from '🔥apps/server/auth/types/jwt-tokwn.type';
+import { UserJwtToken } from '🔥apps/server/auth/types/jwt-token.type';
 import { Capability, ExperienceCapability, KeywordType, Prisma } from '@prisma/client';
 import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
 import { AddCapabilitydBodyDto } from '🔥apps/server/experiences/dto/req/add-capability.dto';

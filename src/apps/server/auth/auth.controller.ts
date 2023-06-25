@@ -4,7 +4,7 @@ import { SigninGuard } from '../common/guards/signin.guard';
 import { User } from '../common/decorators/request/user.decorator';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
-import { UserWithRefreshTokenPayload } from './types/jwt-tokwn.type';
+import { UserWithRefreshTokenPayload } from './types/jwt-token.type';
 import { TokenType } from '📚libs/enums/token.enum';
 import { JwtRefreshGuard } from '../common/guards/jwt-refresh.guard';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
@@ -13,7 +13,6 @@ import { PostReissueResponseDto } from '🔥apps/server/auth/dtos/post-reissue.d
 import { PostSigninRequestBodyDto, PostSigninResponseDto, UserPayload } from '🔥apps/server/auth/dtos/post-signin.dto';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
 import { OnboardingsService } from '🔥apps/server/onboarding/onboarding.service';
-import { GetAllOnboardingsResponseDto } from '🔥apps/server/onboarding/dtos/get-onboarding.dto';
 
 @ApiTags('🔐 권한 관련 API')
 @Controller('auth')
@@ -44,21 +43,23 @@ export class AuthController {
     @Body() _: PostSigninRequestBodyDto,
     @User() user: UserPayload,
     @Res({ passthrough: true }) response: Response,
-  ): Promise<ResponseEntity<PostSigninResponseDto & { onboarding: GetAllOnboardingsResponseDto }>> {
-    const userId = await this.authService.signin(user);
+  ): Promise<ResponseEntity<PostSigninResponseDto>> {
+    const { userId, nickname } = await this.authService.signin(user);
 
     const accessToken = this.authService.issueAccessToken(userId);
     const refreshToken = this.authService.issueRefreshToken(userId);
 
     await this.authService.setRefreshToken(userId, refreshToken);
 
-    const cookieOptions = this.authService.getCookieOptions(TokenType.RefreshToken);
+    const accessTokenCookieOptions = this.authService.getCookieOptions(TokenType.AccessToken);
+    const refreshTokenCookieOptions = this.authService.getCookieOptions(TokenType.RefreshToken);
 
-    response.cookie('refreshToken', refreshToken, cookieOptions);
+    response.cookie('accessToken', accessToken, accessTokenCookieOptions);
+    response.cookie('refreshToken', refreshToken, refreshTokenCookieOptions);
 
     const onboarding = await this.onboardingsService.getAllOnboardings(userId);
 
-    return ResponseEntity.CREATED_WITH_DATA(Object.assign(new PostSigninResponseDto(accessToken), { onboarding }));
+    return ResponseEntity.CREATED_WITH_DATA(Object.assign(new PostSigninResponseDto(accessToken, onboarding, userId, nickname)));
   }
 
   @UseGuards(JwtRefreshGuard)
@@ -88,9 +89,11 @@ export class AuthController {
   ): Promise<ResponseEntity<PostReissueResponseDto>> {
     const { accessToken, refreshToken } = await this.authService.rotateRefreshToken(user);
 
-    const cookieOptions = this.authService.getCookieOptions(TokenType.RefreshToken);
+    const accessTokenCookieOptions = this.authService.getCookieOptions(TokenType.AccessToken);
+    const refreshTokenCookieOptions = this.authService.getCookieOptions(TokenType.RefreshToken);
 
-    response.cookie('refreshToken', refreshToken, cookieOptions);
+    response.cookie('accessToken', accessToken, accessTokenCookieOptions);
+    response.cookie('refreshToken', refreshToken, refreshTokenCookieOptions);
     return ResponseEntity.CREATED_WITH_DATA(new PostReissueResponseDto(accessToken));
   }
 
@@ -116,13 +119,23 @@ export class AuthController {
     description:
       '# 회원 탈퇴 API\n## Description\n회원 탈퇴를 진행합니다. 해당 유저의 Refresh Token을 받아서 삭제합니다.\n## Response\n반환값은 없습니다.\n## etc.\n⛳️ [마이페이지 회원탈퇴](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1418-10972&t=PibZzDLncZrUbrLe-4)',
   })
-  async withdraw(@User() user: UserWithRefreshTokenPayload): Promise<ResponseEntity<string>> {
+  async withdraw(
+    @User() user: UserWithRefreshTokenPayload,
+    @Res({ passthrough: true }) response: Response,
+  ): Promise<ResponseEntity<string>> {
     await this.authService.withdraw(user);
 
+    response.clearCookie('accessToken');
+    response.clearCookie('refreshToken');
     return ResponseEntity.OK_WITH_MESSAGE('User withdrawed');
   }
 
-  /** */
+  /**
+   * ## Refresh 토큰을 받아 로그아웃을 처리하는 API
+   *
+   * Refresh token을 삭제하여 로그인할 때까지 서비스를 사용하지 못하도록 해야 하므로,
+   * Refresh token을 입력으로 받고 최종적으로 token들을 삭제합니다.
+   */
   @UseGuards(JwtRefreshGuard)
   @Route({
     request: {
@@ -139,9 +152,11 @@ export class AuthController {
     description:
       '# 로그아웃 API\n## Description\n로그아웃을 처리합니다. 해당 유저의 Refresh Token을 쿠키에서 탐색하여, 해당 token이 redis에 존재하는 refresh token과 같은지 검증합니다. RTR 방식으로 매번 refresh token을 생성하지만, 기존 브라우저에 존재하는 refresh token을 만료하게 할 수는 없기 떄문에, Redis와 같은 key-value 저장소에 저장된 토큰을 유효한 토큰으로 간주합니다.\n## Response\n반환값은 없습니다.\n## etc.\n⛳️ [로그아웃](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1418-10717&t=6UiMDM9wwxO4vDZo-4)   \n💬 참고자료: https://seungyong20.tistory.com/entry/JWT-Access-Token%EA%B3%BC-Refresh-Token-%EA%B7%B8%EB%A6%AC%EA%B3%A0-RTR-%EA%B8%B0%EB%B2%95%EC%97%90-%EB%8C%80%ED%95%B4%EC%84%9C-%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90',
   })
-  async signout(@User() user: UserWithRefreshTokenPayload): Promise<ResponseEntity<string>> {
+  async signout(@User() user: UserWithRefreshTokenPayload, @Res() response: Response): Promise<ResponseEntity<string>> {
     await this.authService.signout(user);
 
+    response.clearCookie('accessToken');
+    response.clearCookie('refreshToken');
     return ResponseEntity.OK_WITH_MESSAGE('User signed out');
   }
 }

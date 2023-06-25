@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
-import { IsEmail, IsNotEmpty, IsString, IsUUID, IsUrl } from 'class-validator';
+import { IsEmail, IsInstance, IsInt, IsNotEmpty, IsObject, IsPositive, IsString, IsUUID, IsUrl } from 'class-validator';
+import { GetAllOnboardingsResponseDto } from '🔥apps/server/onboarding/dtos/get-onboarding.dto';
 
 export class PostSinginRequestBodyForGuard {
   body: {
@@ -43,9 +44,15 @@ export class PostSigninRequestBodyDto {
 
 export class PostSigninResponseDto {
   @Exclude() private readonly _accessToken: string;
+  @Exclude() private readonly _onboarding: GetAllOnboardingsResponseDto;
+  @Exclude() private readonly _userId: number;
+  @Exclude() private readonly _nickname: string;
 
-  constructor(accessToken: string) {
+  constructor(accessToken: string, onboarding: GetAllOnboardingsResponseDto, userId: number, nickname: string) {
     this._accessToken = accessToken;
+    this._onboarding = onboarding;
+    this._userId = userId;
+    this._nickname = nickname;
   }
 
   @Expose()
@@ -58,5 +65,42 @@ export class PostSigninResponseDto {
   @IsString()
   get accessToken(): string {
     return this._accessToken;
+  }
+
+  @Expose()
+  @ApiProperty({
+    description: '## 유저의 온보딩 체크 여부입니다.',
+    type: GetAllOnboardingsResponseDto,
+  })
+  @IsObject()
+  @IsInstance(GetAllOnboardingsResponseDto)
+  @IsNotEmpty()
+  get onboarding(): GetAllOnboardingsResponseDto {
+    return this._onboarding;
+  }
+
+  @Expose()
+  @ApiProperty({
+    description: '## 유저의 고유 아이디입니다.',
+    example: 1234,
+    type: Number,
+  })
+  @IsNotEmpty()
+  @IsInt()
+  @IsPositive()
+  get userId(): number {
+    return this._userId;
+  }
+
+  @Expose()
+  @ApiProperty({
+    description: '## 유저의 닉네임입니다.',
+    example: '배부른 냄비',
+    type: String,
+  })
+  @IsNotEmpty()
+  @IsString()
+  get nickname(): string {
+    return this._nickname;
   }
 }

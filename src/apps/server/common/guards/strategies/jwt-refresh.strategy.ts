@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Request } from 'express';
 import { AuthService } from '🔥apps/server/auth/auth.service';
-import { UserJwtToken, UserWithRefreshTokenPayload } from '🔥apps/server/auth/types/jwt-tokwn.type';
+import { UserJwtToken, UserWithRefreshTokenPayload } from '🔥apps/server/auth/types/jwt-token.type';
 import { EnvService } from '📚libs/modules/env/env.service';
 import { EnvEnum } from '📚libs/modules/env/env.enum';
 
@@ -13,7 +13,7 @@ export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: Request): string => {
-          return authService.trackRefreshToken(request);
+          return authService.extractRefreshToken(request);
         },
       ]),
       ignoreExpiration: false,
@@ -23,7 +23,7 @@ export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
   }
 
   async validate(request: Request, payload: UserJwtToken): Promise<UserWithRefreshTokenPayload> {
-    const refreshToken: string = this.authService.trackRefreshToken(request);
+    const refreshToken: string = this.authService.extractRefreshToken(request);
     return { refreshToken, ...payload };
   }
 }

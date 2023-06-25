@@ -2,20 +2,23 @@ version: 0.0
 os: linux
 files:
   - source:  /
-    destination: /home/ubuntu/13th-4team-backend
+    destination: /home/ec2-user/InsightOut-Server
+    overwrite: yes
+file_exists_behavior: OVERWRITE
 
 permissions:
-  - object: /
-    mode: 755
+  - object: /home/ec2-user
     pattern: "**"
-    owner: ubuntu
-    group: ubuntu
+    owner: ec2-user
+    group: ec2-user
 
 
 hooks:
   BeforeInstall:
-    - location: deploy-before.sh
-      runas: ubuntu
+    - location: scripts/deploy-before.sh
+      runas: ec2-user
   ApplicationStart:
-    - location: deploy-run.sh
-      runas: ubuntu
+    - location: scripts/deploy-run.sh
+      runas: ec2-user
+
+
