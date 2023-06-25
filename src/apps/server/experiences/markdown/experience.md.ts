@@ -5,8 +5,13 @@ s, t, a, r의 경험 카드 내용을 조회하기 위해서 각각 querystring�
 - situation=true를 입력하면, situation 정보만 가져옵니다.
 - situation=true&task=true를 입력하면, situation, task 정보만 가져옵니다.\n
 
-추가적으로, 마지막으로 만든 경험카드 한 개만을 조회하기 위해서는 querystring에서 last라는 키에 대해 값을 boolean으로 넣어주세요.\n
-예를 들어서 last=true를 입력했을 때, 유저가 마지막으로 만든 경험카드 한 개만을 조회합니다.
+마지막 데이터만 가져오고자 한다면, string에는 createdAt을, order에는 DESC, page는 1, take는 1을 입력해주세요.
+
+### Picture
+
+#### 페이지네이션 명세
+
+<img width="1409" alt="image" src="https://github.com/depromeet/InsightOut-Server/assets/83271772/ea8542e8-df05-4842-ba86-b43138fb1fe4">
 
 ---
 
