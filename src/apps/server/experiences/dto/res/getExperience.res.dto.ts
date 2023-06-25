@@ -153,7 +153,7 @@ export class GetExperienceResDto {
     return this._result;
   }
 
-  @ApiPropertyOptional({ example: ['협업', '리더십'] })
+  @ApiPropertyOptional({ example: ['협업', '리더십'], isArray: true, type: String })
   @IsArray()
   @IsString({ each: true })
   @ArrayMaxSize(2)
