@@ -11,10 +11,14 @@ import { PaginationMetaDto } from '📚libs/pagination/pagination-meta.dto';
  */
 export class PaginationDto<T> {
   @IsArray()
-  @ApiProperty({ type: 'generic', isArray: true })
+  @ApiProperty({ type: 'generic', isArray: true, description: '실제 데이터입니다.' })
   readonly data: T[];
 
-  @ApiProperty({ type: PaginationMetaDto })
+  @ApiProperty({
+    type: PaginationMetaDto,
+    description:
+      '페이지네이션의 메타데이터로, 현재 페이지, 가져올 데이터 개수, 가져온 데이터 개수, 총 페이지 개수, 이전 페이지 유무, 다음 페이지 유무 값을 가지고 있습니다.',
+  })
   readonly meta: PaginationMetaDto;
 
   constructor(data: T[], meta: PaginationMetaDto) {
