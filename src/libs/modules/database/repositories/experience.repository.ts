@@ -4,6 +4,7 @@ import { Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
 import { ExperienceSelect } from '🔥apps/server/experiences/interface/experience-select.interface';
 import { ExperienceRepositoryInterface } from '🔥apps/server/experiences/interface/experience-repository.interface';
 import { ExperienceCardType } from '🔥apps/server/experiences/types/experience-card.type';
+import { PaginationOptionsDto } from '📚libs/pagination/pagination-option.dto';
 
 @Injectable()
 export class ExperienceRepository implements ExperienceRepositoryInterface {
@@ -53,6 +54,10 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
     });
   }
 
+  public async getCount(userId: number) {
+    return await this.prisma.experience.count({ where: { userId } });
+  }
+
   public async selectOneById(
     experienceId: number,
     select: ExperienceSelect,
@@ -73,10 +78,13 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
     });
   }
 
-  public async findManyByUserId(userId: number, select: ExperienceSelect) {
+  public async findManyByUserId(userId: number, select: ExperienceSelect, pagination: PaginationOptionsDto) {
+    const { criteria, order, take, skip } = pagination;
     return await this.prisma.experience.findMany({
       select,
-      orderBy: { createdAt: 'desc' },
+      orderBy: { [criteria]: order },
+      take,
+      skip,
     });
   }
 
@@ -93,7 +101,13 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
     });
   }
 
-  public async getExperienceByCapability(userId: number, capabilityId: number, select: Partial<ExperienceSelect>) {
+  public async getExperienceByCapability(
+    userId: number,
+    capabilityId: number,
+    select: Partial<ExperienceSelect>,
+    pagination: PaginationOptionsDto,
+  ) {
+    const { criteria, order, take, skip } = pagination;
     // TODO ai 역량 키워드가 적용되면 해당 키워드도 함께 쿼리로 가져와야 함.
     const experiences = await this.prisma.experience.findMany({
       where: { userId, ExperienceCapability: { some: { capabilityId: { equals: capabilityId } } } },
@@ -105,7 +119,9 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
         experienceStatus: true,
         ...select,
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { [criteria]: order },
+      take,
+      skip,
     });
 
     const experienceWithCapability = await Promise.all(

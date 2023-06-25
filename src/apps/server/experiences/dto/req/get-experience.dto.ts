@@ -1,11 +1,10 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
 import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsPositive } from 'class-validator';
-// import { PaginationOptionsDto } from '📚libs/pagination/pagination-option.dto';
+import { PaginationOptionsDto } from '📚libs/pagination/pagination-option.dto';
+import { OrderBy, OrderCriteria } from '📚libs/pagination/pagination.type';
 
-// TODO Pagination 상속받아서 속성을 부여받고, Controller에서 dto wrapping하기
-// export class GetExperienceRequestQueryDto extends PaginationOptionsDto {
-export class GetExperienceRequestQueryDto {
+export class GetExperienceRequestQueryDto extends PaginationOptionsDto {
   @ApiPropertyOptional({
     description: '역량 키워드 id',
   })
@@ -17,17 +16,6 @@ export class GetExperienceRequestQueryDto {
   capabilityId?: number;
 
   @ApiPropertyOptional({
-    description: '가장 최근 경험분해 하나만 가져올지 여부입니다.',
-  })
-  @IsOptional()
-  @IsBoolean()
-  @IsNotEmpty()
-  @Transform((_) => {
-    return _.obj.last === 'true' ? true : false;
-  })
-  last?: boolean;
-
-  @ApiPropertyOptional({
     description:
       '경험 카드에서 situation을 가져올지에 대한 filter query입니다. true를 입력하면, 응답에 situation이 추가되고 입력하지 않거나 false를 입력하면, 응답에 situation이 제외됩니다.',
     example: true,
@@ -37,7 +25,7 @@ export class GetExperienceRequestQueryDto {
   @IsBoolean()
   @IsNotEmpty()
   @Transform((_) => {
-    return _.obj.situation === 'true' ? true : false;
+    return _.obj.situation === 'true';
   })
   situation?: boolean;
 
@@ -51,7 +39,7 @@ export class GetExperienceRequestQueryDto {
   @IsBoolean()
   @IsNotEmpty()
   @Transform((_) => {
-    return _.obj.task === 'true' ? true : false;
+    return _.obj.task === 'true';
   })
   task?: boolean;
 
@@ -65,7 +53,7 @@ export class GetExperienceRequestQueryDto {
   @IsBoolean()
   @IsNotEmpty()
   @Transform((_) => {
-    return _.obj.action === 'true' ? true : false;
+    return _.obj.action === 'true';
   })
   action?: boolean;
 
@@ -79,7 +67,28 @@ export class GetExperienceRequestQueryDto {
   @IsBoolean()
   @IsNotEmpty()
   @Transform((_) => {
-    return _.obj.result === 'true' ? true : false;
+    return _.obj.result === 'true';
   })
   result?: boolean;
+
+  toRequestDto(this: GetExperienceRequestQueryDto): GetExperienceRequestQueryDtoWithPagination {
+    const { criteria, order, take, page, skip, ...getExperienceRequestQueryDto } = this;
+    const pagination = { criteria, order, take, page, skip };
+    return { pagination, ...getExperienceRequestQueryDto };
+  }
 }
+
+export type GetExperienceRequestQueryDtoWithPagination = {
+  capabilityId?: number;
+  situation?: boolean;
+  task?: boolean;
+  action?: boolean;
+  result?: boolean;
+  pagination: {
+    criteria: OrderCriteria;
+    order: OrderBy;
+    take: number;
+    page: number;
+    skip: number;
+  };
+};

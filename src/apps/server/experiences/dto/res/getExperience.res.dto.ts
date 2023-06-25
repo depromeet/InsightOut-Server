@@ -7,7 +7,7 @@ import { dateValidation } from '🔥apps/server/common/consts/date-validation.co
 import { IsOptionalNumber } from '🔥apps/server/common/decorators/validation/isCustomNumber.decorator';
 import { IsOptionalString } from '🔥apps/server/common/decorators/validation/isCustomString.decorator';
 
-export class GetExperienceInfoResDto {
+class GetExperienceInfoResDto {
   @Exclude() _experienceInfoId: number;
   @Exclude() _experienceId: number;
   @Exclude() _motivation: string;
@@ -153,7 +153,7 @@ export class GetExperienceResDto {
     return this._result;
   }
 
-  @ApiPropertyOptional({ example: ['협업', '리더십'] })
+  @ApiPropertyOptional({ example: ['협업', '리더십'], isArray: true, type: String })
   @IsArray()
   @IsString({ each: true })
   @ArrayMaxSize(2)

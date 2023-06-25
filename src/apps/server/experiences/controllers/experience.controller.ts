@@ -13,47 +13,46 @@ import {
   UpdateExperienceResDto,
 } from '../dto/res/updateExperienceInfo.res.dto';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
-import { GetExperienceNotFoundErrorResDto, GetExperienceResDto } from '../dto/res/getExperience.res.dto';
 import { Method } from '📚libs/enums/method.enum';
 import {
+  CreateExperienceResDto,
+  ExperienceIdParamReqDto,
+  GetCountOfExperienceAndCapabilityResponseDto,
+  GetCountOfExperienceResponseDto,
+  GetExperienceByIdResDto,
+  GetExperienceNotFoundErrorResDto,
+  GetExperienceRequestQueryDto,
+  GetExperienceResDto,
+  GetStarFromExperienceRequestParamDto,
+  GetStarFromExperienceResponseDto,
+} from '🔥apps/server/experiences/dto';
+import {
+  GetCountOfExperienceAndCapabilityDescriptionMd,
+  GetCountOfExperienceAndCapabilityResponseDescriptionMd,
+  GetCountOfExperienceAndCapabilitySummaryMd,
+  GetCountOfExperienceDescriptionMd,
+  GetCountOfExperienceResponseDescriptionMd,
+  GetCountOfExperienceSummaryMd,
+  GetStarFromExperienceDescriptionMd,
+  GetStarFromExperienceResponseDescriptionMd,
+  GetStarFromExperienceSummaryMd,
   createExperienceDescriptionMd,
   createExperienceSuccMd,
   createExperienceSummaryMd,
   getExperienceByIdDescriptionMd,
   getExperienceByIdSuccMd,
   getExperienceByIdSummaryMd,
+  getExperienceFirstPagehavingNextPageDescriptionMd,
+  getExperienceLastPagehavingDescriptionMd,
+  getExperienceMiddlePagehavingDescriptionMd,
+  getExperienceOnePageDescriptionMd,
   getExperienceSuccMd,
   updateExperienceDescriptionMd,
   updateExperienceSuccMd,
   updateExperienceSummaryMd,
-} from '🔥apps/server/experiences/markdown/experience.md';
-import { GetExperienceRequestQueryDto } from '🔥apps/server/experiences/dto/req/get-experience.dto';
-import {
-  GetCountOfExperienceAndCapabilityDescriptionMd,
-  GetCountOfExperienceAndCapabilityResponseDescriptionMd,
-  GetCountOfExperienceAndCapabilitySummaryMd,
-} from '../markdown/get-count-of-experience-and-capability.doc';
-import {
-  GetCountOfExperienceAndCapabilityResponseDto,
-  GetCountOfExperienceResponseDto,
-} from '🔥apps/server/experiences/dto/get-count-of-experience-and-capability.dto';
-import {
-  GetCountOfExperienceDescriptionMd,
-  GetCountOfExperienceResponseDescriptionMd,
-  GetCountOfExperienceSummaryMd,
-} from '🔥apps/server/experiences/markdown/get-count-of-experience.md';
-import {
-  GetStarFromExperienceRequestParamDto,
-  GetStarFromExperienceResponseDto,
-} from '🔥apps/server/experiences/dto/get-star-from-experience.dto';
-import {
-  GetStarFromExperienceDescriptionMd,
-  GetStarFromExperienceResponseDescriptionMd,
-  GetStarFromExperienceSummaryMd,
-} from '🔥apps/server/experiences/markdown/get-star-from-experience.md';
-import { CreateExperienceResDto } from '🔥apps/server/experiences/dto/res/createExperience.res.dto';
-import { ExperienceIdParamReqDto } from '🔥apps/server/experiences/dto/req/experienceIdParam.dto';
-import { GetExperienceByIdResDto } from '🔥apps/server/experiences/dto/res/getExperienceById.res.dto';
+} from '🔥apps/server/experiences/markdown';
+import { SuccessResponse } from '📚libs/decorators/success-response.dto';
+import { PaginationDto } from '📚libs/pagination/pagination.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -115,6 +114,48 @@ export class ExperienceController {
     return ResponseEntity.CREATED_WITH_DATA(experience);
   }
 
+  @SuccessResponse(HttpStatus.OK, [
+    {
+      model: PaginationDto,
+      exampleTitle: '페이지가 처음이며, 다음 페이지가 있는 경우',
+      exampleDescription: getExperienceFirstPagehavingNextPageDescriptionMd,
+      generic: GetExperienceResDto,
+    },
+    {
+      model: PaginationDto,
+      exampleTitle: '페이지가 중간일 때(이전 페이지와 다음 페이지가 모두 있는 경우)',
+      exampleDescription: getExperienceMiddlePagehavingDescriptionMd,
+      overwriteValue: {
+        meta: {
+          page: 2,
+          hasPreviousPage: true,
+          hasNextPage: true,
+        },
+      },
+      generic: GetExperienceResDto,
+    },
+    {
+      model: PaginationDto,
+      exampleTitle: '페이지가 마지막 이며, 이전 페이지가 있는 경우',
+      overwriteValue: {
+        meta: {
+          page: 3,
+          hasNextPage: false,
+        },
+      },
+      exampleDescription: getExperienceLastPagehavingDescriptionMd,
+      generic: GetExperienceResDto,
+    },
+    {
+      model: PaginationDto,
+      exampleTitle: '페이지가 처음이자, 마지막인 경우(1개의 페이지만 있는 경우)',
+      exampleDescription: getExperienceOnePageDescriptionMd,
+      overwriteValue: {
+        meta: { pageCount: 1, hasNextPage: false },
+      },
+      generic: GetExperienceResDto,
+    },
+  ])
   @Route({
     request: {
       method: Method.GET,
@@ -122,7 +163,6 @@ export class ExperienceController {
     },
     response: {
       code: HttpStatus.OK,
-      type: GetExperienceResDto,
     },
     description: getExperienceSuccMd,
     summary: '✅ 경험 분해 조회 API',
@@ -134,16 +174,14 @@ export class ExperienceController {
   public async getExperiences(@User() user: UserJwtToken, @Query() getExperienceRequestQueryDto?: GetExperienceRequestQueryDto) {
     let experience;
 
+    const dto = getExperienceRequestQueryDto.toRequestDto();
+
     // TODO service로 넘어가기 전에 DTO 한 번 더 wrapping하기
-    if (getExperienceRequestQueryDto.capabilityId) {
-      experience = await this.experienceService.getExperienceByCapability(user.userId, getExperienceRequestQueryDto);
+    if (dto.capabilityId) {
+      experience = await this.experienceService.getExperienceByCapability(user.userId, dto);
     } else {
       // TODO 추후 전체 모아보기를 위해 수정 필요
-      experience = await this.experienceService.getExperiencesByUserId(user.userId, getExperienceRequestQueryDto);
-    }
-
-    if (getExperienceRequestQueryDto.last) {
-      experience = experience[0];
+      experience = await this.experienceService.getExperiencesByUserId(user.userId, dto);
     }
 
     return ResponseEntity.OK_WITH_DATA(experience);

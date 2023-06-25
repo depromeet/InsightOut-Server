@@ -13,9 +13,11 @@ import {
 } from '🔥apps/server/experiences/dto/get-count-of-experience-and-capability.dto';
 import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
 import { CountExperienceAndCapability } from '🔥apps/server/experiences/types/count-experience-and-capability.type';
-import { GetExperienceRequestQueryDto } from '🔥apps/server/experiences/dto/req/get-experience.dto';
+import { GetExperienceRequestQueryDtoWithPagination } from '🔥apps/server/experiences/dto/req/get-experience.dto';
 import { GetStarFromExperienceResponseDto } from '🔥apps/server/experiences/dto/get-star-from-experience.dto';
 import { ExperienceCardType } from '🔥apps/server/experiences/types/experience-card.type';
+import { PaginationDto } from '📚libs/pagination/pagination.dto';
+import { PaginationMetaDto } from '📚libs/pagination/pagination-meta.dto';
 import { CreateExperienceResDto } from '🔥apps/server/experiences/dto/res/createExperience.res.dto';
 import { ExperienceIdParamReqDto } from '🔥apps/server/experiences/dto/req/experienceIdParam.dto';
 import { GetExperienceByIdResDto } from '🔥apps/server/experiences/dto/res/getExperienceById.res.dto';
@@ -105,17 +107,26 @@ export class ExperienceService {
 
   public async getExperienceByCapability(
     userId: number,
-    query: GetExperienceRequestQueryDto,
-  ): Promise<GetExperienceByCapabilityResponseDto[]> {
-    const { capabilityId, last, ...select } = query;
-    const experience = await this.experienceRepository.getExperienceByCapability(userId, capabilityId, select);
+    query: GetExperienceRequestQueryDtoWithPagination,
+  ): Promise<PaginationDto<GetExperienceByCapabilityResponseDto>> {
+    const { pagination, capabilityId, ...select } = query;
+    const experience = await this.experienceRepository.getExperienceByCapability(userId, capabilityId, select, pagination);
     if (!experience.length) {
       throw new NotFoundException('Experience not found');
     }
 
-    const getExperienceByCapabilityResponseDto = experience.map((experience) => new GetExperienceByCapabilityResponseDto(experience));
+    const getExperienceByCapabilityResponseDto: GetExperienceByCapabilityResponseDto[] = experience.map(
+      (experience) => new GetExperienceByCapabilityResponseDto(experience),
+    );
 
-    return getExperienceByCapabilityResponseDto;
+    const itemCount = await this.experienceRepository.getCount(userId);
+
+    const experienceDto = new PaginationDto(
+      getExperienceByCapabilityResponseDto,
+      new PaginationMetaDto({ itemCount, paginationOptionsDto: pagination }),
+    );
+
+    return experienceDto;
   }
 
   public async getExperienceByUserId(userId: number): Promise<GetExperienceResDto | string> {
@@ -130,13 +141,29 @@ export class ExperienceService {
     }
   }
 
-  public async getExperiencesByUserId(userId: number, query: GetExperienceRequestQueryDto): Promise<GetExperienceResDto[] | string> {
+  public async getExperiencesByUserId(
+    userId: number,
+    query: GetExperienceRequestQueryDtoWithPagination,
+  ): Promise<PaginationDto<GetExperienceResDto> | string> {
     try {
-      const { capabilityId, last, ...select } = query;
-      const experience = await this.experienceRepository.findManyByUserId(userId, Object.assign(getExperienceAttribute, select));
+      const { pagination, capabilityId, ...select } = query;
+      const experience = await this.experienceRepository.findManyByUserId(
+        userId,
+        Object.assign(getExperienceAttribute, select),
+        pagination,
+      );
       if (!experience.length) return 'INPROGRESS 상태의 경험카드가 없습니다';
 
-      return experience.map((experience) => new GetExperienceResDto(experience));
+      const getExperiencesByUserIdDto = experience.map((experience) => new GetExperienceResDto(experience));
+
+      const itemCount = await this.experienceRepository.getCount(userId);
+
+      const experienceDto = new PaginationDto(
+        getExperiencesByUserIdDto,
+        new PaginationMetaDto({ itemCount, paginationOptionsDto: pagination }),
+      );
+
+      return experienceDto;
     } catch (error) {
       console.log('error', error);
       if (error instanceof Prisma.PrismaClientKnownRequestError) throw new NotFoundException('INPROGRESS 상태의 경험카드가 없습니다.');

@@ -14,22 +14,22 @@ import { PaginationMetaDtoParameters } from '📚libs/pagination/pagination.type
  * @property `hasNextPage` 다음 페이지가 존재하는지에 대한 유무입니다.
  */
 export class PaginationMetaDto {
-  @ApiProperty()
+  @ApiProperty({ type: Number, description: 'API 요청에 사용한 페이지 정보입니다.', example: 1 })
   readonly page: number;
 
-  @ApiProperty()
+  @ApiProperty({ type: Number, description: 'API 요청에 사용한 페이지 당 조회할 개수입니다.', example: 3 })
   readonly take: number;
 
-  @ApiProperty()
+  @ApiProperty({ type: Number, description: '조회 결과로 가져온 아이템의 총 개수입니다.', example: 3 })
   readonly itemCount: number;
 
-  @ApiProperty()
+  @ApiProperty({ type: Number, description: '총 페이지 개수', example: 3 })
   readonly pageCount: number;
 
-  @ApiProperty()
+  @ApiProperty({ type: Boolean, description: '이전 페이지 여부', example: false })
   readonly hasPreviousPage: boolean;
 
-  @ApiProperty()
+  @ApiProperty({ type: Boolean, description: '다음 페이지 여부', example: true })
   readonly hasNextPage: boolean;
 
   constructor({ paginationOptionsDto, itemCount }: PaginationMetaDtoParameters) {

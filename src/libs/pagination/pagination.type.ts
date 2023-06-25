@@ -19,3 +19,17 @@ export interface PaginationMetaDtoParameters {
   paginationOptionsDto: PaginationOptionsDto;
   itemCount: number;
 }
+
+/**
+ * ### 정렬 기준
+ *
+ * createdAt은 생성일자 순이며, startDate는 경험시간 순입니다.
+ *
+ * 이때, 기본적인 정렬은 createdAt을 기준으로 하며 DESC 순서로 가져오는 것입니다. 작성일자 순이 존재하지만, 별도로 화면에 드러나지 않습니다.
+ */
+export const OrderCriteria = {
+  createdAt: 'createdAt',
+  startDate: 'startDate',
+} as const;
+
+export type OrderCriteria = (typeof OrderCriteria)[keyof typeof OrderCriteria];
