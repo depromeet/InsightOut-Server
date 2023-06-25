@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, Max, Min } from 'class-validator';
-import { OrderBy } from '📚libs/pagination/pagination.type';
+import { OrderBy, OrderCriteria } from '📚libs/pagination/pagination.type';
 
 const criteriaDiscription = `
 ### 데이터를 가져오는 기준
@@ -31,14 +31,16 @@ asc는 오름차순이고, desc는 내림차순입니다.\n
 export class PaginationOptionsDto {
   @ApiPropertyOptional({
     description: criteriaDiscription,
-    example: 'createdAt',
-    default: 'createdAt',
-    type: String,
+    example: OrderCriteria.createdAt,
+    default: OrderCriteria.createdAt,
+    type: OrderCriteria,
+    enum: OrderCriteria,
   })
   @IsString()
+  @IsEnum(OrderCriteria)
   @IsNotEmpty()
   @IsOptional()
-  readonly criteria?: string = 'createdAt';
+  readonly criteria?: OrderCriteria = OrderCriteria.createdAt;
 
   @ApiPropertyOptional({ description: orderDiscription, enum: OrderBy, default: OrderBy.asc })
   @IsEnum(OrderBy)

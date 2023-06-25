@@ -2,7 +2,7 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
 import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsPositive } from 'class-validator';
 import { PaginationOptionsDto } from '📚libs/pagination/pagination-option.dto';
-import { OrderBy } from '📚libs/pagination/pagination.type';
+import { OrderBy, OrderCriteria } from '📚libs/pagination/pagination.type';
 
 export class GetExperienceRequestQueryDto extends PaginationOptionsDto {
   @ApiPropertyOptional({
@@ -85,7 +85,7 @@ export type GetExperienceRequestQueryDtoWithPagination = {
   action?: boolean;
   result?: boolean;
   pagination: {
-    criteria: string;
+    criteria: OrderCriteria;
     order: OrderBy;
     take: number;
     page: number;
