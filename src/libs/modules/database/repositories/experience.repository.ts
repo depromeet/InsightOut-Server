@@ -82,6 +82,7 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
     const { criteria, order, take, skip } = pagination;
     return await this.prisma.experience.findMany({
       select,
+      where: { userId },
       orderBy: { [criteria]: order },
       take,
       skip,
