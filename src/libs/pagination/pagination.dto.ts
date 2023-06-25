@@ -11,10 +11,10 @@ import { PaginationMetaDto } from '📚libs/pagination/pagination-meta.dto';
  */
 export class PaginationDto<T> {
   @IsArray()
-  @ApiProperty({ isArray: true })
+  @ApiProperty({ type: 'generic', isArray: true })
   readonly data: T[];
 
-  @ApiProperty({ type: () => PaginationMetaDto })
+  @ApiProperty({ type: PaginationMetaDto })
   readonly meta: PaginationMetaDto;
 
   constructor(data: T[], meta: PaginationMetaDto) {
