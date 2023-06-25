@@ -33,7 +33,13 @@ import {
   GetStarFromExperienceResponseDescriptionMd,
   GetStarFromExperienceSummaryMd,
   GetStarFromExperienceDescriptionMd,
+  getExperienceFirstPagehavingNextPageDescriptionMd,
+  getExperienceOnePageDescriptionMd,
+  getExperienceMiddlePagehavingDescriptionMd,
+  getExperienceLastPagehavingDescriptionMd,
 } from '🔥apps/server/experiences/markdown';
+import { PaginationDto } from '📚libs/pagination/pagination.dto';
+import { SuccessResponse } from '📚libs/decorators/success-response.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -72,6 +78,48 @@ export class ExperienceController {
     return ResponseEntity.CREATED_WITH_DATA(experience);
   }
 
+  @SuccessResponse(HttpStatus.OK, [
+    {
+      model: PaginationDto,
+      exampleTitle: '페이지가 처음이며, 다음 페이지가 있는 경우',
+      exampleDescription: getExperienceFirstPagehavingNextPageDescriptionMd,
+      generic: GetExperienceResDto,
+    },
+    {
+      model: PaginationDto,
+      exampleTitle: '페이지가 중간일 때(이전 페이지와 다음 페이지가 모두 있는 경우)',
+      exampleDescription: getExperienceMiddlePagehavingDescriptionMd,
+      overwriteValue: {
+        meta: {
+          page: 2,
+          hasPreviousPage: true,
+          hasNextPage: true,
+        },
+      },
+      generic: GetExperienceResDto,
+    },
+    {
+      model: PaginationDto,
+      exampleTitle: '페이지가 마지막 이며, 이전 페이지가 있는 경우',
+      overwriteValue: {
+        meta: {
+          page: 3,
+          hasNextPage: false,
+        },
+      },
+      exampleDescription: getExperienceLastPagehavingDescriptionMd,
+      generic: GetExperienceResDto,
+    },
+    {
+      model: PaginationDto,
+      exampleTitle: '페이지가 처음이자, 마지막인 경우(1개의 페이지만 있는 경우)',
+      exampleDescription: getExperienceOnePageDescriptionMd,
+      overwriteValue: {
+        meta: { pageCount: 1, hasNextPage: false },
+      },
+      generic: GetExperienceResDto,
+    },
+  ])
   @Route({
     request: {
       method: Method.GET,
@@ -79,7 +127,7 @@ export class ExperienceController {
     },
     response: {
       code: HttpStatus.OK,
-      type: GetExperienceResDto,
+      // type: GetExperienceResDto,
       // TODO: Swagger에서 Pagination에 따라 다른 Example 보여주기
       // type: PaginationDto<GetExperienceResDto>,
     },
