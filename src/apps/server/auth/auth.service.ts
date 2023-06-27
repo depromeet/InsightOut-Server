@@ -231,30 +231,35 @@ export class AuthService {
   async withdraw(user: UserWithRefreshTokenPayload) {
     const { userId, refreshToken } = user;
 
-    // 1. 유저가 DB에 존재하는지 확인합니다.
-    const exUser = await this.userRepository.findFirst({ where: { id: userId } });
-    if (!exUser) {
-      throw new NotFoundException('User not found');
-    }
-
-    /** 2. redis에 저장된 refresh 토큰과 유저의 refresh 토큰이 같은지 비교합니다.
-     * 유효한지 검사하는 과정이며, 같지 않을 시 인가되지 않은 것으로 판단합니다.
-     */
-    const existedRefreshToken = await this.redisService.get(String(userId));
-    if (refreshToken !== existedRefreshToken) {
-      throw new UnauthorizedException('Token is not valid');
-    }
-
     try {
-      // 전체 과정이 수행된 후, firebase에서 uid를 통해 유저를 삭제합니다.
-      await this.firebaseService.withdraw(exUser.uid);
+      await this.prismaService.$transaction(async (tx) => {
+        // 1. 유저가 DB에 존재하는지 확인합니다.
+        const exUser = await tx.user.findFirst({ where: { id: userId } });
+        if (!exUser) {
+          throw new NotFoundException('User not found');
+        }
 
-      // Redis에서 refresh 토큰을 삭제합니다.
-      await this.redisService.del(String(userId));
+        /** 2. redis에 저장된 refresh 토큰과 유저의 refresh 토큰이 같은지 비교합니다.
+         * 유효한지 검사하는 과정이며, 같지 않을 시 인가되지 않은 것으로 판단합니다.
+         */
+        const existedRefreshToken = await this.redisService.get(String(userId));
+        if (refreshToken !== existedRefreshToken) {
+          throw new UnauthorizedException('Token is not valid');
+        }
+
+        await tx.user.delete({ where: { id: userId } });
+
+        // 전체 과정이 수행된 후, firebase에서 uid를 통해 유저를 삭제합니다.
+        // TODO MQ를 사용해서 무조건 삭제되도록 처리하기
+        await this.firebaseService.withdraw(exUser.uid);
+        // Redis에서 refresh 토큰을 삭제합니다.
+        await this.redisService.del(String(userId));
+      });
     } catch (error) {
       if (isFirebaseAuthError(error)) {
-        throw new BadRequestException('Invalid Firebase request.');
+        throw new BadRequestException('Invalid Firebase request. Please check idToken');
       }
+      throw error;
     }
   }
 
