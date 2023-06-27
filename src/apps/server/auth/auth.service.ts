@@ -141,7 +141,6 @@ export class AuthService {
       if (error instanceof NotFoundException) {
         throw new NotFoundException();
       }
-      throw new InternalServerErrorException(error);
     }
   }
 
