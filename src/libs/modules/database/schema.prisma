@@ -25,12 +25,12 @@ model User {
   deletedAt DateTime? @map("deleted_at") @db.Timestamptz
   nickname  String    @db.VarChar(10)
 
-  UserInfo     UserInfo?
-  Onboarding   Onboarding?
-  Resume       Resume[]
-  AiResumes    AiResume[]
-  Experiences  Experience[]
-  Capability   Capability[]
+  UserInfo    UserInfo?
+  Onboarding  Onboarding?
+  Resume      Resume[]
+  AiResumes   AiResume[]
+  Experiences Experience[]
+  Capability  Capability[]
 
   @@map("user")
 }
@@ -73,7 +73,7 @@ model UserInfo {
   provider Provider? // 소셜 로그인 제공자
   imageUrl String?   @map("image_url") @db.Text // 이미지 url
 
-  User User @relation(references: [id], fields: [userId], onDelete: Cascade)
+  User User @relation(references: [id], fields: [userId], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("user_info")
 }
@@ -91,7 +91,7 @@ model Onboarding {
   resume            Boolean @default(false) // 자기소개서 작성 온보딩 여부
   collection        Boolean @default(false) // 모아보기 온보딩 여부
 
-  User User @relation(references: [id], fields: [userId])
+  User User @relation(references: [id], fields: [userId], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("onboarding")
 }
@@ -110,7 +110,7 @@ model Resume {
 
   userId Int @map("user_id")
 
-  User     User       @relation(references: [id], fields: [userId], onDelete: Cascade)
+  User     User       @relation(references: [id], fields: [userId], onDelete: Cascade, onUpdate: Cascade)
   Question Question[]
 
   @@map("resume")
@@ -131,28 +131,27 @@ model AiResume {
   userId       Int @map("user_id")
   experienceId Int @unique @map("experience_id") // 경험 id
 
-  User           User           @relation(references: [id], fields: [userId], onDelete: Cascade)
-  Experience     Experience     @relation(references: [id], fields: [experienceId], onDelete: Cascade)
+  User       User       @relation(references: [id], fields: [userId], onDelete: Cascade)
+  Experience Experience @relation(references: [id], fields: [experienceId], onDelete: NoAction)
 
   AiResumeCapability AiResumeCapability[]
 
   @@map("ai_resume")
 }
 
-
 // ********************************
 // ****** AI 추천 자기소개서 문항 ******
 // ********************************
 model AiRecommendQuestion {
-  id      Int    @id @default(autoincrement())
-  title  String? @db.VarChar(300) // 문항 제목
+  id    Int     @id @default(autoincrement())
+  title String? @db.VarChar(300) // 문항 제목
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
   experienceId Int @map("experience_id") // 경험 id
 
-  Experience     Experience     @relation(references: [id], fields: [experienceId], onDelete: Cascade)
+  Experience Experience @relation(references: [id], fields: [experienceId], onDelete: NoAction, onUpdate: Cascade)
 
   @@map("ai_recommend_question")
 }
@@ -170,7 +169,7 @@ model Question {
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
-  Resume Resume @relation(references: [id], fields: [resumeId], onDelete: Cascade)
+  Resume Resume @relation(references: [id], fields: [resumeId], onDelete: Cascade, onUpdate: Cascade)
 
   // @@id([resumeId])
   @@map("question")
@@ -190,18 +189,18 @@ model Experience {
 
   experienceStatus ExperienceStatus @default(INPROGRESS) // 경험 분해 진행 척도 디폴트 inprogress
 
-  situation String? @db.VarChar(100) // S: Situation, 계기와 배경
-  task      String? @db.VarChar(100) // T: Task, 과제 및 목표
-  action    String? @db.VarChar(100) // A: Action, 행동
-  result    String? @db.VarChar(100) // R: Result, 결과
-  summaryKeywords  String[] @map("summary_keywords")// 요약 키워드 배열
+  situation       String?  @db.VarChar(100) // S: Situation, 계기와 배경
+  task            String?  @db.VarChar(100) // T: Task, 과제 및 목표
+  action          String?  @db.VarChar(100) // A: Action, 행동
+  result          String?  @db.VarChar(100) // R: Result, 결과
+  summaryKeywords String[] @map("summary_keywords") // 요약 키워드 배열
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
   userId Int @map("user_id")
 
-  User                 User?                  @relation(references: [id], fields: [userId], onDelete: Cascade)
+  User                 User?                  @relation(references: [id], fields: [userId], onDelete: Cascade, onUpdate: Cascade)
   AiResume             AiResume?
   ExperienceInfo       ExperienceInfo?
   AiRecommendQuestion  AiRecommendQuestion[]
@@ -215,7 +214,6 @@ enum ExperienceStatus {
   INPROGRESS // 진행중
   DONE // 끝
 }
-
 
 // ********************************
 // *********** 경험 정보 ************
@@ -233,7 +231,7 @@ model ExperienceInfo {
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
   experienceId Int        @id @map("experience_id") // 경험 id
-  Experience   Experience @relation(references: [id], fields: [experienceId])
+  Experience   Experience @relation(references: [id], fields: [experienceId], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("experience_info")
 }
@@ -243,14 +241,14 @@ model ExperienceInfo {
 // ********************************
 
 model Capability {
-  id      Int    @id @default(autoincrement()) // 역량 id
-  keyword String @db.VarChar(10) // 역량 키워드
+  id          Int         @id @default(autoincrement()) // 역량 id
+  keyword     String      @db.VarChar(10) // 역량 키워드
   keywordType KeywordType
-  userId Int @map("user_id")
+  userId      Int         @map("user_id")
 
-  User                 User                   @relation(references: [id], fields: [userId], onDelete: Cascade)
+  User                 User                   @relation(references: [id], fields: [userId], onDelete: Cascade, onUpdate: Cascade)
   ExperienceCapability ExperienceCapability[]
-  AiResumeCapability AiResumeCapability[]
+  AiResumeCapability   AiResumeCapability[]
 
   @@map("capability")
 }
@@ -261,25 +259,23 @@ enum KeywordType {
   USER // user가 선택한 키워드
 }
 
-
 model ExperienceCapability {
   experienceId Int @map("experience_id")
   capabilityId Int @map("capability_id")
 
-  Experience Experience @relation(references: [id], fields: [experienceId])
-  Capability Capability @relation(references: [id], fields: [capabilityId])
+  Experience Experience @relation(references: [id], fields: [experienceId], onDelete: Cascade)
+  Capability Capability @relation(references: [id], fields: [capabilityId], onDelete: NoAction)
 
   @@id([experienceId, capabilityId])
   @@map("experience_capability")
 }
 
-
 model AiResumeCapability {
-  aiResumeId Int @map("ai_resume_id")
+  aiResumeId   Int @map("ai_resume_id")
   capabilityId Int @map("capability_id")
 
-  AiResume AiResume @relation(references: [id], fields: [aiResumeId])
-  Capability Capability @relation(references: [id], fields: [capabilityId])
+  AiResume   AiResume   @relation(references: [id], fields: [aiResumeId], onDelete: Cascade)
+  Capability Capability @relation(references: [id], fields: [capabilityId], onDelete: NoAction)
 
   @@id([aiResumeId, capabilityId])
   @@map("ai_resume_capability")

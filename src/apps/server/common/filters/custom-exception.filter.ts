@@ -29,6 +29,7 @@ export class CustomExceptionFilter implements ExceptionFilter {
         });
       }
 
+      // TODO Prisma 에러코드 별 상태 코드 설정 추가
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P1003') {
           return new InternalServerErrorException({
