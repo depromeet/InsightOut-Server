@@ -25,12 +25,12 @@ model User {
   deletedAt DateTime? @map("deleted_at") @db.Timestamptz
   nickname  String    @db.VarChar(10)
 
-  UserInfo     UserInfo?
-  Onboarding   Onboarding?
-  Resume       Resume[]
-  AiResumes    AiResume[]
-  Experiences  Experience[]
-  Capability   Capability[]
+  UserInfo    UserInfo?
+  Onboarding  Onboarding?
+  Resume      Resume[]
+  AiResumes   AiResume[]
+  Experiences Experience[]
+  Capability  Capability[]
 
   @@map("user")
 }
@@ -86,6 +86,7 @@ model UserInfo {
 model Onboarding {
   userId Int @id
 
+  field             Boolean @default(false) // 직무 선택 온보딩
   experience        Boolean @default(false) // 경험분해 온보딩 여부
   experienceStepper Boolean @default(false) @map("experience_stepper") // 경험분해 stepper 온보딩 여부
   resume            Boolean @default(false) // 자기소개서 작성 온보딩 여부
@@ -131,28 +132,27 @@ model AiResume {
   userId       Int @map("user_id")
   experienceId Int @unique @map("experience_id") // 경험 id
 
-  User           User           @relation(references: [id], fields: [userId], onDelete: Cascade)
-  Experience     Experience     @relation(references: [id], fields: [experienceId], onDelete: Cascade)
+  User       User       @relation(references: [id], fields: [userId], onDelete: Cascade)
+  Experience Experience @relation(references: [id], fields: [experienceId], onDelete: Cascade)
 
   AiResumeCapability AiResumeCapability[]
 
   @@map("ai_resume")
 }
 
-
 // ********************************
 // ****** AI 추천 자기소개서 문항 ******
 // ********************************
 model AiRecommendQuestion {
-  id      Int    @id @default(autoincrement())
-  title  String? @db.VarChar(300) // 문항 제목
+  id    Int     @id @default(autoincrement())
+  title String? @db.VarChar(300) // 문항 제목
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
 
   experienceId Int @map("experience_id") // 경험 id
 
-  Experience     Experience     @relation(references: [id], fields: [experienceId], onDelete: Cascade)
+  Experience Experience @relation(references: [id], fields: [experienceId], onDelete: Cascade)
 
   @@map("ai_recommend_question")
 }
@@ -190,11 +190,11 @@ model Experience {
 
   experienceStatus ExperienceStatus @default(INPROGRESS) // 경험 분해 진행 척도 디폴트 inprogress
 
-  situation String? @db.VarChar(100) // S: Situation, 계기와 배경
-  task      String? @db.VarChar(100) // T: Task, 과제 및 목표
-  action    String? @db.VarChar(100) // A: Action, 행동
-  result    String? @db.VarChar(100) // R: Result, 결과
-  summaryKeywords  String[] @map("summary_keywords")// 요약 키워드 배열
+  situation       String?  @db.VarChar(100) // S: Situation, 계기와 배경
+  task            String?  @db.VarChar(100) // T: Task, 과제 및 목표
+  action          String?  @db.VarChar(100) // A: Action, 행동
+  result          String?  @db.VarChar(100) // R: Result, 결과
+  summaryKeywords String[] @map("summary_keywords") // 요약 키워드 배열
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
@@ -215,7 +215,6 @@ enum ExperienceStatus {
   INPROGRESS // 진행중
   DONE // 끝
 }
-
 
 // ********************************
 // *********** 경험 정보 ************
@@ -243,14 +242,14 @@ model ExperienceInfo {
 // ********************************
 
 model Capability {
-  id      Int    @id @default(autoincrement()) // 역량 id
-  keyword String @db.VarChar(10) // 역량 키워드
+  id          Int         @id @default(autoincrement()) // 역량 id
+  keyword     String      @db.VarChar(10) // 역량 키워드
   keywordType KeywordType
-  userId Int @map("user_id")
+  userId      Int         @map("user_id")
 
   User                 User                   @relation(references: [id], fields: [userId], onDelete: Cascade)
   ExperienceCapability ExperienceCapability[]
-  AiResumeCapability AiResumeCapability[]
+  AiResumeCapability   AiResumeCapability[]
 
   @@map("capability")
 }
@@ -260,7 +259,6 @@ enum KeywordType {
   AI // ai 역량 키워드
   USER // user가 선택한 키워드
 }
-
 
 model ExperienceCapability {
   experienceId Int @map("experience_id")
@@ -273,12 +271,11 @@ model ExperienceCapability {
   @@map("experience_capability")
 }
 
-
 model AiResumeCapability {
-  aiResumeId Int @map("ai_resume_id")
+  aiResumeId   Int @map("ai_resume_id")
   capabilityId Int @map("capability_id")
 
-  AiResume AiResume @relation(references: [id], fields: [aiResumeId])
+  AiResume   AiResume   @relation(references: [id], fields: [aiResumeId])
   Capability Capability @relation(references: [id], fields: [capabilityId])
 
   @@id([aiResumeId, capabilityId])
