@@ -6,6 +6,16 @@ import { IsTrue } from '🔥apps/server/common/decorators/validation/isTrue.deco
 
 export class PatchOnboardingRequestBodyDto {
   @ApiPropertyOptional({
+    description: '직무 선택 온보딩 경험 여부',
+    example: true,
+    type: Boolean,
+  })
+  @IsTrue()
+  @IsNotEmpty()
+  @IsOptional()
+  field?: boolean;
+
+  @ApiPropertyOptional({
     description: '경험분해 온보딩 경험 여부',
     example: true,
     type: Boolean,
@@ -48,16 +58,31 @@ export class PatchOnboardingRequestBodyDto {
 }
 
 export class PatchOnboardingResponseDto {
+  @Exclude() private readonly _field?: boolean | undefined;
   @Exclude() private readonly _experience?: boolean | undefined;
   @Exclude() private readonly _experienceStepper?: boolean | undefined;
   @Exclude() private readonly _resume?: boolean | undefined;
   @Exclude() private readonly _collection?: boolean | undefined;
 
   constructor(onboarding: Onboarding) {
+    this._field = onboarding.field;
     this._experience = onboarding.experience;
     this._experienceStepper = onboarding.experienceStepper;
     this._resume = onboarding.resume;
     this._collection = onboarding.collection;
+  }
+
+  @Expose()
+  @ApiPropertyOptional({
+    description: '직무 선택 온보딩 경험 여부',
+    example: true,
+    type: Boolean,
+  })
+  @IsBoolean()
+  @IsNotEmpty()
+  @IsOptional()
+  get field(): boolean {
+    return this._field;
   }
 
   @Expose()
