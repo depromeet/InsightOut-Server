@@ -86,6 +86,7 @@ model UserInfo {
 model Onboarding {
   userId Int @id
 
+  field             Boolean @default(false) // 직무 선택 온보딩
   experience        Boolean @default(false) // 경험분해 온보딩 여부
   experienceStepper Boolean @default(false) @map("experience_stepper") // 경험분해 stepper 온보딩 여부
   resume            Boolean @default(false) // 자기소개서 작성 온보딩 여부
