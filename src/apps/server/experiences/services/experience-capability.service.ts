@@ -40,7 +40,7 @@ export class ExperienceCapabilityService {
 
     experienceCapabilities.forEach((experienceCapability: ExperienceCapability) => {
       const capability: Capability = userCapabilities.find((capability) => capability.id === experienceCapability.capabilityId);
-      if (!capability) return [];
+      if (!capability) throw new NotFoundException(`${capability.keyword} 해당 키워드를 찾을 수 없습니다.`);
 
       value[capability.keyword] = true;
     });

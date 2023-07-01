@@ -214,10 +214,6 @@ export class ExperienceService {
       (row: CountExperienceAndCapability) => row._count.ExperienceCapability !== 0,
     );
 
-    if (!filteredCountOfExperienceAndCapability.length) {
-      throw new NotFoundException('Experience not found');
-    }
-
     const countOfExperienceAndCapabilityResponseDto = filteredCountOfExperienceAndCapability.map(
       (count) => new GetCountOfExperienceAndCapabilityResponseDto(count as CountExperienceAndCapability),
     );
