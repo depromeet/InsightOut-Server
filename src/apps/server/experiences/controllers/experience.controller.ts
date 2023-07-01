@@ -19,10 +19,10 @@ import {
   ExperienceIdParamReqDto,
   GetCountOfExperienceAndCapabilityResponseDto,
   GetCountOfExperienceResponseDto,
+  GetExperiencesResponseDto,
   GetExperienceByIdResDto,
   GetExperienceNotFoundErrorResDto,
   GetExperienceRequestQueryDto,
-  GetExperienceResDto,
   GetStarFromExperienceRequestParamDto,
   GetStarFromExperienceResponseDto,
 } from '🔥apps/server/experiences/dto';
@@ -119,7 +119,7 @@ export class ExperienceController {
       model: PaginationDto,
       exampleTitle: '페이지가 처음이며, 다음 페이지가 있는 경우',
       exampleDescription: getExperienceFirstPagehavingNextPageDescriptionMd,
-      generic: GetExperienceResDto,
+      generic: GetExperiencesResponseDto,
     },
     {
       model: PaginationDto,
@@ -132,7 +132,7 @@ export class ExperienceController {
           hasNextPage: true,
         },
       },
-      generic: GetExperienceResDto,
+      generic: GetExperiencesResponseDto,
     },
     {
       model: PaginationDto,
@@ -144,7 +144,7 @@ export class ExperienceController {
         },
       },
       exampleDescription: getExperienceLastPagehavingDescriptionMd,
-      generic: GetExperienceResDto,
+      generic: GetExperiencesResponseDto,
     },
     {
       model: PaginationDto,
@@ -153,7 +153,7 @@ export class ExperienceController {
       overwriteValue: {
         meta: { pageCount: 1, hasNextPage: false },
       },
-      generic: GetExperienceResDto,
+      generic: GetExperiencesResponseDto,
     },
   ])
   @Route({
@@ -163,6 +163,7 @@ export class ExperienceController {
     },
     response: {
       code: HttpStatus.OK,
+      type: GetExperiencesResponseDto,
     },
     description: getExperienceSuccMd,
     summary: '✅ 경험 분해 조회 API',
@@ -171,19 +172,13 @@ export class ExperienceController {
     description: '⛔ 해당 경험 카드 ID를 확인해주세요 :)',
     type: GetExperienceNotFoundErrorResDto,
   })
-  public async getExperiences(@User() user: UserJwtToken, @Query() getExperienceRequestQueryDto?: GetExperienceRequestQueryDto) {
-    let experience;
-
+  public async getExperiences(
+    @User() user: UserJwtToken,
+    @Query() getExperienceRequestQueryDto?: GetExperienceRequestQueryDto,
+  ): Promise<ResponseEntity<PaginationDto<GetExperiencesResponseDto>>> {
     const dto = getExperienceRequestQueryDto.toRequestDto();
 
-    // TODO service로 넘어가기 전에 DTO 한 번 더 wrapping하기
-    if (dto.capabilityId) {
-      experience = await this.experienceService.getExperienceByCapability(user.userId, dto);
-    } else {
-      // TODO 추후 전체 모아보기를 위해 수정 필요
-      experience = await this.experienceService.getExperiencesByUserId(user.userId, dto);
-    }
-
+    const experience = await this.experienceService.getExperiences(user.userId, dto);
     return ResponseEntity.OK_WITH_DATA(experience);
   }
 
