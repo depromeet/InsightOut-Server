@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Capability, Experience, ExperienceInfo, ExperienceStatus, KeywordType } from '@prisma/client';
+import { AiResumeCapability, Capability, Experience, ExperienceInfo, ExperienceStatus, KeywordType, Prisma } from '@prisma/client';
 import { Exclude, Expose } from 'class-transformer';
 import { ArrayMaxSize, IsArray, IsEnum, IsInt, IsNotEmpty, IsOptional, IsPositive, IsString, Matches } from 'class-validator';
 import { getFormattedDate } from '📚libs/utils/date';
@@ -60,121 +60,7 @@ class GetExperienceInfoResDto {
   }
 }
 
-export class GetExperienceResDto {
-  @Exclude() _id: number;
-  @Exclude() _title: string;
-  @Exclude() _startDate: Date;
-  @Exclude() _endDate: Date;
-  @Exclude() _experienceStatus: ExperienceStatus;
-  @Exclude() _situation: string;
-  @Exclude() _task: string;
-  @Exclude() _action: string;
-  @Exclude() _result: string;
-  @Exclude() _summaryKeywords: string[];
-
-  constructor(
-    experience: Partial<
-      Experience & {
-        experienceInfo?: ExperienceInfo;
-      }
-    >,
-  ) {
-    this._id = experience.id;
-    this._title = experience.title;
-    this._startDate = experience.startDate;
-    this._endDate = experience.endDate;
-    this._experienceStatus = experience.experienceStatus;
-    this._situation = experience.situation;
-    this._task = experience.task;
-    this._action = experience.action;
-    this._result = experience.result;
-    this._summaryKeywords = experience.summaryKeywords;
-    this.experienceInfo = experience.experienceInfo;
-  }
-
-  @ApiProperty({ example: 1 })
-  @IsOptionalNumber()
-  get id(): number {
-    return this._id;
-  }
-
-  @ApiPropertyOptional({ example: '00직무 디자인 인턴' })
-  @IsOptionalString(0, 100)
-  get title(): string {
-    return this._title;
-  }
-
-  @ApiPropertyOptional({ example: '2022-01' })
-  @IsOptionalString(0, 7)
-  @Matches(dateValidation.YYYY_MM)
-  get startDate(): Date {
-    return this._startDate;
-  }
-
-  @ApiPropertyOptional({ example: '2022-07' })
-  @IsOptionalString(0, 7)
-  @Matches(dateValidation.YYYY_MM)
-  get endDate(): Date {
-    return this._endDate;
-  }
-
-  @ApiPropertyOptional({
-    example: 'INPROGRESS or DONE',
-    default: 'INPROGRESS',
-  })
-  @IsEnum(ExperienceStatus)
-  @IsOptional()
-  @Expose()
-  get experienceStatus(): ExperienceStatus {
-    return this._experienceStatus;
-  }
-
-  @ApiPropertyOptional({ example: '개발자와 협업 역량을 쌓기 위해 IT 동아리에 들어감' })
-  @IsOptionalString(0, 100)
-  get situation(): string {
-    return this._situation;
-  }
-
-  @ApiProperty({ example: '개발 시간이 짧아서 빠른 기간 내에 런칭을 완료해야 했음' })
-  @IsOptionalString(0, 100)
-  get task(): string {
-    return this._task;
-  }
-
-  @ApiPropertyOptional({ example: '디자인 시스템 제작, 런칭일 정해서 린하게 개발하는 방법 제의' })
-  @IsOptionalString(0, 100)
-  get action(): string {
-    return this._action;
-  }
-
-  @ApiPropertyOptional({ example: '4개월만에 출시를 성공하게 됨' })
-  @IsOptionalString(0, 100)
-  get result(): string {
-    return this._result;
-  }
-
-  @ApiPropertyOptional({ example: ['협업', '리더십'], isArray: true, type: String })
-  @IsArray()
-  @IsString({ each: true })
-  @ArrayMaxSize(2)
-  @IsOptional()
-  get summaryKeywords(): string[] {
-    return this._summaryKeywords;
-  }
-
-  @Expose()
-  @ApiProperty({ type: GetExperienceInfoResDto })
-  experienceInfo?: Partial<GetExperienceInfoResDto>;
-}
-
-class _Capability {
-  id: number;
-  keyword: string;
-  userId: number;
-  keywordType: KeywordType;
-}
-
-export class GetExperienceByCapabilityResponseDto {
+export class GetExperiencesResponseDto {
   @Exclude() private readonly _id: number;
   @Exclude() private readonly _title?: string;
   @Exclude() private readonly _situation?: string;
@@ -184,12 +70,14 @@ export class GetExperienceByCapabilityResponseDto {
   @Exclude() private readonly _startDate?: string;
   @Exclude() private readonly _endDate?: string;
   @Exclude() private readonly _experienceStatus: ExperienceStatus;
-  @Exclude() private readonly _capability?: Omit<Capability, 'userId'>[] | undefined;
-  @Exclude() private readonly _aiRecommend: any[]; // AI 역량 키워드
+  @Exclude() private readonly _summaryKeywords?: string[] | undefined;
+  @Exclude() private readonly _experienceCapabilityKeywords?: string[] | undefined;
+  @Exclude() private readonly _aiRecommendKeywords?: string[] | undefined;
 
   constructor(
     experience: Partial<Experience> & {
-      capability: Omit<Capability, 'userId'>[];
+      ExperienceCapability: { Capability: Capability }[];
+      AiResume: { AiResumeCapability: AiResumeCapability[] } | { AiResumeCapability: { Capability: Capability }[] };
     },
   ) {
     this._id = experience.id;
@@ -201,7 +89,12 @@ export class GetExperienceByCapabilityResponseDto {
     this._startDate = getFormattedDate(experience.startDate);
     this._endDate = getFormattedDate(experience.endDate);
     this._experienceStatus = experience.experienceStatus;
-    this._capability = experience.capability;
+    this._summaryKeywords = experience?.summaryKeywords; // AI 요약 키워드
+    this._experienceCapabilityKeywords = experience?.ExperienceCapability.map((capability) => capability.Capability.keyword); // 경험 역량 키워드
+    this._aiRecommendKeywords =
+      experience?.AiResume?.AiResumeCapability.map(
+        (aiResumeCapability: AiResumeCapability & { Capability: Capability }) => aiResumeCapability.Capability?.keyword,
+      ) ?? [];
 
     // this._aiRecommend =
   }
@@ -282,7 +175,8 @@ export class GetExperienceByCapabilityResponseDto {
 
   @Expose()
   @ApiPropertyOptional({
-    description: '경험 시작 연월. 경험을 처음 시작한 일자를 나타냅니다. YYYY-MM의 string을 반환합니다.',
+    description:
+      '경험 시작 연월. 경험을 처음 시작한 일자를 나타냅니다. YYYY-MM의 string을 반환합니다. 만약 값이 존재하지 않거나 유효하지 않은 포맷이라면 Invald Date라고 전달됩니다.',
     example: '2023-04',
   })
   @IsString()
@@ -294,7 +188,8 @@ export class GetExperienceByCapabilityResponseDto {
 
   @Expose()
   @ApiPropertyOptional({
-    description: '경험 종료 연월. 경험을 종료한 일자를 나타냅니다. YYYY-MM의 string을 반환합니다.',
+    description:
+      '경험 종료 연월. 경험을 종료한 일자를 나타냅니다. YYYY-MM의 string을 반환합니다. 만약 값이 존재하지 않거나 유효하지 않은 포맷이라면 Invald Date라고 전달됩니다.',
     example: '2023-07',
   })
   @IsString()
@@ -320,17 +215,35 @@ export class GetExperienceByCapabilityResponseDto {
 
   @Expose()
   @ApiPropertyOptional({
-    description: '해당 경험 카드의 역량 키워드입니다.',
-    example: {
-      id: 1234,
-      keyword: '리더십',
-      keywordType: KeywordType.USER,
-    },
-    type: _Capability,
+    description: '해당 경험 카드의 요약 키워드입니다.',
+    example: ['서비스 스토어 런칭, 대상 수상'],
     isArray: true,
+    type: String,
   })
-  get capability(): Omit<Capability, 'userId'>[] | undefined {
-    return this._capability;
+  get summaryKeywords(): string[] {
+    return this._summaryKeywords;
+  }
+
+  @Expose()
+  @ApiPropertyOptional({
+    description: '해당 경험에서 선택한 직무 역량 키워드입니다.',
+    example: ['리더십'],
+    isArray: true,
+    type: String,
+  })
+  get experienceCapabilityKeywords(): string[] {
+    return this._experienceCapabilityKeywords;
+  }
+
+  @Expose()
+  @ApiPropertyOptional({
+    description: '해당 경험 카드의 AI 추천 키워드입니다.',
+    example: ['통찰력', '상황파악'],
+    isArray: true,
+    type: String,
+  })
+  get aiRecommendKeywords(): string[] | undefined {
+    return this._aiRecommendKeywords;
   }
 }
 
