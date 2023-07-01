@@ -134,7 +134,7 @@ export class AiController {
     return ResponseEntity.OK_WITH_DATA(newAi);
   }
 
-  public async restricePrompt(user: UserJwtToken) {
+  public async restricePrompt(user: UserJwtToken): void {
     const PROMPT_REDIS_KEY: string = this.envService.get(EnvEnum.PROMPT_REDIS_KEY);
     const promptCountStr = await this.redisCheckService.get(String(PROMPT_REDIS_KEY));
     let promptCountObj = JSON.parse(promptCountStr);
@@ -143,7 +143,7 @@ export class AiController {
       // 없으면 최초로 유저 하나 추가해주기
       promptCountObj = {};
       promptCountObj[PROMPT_REDIS_KEY] = [{ userId: user.userId, count: 1 }];
-      return await this.redisCheckService.set(String(PROMPT_REDIS_KEY), JSON.stringify(promptCountObj));
+      await this.redisCheckService.set(String(PROMPT_REDIS_KEY), JSON.stringify(promptCountObj));
     } else {
       const userCount = promptCountObj[PROMPT_REDIS_KEY].find((item) => item.userId === user.userId);
       // 있으면 해당 유저 아이디 있는지 확인
@@ -156,11 +156,11 @@ export class AiController {
         promptCountObj[PROMPT_REDIS_KEY].forEach((item) => {
           if (item.userId === user.userId) item.count = item.count + 1;
         });
-        return await this.redisCheckService.set(String(PROMPT_REDIS_KEY), JSON.stringify(promptCountObj));
+        await this.redisCheckService.set(String(PROMPT_REDIS_KEY), JSON.stringify(promptCountObj));
       } else {
         // 없으면 해당 유저 처음이니 저장하기
         promptCountObj[PROMPT_REDIS_KEY].push({ userId: user.userId, count: 1 });
-        return await this.redisCheckService.set(String(PROMPT_REDIS_KEY), JSON.stringify(promptCountObj));
+        await this.redisCheckService.set(String(PROMPT_REDIS_KEY), JSON.stringify(promptCountObj));
       }
     }
   }
