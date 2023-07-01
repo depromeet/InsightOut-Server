@@ -187,29 +187,23 @@ export class ExperienceController {
     return ResponseEntity.OK_WITH_DATA(experience);
   }
 
-  @ApiNotFoundResponse({
-    description: '⛔ 해당 ID의 경험카드는 존재하지 않습니다 아이디를 확인해주세요 :)',
-    type: UpdateExperienceInfoNotFoundErrorResDto,
-  })
   @Route({
     request: {
+      path: '/count',
       method: Method.GET,
-      path: '/:experienceId',
     },
     response: {
       code: HttpStatus.OK,
-      type: GetExperienceByIdResDto,
-      description: getExperienceByIdSuccMd,
+      type: GetCountOfExperienceResponseDto,
+      description: GetCountOfExperienceResponseDescriptionMd,
     },
-    description: getExperienceByIdDescriptionMd,
-    summary: getExperienceByIdSummaryMd,
+    summary: GetCountOfExperienceSummaryMd,
+    description: GetCountOfExperienceDescriptionMd,
   })
-  public async getExperienceById(
-    @Param() experienceIdParamReqDto: ExperienceIdParamReqDto,
-  ): Promise<ResponseEntity<GetExperienceByIdResDto>> {
-    const experience = await this.experienceService.getExperienceById(experienceIdParamReqDto);
+  public async getCountOfExperience(@User() user: UserJwtToken): Promise<ResponseEntity<GetCountOfExperienceResponseDto>> {
+    const countOfExperience = await this.experienceService.getCountOfExperience(user.userId);
 
-    return ResponseEntity.OK_WITH_DATA(experience);
+    return ResponseEntity.OK_WITH_DATA(countOfExperience);
   }
 
   @Route({
@@ -234,23 +228,29 @@ export class ExperienceController {
     return ResponseEntity.OK_WITH_DATA(countOfExperienceAndCapability);
   }
 
+  @ApiNotFoundResponse({
+    description: '⛔ 해당 ID의 경험카드는 존재하지 않습니다 아이디를 확인해주세요 :)',
+    type: UpdateExperienceInfoNotFoundErrorResDto,
+  })
   @Route({
     request: {
-      path: '/count',
       method: Method.GET,
+      path: '/:experienceId',
     },
     response: {
       code: HttpStatus.OK,
-      type: GetCountOfExperienceResponseDto,
-      description: GetCountOfExperienceResponseDescriptionMd,
+      type: GetExperienceByIdResDto,
+      description: getExperienceByIdSuccMd,
     },
-    summary: GetCountOfExperienceSummaryMd,
-    description: GetCountOfExperienceDescriptionMd,
+    description: getExperienceByIdDescriptionMd,
+    summary: getExperienceByIdSummaryMd,
   })
-  public async getCountOfExperience(@User() user: UserJwtToken): Promise<ResponseEntity<GetCountOfExperienceResponseDto>> {
-    const countOfExperience = await this.experienceService.getCountOfExperience(user.userId);
+  public async getExperienceById(
+    @Param() experienceIdParamReqDto: ExperienceIdParamReqDto,
+  ): Promise<ResponseEntity<GetExperienceByIdResDto>> {
+    const experience = await this.experienceService.getExperienceById(experienceIdParamReqDto);
 
-    return ResponseEntity.OK_WITH_DATA(countOfExperience);
+    return ResponseEntity.OK_WITH_DATA(experience);
   }
 
   // ✅ 경험카드 star 조회
