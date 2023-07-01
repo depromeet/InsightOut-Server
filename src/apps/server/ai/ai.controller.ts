@@ -30,6 +30,8 @@ import {
 import { PromptSummaryBodyReqDto } from './dto/req/promptSummary.req.dto';
 import { PromptSummaryResDto } from './dto/res/promptSummary.res.dto';
 import { PromptAiKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptAiKeyword.req.dto';
+import { RedisCacheService } from '📚libs/modules/cache/redis/redis.service';
+import { EnvService } from '📚libs/modules/env/env.service';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -63,6 +65,7 @@ export class AiController {
     @Body() promptKeywordBodyReqDto: PromptAiKeywordBodyReqDto,
     @User() user: UserJwtToken,
   ): Promise<ResponseEntity<PromptKeywordResDto>> {
+    await this.aiService.restrictPrompt(user);
     const newAi = await this.aiService.postAiKeywordPrompt(promptKeywordBodyReqDto, user);
 
     return ResponseEntity.OK_WITH_DATA(newAi);
@@ -97,6 +100,7 @@ export class AiController {
     @Body() promptKeywordBodyReqDto: PromptResumeBodyResDto,
     @User() user: UserJwtToken,
   ): Promise<ResponseEntity<PromptResumeResDto>> {
+    await this.aiService.restrictPrompt(user);
     const newAi = await this.aiService.postResumePrompt(promptKeywordBodyReqDto, user);
 
     return ResponseEntity.OK_WITH_DATA(newAi);
@@ -115,7 +119,11 @@ export class AiController {
     description: postSummaryPromptDescriptionMd,
     summary: postResumeSummarySummaryMd,
   })
-  public async postSummaryPrompt(@Body() promptSummaryBodyReqDto: PromptSummaryBodyReqDto): Promise<ResponseEntity<PromptSummaryResDto>> {
+  public async postSummaryPrompt(
+    @User() user: UserJwtToken,
+    @Body() promptSummaryBodyReqDto: PromptSummaryBodyReqDto,
+  ): Promise<ResponseEntity<PromptSummaryResDto>> {
+    await this.aiService.restrictPrompt(user);
     const newAi = await this.aiService.postSummaryPrompt(promptSummaryBodyReqDto);
 
     return ResponseEntity.OK_WITH_DATA(newAi);
