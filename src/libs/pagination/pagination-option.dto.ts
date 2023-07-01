@@ -42,10 +42,10 @@ export class PaginationOptionsDto {
   @IsOptional()
   readonly criteria?: OrderCriteria = OrderCriteria.createdAt;
 
-  @ApiPropertyOptional({ description: orderDiscription, enum: OrderBy, default: OrderBy.asc })
+  @ApiPropertyOptional({ description: orderDiscription, enum: OrderBy, default: OrderBy.desc })
   @IsEnum(OrderBy)
   @IsOptional()
-  readonly order?: OrderBy = OrderBy.asc;
+  readonly order?: OrderBy = OrderBy.desc;
 
   @ApiPropertyOptional({
     description: '### 가져올 페이지',
