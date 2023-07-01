@@ -110,11 +110,11 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
    *
    * ## 3. 응답값
    *
-   * @param userId
-   * @param select
-   * @param pagination
-   * @param capabilityId
-   * @returns
+   * @param userId 유저 고유 아이디
+   * @param select 추가적으로 조회할 컬럼들
+   * @param pagination 페이지네이션 옵션
+   * @param capabilityId 역량 키워드 ID
+   * @returns 조건에 맞는 경험카드
    */
   public async getExperiences(userId: number, select: Partial<ExperienceSelect>, pagination: PaginationOptionsDto, capabilityId?: number) {
     const { criteria, order, take, skip } = pagination;
