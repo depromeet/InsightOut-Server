@@ -20,6 +20,10 @@ s, t, a, r의 경험 카드 내용을 조회하기 위해서 각각 querystring�
 
 ### Picture
 
+#### 키워드 정리
+
+<img width="360" alt="image" src="https://github.com/depromeet/InsightOut-Server/assets/83271772/e14612fe-13e0-469a-892e-66a615bcb194">
+
 #### 페이지네이션 명세
 
 <img width="1409" alt="image" src="https://github.com/depromeet/InsightOut-Server/assets/83271772/ea8542e8-df05-4842-ba86-b43138fb1fe4">
@@ -34,7 +38,7 @@ export const getExperienceFirstPagehavingNextPageDescriptionMd = `
 ### 첫 페이지 조회
 - page: 1 - 현재 페이지는 1페이지입니다.
 - take: 3 - take로 입력한 값은 3입니다. 즉, 페이지 당 3개의 값을 조회합니다.
-- itemCount: 3 - 가져온 아이템 개수는 3개입니다(take가 3인 경우).
+- itemCount: 3 - 해당 API에서의 총 아이템 개수는 3개입니다.
 - pageCount: 3 - 총 페이지 개수는 3개입니다(총 7~9개의 아이템이 존재할 수 있습니다.).
 - hasPreviousPage: false - 이전 페이지가 존재하지 않습니다. 즉, 첫 번째 페이지입니다.
 - hasNextPage: true - 다음 페이지가 존재합니다. 즉, 마지막 페이지가 아닙니다.
@@ -44,7 +48,7 @@ export const getExperienceOnePageDescriptionMd = `
 ### 페이지가 한 개만 있는 경우 조회 (다음 페이지가 없는 경우)
 - page: 1 - 현재 페이지는 1페이지입니다.
 - take: 3 - take로 입력한 값은 3입니다. 즉, 페이지 당 3개의 값을 조회합니다.
-- itemCount: 3 - 가져온 아이템 개수는 3개입니다(take가 3인 경우).
+- itemCount: 3 - 해당 API에서의 총 아이템 개수는 3개입니다.
 - pageCount: 3 - 총 페이지 개수는 3개입니다(총 7~9개의 아이템이 존재할 수 있습니다.).
 - hasPreviousPage: false - 이전 페이지가 존재하지 않습니다. 즉, 첫 번째 페이지입니다.
 - hasNextPage: false - 다음 페이지가 존재합니다. 즉, 마지막 페이지입니다.
@@ -56,7 +60,7 @@ export const getExperienceLastPagehavingDescriptionMd = `
 ### 마지막 페이지 조회
 - page: 3 - 현재 페이지는 3페이지입니다.
 - take: 3 - take로 입력한 값은 3입니다. 즉, 페이지 당 3개의 값을 조회합니다.
-- itemCount: 3 - 가져온 아이템 개수는 3개입니다(take가 3인 경우).
+- itemCount: 3 - 해당 API에서의 총 아이템 개수는 3개입니다.
 - pageCount: 3 - 총 페이지 개수는 3개입니다(총 7~9개의 아이템이 존재할 수 있습니다.).
 - hasPreviousPage: true - 이전 페이지가 존재합니다. 즉, 첫 번째 페이지가 아닙니다.
 - hasNextPage: false - 다음 페이지가 존재하지 않습니다. 즉, 마지막 페이지입니다.
@@ -66,7 +70,7 @@ export const getExperienceMiddlePagehavingDescriptionMd = `
 ### 중간 페이지 조회
 - page: 2 - 현재 페이지는 2페이지입니다.
 - take: 3 - take로 입력한 값은 3입니다. 즉, 페이지 당 3개의 값을 조회합니다.
-- itemCount: 3 - 가져온 아이템 개수는 3개입니다(take가 3인 경우).
+- itemCount: 3 - 해당 API에서의 총 아이템 개수는 3개입니다.
 - pageCount: 3 - 총 페이지 개수는 3개입니다(총 7~9개의 아이템이 존재할 수 있습니다.).
 - hasPreviousPage: true - 이전 페이지가 존재합니다. 즉, 첫 번째 페이지가 아닙니다.
 - hasNextPage: true - 다음 페이지가 존재합니다. 즉, 마지막 페이지가 아닙니다.
