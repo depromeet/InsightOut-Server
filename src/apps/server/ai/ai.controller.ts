@@ -9,7 +9,7 @@ import {
   postResumeSummarySummaryMd,
   postSummaryPromptDescriptionMd,
 } from '🔥apps/server/ai/markdown/ai.md';
-import { BadRequestException, Body, HttpStatus, UseGuards } from '@nestjs/common';
+import { Body, HttpStatus, UseGuards } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiConflictResponse, ApiNotFoundResponse } from '@nestjs/swagger';
 import { Method } from '📚libs/enums/method.enum';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
@@ -32,8 +32,6 @@ import { PromptSummaryResDto } from './dto/res/promptSummary.res.dto';
 import { PromptAiKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptAiKeyword.req.dto';
 import { RedisCacheService } from '📚libs/modules/cache/redis/redis.service';
 import { EnvService } from '📚libs/modules/env/env.service';
-import { EnvEnum } from '📚libs/modules/env/env.enum';
-import { DAY } from '🔥apps/server/common/consts/time.const';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -44,11 +42,7 @@ import { DAY } from '🔥apps/server/common/consts/time.const';
   },
 })
 export class AiController {
-  constructor(
-    private readonly aiService: AiService,
-    private readonly redisCheckService: RedisCacheService,
-    private readonly envService: EnvService,
-  ) {}
+  constructor(private readonly aiService: AiService) {}
 
   @ApiConflictResponse({
     description: '⛔ 해당 experienceId에 추천 AI Capability가 이미 존재합니다. :)',
@@ -71,7 +65,7 @@ export class AiController {
     @Body() promptKeywordBodyReqDto: PromptAiKeywordBodyReqDto,
     @User() user: UserJwtToken,
   ): Promise<ResponseEntity<PromptKeywordResDto>> {
-    await this.restricePrompt(user);
+    await this.aiService.restrictPrompt(user);
     const newAi = await this.aiService.postAiKeywordPrompt(promptKeywordBodyReqDto, user);
 
     return ResponseEntity.OK_WITH_DATA(newAi);
@@ -106,7 +100,7 @@ export class AiController {
     @Body() promptKeywordBodyReqDto: PromptResumeBodyResDto,
     @User() user: UserJwtToken,
   ): Promise<ResponseEntity<PromptResumeResDto>> {
-    await this.restricePrompt(user);
+    await this.aiService.restrictPrompt(user);
     const newAi = await this.aiService.postResumePrompt(promptKeywordBodyReqDto, user);
 
     return ResponseEntity.OK_WITH_DATA(newAi);
@@ -129,40 +123,26 @@ export class AiController {
     @User() user: UserJwtToken,
     @Body() promptSummaryBodyReqDto: PromptSummaryBodyReqDto,
   ): Promise<ResponseEntity<PromptSummaryResDto>> {
-    await this.restricePrompt(user);
+    await this.aiService.restrictPrompt(user);
     const newAi = await this.aiService.postSummaryPrompt(promptSummaryBodyReqDto);
 
     return ResponseEntity.OK_WITH_DATA(newAi);
   }
 
-  public async restricePrompt(user: UserJwtToken): Promise<void> {
-    const PROMPT_REDIS_KEY: string = this.envService.get(EnvEnum.PROMPT_REDIS_KEY);
-    const promptCountStr = await this.redisCheckService.get(String(PROMPT_REDIS_KEY));
-    let promptCountObj = JSON.parse(promptCountStr);
-
-    if (promptCountObj === null) {
-      // 없으면 최초로 유저 하나 추가해주기
-      promptCountObj = {};
-      promptCountObj[PROMPT_REDIS_KEY] = [{ userId: user.userId, count: 1 }];
-      await this.redisCheckService.set(String(PROMPT_REDIS_KEY), JSON.stringify(promptCountObj), DAY);
-    } else {
-      const userCount = promptCountObj[PROMPT_REDIS_KEY].find((item) => item.userId === user.userId);
-      // 있으면 해당 유저 아이디 있는지 확인
-      if (userCount) {
-        if (userCount.count >= 50) {
-          // 50회 이상이면 더 사용하지 못하게 하기
-          throw new BadRequestException('50회 이상 사용하실 수 없습니다.');
-        }
-        // 50회 보다 작다면 count +1 하기
-        promptCountObj[PROMPT_REDIS_KEY].forEach((item) => {
-          if (item.userId === user.userId) item.count = item.count + 1;
-        });
-        await this.redisCheckService.set(String(PROMPT_REDIS_KEY), JSON.stringify(promptCountObj), DAY);
-      } else {
-        // 없으면 해당 유저 처음이니 저장하기
-        promptCountObj[PROMPT_REDIS_KEY].push({ userId: user.userId, count: 1 });
-        await this.redisCheckService.set(String(PROMPT_REDIS_KEY), JSON.stringify(promptCountObj), DAY);
-      }
-    }
+  @Route({
+    request: {
+      method: Method.POST,
+      path: '/test',
+    },
+    response: {
+      code: HttpStatus.OK,
+      // type: PromptSummaryResDto,
+      // description: postResumeSummarySuccMd,
+    },
+    // description: postSummaryPromptDescriptionMd,
+    // summary: postResumeSummarySummaryMd,
+  })
+  public async test(@User() user: UserJwtToken) {
+    return await this.aiService.restrictPrompt(user);
   }
 }

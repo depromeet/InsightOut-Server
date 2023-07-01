@@ -22,6 +22,8 @@ import { OpenAiResponseInterface } from '📚libs/modules/open-ai/interface/open
 import { UpdateExperienceReqDto } from '🔥apps/server/experiences/dto/req/updateExperience.dto';
 import { RedisCacheService } from '📚libs/modules/cache/redis/redis.service';
 import { EnvService } from '📚libs/modules/env/env.service';
+import { EnvEnum } from '📚libs/modules/env/env.enum';
+import { DAY } from '🔥apps/server/common/consts/time.const';
 
 @Injectable()
 export class AiService {
@@ -29,6 +31,8 @@ export class AiService {
     private readonly prisma: PrismaService,
     private readonly openAiService: OpenAiService,
     private readonly experienceService: ExperienceService,
+    private readonly redisCheckService: RedisCacheService,
+    private readonly envService: EnvService,
   ) {}
 
   public async postAiKeywordPrompt(body: PromptAiKeywordBodyReqDto, user: UserJwtToken): Promise<PromptKeywordResDto> {
@@ -158,6 +162,36 @@ export class AiService {
       return JSON.parse(promptResult.choices[CHOICES_IDX].message.content);
     } else {
       return promptResult.choices[CHOICES_IDX].message.content as string[];
+    }
+  }
+
+  public async restrictPrompt(user: UserJwtToken): Promise<void> {
+    const PROMPT_REDIS_KEY: string = this.envService.get(EnvEnum.PROMPT_REDIS_KEY);
+    const promptCountStr = await this.redisCheckService.get(String(PROMPT_REDIS_KEY));
+    let promptCountObj = JSON.parse(promptCountStr);
+
+    if (promptCountObj === null) {
+      // 없으면 최초로 유저 하나 추가해주기
+      promptCountObj = {};
+      promptCountObj[PROMPT_REDIS_KEY] = [{ userId: user.userId, count: 1 }];
+      await this.redisCheckService.set(String(PROMPT_REDIS_KEY), JSON.stringify(promptCountObj), DAY);
+    } else {
+      const foundUserIdx = promptCountObj[PROMPT_REDIS_KEY].findIndex((item) => item.userId === user.userId);
+
+      // 있으면 해당 유저 아이디 있는지 확인
+      if (foundUserIdx !== -1) {
+        if (promptCountObj[PROMPT_REDIS_KEY][foundUserIdx].count >= 50) {
+          // 50회 이상이면 더 사용하지 못하게 하기
+          throw new BadRequestException('50회 이상 사용하실 수 없습니다.');
+        }
+        // 50회 보다 작다면 count +1 하기
+        promptCountObj[PROMPT_REDIS_KEY][foundUserIdx].count += 1;
+        await this.redisCheckService.set(String(PROMPT_REDIS_KEY), JSON.stringify(promptCountObj), DAY);
+      } else {
+        // 없으면 해당 유저 처음이니 저장하기
+        promptCountObj[PROMPT_REDIS_KEY].push({ userId: user.userId, count: 1 });
+        await this.redisCheckService.set(String(PROMPT_REDIS_KEY), JSON.stringify(promptCountObj), DAY);
+      }
     }
   }
 }
