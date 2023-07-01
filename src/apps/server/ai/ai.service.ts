@@ -1,5 +1,5 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { Capability, Experience, KeywordType, Prisma } from '@prisma/client';
+import { Capability, Experience, KeywordType, Prisma, AiResume, AiResumeCapability } from '@prisma/client';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-token.type';
 import { OpenAiService } from '📚libs/modules/open-ai/open-ai.service';
@@ -24,6 +24,9 @@ import { RedisCacheService } from '📚libs/modules/cache/redis/redis.service';
 import { EnvService } from '📚libs/modules/env/env.service';
 import { EnvEnum } from '📚libs/modules/env/env.enum';
 import { DAY } from '🔥apps/server/common/consts/time.const';
+import { AiResumeRepository } from '📚libs/modules/database/repositories/ai-resume.repository';
+import { GetAiResumeQueryReqDto } from '🔥apps/server/ai/dto/req/getAiResume.req.dto';
+import { AiResumeResDto, GetAiResumeResDto } from '🔥apps/server/ai/dto/res/getAiResume.res.dto';
 
 @Injectable()
 export class AiService {
@@ -33,6 +36,7 @@ export class AiService {
     private readonly experienceService: ExperienceService,
     private readonly redisCheckService: RedisCacheService,
     private readonly envService: EnvService,
+    private readonly aiResumeRepository: AiResumeRepository,
   ) {}
 
   public async postAiKeywordPrompt(body: PromptAiKeywordBodyReqDto, user: UserJwtToken): Promise<PromptKeywordResDto> {
@@ -146,6 +150,19 @@ export class AiService {
     // 생성된 경험 분해 키드에 들어갈 데이터 return
     return new PromptSummaryResDto(await this.experienceService.getExperienceCardInfo(body.experienceId));
   }
+
+  public async getAiResumes(user: UserJwtToken, query?: GetAiResumeQueryReqDto): Promise<GetAiResumeResDto> {
+    const aiResumeArr = await this.aiResumeRepository.getAiResumeByUserId(user.userId, query.aiKeyword);
+
+    const aiResumeResDtoArr = aiResumeArr.map(
+      (aiResume: { AiResumeCapability: { Capability: { keyword: string } }[]; id: number; updatedAt: Date; content: string }) => {
+        return new AiResumeResDto(aiResume);
+      },
+    );
+
+    return new GetAiResumeResDto(aiResumeResDtoArr);
+  }
+
   // ---public done
 
   // private

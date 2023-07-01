@@ -1,4 +1,7 @@
 import {
+  getAiResumeDescriptionMd,
+  getAiResumeSuccMd,
+  getAiResumeSummaryMd,
   postKeywordPromptDescriptionMd,
   postKeywordPromptSuccMd,
   postKeywordPromptSummaryMd,
@@ -9,7 +12,7 @@ import {
   postResumeSummarySummaryMd,
   postSummaryPromptDescriptionMd,
 } from '🔥apps/server/ai/markdown/ai.md';
-import { Body, HttpStatus, UseGuards } from '@nestjs/common';
+import { Body, HttpStatus, Query, UseGuards } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiConflictResponse, ApiNotFoundResponse } from '@nestjs/swagger';
 import { Method } from '📚libs/enums/method.enum';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
@@ -30,8 +33,9 @@ import {
 import { PromptSummaryBodyReqDto } from './dto/req/promptSummary.req.dto';
 import { PromptSummaryResDto } from './dto/res/promptSummary.res.dto';
 import { PromptAiKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptAiKeyword.req.dto';
-import { RedisCacheService } from '📚libs/modules/cache/redis/redis.service';
-import { EnvService } from '📚libs/modules/env/env.service';
+import { AiResume } from '@prisma/client';
+import { GetAiResumeQueryReqDto } from '🔥apps/server/ai/dto/req/getAiResume.req.dto';
+import { GetAiResumeResDto } from '🔥apps/server/ai/dto/res/getAiResume.res.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -127,5 +131,27 @@ export class AiController {
     const newAi = await this.aiService.postSummaryPrompt(promptSummaryBodyReqDto);
 
     return ResponseEntity.OK_WITH_DATA(newAi);
+  }
+
+  @Route({
+    request: {
+      method: Method.GET,
+      path: '/ai-resume',
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: GetAiResumeResDto,
+      description: getAiResumeSuccMd,
+    },
+    description: getAiResumeDescriptionMd,
+    summary: getAiResumeSummaryMd,
+  })
+  public async getAiResume(
+    @User() user: UserJwtToken,
+    @Query() getAiResumeQueryReqDto?: GetAiResumeQueryReqDto,
+  ): Promise<ResponseEntity<GetAiResumeResDto>> {
+    const aiResumes = await this.aiService.getAiResumes(user, getAiResumeQueryReqDto);
+
+    return ResponseEntity.OK_WITH_DATA(aiResumes);
   }
 }
