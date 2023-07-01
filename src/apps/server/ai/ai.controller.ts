@@ -128,21 +128,4 @@ export class AiController {
 
     return ResponseEntity.OK_WITH_DATA(newAi);
   }
-
-  @Route({
-    request: {
-      method: Method.POST,
-      path: '/test',
-    },
-    response: {
-      code: HttpStatus.OK,
-      // type: PromptSummaryResDto,
-      // description: postResumeSummarySuccMd,
-    },
-    // description: postSummaryPromptDescriptionMd,
-    // summary: postResumeSummarySummaryMd,
-  })
-  public async test(@User() user: UserJwtToken) {
-    return await this.aiService.restrictPrompt(user);
-  }
 }
