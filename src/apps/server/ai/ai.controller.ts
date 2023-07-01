@@ -30,8 +30,6 @@ import {
 import { PromptSummaryBodyReqDto } from './dto/req/promptSummary.req.dto';
 import { PromptSummaryResDto } from './dto/res/promptSummary.res.dto';
 import { PromptAiKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptAiKeyword.req.dto';
-import { RedisCacheService } from '📚libs/modules/cache/redis/redis.service';
-import { EnvService } from '📚libs/modules/env/env.service';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)

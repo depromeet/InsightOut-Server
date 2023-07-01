@@ -3,7 +3,7 @@ export const GetOneQuestionResponseDescriptionMd = `
 `;
 
 export const GetOneQuestionSummaryMd = `
-특정 자기소개서 문항 조회 API
+🟢🟣 특정 자기소개서 문항 조회 API
 `;
 
 export const GetOneQuestionDescriptionMd = `

@@ -4,7 +4,7 @@ export const PatchUserInfoResponseDescriptionMd = `
 `;
 
 export const PatchUserInfoSummaryMd = `
-유저 정보 업데이트 API
+🟤 유저 정보 업데이트 API
 `;
 
 export const PatchUserInfoDescriptionMd = `

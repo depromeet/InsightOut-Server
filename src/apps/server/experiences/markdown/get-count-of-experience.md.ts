@@ -4,7 +4,7 @@ export const GetCountOfExperienceResponseDescriptionMd = `
 `;
 
 export const GetCountOfExperienceSummaryMd = `
-경험 카드 개수 조회 API
+🟢 경험 카드 개수 조회 API
 `;
 
 export const GetCountOfExperienceDescriptionMd = `

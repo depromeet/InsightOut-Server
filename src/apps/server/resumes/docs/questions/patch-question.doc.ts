@@ -5,7 +5,7 @@ export const PatchQuestionResponseDescriptionMd = `
 `;
 
 export const PatchQuestionSummaryMd = `
-자기소개서 문항 수정 API (2023.6.6. Updated)
+🟣 자기소개서 문항 수정 API (2023.6.6. Updated)
 `;
 
 export const PatchQuestionDescriptionMd = `

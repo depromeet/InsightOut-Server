@@ -31,7 +31,7 @@ export class AuthController {
       description:
         '### ✅ 액세스 토큰을 반환합니다.\n해당 Access token을 Authorization 헤더에 bearer로 넣어서 요청을 보내주세요.   \nswagger 상단 Authorize에 입력하시면 다른 API에서 사용 가능합니다.',
     },
-    summary: '소셜 로그인 API입니다. 💬 현재 구글 로그인만 가능합니다.',
+    summary: '🟤 소셜 로그인 API입니다. 💬 현재 구글 로그인만 가능합니다.',
     description:
       '# 소셜 로그인 API\n## Description\n구글로그인 시 <code>idToken</code>을 request body에 담아 전달합니다. 만약 유저가 존재한다면, 로그인하며 존재하지 않는다면, 회원가입 처리합니다.   \n이때, 기본 자기소개서와 기본 역량 키워드를 함께 생성합니다. 이후 액세스 토큰을 response body에 담아 응답하며,<code>Set-Cookie</code> 응답 헤더를 통해 refresh token을 쿠키로 설정합니다.\n## Keyword\n해당 API에서 사용하는 정보들입니다.\n1. idToken: 구글에서 해당 유저의 정보를 담은 토큰입니다.\n2. access token: 서버에서 해당 유저의 요청이 인가된 요청인지 파악하며, 인가된 유저의 경우 해당 토큰에서 userId를 추출하여 API 내부에서 사용합니다. **(💬. 유효기간은 1시간입니다.)**   \n3. refresh token: access token이 만료될 시 재발급 받기 위한 토큰입니다. **(💬. 유효 기간은 2주입니다.)**\n## etc.\n- ⛳️[샘플 자기소개서](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1221-8169&t=j2n55oy4yPo0noBM-4) - 자기소개서 첫 화면의 2번 항목에 사용됩니다.\n- ⛳️ [직무 역량 키워드](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=765-4685&t=j2n55oy4yPo0noBM-4) - 해당 화면에 기본적으로 들어갈 키워드들입니다.',
   })
@@ -74,7 +74,7 @@ export class AuthController {
       description:
         '### ✅ 액세스 토큰을 갱신합니다.\n해당 Access token을 Authorization 헤더에 bearer로 넣어서 요청을 보내주세요.   \nswagger 상단 Authorize에 입력하시면 다른 API에서 사용 가능합니다.',
     },
-    summary: '액세스 토큰 재발급 API입니다. Access token이 만료됐을 시 사용해주세요.',
+    summary: '🟤 액세스 토큰 재발급 API입니다. Access token이 만료됐을 시 사용해주세요.',
     description:
       '# 액세스 토큰 재발급 API\n## Description\nRefresh token을 사용하여 access token을 재발급합니다.   \nRefresh token의 기한이 만료되지 않고, redis에 저장된 토큰과 같을 때(유효한 토큰일 때) access token을 반환합니다.   \nRefresh token의 주기를 짧게 가져가 보안을 강화하기 위해 refresh token도 재발급합니다.\n## Keyword\n해당 API에서 사용하는 정보들입니다.\n1. access token: 서버에서 해당 유저의 요청이 인가된 요청인지 파악하며, 인가된 유저의 경우 해당 토큰에서 userId를 추출하여 API 내부에서 사용합니다. **(💬. 유효기간은 1시간입니다.)**   \n2. refresh token: access token이 만료될 시 재발급 받기 위한 토큰입니다. **(💬. 유효 기간은 2주입니다.)**\n## etc.\n- ⛳️[샘플 자기소개서](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1221-8169&t=j2n55oy4yPo0noBM-4) - 자기소개서 첫 화면의 2번 항목에 사용됩니다.\n- ⛳️ [직무 역량 키워드](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=765-4685&t=j2n55oy4yPo0noBM-4) - 해당 화면에 기본적으로 들어갈 키워드들입니다.',
   })
@@ -115,7 +115,7 @@ export class AuthController {
       description:
         '### ✅ 회원 탈퇴에 성공했습니다.\nRefresh token을 redis에서 삭제하며, firebase Authentication 서비스에서 유저를 삭제합니다.',
     },
-    summary: '회원 탈퇴 API',
+    summary: '🟤 회원 탈퇴 API',
     description:
       '# 회원 탈퇴 API\n## Description\n회원 탈퇴를 진행합니다. 해당 유저의 Refresh Token을 받아서 삭제합니다.\n## Response\n반환값은 없습니다.\n## etc.\n⛳️ [마이페이지 회원탈퇴](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1418-10972&t=PibZzDLncZrUbrLe-4)',
   })
@@ -148,7 +148,7 @@ export class AuthController {
       description:
         '### ✅ 로그아웃에 성공했습니다.\nRefresh token이 같으므로, 유효한 토큰이라 판단해 redis에서 삭제합니다. 회원탈퇴와 다르게 firebase Authentication에서 유저를 삭제하지는 않습니다.',
     },
-    summary: '로그아웃 API',
+    summary: '🟤 로그아웃 API',
     description:
       '# 로그아웃 API\n## Description\n로그아웃을 처리합니다. 해당 유저의 Refresh Token을 쿠키에서 탐색하여, 해당 token이 redis에 존재하는 refresh token과 같은지 검증합니다. RTR 방식으로 매번 refresh token을 생성하지만, 기존 브라우저에 존재하는 refresh token을 만료하게 할 수는 없기 떄문에, Redis와 같은 key-value 저장소에 저장된 토큰을 유효한 토큰으로 간주합니다.\n## Response\n반환값은 없습니다.\n## etc.\n⛳️ [로그아웃](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1418-10717&t=6UiMDM9wwxO4vDZo-4)   \n💬 참고자료: https://seungyong20.tistory.com/entry/JWT-Access-Token%EA%B3%BC-Refresh-Token-%EA%B7%B8%EB%A6%AC%EA%B3%A0-RTR-%EA%B8%B0%EB%B2%95%EC%97%90-%EB%8C%80%ED%95%B4%EC%84%9C-%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90',
   })

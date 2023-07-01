@@ -5,7 +5,7 @@ export const DeleteQuestionResponseDescriptionMd = `
 `;
 
 export const DeleteQuestionSummaryMd = `
-자기소개서 문항 삭제 API
+🟣 자기소개서 문항 삭제 API
 `;
 
 export const DeleteQuestionDescriptionMd = `

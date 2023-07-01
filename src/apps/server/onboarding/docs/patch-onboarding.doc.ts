@@ -5,7 +5,7 @@ export const PatchOnboardingResponseDescriptionMd = `
 `;
 
 export const PatchOnboardingSummaryMd = `
-온보딩 여부 업데이트 API
+🔵🟢🟣 온보딩 여부 업데이트 API
 `;
 
 export const PatchOnboardingDescriptionMd = `

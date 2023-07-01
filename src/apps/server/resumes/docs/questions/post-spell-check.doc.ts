@@ -4,7 +4,7 @@ export const PostSpellCheckResponseDescriptionMd = `
 `;
 
 export const PostSpellCheckSummaryMd = `
-자기소개서 답안 맞춤법 검사 API
+🟣 자기소개서 답안 맞춤법 검사 API
 `;
 
 export const PostSpellCheckDescriptionMd = `

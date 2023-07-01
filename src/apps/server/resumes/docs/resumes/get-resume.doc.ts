@@ -3,7 +3,7 @@ export const GetAllResumesTitleResponseDescriptionMd = `
 모아보기에서 자기소개서 제목을 통해 자기소개서들을 필터링합니다.
 `;
 
-export const GetAllResumesTitleSummaryMd = `자기소개서 제목 조회 API`;
+export const GetAllResumesTitleSummaryMd = `🟢🟣 자기소개서 제목 조회 API`;
 
 export const GetAllResumesTitleDescriptionMd = `
 # 자기소개서 제목 조회 API
@@ -32,7 +32,7 @@ export const GetAllResumeResponseDescriptionMd = `
 `;
 
 export const GetAllResumeSummaryMd = `
-자기소개서 전체 조회 API (2023.6.3. Updated)
+🟢🟣 자기소개서 전체 조회 API (2023.6.3. Updated)
 `;
 
 export const GetAllResumeDescriptionMd = `
@@ -66,7 +66,7 @@ export const GetOneResumeResponseDescriptionMd = `
 `;
 
 export const GetOneResumeSummaryMd = `
-특정 자기소개서 조회 API (2023.6.6. Updated)
+🟣 특정 자기소개서 조회 API (2023.6.6. Updated)
 `;
 
 export const GetOneResumeDescriptionMd = `

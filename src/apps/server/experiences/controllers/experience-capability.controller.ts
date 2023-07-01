@@ -27,7 +27,7 @@ import { ExperienceIdParamReqDto } from '🔥apps/server/experiences/dto/req/exp
 @RouteTable({
   path: 'experience/capability',
   tag: {
-    title: '🔭경험 분해 API',
+    title: '🔭 경험 분해 API',
   },
 })
 export class ExperienceKeywordController {
@@ -42,7 +42,7 @@ export class ExperienceKeywordController {
       code: HttpStatus.OK,
     },
     description: getExperienceCapabilitySuccMd,
-    summary: '✅ 경험 분해 키워드 가져오기 API',
+    summary: '🔵 경험 분해 키워드 가져오기 API',
   })
   public async getExperienceCapability(
     @User() user: UserJwtToken,
@@ -67,7 +67,7 @@ export class ExperienceKeywordController {
       type: AddCapabilityResDto,
     },
     description: addCapabilitySuccMd,
-    summary: '✅ 경험 분해 키워드 추가하기 API',
+    summary: '🔵 경험 분해 키워드 추가하기 API',
   })
   public async addCapability(@Body() addCapabilitydBodyDto: AddCapabilitydBodyDto, @User() user: UserJwtToken) {
     const capability = await this.experienceCapabilityService.addCapability(addCapabilitydBodyDto, user);
@@ -89,7 +89,7 @@ export class ExperienceKeywordController {
       type: CreateExperienceCapabilitiesResDto,
     },
     description: createManyExperienceCapabilitiesSuccMd,
-    summary: '✅ 경험 분해 키워드 임시 저장 API',
+    summary: '🔵 경험 분해 키워드 임시 저장 API',
   })
   public async createManyExperienceCapabilities(
     @Body() createExperienceKeywordBodyDto: CreateExperienceCapabilitiesdBodyDto,

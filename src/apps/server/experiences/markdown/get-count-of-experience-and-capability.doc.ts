@@ -6,7 +6,7 @@ export const GetCountOfExperienceAndCapabilityResponseDescriptionMd = `
 `;
 
 export const GetCountOfExperienceAndCapabilitySummaryMd = `
-경험카드 키워드 및 해당 경험카드 개수 조회 API
+🟢🟣 경험카드 키워드 및 해당 경험카드 개수 조회 API
 `;
 
 export const GetCountOfExperienceAndCapabilityDescriptionMd = `
