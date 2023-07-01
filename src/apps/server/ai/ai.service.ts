@@ -20,6 +20,8 @@ import { ExperienceService } from '🔥apps/server/experiences/services/experien
 import { PromptAiKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptAiKeyword.req.dto';
 import { OpenAiResponseInterface } from '📚libs/modules/open-ai/interface/openAiResponse.interface';
 import { UpdateExperienceReqDto } from '🔥apps/server/experiences/dto/req/updateExperience.dto';
+import { RedisCacheService } from '📚libs/modules/cache/redis/redis.service';
+import { EnvService } from '📚libs/modules/env/env.service';
 
 @Injectable()
 export class AiService {
