@@ -78,17 +78,6 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
     });
   }
 
-  public async findManyByUserId(userId: number, select: ExperienceSelect, pagination: PaginationOptionsDto) {
-    const { criteria, order, take, skip } = pagination;
-    return await this.prisma.experience.findMany({
-      select,
-      where: { userId },
-      orderBy: { [criteria]: order },
-      take,
-      skip,
-    });
-  }
-
   public async findOneByUserId(userId: number): Promise<Experience> {
     return await this.prisma.experience.findFirst({
       include: { ExperienceInfo: true },
@@ -102,22 +91,44 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
     });
   }
 
-  public async getExperienceByCapability(
-    userId: number,
-    capabilityId: number,
-    select: Partial<ExperienceSelect>,
-    pagination: PaginationOptionsDto,
-  ) {
+  /**
+   * # 경험 카드 모두 조회
+   *
+   * ## 1. 설명
+   *
+   * 유저가 작성한 경험 카드를 모두 조회합니다. 페이지네이션, 일부 조회, capabilityId를 통한 필터링이 가능합니다.
+   *
+   * ## 2. 사용 방법
+   *
+   * - select는 쿼리에서 조회할 값들을 의미합니다. 이를 제외하고 기본적으로 반환해야 하는 값들은 id, title, startDate, endDate, experienceStatus, summaryKeywords, ExperienceCapability, AiResume 입니다.
+   * ...select 스프레드 연산자로, 조회할 컬럼을 입력해 주세요.
+   * - pagination은 페이지네이션에 필요한 인자들입니다.
+   *   - criteria는 정렬 기준을 의미합니다. 기본값은 id입니다.
+   *   - order는 정렬 순서를 의미합니다. 기본값은 'desc', 내림차순입니다.
+   *   - take는 한 페이지에 보여줄 데이터의 개수를 의미합니다. 기본값은 3입니다.
+   *   - skip은 건너뛸 row의 개수입니다. (page - 1) * take로 구합니다.
+   *
+   * ## 3. 응답값
+   *
+   * @param userId
+   * @param select
+   * @param pagination
+   * @param capabilityId
+   * @returns
+   */
+  public async getExperiences(userId: number, select: Partial<ExperienceSelect>, pagination: PaginationOptionsDto, capabilityId?: number) {
     const { criteria, order, take, skip } = pagination;
-    // TODO ai 역량 키워드가 적용되면 해당 키워드도 함께 쿼리로 가져와야 함.
-    const experiences = await this.prisma.experience.findMany({
-      where: { userId, ExperienceCapability: { some: { capabilityId: { equals: capabilityId } } } },
+    let experiences = await this.prisma.experience.findMany({
+      where: { userId },
       select: {
         id: true,
         title: true,
         startDate: true,
         endDate: true,
         experienceStatus: true,
+        summaryKeywords: true,
+        ExperienceCapability: { select: { Capability: true } },
+        AiResume: { select: { AiResumeCapability: { select: { Capability: true } } } },
         ...select,
       },
       orderBy: { [criteria]: order },
@@ -125,18 +136,13 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
       skip,
     });
 
-    const experienceWithCapability = await Promise.all(
-      experiences.map(async (experience) => {
-        const capability = await this.prisma.capability.findMany({
-          where: { ExperienceCapability: { some: { experienceId: experience.id } } },
-          select: { id: true, keyword: true, keywordType: true },
-        });
+    if (capabilityId) {
+      experiences = experiences.filter((experience) =>
+        experience.ExperienceCapability.find((experienceCapability) => experienceCapability.Capability.id === capabilityId),
+      );
+    }
 
-        return Object.assign(experience, { capability });
-      }),
-    );
-
-    return experienceWithCapability;
+    return experiences;
   }
 
   public async getStarFromExperienceByExperienceId(experienceId: number) {
