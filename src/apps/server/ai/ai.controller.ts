@@ -134,7 +134,7 @@ export class AiController {
     return ResponseEntity.OK_WITH_DATA(newAi);
   }
 
-  public async restricePrompt(user: UserJwtToken): void {
+  public async restricePrompt(user: UserJwtToken): Promise<void> {
     const PROMPT_REDIS_KEY: string = this.envService.get(EnvEnum.PROMPT_REDIS_KEY);
     const promptCountStr = await this.redisCheckService.get(String(PROMPT_REDIS_KEY));
     let promptCountObj = JSON.parse(promptCountStr);
