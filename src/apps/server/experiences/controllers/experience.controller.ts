@@ -50,9 +50,16 @@ import {
   updateExperienceDescriptionMd,
   updateExperienceSuccMd,
   updateExperienceSummaryMd,
+  getExperienceCardInfoDescriptionMd,
+  getExperienceCardInfoSummaryMd,
+  getExperienceCardInfoSuccMd,
 } from '🔥apps/server/experiences/markdown';
 import { SuccessResponse } from '📚libs/decorators/success-response.dto';
 import { PaginationDto } from '📚libs/pagination/pagination.dto';
+import {
+  GetExperienceCardInfoNotFoundErrorResDto,
+  GetExperienceCardInfoResDto,
+} from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.res.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -185,6 +192,31 @@ export class ExperienceController {
     }
 
     return ResponseEntity.OK_WITH_DATA(experience);
+  }
+
+  @ApiNotFoundResponse({
+    type: GetExperienceCardInfoNotFoundErrorResDto,
+    description: '⛔ 해당 ID의 경험카드는 존재하지 않습니다 아이디를 확인해주세요 :)',
+  })
+  @Route({
+    request: {
+      path: '/:experienceId/card-info',
+      method: Method.GET,
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: GetExperienceCardInfoResDto,
+      description: getExperienceCardInfoDescriptionMd,
+    },
+    summary: getExperienceCardInfoSummaryMd,
+    description: getExperienceCardInfoSuccMd,
+  })
+  public async getExperienceCardInfo(
+    @Param() experienceIdParamReqDto: ExperienceIdParamReqDto,
+  ): Promise<ResponseEntity<GetExperienceCardInfoResDto>> {
+    const experienceCardInfo = await this.experienceService.getExperienceCardInfo(experienceIdParamReqDto.experienceId);
+
+    return ResponseEntity.OK_WITH_DATA(experienceCardInfo);
   }
 
   @Route({

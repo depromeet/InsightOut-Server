@@ -28,10 +28,8 @@ import {
   PromptResumeResDto,
 } from '🔥apps/server/ai/dto/res/promptResume.res.dto';
 import { PromptSummaryBodyReqDto } from './dto/req/promptSummary.req.dto';
-import { PromptSummaryResDto } from './dto/res/promptSummary.res.dto';
 import { PromptAiKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptAiKeyword.req.dto';
-import { RedisCacheService } from '📚libs/modules/cache/redis/redis.service';
-import { EnvService } from '📚libs/modules/env/env.service';
+import { GetExperienceCardInfoResDto } from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.res.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -113,7 +111,7 @@ export class AiController {
     },
     response: {
       code: HttpStatus.OK,
-      type: PromptSummaryResDto,
+      type: GetExperienceCardInfoResDto,
       description: postResumeSummarySuccMd,
     },
     description: postSummaryPromptDescriptionMd,
@@ -122,7 +120,7 @@ export class AiController {
   public async postSummaryPrompt(
     @User() user: UserJwtToken,
     @Body() promptSummaryBodyReqDto: PromptSummaryBodyReqDto,
-  ): Promise<ResponseEntity<PromptSummaryResDto>> {
+  ): Promise<ResponseEntity<GetExperienceCardInfoResDto>> {
     await this.aiService.restrictPrompt(user);
     const newAi = await this.aiService.postSummaryPrompt(promptSummaryBodyReqDto);
 
