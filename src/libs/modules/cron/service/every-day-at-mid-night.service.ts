@@ -12,7 +12,7 @@ import { CronJobTypeEnum } from '📚libs/modules/cron/enum/cron.enum';
  * 2. job안에서 실행시켜주기
  */
 @Injectable()
-export class EveryDayAtMidNight extends AbstractCronJob {
+export class EveryDayAtMidNightService extends AbstractCronJob {
   constructor(private readonly redisCacheService: RedisCacheService, private readonly envService: EnvService) {
     super('CronAtMidnight', CronJobTypeEnum.SCHEDULE_CRON);
   }
