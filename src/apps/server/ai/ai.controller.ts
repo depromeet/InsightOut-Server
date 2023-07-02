@@ -28,10 +28,7 @@ import {
   PromptResumeResDto,
 } from '🔥apps/server/ai/dto/res/promptResume.res.dto';
 import { PromptSummaryBodyReqDto } from './dto/req/promptSummary.req.dto';
-import { PromptSummaryResDto } from './dto/res/promptSummary.res.dto';
 import { PromptAiKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptAiKeyword.req.dto';
-import { RedisCacheService } from '📚libs/modules/cache/redis/redis.service';
-import { EnvService } from '📚libs/modules/env/env.service';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -113,16 +110,13 @@ export class AiController {
     },
     response: {
       code: HttpStatus.OK,
-      type: PromptSummaryResDto,
+      // type: ,
       description: postResumeSummarySuccMd,
     },
     description: postSummaryPromptDescriptionMd,
     summary: postResumeSummarySummaryMd,
   })
-  public async postSummaryPrompt(
-    @User() user: UserJwtToken,
-    @Body() promptSummaryBodyReqDto: PromptSummaryBodyReqDto,
-  ): Promise<ResponseEntity<PromptSummaryResDto>> {
+  public async postSummaryPrompt(@User() user: UserJwtToken, @Body() promptSummaryBodyReqDto: PromptSummaryBodyReqDto) {
     await this.aiService.restrictPrompt(user);
     const newAi = await this.aiService.postSummaryPrompt(promptSummaryBodyReqDto);
 

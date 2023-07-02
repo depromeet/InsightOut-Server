@@ -21,6 +21,11 @@ import { PaginationMetaDto } from '📚libs/pagination/pagination-meta.dto';
 import { CreateExperienceResDto } from '🔥apps/server/experiences/dto/res/createExperience.res.dto';
 import { ExperienceIdParamReqDto } from '🔥apps/server/experiences/dto/req/experienceIdParam.dto';
 import { GetExperienceByIdResDto } from '🔥apps/server/experiences/dto/res/getExperienceById.res.dto';
+import {
+  AiRecommendQuestionResDto,
+  AiResumeResDto,
+  GetExperienceCardInfoResDto,
+} from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.res.dto';
 
 @Injectable()
 export class ExperienceService {
@@ -69,11 +74,31 @@ export class ExperienceService {
     return new CreateExperienceResDto(experience, experienceInfo);
   }
 
-  public async getExperienceCardInfo(experienceId: number): Promise<ExperienceCardType> {
-    const experience = this.experienceRepository.getExperienceCardInfo(experienceId);
+  public async getExperienceCardInfo(experienceId: number): Promise<GetExperienceCardInfoResDto> {
+    const experience = await this.experienceRepository.getExperienceCardInfo(experienceId);
     if (!experience) throw new NotFoundException('해당 ID의 experience가 없습니다.');
 
-    return experience;
+    const aiRecommendQuestionResDto = experience.AiRecommendQuestion.map((aiRecommend) => new AiRecommendQuestionResDto(aiRecommend));
+    const aiResumeResDto = new AiResumeResDto({
+      content: experience.AiResume.content,
+      AiResumeCapability: experience.AiResume.AiResumeCapability.map((capability) => capability.Capability.keyword),
+    });
+    const result: ExperienceCardType = {
+      title: experience.title,
+      summaryKeywords: experience.summaryKeywords,
+      situation: experience.situation,
+      startDate: experience.startDate,
+      endDate: experience.endDate,
+      task: experience.task,
+      action: experience.action,
+      result: experience.result,
+      ExperienceInfo: experience.ExperienceInfo,
+      ExperienceCapability: experience.ExperienceCapability.map((capability) => capability.Capability.keyword),
+      AiRecommendQuestion: aiRecommendQuestionResDto,
+      AiResume: aiResumeResDto,
+    };
+
+    return new GetExperienceCardInfoResDto(result);
   }
 
   public async update(body: UpdateExperienceReqDto, query: ExperienceIdParamReqDto): Promise<UpdateExperienceResDto> {

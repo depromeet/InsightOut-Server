@@ -32,10 +32,12 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
       },
     });
   }
-  public async getExperienceCardInfo(experienceId: number): Promise<ExperienceCardType> {
+  public async getExperienceCardInfo(experienceId: number) {
     return await this.prisma.experience.findUnique({
       where: { id: experienceId },
       select: {
+        startDate: true,
+        endDate: true,
         summaryKeywords: true,
         title: true,
         situation: true,
