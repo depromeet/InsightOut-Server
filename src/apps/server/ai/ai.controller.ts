@@ -29,6 +29,7 @@ import {
 } from '🔥apps/server/ai/dto/res/promptResume.res.dto';
 import { PromptSummaryBodyReqDto } from './dto/req/promptSummary.req.dto';
 import { PromptAiKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptAiKeyword.req.dto';
+import { GetExperienceCardInfoResDto } from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.res.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -110,13 +111,16 @@ export class AiController {
     },
     response: {
       code: HttpStatus.OK,
-      // type: ,
+      type: GetExperienceCardInfoResDto,
       description: postResumeSummarySuccMd,
     },
     description: postSummaryPromptDescriptionMd,
     summary: postResumeSummarySummaryMd,
   })
-  public async postSummaryPrompt(@User() user: UserJwtToken, @Body() promptSummaryBodyReqDto: PromptSummaryBodyReqDto) {
+  public async postSummaryPrompt(
+    @User() user: UserJwtToken,
+    @Body() promptSummaryBodyReqDto: PromptSummaryBodyReqDto,
+  ): Promise<ResponseEntity<GetExperienceCardInfoResDto>> {
     await this.aiService.restrictPrompt(user);
     const newAi = await this.aiService.postSummaryPrompt(promptSummaryBodyReqDto);
 
