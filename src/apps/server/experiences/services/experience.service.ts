@@ -72,6 +72,7 @@ export class ExperienceService {
   public async getExperienceCardInfo(experienceId: number): Promise<ExperienceCardType> {
     const experience = this.experienceRepository.getExperienceCardInfo(experienceId);
     if (!experience) throw new NotFoundException('해당 ID의 experience가 없습니다.');
+
     return experience;
   }
 

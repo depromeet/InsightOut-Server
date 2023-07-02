@@ -50,6 +50,9 @@ import {
   updateExperienceDescriptionMd,
   updateExperienceSuccMd,
   updateExperienceSummaryMd,
+  getExperienceCardInfoDescriptionMd,
+  getExperienceCardInfoSummaryMd,
+  getExperienceCardInfoSuccMd,
 } from '🔥apps/server/experiences/markdown';
 import { SuccessResponse } from '📚libs/decorators/success-response.dto';
 import { PaginationDto } from '📚libs/pagination/pagination.dto';
@@ -185,6 +188,25 @@ export class ExperienceController {
     }
 
     return ResponseEntity.OK_WITH_DATA(experience);
+  }
+
+  @Route({
+    request: {
+      path: '/:experienceId/card-info',
+      method: Method.GET,
+    },
+    response: {
+      code: HttpStatus.OK,
+      // type: GetCountOfExperienceResponseDto,
+      description: getExperienceCardInfoDescriptionMd,
+    },
+    summary: getExperienceCardInfoSummaryMd,
+    description: getExperienceCardInfoSuccMd,
+  })
+  public async getExperienceCardInfo(@Param() experienceIdParamReqDto: ExperienceIdParamReqDto) {
+    const experienceCardInfo = await this.experienceService.getExperienceCardInfo(experienceIdParamReqDto.experienceId);
+
+    return ResponseEntity.OK_WITH_DATA(experienceCardInfo);
   }
 
   @Route({
