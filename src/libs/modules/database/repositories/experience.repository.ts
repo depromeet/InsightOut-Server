@@ -24,6 +24,7 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
         result: true,
         experienceStatus: true,
         summaryKeywords: true,
+        updatedAt: true,
         ExperienceInfo: { select: { experienceId: true, experienceRole: true, motivation: true, utilization: true } },
         AiResume: {
           select: { content: true, AiResumeCapability: { select: { Capability: { select: { keyword: true, keywordType: true } } } } },

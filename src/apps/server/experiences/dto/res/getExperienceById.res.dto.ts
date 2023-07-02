@@ -1,6 +1,17 @@
 import { Exclude, Expose, Type } from 'class-transformer';
 import { Experience, ExperienceStatus, KeywordType } from '@prisma/client';
-import { ArrayMaxSize, IsArray, IsEnum, IsNotEmpty, IsOptional, IsString, Matches, MaxLength, ValidateNested } from 'class-validator';
+import {
+  ArrayMaxSize,
+  IsArray,
+  IsDate,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Matches,
+  MaxLength,
+  ValidateNested,
+} from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptionalNumber } from '🔥apps/server/common/decorators/validation/isCustomNumber.decorator';
 import { IsOptionalString } from '🔥apps/server/common/decorators/validation/isCustomString.decorator';
@@ -87,6 +98,7 @@ export class GetExperienceByIdResDto {
   @Exclude() _result: string;
   @Exclude() _experienceStatus: ExperienceStatus;
   @Exclude() _summaryKeywords: string[];
+  @Exclude() _updatedAt: Date;
   @Exclude() _ExperienceInfo: GetExperienceInfoResDto;
   @Exclude() _AiResume: AiResume;
 
@@ -101,6 +113,7 @@ export class GetExperienceByIdResDto {
     this._result = experience.result;
     this._experienceStatus = experience.experienceStatus;
     this._summaryKeywords = experience.summaryKeywords;
+    this._updatedAt = experience.updatedAt;
     this._ExperienceInfo = experience.ExperienceInfo;
     this._AiResume = experience.AiResume;
   }
@@ -172,6 +185,14 @@ export class GetExperienceByIdResDto {
   @IsOptional()
   get summaryKeywords(): string[] {
     return this._summaryKeywords;
+  }
+
+  @IsDate()
+  @IsNotEmpty()
+  @Expose()
+  @ApiPropertyOptional({ example: '2023-07-01T09:11:30.599Z' })
+  get updatedAt(): Date {
+    return this._updatedAt;
   }
 
   @Expose()
