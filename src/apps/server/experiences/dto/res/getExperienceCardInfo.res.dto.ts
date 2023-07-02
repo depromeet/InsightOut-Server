@@ -87,6 +87,11 @@ export class GetExperienceCardInfoResDto {
   }
 
   @Expose()
+  @ApiProperty({ type: AiRecommendQuestionResDto, isArray: true, description: 'AI 추천 자기소개서 재목 배열입니다..' })
+  get AiRecommendQuestion(): AiRecommendQuestionResDto[] {
+    return this._AiRecommendQuestion;
+  }
+  @Expose()
   @ApiProperty({
     example: { analysis: '와우, 당신의 능력을 보여줘서 놀랐어요! 짧은 기간 내에 출시 성공으로 미래에 대한 가능성이 무궁무진합니다!' },
     description: 'AI가 STAR 요약본입니다.',
