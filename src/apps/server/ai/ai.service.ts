@@ -91,21 +91,25 @@ export class AiService {
     const resume = result.choices[CHOICES_IDX].message.content as string;
 
     try {
-      await this.prisma.$transaction(async (tx) => {
-        // aiResume생성
-        const newAiResume = await tx.aiResume.create({
-          data: { userId: user.userId, content: resume, experienceId: body.experienceId },
-        });
-        const aiResumeCapabilityInfos = body.capabilityIds.map((capabilityId) => {
-          return { capabilityId: capabilityId, aiResumeId: newAiResume.id };
-        });
-        // aiResumeCapability 생성
-        await tx.aiResumeCapability.createMany({ data: aiResumeCapabilityInfos });
-      });
+      await this.prisma.$transaction(
+        async (tx) => {
+          // aiResume생성
+          const newAiResume = await tx.aiResume.create({
+            data: { userId: user.userId, content: resume, experienceId: body.experienceId },
+          });
+          const aiResumeCapabilityInfos = body.capabilityIds.map((capabilityId) => {
+            return { capabilityId: capabilityId, aiResumeId: newAiResume.id };
+          });
+          // aiResumeCapability 생성
+          await tx.aiResumeCapability.createMany({ data: aiResumeCapabilityInfos });
+        },
+        { timeout: 10000 },
+      );
     } catch (error) {
       if (error instanceof Prisma.PrismaClientValidationError) {
         throw new BadRequestException('AI 추천 자기소개서 타입을 확인해주세요');
       }
+      throw error;
     }
 
     return new PromptResumeResDto(result.choices[CHOICES_IDX].message.content as string);
