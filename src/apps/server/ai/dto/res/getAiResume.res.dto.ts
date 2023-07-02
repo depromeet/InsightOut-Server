@@ -1,6 +1,7 @@
 import { Exclude, Expose, Type } from 'class-transformer';
 import { ArrayMaxSize, ArrayMinSize, IsArray, IsDate, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Capability } from '@prisma/client';
 
 export class AiResumeResDto {
   @Exclude() _id: number;
@@ -54,9 +55,20 @@ export class AiResumeResDto {
 
 export class GetAiResumeResDto {
   @Exclude() _AiResumes: AiResumeResDto[];
+  @Exclude() _availableKeywords: string[];
 
-  constructor(AiResumeResDtoArr: AiResumeResDto[]) {
+  constructor(AiResumeResDtoArr: AiResumeResDto[], availableKeywords: string[]) {
     this._AiResumes = AiResumeResDtoArr;
+    this._availableKeywords = availableKeywords;
+  }
+
+  @Expose()
+  @IsArray()
+  @IsString({ each: true })
+  @IsNotEmpty()
+  @ApiProperty({ example: ['추진력', '협업'] })
+  get availableKeywords(): string[] {
+    return this._availableKeywords;
   }
 
   @IsArray()

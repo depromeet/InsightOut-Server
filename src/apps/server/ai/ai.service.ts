@@ -27,6 +27,8 @@ import { DAY } from '🔥apps/server/common/consts/time.const';
 import { AiResumeRepository } from '📚libs/modules/database/repositories/ai-resume.repository';
 import { GetAiResumeQueryReqDto } from '🔥apps/server/ai/dto/req/getAiResume.req.dto';
 import { AiResumeResDto, GetAiResumeResDto } from '🔥apps/server/ai/dto/res/getAiResume.res.dto';
+import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
+import { removeDuplicatesInArr } from '📚libs/utils/array.util';
 
 @Injectable()
 export class AiService {
@@ -37,6 +39,7 @@ export class AiService {
     private readonly redisCheckService: RedisCacheService,
     private readonly envService: EnvService,
     private readonly aiResumeRepository: AiResumeRepository,
+    private readonly capabilityRepository: CapabilityRepository,
   ) {}
 
   public async postAiKeywordPrompt(body: PromptAiKeywordBodyReqDto, user: UserJwtToken): Promise<PromptKeywordResDto> {
@@ -152,6 +155,7 @@ export class AiService {
   }
 
   public async getAiResumes(user: UserJwtToken, query?: GetAiResumeQueryReqDto): Promise<GetAiResumeResDto> {
+    // aiResume 가져오기
     const aiResumeArr = await this.aiResumeRepository.getAiResumeByUserId(user.userId, query.aiKeyword);
 
     const aiResumeResDtoArr = aiResumeArr.map(
@@ -160,7 +164,11 @@ export class AiService {
       },
     );
 
-    return new GetAiResumeResDto(aiResumeResDtoArr);
+    // 내 aiResume 키워드 가져오기
+    const aiResumeCapabilityArr = await this.capabilityRepository.findAiResumeCapabilities(user.userId);
+    const availableKeywords = aiResumeCapabilityArr.map((capability) => capability.keyword);
+
+    return new GetAiResumeResDto(aiResumeResDtoArr, removeDuplicatesInArr<string>(availableKeywords));
   }
 
   // ---public done
