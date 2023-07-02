@@ -150,6 +150,7 @@ export class AiService {
     // 생성된 경험 분해 키드에 들어갈 데이터 return
     return new PromptSummaryResDto(await this.experienceService.getExperienceCardInfo(body.experienceId));
   }
+
   // ---public done
 
   // private

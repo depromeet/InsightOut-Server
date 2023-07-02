@@ -50,9 +50,13 @@ import {
   updateExperienceDescriptionMd,
   updateExperienceSuccMd,
   updateExperienceSummaryMd,
+  getAiResumeSuccMd,
+  getAiResumeDescriptionMd,
+  getAiResumeSummaryMd,
 } from '🔥apps/server/experiences/markdown';
 import { SuccessResponse } from '📚libs/decorators/success-response.dto';
 import { PaginationDto } from '📚libs/pagination/pagination.dto';
+import { GetAiResumeNotFoundException, GetAiResumeResDto } from '🔥apps/server/ai/dto/res/getAiResume.res.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -185,6 +189,27 @@ export class ExperienceController {
     }
 
     return ResponseEntity.OK_WITH_DATA(experience);
+  }
+
+  @ApiNotFoundResponse({ type: GetAiResumeNotFoundException, description: '⛔ 해당 AI의 추천 자기소개서가 없습니다!' })
+  @Route({
+    request: {
+      method: Method.GET,
+      path: '/:experienceId/ai/resume',
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: GetAiResumeResDto,
+      description: getAiResumeSuccMd,
+    },
+    description: getAiResumeDescriptionMd,
+    summary: getAiResumeSummaryMd,
+  })
+  public async getAiResume(
+    @Param() experienceIdParamReqDto: ExperienceIdParamReqDto,
+    @User() user: UserJwtToken,
+  ): Promise<ResponseEntity<GetAiResumeResDto>> {
+    return ResponseEntity.OK_WITH_DATA(await this.experienceService.getAiResume(experienceIdParamReqDto, user));
   }
 
   @Route({
