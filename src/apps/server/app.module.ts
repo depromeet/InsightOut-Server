@@ -18,6 +18,7 @@ import { ExperienceModule } from '🔥apps/server/experiences/experience.module'
 import { UserModule } from '🔥apps/server/users/user.module';
 import { OnboardingsModule } from '🔥apps/server/onboarding/onboarding.module';
 import { AiModule } from './ai/ai.module';
+import { CronModule } from '📚libs/modules/cron/cron.module';
 
 @Module({
   controllers: [AppController],
@@ -25,6 +26,7 @@ import { AiModule } from './ai/ai.module';
     DatabaseModule.forRoot(),
     EnvModule.forRoot(),
     LogModule.forRoot(),
+    CronModule.forRoot(),
     SlackModule,
     RedisModule.forRootAsync({
       imports: [ConfigModule],
