@@ -1,4 +1,7 @@
 import {
+  getAiResumeCountDescriptionMd,
+  getAiResumeCountSuccMd,
+  getAiResumeCountSummaryMd,
   getAiResumeDescriptionMd,
   getAiResumeSuccMd,
   getAiResumeSummaryMd,
@@ -36,6 +39,7 @@ import { PromptAiKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptAiKe
 import { AiResume } from '@prisma/client';
 import { GetAiResumeQueryReqDto } from '🔥apps/server/ai/dto/req/getAiResume.req.dto';
 import { GetAiResumeResDto } from '🔥apps/server/ai/dto/res/getAiResume.res.dto';
+import { GetAiResumeCountResDto } from '🔥apps/server/ai/dto/res/getAiResumeCount.res.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -151,6 +155,28 @@ export class AiController {
     @Query() getAiResumeQueryReqDto?: GetAiResumeQueryReqDto,
   ): Promise<ResponseEntity<GetAiResumeResDto>> {
     const aiResumes = await this.aiService.getAiResumes(user, getAiResumeQueryReqDto);
+
+    return ResponseEntity.OK_WITH_DATA(aiResumes);
+  }
+
+  @Route({
+    request: {
+      method: Method.GET,
+      path: '/ai-resume/count',
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: GetAiResumeCountResDto,
+      description: getAiResumeCountSuccMd,
+    },
+    description: getAiResumeCountDescriptionMd,
+    summary: getAiResumeCountSummaryMd,
+  })
+  public async getAiResumeCount(
+    @User() user: UserJwtToken,
+    @Query() getAiResumeQueryReqDto?: GetAiResumeQueryReqDto,
+  ): Promise<ResponseEntity<GetAiResumeCountResDto>> {
+    const aiResumes = await this.aiService.getAiResumeCount(user, getAiResumeQueryReqDto);
 
     return ResponseEntity.OK_WITH_DATA(aiResumes);
   }

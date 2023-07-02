@@ -20,4 +20,14 @@ export class AiResumeRepository implements AiResumeRepositoryInterface {
       where,
     });
   }
+
+  public async getAiResumeCount(userId: number, aiKeyword?: string): Promise<number> {
+    let where = <AiResumeFindManyArgs>{ userId };
+
+    if (aiKeyword) {
+      where = { userId, AiResumeCapability: { some: { Capability: { keyword: { equals: aiKeyword } } } } };
+    }
+
+    return await this.prisma.aiResume.count({ where });
+  }
 }

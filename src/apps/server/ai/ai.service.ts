@@ -29,6 +29,7 @@ import { GetAiResumeQueryReqDto } from '🔥apps/server/ai/dto/req/getAiResume.r
 import { AiResumeResDto, GetAiResumeResDto } from '🔥apps/server/ai/dto/res/getAiResume.res.dto';
 import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
 import { removeDuplicatesInArr } from '📚libs/utils/array.util';
+import { GetAiResumeCountResDto } from '🔥apps/server/ai/dto/res/getAiResumeCount.res.dto';
 
 @Injectable()
 export class AiService {
@@ -173,6 +174,12 @@ export class AiService {
     const availableKeywords = aiResumeCapabilityArr.map((capability) => capability.keyword);
 
     return new GetAiResumeResDto(aiResumeResDtoArr, removeDuplicatesInArr<string>(availableKeywords));
+  }
+
+  public async getAiResumeCount(user: UserJwtToken, query?: GetAiResumeQueryReqDto): Promise<GetAiResumeCountResDto> {
+    const aiResumeCount = await this.aiResumeRepository.getAiResumeCount(user.userId, query.aiKeyword);
+
+    return new GetAiResumeCountResDto(aiResumeCount);
   }
 
   // ---public done

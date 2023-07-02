@@ -79,4 +79,22 @@ export const getAiResumeSuccMd = `
 ChatGPT 추천 자기소개서 목록 조회에 성공하였습니다.
 `;
 
-// -- ai 자기소개서 가져오기
+// -- ai 추천 자기소개서 가져오기
+
+export const getAiResumeCountDescriptionMd = `
+### ChatGPT가 해당 유저에게 추천해준 자기소개서 개수 조회에 성공하였습니다.
+ChatGPT가 유저에게 추천해준 자기소개서의 개수가 나옵니다.\n
+아래 이미지의 동그라미 친 개수입니다. \n
+생성된 추천 자기소개서가 없으면 0개가 반환됩니다 :)
+
+### Picture
+<img width="456" alt="image" src="https://github.com/depromeet/InsightOut-Server/assets/97580759/d5eba7d5-9f42-4fcc-b98c-b16b9f02d52c">
+`;
+export const getAiResumeCountSummaryMd = `
+✅ ChatGPT 추천 자기소개서 개수 조회 API
+`;
+export const getAiResumeCountSuccMd = `
+ChatGPT 추천 자기소개서 개수 조회에 성공하였습니다.
+`;
+
+// -- ai 추천 자기소개서 개수 반환하기
