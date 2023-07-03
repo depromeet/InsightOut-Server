@@ -3,7 +3,7 @@ import { UpdateExperienceReqDto } from '../dto/req/updateExperience.dto';
 import { UserJwtToken } from '../../auth/types/jwt-token.type';
 import { UpdateExperienceResDto } from '../dto/res/updateExperienceInfo.res.dto';
 import { getExperienceAttribute } from '../../common/consts/experience-attribute.const';
-import { GetExperienceByCapabilityResponseDto, GetExperienceResDto } from '../dto/res/getExperience.res.dto';
+import { GetExperiencesResponseDto } from '../dto/res/getExperience.res.dto';
 import { Experience, ExperienceInfo, ExperienceStatus, Prisma } from '@prisma/client';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
 import { ExperienceRepository } from '📚libs/modules/database/repositories/experience.repository';
@@ -122,16 +122,6 @@ export class ExperienceService {
     return await this.processUpdateExperience(experinece.id, updatedExperienceInfo);
   }
 
-  public async getExperience(experienceId: number): Promise<Partial<GetExperienceResDto>> {
-    try {
-      const experience = await this.experienceRepository.selectOneById(experienceId, getExperienceAttribute);
-
-      return new GetExperienceResDto(experience);
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) throw new NotFoundException('해당 ID의 경험카드는 존재하지 않습니다.');
-    }
-  }
-
   public async findOneById(experienceId: number): Promise<Experience & { AiResume; ExperienceInfo; AiRecommendQuestion }> {
     try {
       const experience = await this.experienceRepository.findOneById(experienceId);
@@ -142,18 +132,18 @@ export class ExperienceService {
     }
   }
 
-  public async getExperienceByCapability(
+  public async getExperiences(
     userId: number,
     query: GetExperienceRequestQueryDtoWithPagination,
-  ): Promise<PaginationDto<GetExperienceByCapabilityResponseDto>> {
+  ): Promise<PaginationDto<GetExperiencesResponseDto>> {
     const { pagination, capabilityId, ...select } = query;
-    const experience = await this.experienceRepository.getExperienceByCapability(userId, capabilityId, select, pagination);
+    const experience = await this.experienceRepository.getExperiences(userId, select, pagination, capabilityId);
     if (!experience.length) {
       throw new NotFoundException('Experience not found');
     }
 
-    const getExperienceByCapabilityResponseDto: GetExperienceByCapabilityResponseDto[] = experience.map(
-      (experience) => new GetExperienceByCapabilityResponseDto(experience),
+    const getExperienceByCapabilityResponseDto: GetExperiencesResponseDto[] = experience.map(
+      (experience) => new GetExperiencesResponseDto(experience),
     );
 
     const itemCount = await this.experienceRepository.getCount(userId);
@@ -164,47 +154,6 @@ export class ExperienceService {
     );
 
     return experienceDto;
-  }
-
-  public async getExperienceByUserId(userId: number): Promise<GetExperienceResDto | string> {
-    try {
-      const experience = await this.experienceRepository.selectOneByUserId(userId, getExperienceAttribute);
-      if (!experience) return 'INPROGRESS 상태의 경험카드가 없습니다';
-
-      return new GetExperienceResDto(experience);
-    } catch (error) {
-      console.log('error', error);
-      if (error instanceof Prisma.PrismaClientKnownRequestError) throw new NotFoundException('INPROGRESS 상태의 경험카드가 없습니다.');
-    }
-  }
-
-  public async getExperiencesByUserId(
-    userId: number,
-    query: GetExperienceRequestQueryDtoWithPagination,
-  ): Promise<PaginationDto<GetExperienceResDto> | string> {
-    try {
-      const { pagination, capabilityId, ...select } = query;
-      const experience = await this.experienceRepository.findManyByUserId(
-        userId,
-        Object.assign(getExperienceAttribute, select),
-        pagination,
-      );
-      if (!experience.length) return 'INPROGRESS 상태의 경험카드가 없습니다';
-
-      const getExperiencesByUserIdDto = experience.map((experience) => new GetExperienceResDto(experience));
-
-      const itemCount = await this.experienceRepository.getCount(userId);
-
-      const experienceDto = new PaginationDto(
-        getExperiencesByUserIdDto,
-        new PaginationMetaDto({ itemCount, paginationOptionsDto: pagination }),
-      );
-
-      return experienceDto;
-    } catch (error) {
-      console.log('error', error);
-      if (error instanceof Prisma.PrismaClientKnownRequestError) throw new NotFoundException('INPROGRESS 상태의 경험카드가 없습니다.');
-    }
   }
 
   public async processUpdateExperience(

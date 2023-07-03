@@ -25,4 +25,5 @@ export interface ExperienceSelect {
           experienceId?: boolean;
         };
       };
+  AiResume: { select: { AiResumeCapability: true } };
 }
