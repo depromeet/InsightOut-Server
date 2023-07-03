@@ -200,7 +200,7 @@ export class ExperienceController {
   @Route({
     request: {
       method: Method.GET,
-      path: '/:experienceId/ai/resume',
+      path: '/:experienceId/ai-resume',
     },
     response: {
       code: HttpStatus.OK,
