@@ -74,55 +74,6 @@ import { GetExperienceCardInfoResDto } from '🔥apps/server/experiences/dto/res
 export class ExperienceController {
   constructor(private readonly experienceService: ExperienceService) {}
 
-  @Route({
-    request: {
-      method: Method.POST,
-      path: '/',
-    },
-    response: {
-      code: HttpStatus.CREATED,
-      type: CreateExperienceResDto,
-      description: createExperienceSuccMd,
-    },
-    description: createExperienceDescriptionMd,
-    summary: createExperienceSummaryMd,
-  })
-  public async create(@User() user: UserJwtToken): Promise<ResponseEntity<CreateExperienceResDto>> {
-    const experience = await this.experienceService.create(user);
-
-    return ResponseEntity.CREATED_WITH_DATA(experience);
-  }
-
-  @ApiBadRequestResponse({
-    description: '⛔ 유효성 검사에 실패하였습니다. 타입을 확인해주세요 :)',
-    type: BadRequestErrorResDto,
-  })
-  @ApiNotFoundResponse({
-    description: '⛔ 해당 ID의 경험카드는 존재하지 않습니다 아이디를 확인해주세요 :)',
-    type: UpdateExperienceInfoNotFoundErrorResDto,
-  })
-  @Route({
-    request: {
-      method: Method.PUT,
-      path: '/:experienceId',
-    },
-    response: {
-      code: HttpStatus.OK,
-      type: UpdateExperienceResDto,
-      description: updateExperienceSuccMd,
-    },
-    description: updateExperienceDescriptionMd,
-    summary: updateExperienceSummaryMd,
-  })
-  public async update(
-    @Body() upsertExperienceReqDto: UpdateExperienceReqDto,
-    @Param() experienceIdParamReqDto: ExperienceIdParamReqDto,
-  ): Promise<ResponseEntity<UpdateExperienceResDto>> {
-    const experience = await this.experienceService.update(upsertExperienceReqDto, experienceIdParamReqDto);
-
-    return ResponseEntity.CREATED_WITH_DATA(experience);
-  }
-
   @SuccessResponse(HttpStatus.OK, [
     {
       model: PaginationDto,
@@ -191,6 +142,48 @@ export class ExperienceController {
     return ResponseEntity.OK_WITH_DATA(experience);
   }
 
+  @Route({
+    request: {
+      path: '/count',
+      method: Method.GET,
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: GetCountOfExperienceResponseDto,
+      description: GetCountOfExperienceResponseDescriptionMd,
+    },
+    summary: GetCountOfExperienceSummaryMd,
+    description: GetCountOfExperienceDescriptionMd,
+  })
+  public async getCountOfExperience(@User() user: UserJwtToken): Promise<ResponseEntity<GetCountOfExperienceResponseDto>> {
+    const countOfExperience = await this.experienceService.getCountOfExperience(user.userId);
+
+    return ResponseEntity.OK_WITH_DATA(countOfExperience);
+  }
+
+  @Route({
+    request: {
+      path: '/capability',
+      method: Method.GET,
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: GetCountOfExperienceAndCapabilityResponseDto,
+      isArray: true,
+      description: GetCountOfExperienceAndCapabilityResponseDescriptionMd,
+    },
+    summary: GetCountOfExperienceAndCapabilitySummaryMd,
+    description: GetCountOfExperienceAndCapabilityDescriptionMd,
+  })
+  public async getCountOfExperienceAndCapability(
+    @User() user: UserJwtToken,
+  ): Promise<ResponseEntity<GetCountOfExperienceAndCapabilityResponseDto[]>> {
+    const countOfExperienceAndCapability = await this.experienceService.getCountOfExperienceAndCapability(user.userId);
+
+    return ResponseEntity.OK_WITH_DATA(countOfExperienceAndCapability);
+  }
+
+  // param: experienceId -- 아래로 나려주세요
   @ApiNotFoundResponse({ type: GetAiResumeNotFoundException, description: '⛔ 해당 AI의 추천 자기소개서가 없습니다!' })
   @Route({
     request: {
@@ -235,47 +228,6 @@ export class ExperienceController {
     const experienceCardInfo = await this.experienceService.getExperienceCardInfo(experienceIdParamReqDto.experienceId);
 
     return ResponseEntity.OK_WITH_DATA(experienceCardInfo);
-  }
-
-  @Route({
-    request: {
-      path: '/count',
-      method: Method.GET,
-    },
-    response: {
-      code: HttpStatus.OK,
-      type: GetCountOfExperienceResponseDto,
-      description: GetCountOfExperienceResponseDescriptionMd,
-    },
-    summary: GetCountOfExperienceSummaryMd,
-    description: GetCountOfExperienceDescriptionMd,
-  })
-  public async getCountOfExperience(@User() user: UserJwtToken): Promise<ResponseEntity<GetCountOfExperienceResponseDto>> {
-    const countOfExperience = await this.experienceService.getCountOfExperience(user.userId);
-
-    return ResponseEntity.OK_WITH_DATA(countOfExperience);
-  }
-
-  @Route({
-    request: {
-      path: '/capability',
-      method: Method.GET,
-    },
-    response: {
-      code: HttpStatus.OK,
-      type: GetCountOfExperienceAndCapabilityResponseDto,
-      isArray: true,
-      description: GetCountOfExperienceAndCapabilityResponseDescriptionMd,
-    },
-    summary: GetCountOfExperienceAndCapabilitySummaryMd,
-    description: GetCountOfExperienceAndCapabilityDescriptionMd,
-  })
-  public async getCountOfExperienceAndCapability(
-    @User() user: UserJwtToken,
-  ): Promise<ResponseEntity<GetCountOfExperienceAndCapabilityResponseDto[]>> {
-    const countOfExperienceAndCapability = await this.experienceService.getCountOfExperienceAndCapability(user.userId);
-
-    return ResponseEntity.OK_WITH_DATA(countOfExperienceAndCapability);
   }
 
   @ApiNotFoundResponse({
@@ -323,5 +275,56 @@ export class ExperienceController {
     const star = await this.experienceService.getStarFromExperienceByExperienceId(getStarFromExperienceRequestParamDto.experienceId);
 
     return ResponseEntity.OK_WITH_DATA(star);
+  }
+
+  //  --POST
+  @Route({
+    request: {
+      method: Method.POST,
+      path: '/',
+    },
+    response: {
+      code: HttpStatus.CREATED,
+      type: CreateExperienceResDto,
+      description: createExperienceSuccMd,
+    },
+    description: createExperienceDescriptionMd,
+    summary: createExperienceSummaryMd,
+  })
+  public async create(@User() user: UserJwtToken): Promise<ResponseEntity<CreateExperienceResDto>> {
+    const experience = await this.experienceService.create(user);
+
+    return ResponseEntity.CREATED_WITH_DATA(experience);
+  }
+
+  //--PUT
+  @ApiBadRequestResponse({
+    description: '⛔ 유효성 검사에 실패하였습니다. 타입을 확인해주세요 :)',
+    type: BadRequestErrorResDto,
+  })
+  @ApiNotFoundResponse({
+    description: '⛔ 해당 ID의 경험카드는 존재하지 않습니다 아이디를 확인해주세요 :)',
+    type: UpdateExperienceInfoNotFoundErrorResDto,
+  })
+  @Route({
+    request: {
+      method: Method.PUT,
+      path: '/:experienceId',
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: UpdateExperienceResDto,
+      description: updateExperienceSuccMd,
+    },
+    description: updateExperienceDescriptionMd,
+    summary: updateExperienceSummaryMd,
+  })
+  public async update(
+    @Body() upsertExperienceReqDto: UpdateExperienceReqDto,
+    @Param() experienceIdParamReqDto: ExperienceIdParamReqDto,
+  ): Promise<ResponseEntity<UpdateExperienceResDto>> {
+    const experience = await this.experienceService.update(upsertExperienceReqDto, experienceIdParamReqDto);
+
+    return ResponseEntity.CREATED_WITH_DATA(experience);
   }
 }

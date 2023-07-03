@@ -182,35 +182,6 @@ export class ResumesController {
     return ResponseEntity.CREATED_WITH_DATA(resume);
   }
 
-  // ✅ 자기소개서 삭제 API
-  @Route({
-    request: {
-      path: ':resumeId',
-      method: Method.DELETE,
-    },
-    response: {
-      code: HttpStatus.OK,
-      description: DeleteResumeResponseDescriptionMd,
-      type: String,
-    },
-    summary: DeleteResumeSummaryMd,
-    description: DeleteResumeDescriptionMd,
-  })
-  @ApiParam({
-    name: 'resumeId',
-    description: '자기소개서 id를 입력해주세요.',
-    example: 1234,
-    type: Number,
-  })
-  async deleteResume(
-    @Param() deleteResumeRequestParamDto: DeleteResumeRequestParamDto,
-    @User() user: UserJwtToken,
-  ): Promise<ResponseEntity<string>> {
-    await this.resumesService.deleteResume({ resumeId: deleteResumeRequestParamDto.resumeId, userId: user.userId });
-
-    return ResponseEntity.OK_WITH_MESSAGE('Resume deleted');
-  }
-
   // ✅ 자기소개서 제목 수정 API
   @Route({
     request: {
@@ -239,5 +210,34 @@ export class ResumesController {
     await this.resumesService.updateResumeFolder(patchResumeRequestDto, patchResumeRequestParamDto.resumeId, user.userId);
 
     return ResponseEntity.OK_WITH_MESSAGE('Resume updated');
+  }
+
+  // ✅ 자기소개서 삭제 API
+  @Route({
+    request: {
+      path: ':resumeId',
+      method: Method.DELETE,
+    },
+    response: {
+      code: HttpStatus.OK,
+      description: DeleteResumeResponseDescriptionMd,
+      type: String,
+    },
+    summary: DeleteResumeSummaryMd,
+    description: DeleteResumeDescriptionMd,
+  })
+  @ApiParam({
+    name: 'resumeId',
+    description: '자기소개서 id를 입력해주세요.',
+    example: 1234,
+    type: Number,
+  })
+  async deleteResume(
+    @Param() deleteResumeRequestParamDto: DeleteResumeRequestParamDto,
+    @User() user: UserJwtToken,
+  ): Promise<ResponseEntity<string>> {
+    await this.resumesService.deleteResume({ resumeId: deleteResumeRequestParamDto.resumeId, userId: user.userId });
+
+    return ResponseEntity.OK_WITH_MESSAGE('Resume deleted');
   }
 }

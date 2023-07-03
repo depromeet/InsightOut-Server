@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateExperienceReqDto } from '../dto/req/updateExperience.dto';
 import { UserJwtToken } from '../../auth/types/jwt-token.type';
 import { UpdateExperienceResDto } from '../dto/res/updateExperienceInfo.res.dto';
-import { getExperienceAttribute } from '../../common/consts/experience-attribute.const';
 import { GetExperiencesResponseDto } from '../dto/res/getExperience.res.dto';
 import { Experience, ExperienceInfo, ExperienceStatus, Prisma } from '@prisma/client';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
