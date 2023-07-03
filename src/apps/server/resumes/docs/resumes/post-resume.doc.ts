@@ -6,7 +6,7 @@ title이 존재하지 않고 빈 폴더를 생성하기 때문에 이름(제목,
 `;
 
 export const PostResumeSummaryMd = `
-자기소개서 추가 API (2023.6.3. Updated)
+🟣 자기소개서 추가 API (2023.6.3. Updated)
 `;
 
 export const PostResumeDescriptionMd = `

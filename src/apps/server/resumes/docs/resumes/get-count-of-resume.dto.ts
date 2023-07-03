@@ -4,7 +4,7 @@ export const GetCountOfResumeResponseDescriptionMd = `
 `;
 
 export const GetCountOfResumeSummaryMd = `
-자기소개서 개수 조회 API
+🟢🟣 자기소개서 개수 조회 API
 `;
 
 export const GetCountOfResumeDescriptionMd = `

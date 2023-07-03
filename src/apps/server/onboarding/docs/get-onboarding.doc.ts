@@ -3,7 +3,7 @@ export const GetOnBoardingResponseDescription = `
 온보딩의 여부를 통해서 툴팁을 보여주거나 온보딩 페이지를 노출합니다.
 `;
 
-export const GetOnboardingSummaryMd = '온보딩 조회 API';
+export const GetOnboardingSummaryMd = '🔵🟢🟣 온보딩 조회 API';
 
 export const GetOnboardingDescriptionMd = `
 # 온보딩 조회 API

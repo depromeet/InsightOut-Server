@@ -3,7 +3,7 @@ export const PatchResumeResponseDescriptionMd = `
 `;
 
 export const PatchResumeSummaryMd = `
-자기소개서 제목 수정 API
+🟣 자기소개서 제목 수정 API
 `;
 
 export const PatchResumeDescriptionMd = `

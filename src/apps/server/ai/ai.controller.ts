@@ -25,20 +25,23 @@ import { User } from '🔥apps/server/common/decorators/request/user.decorator';
 import { RouteTable } from '🔥apps/server/common/decorators/router/route-table.decorator';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
 import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
-import { PromptKeywordResDto } from '🔥apps/server/ai/dto/res/promptKeyword.res.dto';
-import { PromptResumeBodyResDto } from '🔥apps/server/ai/dto/req/promptResume.req.dto';
 import {
+  GetAiResumeQueryReqDto,
+  PromptAiKeywordBodyReqDto,
+  PromptResumeBodyResDto,
+  PromptSummaryBodyReqDto,
+} from '🔥apps/server/ai/dto/req';
+import {
+  GetAiResumeCountResDto,
+  GetAiResumeResDto,
+  PromptKeywordResDto,
   PromptResumeBadRequestErrorDto,
   PromptResumeConflictErrorDto,
+  PromptResumeKeywordsConflictErrorDto,
   PromptResumeNotFoundErrorDto,
   PromptResumeResDto,
-} from '🔥apps/server/ai/dto/res/promptResume.res.dto';
-import { PromptSummaryBodyReqDto } from './dto/req/promptSummary.req.dto';
-import { PromptAiKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptAiKeyword.req.dto';
-import { GetAiResumeQueryReqDto } from '🔥apps/server/ai/dto/req/getAiResume.req.dto';
-import { GetAiResumeResDto } from '🔥apps/server/ai/dto/res/getAiResume.res.dto';
-import { GetAiResumeCountResDto } from '🔥apps/server/ai/dto/res/getAiResumeCount.res.dto';
-import { GetExperienceCardInfoResDto } from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.res.dto';
+} from '🔥apps/server/ai/dto/res';
+import { GetExperienceCardInfoResDto } from '🔥apps/server/experiences/dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -53,7 +56,7 @@ export class AiController {
 
   @ApiConflictResponse({
     description: '⛔ 해당 experienceId에 추천 AI Capability가 이미 존재합니다. :)',
-    type: PromptResumeConflictErrorDto,
+    type: PromptResumeKeywordsConflictErrorDto,
   })
   @Route({
     request: {

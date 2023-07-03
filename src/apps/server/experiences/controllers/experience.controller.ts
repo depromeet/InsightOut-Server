@@ -68,7 +68,7 @@ import { GetExperienceCardInfoResDto } from '🔥apps/server/experiences/dto/res
 @RouteTable({
   path: 'experience',
   tag: {
-    title: '🔭경험 분해 API',
+    title: '🔭 경험 분해 API',
   },
 })
 export class ExperienceController {
@@ -175,7 +175,7 @@ export class ExperienceController {
       type: GetExperiencesResponseDto,
     },
     description: getExperienceSuccMd,
-    summary: '✅ 경험 분해 조회 API',
+    summary: '🔵🟢🟣 경험 분해 조회 API',
   })
   @ApiNotFoundResponse({
     description: '⛔ 해당 경험 카드 ID를 확인해주세요 :)',

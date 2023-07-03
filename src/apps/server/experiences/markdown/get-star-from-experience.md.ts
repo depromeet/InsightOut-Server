@@ -5,7 +5,7 @@ export const GetStarFromExperienceResponseDescriptionMd = `
 `;
 
 export const GetStarFromExperienceSummaryMd = `
-경험카드 S, T, A, R 조회 API
+🟣 경험카드 S, T, A, R 조회 API
 `;
 
 export const GetStarFromExperienceDescriptionMd = `

@@ -3,7 +3,7 @@ export const GetUserResponseDescription = `
 
 accessToken과 온보딩 여부, 유저 아이디, 닉네임 등을 반환합니다.`;
 
-export const GetUserSummary = `유저 정보 조회 API`;
+export const GetUserSummary = `🟤 유저 정보 조회 API`;
 
 export const GetUserDescription = `
 # 유저 정보 조회 API

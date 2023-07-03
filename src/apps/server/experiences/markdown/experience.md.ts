@@ -4,7 +4,7 @@ export const createExperienceDescriptionMd = `
 최초 상태는 \`INPROGRESS\`입니다.
 `;
 
-export const createExperienceSummaryMd = '✅ 경험 정보 생성 API';
+export const createExperienceSummaryMd = '🔵 경험 정보 생성 API';
 export const createExperienceSuccMd = '✅ 경험 정보 생성에 성공하였습니다.';
 
 //-- createExperience
@@ -92,7 +92,7 @@ export const getExperienceByIdDescriptionMd = `
 
 export const getExperienceByIdSuccMd = `✅ 경험 분해 단일 조회에 성공하였습니다 :)`;
 
-export const getExperienceByIdSummaryMd = `✅ 경험 분해 단일 조회 API`;
+export const getExperienceByIdSummaryMd = `🔵🟢🟣 경험 분해 단일 조회 API`;
 
 // -- getExperienceById
 
@@ -104,7 +104,7 @@ export const updateExperienceDescriptionMd = `
 전달 받은 프로퍼티만 업데이트 됩니다 :)
 `;
 
-export const updateExperienceSummaryMd = '✅ 경험 정보 수정 API';
+export const updateExperienceSummaryMd = '🔵 경험 정보 수정 API';
 export const updateExperienceSuccMd = '✅ 경험 정보 수정에 성공하였습니다.';
 
 // -- updateExperience

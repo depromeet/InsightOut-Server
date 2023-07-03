@@ -34,7 +34,7 @@ export class PromptKeywordResDto {
   }
 }
 
-export class PromptResumeConflictErrorDto {
+export class PromptResumeKeywordsConflictErrorDto {
   @ApiProperty({ example: 409 })
   statusCode: number;
   @ApiProperty({ example: 'ConflictException' })

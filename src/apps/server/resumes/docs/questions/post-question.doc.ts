@@ -5,7 +5,7 @@ export const PostQuestionResponseDescriptionMd = `
 `;
 
 export const PostQuestionSummaryMd = `
-자기소개서 문항 추가 API
+🟣 자기소개서 문항 추가 API
 `;
 
 export const PostQuestionDesciptionMd = `

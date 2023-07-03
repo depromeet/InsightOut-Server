@@ -11,7 +11,7 @@ ChatGPT API를 사용하여 키워드를 생성할 때 2~3초 정도 소요됩�
 `;
 
 export const postKeywordPromptSummaryMd = `
-✅ ChatGPT 추천 키워드 생성 및 저장 프롬프트 API
+🔵 ChatGPT 추천 키워드 생성 및 저장 프롬프트 API
 `;
 
 export const postKeywordPromptSuccMd = `
@@ -31,7 +31,7 @@ ChatGPT API를 사용하여 추천 자기소개서를 생성할 때 30~40초 정
 `;
 
 export const postResumePromptSummaryMd = `
-✅ ChatGPT 추천 자기소개서 생성 프롬프트 API
+🔵 ChatGPT 추천 자기소개서 생성 프롬프트 API
 `;
 
 export const postResumePromptSuccMd = `
@@ -55,7 +55,7 @@ ChatGPT API를 사용하여 추천 자기소개서를 생성할 때 20~30초 정
 `;
 
 export const postResumeSummarySummaryMd = `
-✅ ChatGPT 경험 요약 프롬프트, 요약 키워드 생성 프롬프트, 추천 자기소개서 작성 프롬프트 API
+🔵 ChatGPT 경험 요약 프롬프트, 요약 키워드 생성 프롬프트, 추천 자기소개서 작성 프롬프트 API
 `;
 
 export const postResumeSummarySuccMd = `
