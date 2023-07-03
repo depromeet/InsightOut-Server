@@ -152,3 +152,19 @@ export const getExperienceCapabilitySuccMd = `
 \`\`\`
 
 `;
+
+export const getAiResumeDescriptionMd = `
+### ✅ ChatGPT가 추천해준 AI 자기소개서 조회에 성공하였습니다.
+해당 추천 자기소개서가 없을 경우 \`404\` 에러가 내려갑니다!
+
+`;
+
+export const getAiResumeSummaryMd = `
+✅ ChatGPT 추천 자기소개서 조회 API
+`;
+
+export const getAiResumeSuccMd = `
+ChatGPT가 추천해준 자기소개서 조회에 성공하였습니다 :)
+`;
+
+// -- ChatGPT AI가 추천해준 자기소개서 내려주는 API

@@ -24,7 +24,7 @@ import { EnvEnum } from '📚libs/modules/env/env.enum';
 import { DAY } from '🔥apps/server/common/consts/time.const';
 import { AiResumeRepository } from '📚libs/modules/database/repositories/ai-resume.repository';
 import { GetAiResumeQueryReqDto } from '🔥apps/server/ai/dto/req/getAiResume.req.dto';
-import { AiResumeResDto, GetAiResumeResDto } from '🔥apps/server/ai/dto/res/getAiResume.res.dto';
+import { AiResumeDto, GetAiResumeResDto } from '🔥apps/server/ai/dto/res/getAiResume.res.dto';
 import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
 import { removeDuplicatesInArr } from '📚libs/utils/array.util';
 import { GetAiResumeCountResDto } from '🔥apps/server/ai/dto/res/getAiResumeCount.res.dto';
@@ -164,7 +164,7 @@ export class AiService {
 
     const aiResumeResDtoArr = aiResumeArr.map(
       (aiResume: { AiResumeCapability: { Capability: { keyword: string } }[]; id: number; updatedAt: Date; content: string }) => {
-        return new AiResumeResDto(aiResume);
+        return new AiResumeDto(aiResume);
       },
     );
 

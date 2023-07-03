@@ -21,6 +21,8 @@ import { PaginationMetaDto } from '📚libs/pagination/pagination-meta.dto';
 import { CreateExperienceResDto } from '🔥apps/server/experiences/dto/res/createExperience.res.dto';
 import { ExperienceIdParamReqDto } from '🔥apps/server/experiences/dto/req/experienceIdParam.dto';
 import { GetExperienceByIdResDto } from '🔥apps/server/experiences/dto/res/getExperienceById.res.dto';
+import { AiResumeRepository } from '📚libs/modules/database/repositories/ai-resume.repository';
+import { GetAiResumeResDto } from '🔥apps/server/experiences/dto/res/getAiResume.res.dto';
 import {
   AiRecommendQuestionResDto,
   AiResumeResDto,
@@ -30,9 +32,10 @@ import {
 @Injectable()
 export class ExperienceService {
   constructor(
-    private readonly experienceRepository: ExperienceRepository,
     private readonly prisma: PrismaService,
+    private readonly experienceRepository: ExperienceRepository,
     private readonly capabilityRepository: CapabilityRepository,
+    private readonly aiResumeRepository: AiResumeRepository,
   ) {}
 
   public async getExperienceById(param: ExperienceIdParamReqDto): Promise<GetExperienceByIdResDto> {
@@ -99,6 +102,14 @@ export class ExperienceService {
     };
 
     return new GetExperienceCardInfoResDto(result);
+  }
+
+  public async getAiResume(param: ExperienceIdParamReqDto, user: UserJwtToken): Promise<GetAiResumeResDto> {
+    const where = <Prisma.AiResumeWhereInput>{ userId: user.userId, experienceId: param.experienceId };
+    const aiResume = await this.aiResumeRepository.findOneByFilter(where);
+    if (!aiResume) throw new NotFoundException('해당 experienceId로 추천된 AI Resuem가 없습니다.');
+
+    return new GetAiResumeResDto({ id: aiResume.id, content: aiResume.content });
   }
 
   public async update(body: UpdateExperienceReqDto, query: ExperienceIdParamReqDto): Promise<UpdateExperienceResDto> {
