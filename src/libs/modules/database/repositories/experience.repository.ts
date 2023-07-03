@@ -129,6 +129,8 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
         summaryKeywords: true,
         ExperienceCapability: { select: { Capability: true } },
         AiResume: { select: { AiResumeCapability: { select: { Capability: true } } } },
+        AiRecommendQuestion: true,
+        ExperienceInfo: { select: { analysis: true } },
         ...select,
       },
       orderBy: { [criteria]: order },
