@@ -1,4 +1,10 @@
 import {
+  getAiResumeCountDescriptionMd,
+  getAiResumeCountSuccMd,
+  getAiResumeCountSummaryMd,
+  getAiResumeDescriptionMd,
+  getAiResumeSuccMd,
+  getAiResumeSummaryMd,
   postKeywordPromptDescriptionMd,
   postKeywordPromptSuccMd,
   postKeywordPromptSummaryMd,
@@ -9,7 +15,7 @@ import {
   postResumeSummarySummaryMd,
   postSummaryPromptDescriptionMd,
 } from '🔥apps/server/ai/markdown/ai.md';
-import { Body, HttpStatus, UseGuards } from '@nestjs/common';
+import { Body, HttpStatus, Query, UseGuards } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiConflictResponse, ApiNotFoundResponse } from '@nestjs/swagger';
 import { Method } from '📚libs/enums/method.enum';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
@@ -28,9 +34,11 @@ import {
   PromptResumeResDto,
 } from '🔥apps/server/ai/dto/res/promptResume.res.dto';
 import { PromptSummaryBodyReqDto } from './dto/req/promptSummary.req.dto';
-import { PromptSummaryResDto } from './dto/res/promptSummary.res.dto';
 import { PromptAiKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptAiKeyword.req.dto';
-import { GetAiResumeNotFoundException } from '\uD83D\uDD25apps/server/experiences/dto/res/getAiResume.res.dto';
+import { GetAiResumeQueryReqDto } from '🔥apps/server/ai/dto/req/getAiResume.req.dto';
+import { GetAiResumeResDto } from '🔥apps/server/ai/dto/res/getAiResume.res.dto';
+import { GetAiResumeCountResDto } from '🔥apps/server/ai/dto/res/getAiResumeCount.res.dto';
+import { GetExperienceCardInfoResDto } from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.res.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -112,7 +120,7 @@ export class AiController {
     },
     response: {
       code: HttpStatus.OK,
-      type: PromptSummaryResDto,
+      type: GetExperienceCardInfoResDto,
       description: postResumeSummarySuccMd,
     },
     description: postSummaryPromptDescriptionMd,
@@ -121,10 +129,54 @@ export class AiController {
   public async postSummaryPrompt(
     @User() user: UserJwtToken,
     @Body() promptSummaryBodyReqDto: PromptSummaryBodyReqDto,
-  ): Promise<ResponseEntity<PromptSummaryResDto>> {
+  ): Promise<ResponseEntity<GetExperienceCardInfoResDto>> {
     await this.aiService.restrictPrompt(user);
     const newAi = await this.aiService.postSummaryPrompt(promptSummaryBodyReqDto);
 
     return ResponseEntity.OK_WITH_DATA(newAi);
+  }
+
+  @Route({
+    request: {
+      method: Method.GET,
+      path: '/ai-resume',
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: GetAiResumeResDto,
+      description: getAiResumeSuccMd,
+    },
+    description: getAiResumeDescriptionMd,
+    summary: getAiResumeSummaryMd,
+  })
+  public async getAiResume(
+    @User() user: UserJwtToken,
+    @Query() getAiResumeQueryReqDto?: GetAiResumeQueryReqDto,
+  ): Promise<ResponseEntity<GetAiResumeResDto>> {
+    const aiResumes = await this.aiService.getAiResumes(user, getAiResumeQueryReqDto);
+
+    return ResponseEntity.OK_WITH_DATA(aiResumes);
+  }
+
+  @Route({
+    request: {
+      method: Method.GET,
+      path: '/ai-resume/count',
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: GetAiResumeCountResDto,
+      description: getAiResumeCountSuccMd,
+    },
+    description: getAiResumeCountDescriptionMd,
+    summary: getAiResumeCountSummaryMd,
+  })
+  public async getAiResumeCount(
+    @User() user: UserJwtToken,
+    @Query() getAiResumeQueryReqDto?: GetAiResumeQueryReqDto,
+  ): Promise<ResponseEntity<GetAiResumeCountResDto>> {
+    const aiResumes = await this.aiService.getAiResumeCount(user, getAiResumeQueryReqDto);
+
+    return ResponseEntity.OK_WITH_DATA(aiResumes);
   }
 }
