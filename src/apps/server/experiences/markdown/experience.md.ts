@@ -105,6 +105,16 @@ export const updateExperienceSuccMd = '✅ 경험 정보 수정에 성공하였�
 
 // -- updateExperience
 
+export const getExperienceCardInfoDescriptionMd = `
+### ✅ 경험 카드를 보여주기 위해 필요한 앞, 뒷면에 대한 모든 정보 조회에 성공하였습니다.
+전달 받은 아이디의 경험 분해가 없다면 \`404\` 에러를 뱉어냅니다.
+`;
+
+export const getExperienceCardInfoSummaryMd = '✅ 경험 카드 정보 조회 API';
+export const getExperienceCardInfoSuccMd = '✅ 경험 카드를 보여주기 위해 필요한 앞, 뒷면에 대한 모든 정보 조회에 성공하였습니다.';
+
+// -- get experienceInfo
+
 export const addCapabilitySuccMd = `
 ### ✅ 경험 분해 키워드 추가하는 데 성공했습니다.
 이미 가지고 있는 키워드라면 \`{가지고 있는 키워드} 해당 키워드가 이미 존재합니다. 확인 부탁드립니다.\`라는 409 에러가 발생합니다.\n

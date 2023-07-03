@@ -1,5 +1,5 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { Capability, Experience, KeywordType, Prisma, AiResume, AiResumeCapability } from '@prisma/client';
+import { Capability, Experience, KeywordType, Prisma } from '@prisma/client';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-token.type';
 import { OpenAiService } from '📚libs/modules/open-ai/open-ai.service';
@@ -14,9 +14,7 @@ import { PromptKeywordResDto } from '🔥apps/server/ai/dto/res/promptKeyword.re
 import { PromptResumeResDto } from '🔥apps/server/ai/dto/res/promptResume.res.dto';
 import { PromptResumeBodyResDto } from '🔥apps/server/ai/dto/req/promptResume.req.dto';
 import { PromptSummaryBodyReqDto } from './dto/req/promptSummary.req.dto';
-import { PromptSummaryResDto } from './dto/res/promptSummary.res.dto';
 import { ExperienceService } from '🔥apps/server/experiences/services/experience.service';
-
 import { PromptAiKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptAiKeyword.req.dto';
 import { OpenAiResponseInterface } from '📚libs/modules/open-ai/interface/openAiResponse.interface';
 import { UpdateExperienceReqDto } from '🔥apps/server/experiences/dto/req/updateExperience.dto';
@@ -30,6 +28,7 @@ import { AiResumeResDto, GetAiResumeResDto } from '🔥apps/server/ai/dto/res/ge
 import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
 import { removeDuplicatesInArr } from '📚libs/utils/array.util';
 import { GetAiResumeCountResDto } from '🔥apps/server/ai/dto/res/getAiResumeCount.res.dto';
+import { GetExperienceCardInfoResDto } from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.res.dto';
 
 @Injectable()
 export class AiService {
@@ -116,7 +115,7 @@ export class AiService {
     return new PromptResumeResDto(result.choices[CHOICES_IDX].message.content as string);
   }
 
-  public async postSummaryPrompt(body: PromptSummaryBodyReqDto): Promise<PromptSummaryResDto> {
+  public async postSummaryPrompt(body: PromptSummaryBodyReqDto): Promise<GetExperienceCardInfoResDto> {
     const experience = await this.validationExperinece(body.experienceId);
     if (experience.summaryKeywords.length !== 0) throw new ConflictException('이미 요약된 키워드가 있습니다.');
     if (experience.ExperienceInfo.analysis) throw new ConflictException('이미 요약된 정보가 있습니다.');
@@ -156,7 +155,7 @@ export class AiService {
     // 추천 Resume 저장 Done
 
     // 생성된 경험 분해 키드에 들어갈 데이터 return
-    return new PromptSummaryResDto(await this.experienceService.getExperienceCardInfo(body.experienceId));
+    return await this.experienceService.getExperienceCardInfo(body.experienceId);
   }
 
   public async getAiResumes(user: UserJwtToken, query?: GetAiResumeQueryReqDto): Promise<GetAiResumeResDto> {
