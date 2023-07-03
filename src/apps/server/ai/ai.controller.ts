@@ -15,16 +15,6 @@ import {
   postResumeSummarySummaryMd,
   postSummaryPromptDescriptionMd,
 } from '🔥apps/server/ai/markdown/ai.md';
-import { Body, HttpStatus, Query, UseGuards } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiConflictResponse, ApiNotFoundResponse } from '@nestjs/swagger';
-import { Method } from '📚libs/enums/method.enum';
-import { ResponseEntity } from '📚libs/utils/respone.entity';
-import { AiService } from '🔥apps/server/ai/ai.service';
-import { UserJwtToken } from '🔥apps/server/auth/types/jwt-token.type';
-import { User } from '🔥apps/server/common/decorators/request/user.decorator';
-import { RouteTable } from '🔥apps/server/common/decorators/router/route-table.decorator';
-import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
-import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
 import {
   GetAiResumeQueryReqDto,
   PromptAiKeywordBodyReqDto,
@@ -41,6 +31,16 @@ import {
   PromptResumeNotFoundErrorDto,
   PromptResumeResDto,
 } from '🔥apps/server/ai/dto/res';
+import { Body, HttpStatus, Query, UseGuards } from '@nestjs/common';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiConflictResponse, ApiNotFoundResponse } from '@nestjs/swagger';
+import { Method } from '📚libs/enums/method.enum';
+import { ResponseEntity } from '📚libs/utils/respone.entity';
+import { AiService } from '🔥apps/server/ai/ai.service';
+import { UserJwtToken } from '🔥apps/server/auth/types/jwt-token.type';
+import { User } from '🔥apps/server/common/decorators/request/user.decorator';
+import { RouteTable } from '🔥apps/server/common/decorators/router/route-table.decorator';
+import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
+import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
 import { GetExperienceCardInfoResDto } from '🔥apps/server/experiences/dto';
 
 @ApiBearerAuth()
@@ -53,6 +53,50 @@ import { GetExperienceCardInfoResDto } from '🔥apps/server/experiences/dto';
 })
 export class AiController {
   constructor(private readonly aiService: AiService) {}
+
+  @Route({
+    request: {
+      method: Method.GET,
+      path: '/ai-resume',
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: GetAiResumeResDto,
+      description: getAiResumeSuccMd,
+    },
+    description: getAiResumeDescriptionMd,
+    summary: getAiResumeSummaryMd,
+  })
+  public async getAiResume(
+    @User() user: UserJwtToken,
+    @Query() getAiResumeQueryReqDto?: GetAiResumeQueryReqDto,
+  ): Promise<ResponseEntity<GetAiResumeResDto>> {
+    const aiResumes = await this.aiService.getAiResumes(user, getAiResumeQueryReqDto);
+
+    return ResponseEntity.OK_WITH_DATA(aiResumes);
+  }
+
+  @Route({
+    request: {
+      method: Method.GET,
+      path: '/ai-resume/count',
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: GetAiResumeCountResDto,
+      description: getAiResumeCountSuccMd,
+    },
+    description: getAiResumeCountDescriptionMd,
+    summary: getAiResumeCountSummaryMd,
+  })
+  public async getAiResumeCount(
+    @User() user: UserJwtToken,
+    @Query() getAiResumeQueryReqDto?: GetAiResumeQueryReqDto,
+  ): Promise<ResponseEntity<GetAiResumeCountResDto>> {
+    const aiResumes = await this.aiService.getAiResumeCount(user, getAiResumeQueryReqDto);
+
+    return ResponseEntity.OK_WITH_DATA(aiResumes);
+  }
 
   @ApiConflictResponse({
     description: '⛔ 해당 experienceId에 추천 AI Capability가 이미 존재합니다. :)',
@@ -137,49 +181,5 @@ export class AiController {
     const newAi = await this.aiService.postSummaryPrompt(promptSummaryBodyReqDto);
 
     return ResponseEntity.OK_WITH_DATA(newAi);
-  }
-
-  @Route({
-    request: {
-      method: Method.GET,
-      path: '/ai-resume',
-    },
-    response: {
-      code: HttpStatus.OK,
-      type: GetAiResumeResDto,
-      description: getAiResumeSuccMd,
-    },
-    description: getAiResumeDescriptionMd,
-    summary: getAiResumeSummaryMd,
-  })
-  public async getAiResume(
-    @User() user: UserJwtToken,
-    @Query() getAiResumeQueryReqDto?: GetAiResumeQueryReqDto,
-  ): Promise<ResponseEntity<GetAiResumeResDto>> {
-    const aiResumes = await this.aiService.getAiResumes(user, getAiResumeQueryReqDto);
-
-    return ResponseEntity.OK_WITH_DATA(aiResumes);
-  }
-
-  @Route({
-    request: {
-      method: Method.GET,
-      path: '/ai-resume/count',
-    },
-    response: {
-      code: HttpStatus.OK,
-      type: GetAiResumeCountResDto,
-      description: getAiResumeCountSuccMd,
-    },
-    description: getAiResumeCountDescriptionMd,
-    summary: getAiResumeCountSummaryMd,
-  })
-  public async getAiResumeCount(
-    @User() user: UserJwtToken,
-    @Query() getAiResumeQueryReqDto?: GetAiResumeQueryReqDto,
-  ): Promise<ResponseEntity<GetAiResumeCountResDto>> {
-    const aiResumes = await this.aiService.getAiResumeCount(user, getAiResumeQueryReqDto);
-
-    return ResponseEntity.OK_WITH_DATA(aiResumes);
   }
 }

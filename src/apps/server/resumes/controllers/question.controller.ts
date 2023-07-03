@@ -49,6 +49,38 @@ import { QuestionsService } from '🔥apps/server/resumes/services/question.serv
 export class QuestionsController {
   constructor(private readonly questionService: QuestionsService) {}
 
+  /**
+   * ✅ 한 개의 자기소개서 문항 조회 API
+   *
+   * 자기소개서 id(resumeId)와 유저 id(userId)를 통해서 자기소개서 문항을 한 개 가져옵니다.
+   * 응답으로는 해당 문항에 대한 정보를 반환합니다.
+   *
+   * @param getOneQuestionRequestParamDto resumeId를 담은 param 클래스
+   * @param user request 객체의 user 값
+   * @returns 자기소개서 문항 한 개에 대한 데이터
+   */
+  @Route({
+    request: {
+      path: ':questionId',
+      method: Method.GET,
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: GetOneQuestionResponseDto,
+      description: GetOneQuestionResponseDescriptionMd,
+    },
+    summary: GetOneQuestionSummaryMd,
+    description: GetOneQuestionDescriptionMd,
+  })
+  async getOneQuestion(
+    @Param() getOneQuestionRequestParamDto: GetOneQuestionRequestParamDto,
+    @User() user: UserJwtToken,
+  ): Promise<ResponseEntity<GetOneQuestionResponseDto>> {
+    const question = await this.questionService.getOneQuestion(user.userId, getOneQuestionRequestParamDto.questionId);
+
+    return ResponseEntity.OK_WITH_DATA(question);
+  }
+
   // ✅ 자기소개서 문항 추가 API
   @Route({
     request: {
@@ -90,38 +122,6 @@ export class QuestionsController {
     const checkedSpell = await this.questionService.spellCheck(body);
 
     return ResponseEntity.OK_WITH_DATA(checkedSpell);
-  }
-
-  /**
-   * ✅ 한 개의 자기소개서 문항 조회 API
-   *
-   * 자기소개서 id(resumeId)와 유저 id(userId)를 통해서 자기소개서 문항을 한 개 가져옵니다.
-   * 응답으로는 해당 문항에 대한 정보를 반환합니다.
-   *
-   * @param getOneQuestionRequestParamDto resumeId를 담은 param 클래스
-   * @param user request 객체의 user 값
-   * @returns 자기소개서 문항 한 개에 대한 데이터
-   */
-  @Route({
-    request: {
-      path: ':questionId',
-      method: Method.GET,
-    },
-    response: {
-      code: HttpStatus.OK,
-      type: GetOneQuestionResponseDto,
-      description: GetOneQuestionResponseDescriptionMd,
-    },
-    summary: GetOneQuestionSummaryMd,
-    description: GetOneQuestionDescriptionMd,
-  })
-  async getOneQuestion(
-    @Param() getOneQuestionRequestParamDto: GetOneQuestionRequestParamDto,
-    @User() user: UserJwtToken,
-  ): Promise<ResponseEntity<GetOneQuestionResponseDto>> {
-    const question = await this.questionService.getOneQuestion(user.userId, getOneQuestionRequestParamDto.questionId);
-
-    return ResponseEntity.OK_WITH_DATA(question);
   }
 
   // ✅ 자기소개서 문항 수정 API
