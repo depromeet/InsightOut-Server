@@ -22,6 +22,12 @@ import { RedisCacheService } from '📚libs/modules/cache/redis/redis.service';
 import { EnvService } from '📚libs/modules/env/env.service';
 import { EnvEnum } from '📚libs/modules/env/env.enum';
 import { DAY } from '🔥apps/server/common/consts/time.const';
+import { AiResumeRepository } from '📚libs/modules/database/repositories/ai-resume.repository';
+import { GetAiResumeQueryReqDto } from '🔥apps/server/ai/dto/req/getAiResume.req.dto';
+import { AiResumeResDto, GetAiResumeResDto } from '🔥apps/server/ai/dto/res/getAiResume.res.dto';
+import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
+import { removeDuplicatesInArr } from '📚libs/utils/array.util';
+import { GetAiResumeCountResDto } from '🔥apps/server/ai/dto/res/getAiResumeCount.res.dto';
 import { GetExperienceCardInfoResDto } from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.res.dto';
 
 @Injectable()
@@ -32,6 +38,8 @@ export class AiService {
     private readonly experienceService: ExperienceService,
     private readonly redisCheckService: RedisCacheService,
     private readonly envService: EnvService,
+    private readonly aiResumeRepository: AiResumeRepository,
+    private readonly capabilityRepository: CapabilityRepository,
   ) {}
 
   public async postAiKeywordPrompt(body: PromptAiKeywordBodyReqDto, user: UserJwtToken): Promise<PromptKeywordResDto> {
@@ -149,6 +157,30 @@ export class AiService {
     // 생성된 경험 분해 키드에 들어갈 데이터 return
     return await this.experienceService.getExperienceCardInfo(body.experienceId);
   }
+
+  public async getAiResumes(user: UserJwtToken, query?: GetAiResumeQueryReqDto): Promise<GetAiResumeResDto> {
+    // aiResume 가져오기
+    const aiResumeArr = await this.aiResumeRepository.getAiResumeByUserId(user.userId, query.aiKeyword);
+
+    const aiResumeResDtoArr = aiResumeArr.map(
+      (aiResume: { AiResumeCapability: { Capability: { keyword: string } }[]; id: number; updatedAt: Date; content: string }) => {
+        return new AiResumeResDto(aiResume);
+      },
+    );
+
+    // 내 aiResume 키워드 가져오기
+    const aiResumeCapabilityArr = await this.capabilityRepository.findAiResumeCapabilities(user.userId);
+    const availableKeywords = aiResumeCapabilityArr.map((capability) => capability.keyword);
+
+    return new GetAiResumeResDto(aiResumeResDtoArr, removeDuplicatesInArr<string>(availableKeywords));
+  }
+
+  public async getAiResumeCount(user: UserJwtToken, query?: GetAiResumeQueryReqDto): Promise<GetAiResumeCountResDto> {
+    const aiResumeCount = await this.aiResumeRepository.getAiResumeCount(user.userId, query.aiKeyword);
+
+    return new GetAiResumeCountResDto(aiResumeCount);
+  }
+
   // ---public done
 
   // private
