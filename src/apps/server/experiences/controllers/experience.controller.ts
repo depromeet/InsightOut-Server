@@ -56,7 +56,7 @@ import {
 } from '🔥apps/server/experiences/markdown';
 import { SuccessResponse } from '📚libs/decorators/success-response.dto';
 import { PaginationDto } from '📚libs/pagination/pagination.dto';
-import { GetAiResumeNotFoundException, GetAiResumeResDto } from '🔥apps/server/ai/dto/res/getAiResume.res.dto';
+import { GetAiResumeNotFoundException, GetAiResumeResDto } from '🔥apps/server/experiences/dto/res/getAiResume.res.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)

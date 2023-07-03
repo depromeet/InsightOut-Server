@@ -21,8 +21,8 @@ import { PaginationMetaDto } from '📚libs/pagination/pagination-meta.dto';
 import { CreateExperienceResDto } from '🔥apps/server/experiences/dto/res/createExperience.res.dto';
 import { ExperienceIdParamReqDto } from '🔥apps/server/experiences/dto/req/experienceIdParam.dto';
 import { GetExperienceByIdResDto } from '🔥apps/server/experiences/dto/res/getExperienceById.res.dto';
-import { GetAiResumeResDto } from '🔥apps/server/ai/dto/res/getAiResume.res.dto';
 import { AiResumeRepository } from '📚libs/modules/database/repositories/ai-resume.repository';
+import { GetAiResumeResDto } from '🔥apps/server/experiences/dto/res/getAiResume.res.dto';
 
 @Injectable()
 export class ExperienceService {

@@ -30,7 +30,7 @@ import {
 import { PromptSummaryBodyReqDto } from './dto/req/promptSummary.req.dto';
 import { PromptSummaryResDto } from './dto/res/promptSummary.res.dto';
 import { PromptAiKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptAiKeyword.req.dto';
-import { GetAiResumeNotFoundException } from '🔥apps/server/ai/dto/res/getAiResume.res.dto';
+import { GetAiResumeNotFoundException } from '\uD83D\uDD25apps/server/experiences/dto/res/getAiResume.res.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
