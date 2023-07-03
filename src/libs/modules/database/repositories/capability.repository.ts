@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Capability, Prisma } from '@prisma/client';
+import { Capability, KeywordType, Prisma } from '@prisma/client';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
 import { AbstractRepository, DelegateArgs, DelegateReturnTypes } from '📚libs/modules/database/repositories/abstract.repository';
 
@@ -27,5 +27,9 @@ export class CapabilityRepository extends AbstractRepository<
       },
       distinct: 'keyword',
     });
+  }
+
+  public async findAiResumeCapabilities(userId: number): Promise<Capability[]> {
+    return await this.findMany({ where: { userId, keywordType: KeywordType.AI }, select: { keyword: true } });
   }
 }

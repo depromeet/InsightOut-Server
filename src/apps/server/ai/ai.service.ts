@@ -14,9 +14,7 @@ import { PromptKeywordResDto } from '🔥apps/server/ai/dto/res/promptKeyword.re
 import { PromptResumeResDto } from '🔥apps/server/ai/dto/res/promptResume.res.dto';
 import { PromptResumeBodyResDto } from '🔥apps/server/ai/dto/req/promptResume.req.dto';
 import { PromptSummaryBodyReqDto } from './dto/req/promptSummary.req.dto';
-import { PromptSummaryResDto } from './dto/res/promptSummary.res.dto';
 import { ExperienceService } from '🔥apps/server/experiences/services/experience.service';
-
 import { PromptAiKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptAiKeyword.req.dto';
 import { OpenAiResponseInterface } from '📚libs/modules/open-ai/interface/openAiResponse.interface';
 import { UpdateExperienceReqDto } from '🔥apps/server/experiences/dto/req/updateExperience.dto';
@@ -24,6 +22,13 @@ import { RedisCacheService } from '📚libs/modules/cache/redis/redis.service';
 import { EnvService } from '📚libs/modules/env/env.service';
 import { EnvEnum } from '📚libs/modules/env/env.enum';
 import { DAY } from '🔥apps/server/common/consts/time.const';
+import { AiResumeRepository } from '📚libs/modules/database/repositories/ai-resume.repository';
+import { GetAiResumeQueryReqDto } from '🔥apps/server/ai/dto/req/getAiResume.req.dto';
+import { AiResumeDto, GetAiResumeResDto } from '🔥apps/server/ai/dto/res/getAiResume.res.dto';
+import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
+import { removeDuplicatesInArr } from '📚libs/utils/array.util';
+import { GetAiResumeCountResDto } from '🔥apps/server/ai/dto/res/getAiResumeCount.res.dto';
+import { GetExperienceCardInfoResDto } from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.res.dto';
 
 @Injectable()
 export class AiService {
@@ -33,6 +38,8 @@ export class AiService {
     private readonly experienceService: ExperienceService,
     private readonly redisCheckService: RedisCacheService,
     private readonly envService: EnvService,
+    private readonly aiResumeRepository: AiResumeRepository,
+    private readonly capabilityRepository: CapabilityRepository,
   ) {}
 
   public async postAiKeywordPrompt(body: PromptAiKeywordBodyReqDto, user: UserJwtToken): Promise<PromptKeywordResDto> {
@@ -108,7 +115,7 @@ export class AiService {
     return new PromptResumeResDto(result.choices[CHOICES_IDX].message.content as string);
   }
 
-  public async postSummaryPrompt(body: PromptSummaryBodyReqDto): Promise<PromptSummaryResDto> {
+  public async postSummaryPrompt(body: PromptSummaryBodyReqDto): Promise<GetExperienceCardInfoResDto> {
     const experience = await this.validationExperinece(body.experienceId);
     if (experience.summaryKeywords.length !== 0) throw new ConflictException('이미 요약된 키워드가 있습니다.');
     if (experience.ExperienceInfo.analysis) throw new ConflictException('이미 요약된 정보가 있습니다.');
@@ -148,8 +155,32 @@ export class AiService {
     // 추천 Resume 저장 Done
 
     // 생성된 경험 분해 키드에 들어갈 데이터 return
-    return new PromptSummaryResDto(await this.experienceService.getExperienceCardInfo(body.experienceId));
+    return await this.experienceService.getExperienceCardInfo(body.experienceId);
   }
+
+  public async getAiResumes(user: UserJwtToken, query?: GetAiResumeQueryReqDto): Promise<GetAiResumeResDto> {
+    // aiResume 가져오기
+    const aiResumeArr = await this.aiResumeRepository.getAiResumeByUserId(user.userId, query.aiKeyword);
+
+    const aiResumeResDtoArr = aiResumeArr.map(
+      (aiResume: { AiResumeCapability: { Capability: { keyword: string } }[]; id: number; updatedAt: Date; content: string }) => {
+        return new AiResumeDto(aiResume);
+      },
+    );
+
+    // 내 aiResume 키워드 가져오기
+    const aiResumeCapabilityArr = await this.capabilityRepository.findAiResumeCapabilities(user.userId);
+    const availableKeywords = aiResumeCapabilityArr.map((capability) => capability.keyword);
+
+    return new GetAiResumeResDto(aiResumeResDtoArr, removeDuplicatesInArr<string>(availableKeywords));
+  }
+
+  public async getAiResumeCount(user: UserJwtToken, query?: GetAiResumeQueryReqDto): Promise<GetAiResumeCountResDto> {
+    const aiResumeCount = await this.aiResumeRepository.getAiResumeCount(user.userId, query.aiKeyword);
+
+    return new GetAiResumeCountResDto(aiResumeCount);
+  }
+
   // ---public done
 
   // private

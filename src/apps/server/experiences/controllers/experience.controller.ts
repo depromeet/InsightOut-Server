@@ -19,10 +19,10 @@ import {
   ExperienceIdParamReqDto,
   GetCountOfExperienceAndCapabilityResponseDto,
   GetCountOfExperienceResponseDto,
+  GetExperiencesResponseDto,
   GetExperienceByIdResDto,
   GetExperienceNotFoundErrorResDto,
   GetExperienceRequestQueryDto,
-  GetExperienceResDto,
   GetStarFromExperienceRequestParamDto,
   GetStarFromExperienceResponseDto,
 } from '🔥apps/server/experiences/dto';
@@ -50,9 +50,18 @@ import {
   updateExperienceDescriptionMd,
   updateExperienceSuccMd,
   updateExperienceSummaryMd,
+  getAiResumeSuccMd,
+  getAiResumeDescriptionMd,
+  getAiResumeSummaryMd,
+  getExperienceCardInfoSuccMd,
+  getExperienceCardInfoSummaryMd,
+  getExperienceCardInfoDescriptionMd,
 } from '🔥apps/server/experiences/markdown';
+import { GetAiResumeNotFoundException, GetAiResumeResDto } from '🔥apps/server/experiences/dto/res/getAiResume.res.dto';
+import { GetExperienceCardInfoNotFoundErrorResDto } from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.res.dto';
 import { SuccessResponse } from '📚libs/decorators/success-response.dto';
 import { PaginationDto } from '📚libs/pagination/pagination.dto';
+import { GetExperienceCardInfoResDto } from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.res.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -119,7 +128,7 @@ export class ExperienceController {
       model: PaginationDto,
       exampleTitle: '페이지가 처음이며, 다음 페이지가 있는 경우',
       exampleDescription: getExperienceFirstPagehavingNextPageDescriptionMd,
-      generic: GetExperienceResDto,
+      generic: GetExperiencesResponseDto,
     },
     {
       model: PaginationDto,
@@ -132,7 +141,7 @@ export class ExperienceController {
           hasNextPage: true,
         },
       },
-      generic: GetExperienceResDto,
+      generic: GetExperiencesResponseDto,
     },
     {
       model: PaginationDto,
@@ -144,7 +153,7 @@ export class ExperienceController {
         },
       },
       exampleDescription: getExperienceLastPagehavingDescriptionMd,
-      generic: GetExperienceResDto,
+      generic: GetExperiencesResponseDto,
     },
     {
       model: PaginationDto,
@@ -153,7 +162,7 @@ export class ExperienceController {
       overwriteValue: {
         meta: { pageCount: 1, hasNextPage: false },
       },
-      generic: GetExperienceResDto,
+      generic: GetExperiencesResponseDto,
     },
   ])
   @Route({
@@ -163,6 +172,7 @@ export class ExperienceController {
     },
     response: {
       code: HttpStatus.OK,
+      type: GetExperiencesResponseDto,
     },
     description: getExperienceSuccMd,
     summary: '🔵🟢🟣 경험 분해 조회 API',
@@ -171,20 +181,60 @@ export class ExperienceController {
     description: '⛔ 해당 경험 카드 ID를 확인해주세요 :)',
     type: GetExperienceNotFoundErrorResDto,
   })
-  public async getExperiences(@User() user: UserJwtToken, @Query() getExperienceRequestQueryDto?: GetExperienceRequestQueryDto) {
-    let experience;
-
+  public async getExperiences(
+    @User() user: UserJwtToken,
+    @Query() getExperienceRequestQueryDto?: GetExperienceRequestQueryDto,
+  ): Promise<ResponseEntity<PaginationDto<GetExperiencesResponseDto>>> {
     const dto = getExperienceRequestQueryDto.toRequestDto();
 
-    // TODO service로 넘어가기 전에 DTO 한 번 더 wrapping하기
-    if (dto.capabilityId) {
-      experience = await this.experienceService.getExperienceByCapability(user.userId, dto);
-    } else {
-      // TODO 추후 전체 모아보기를 위해 수정 필요
-      experience = await this.experienceService.getExperiencesByUserId(user.userId, dto);
-    }
-
+    const experience = await this.experienceService.getExperiences(user.userId, dto);
     return ResponseEntity.OK_WITH_DATA(experience);
+  }
+
+  @ApiNotFoundResponse({ type: GetAiResumeNotFoundException, description: '⛔ 해당 AI의 추천 자기소개서가 없습니다!' })
+  @Route({
+    request: {
+      method: Method.GET,
+      path: '/:experienceId/ai-resume',
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: GetAiResumeResDto,
+      description: getAiResumeSuccMd,
+    },
+    description: getAiResumeDescriptionMd,
+    summary: getAiResumeSummaryMd,
+  })
+  public async getAiResume(
+    @Param() experienceIdParamReqDto: ExperienceIdParamReqDto,
+    @User() user: UserJwtToken,
+  ): Promise<ResponseEntity<GetAiResumeResDto>> {
+    return ResponseEntity.OK_WITH_DATA(await this.experienceService.getAiResume(experienceIdParamReqDto, user));
+  }
+
+  @ApiNotFoundResponse({
+    type: GetExperienceCardInfoNotFoundErrorResDto,
+    description: '⛔ 해당 ID의 경험카드는 존재하지 않습니다 아이디를 확인해주세요 :)',
+  })
+  @Route({
+    request: {
+      path: '/:experienceId/card-info',
+      method: Method.GET,
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: GetExperienceCardInfoResDto,
+      description: getExperienceCardInfoDescriptionMd,
+    },
+    summary: getExperienceCardInfoSummaryMd,
+    description: getExperienceCardInfoSuccMd,
+  })
+  public async getExperienceCardInfo(
+    @Param() experienceIdParamReqDto: ExperienceIdParamReqDto,
+  ): Promise<ResponseEntity<GetExperienceCardInfoResDto>> {
+    const experienceCardInfo = await this.experienceService.getExperienceCardInfo(experienceIdParamReqDto.experienceId);
+
+    return ResponseEntity.OK_WITH_DATA(experienceCardInfo);
   }
 
   @Route({

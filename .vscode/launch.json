@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node", // nodejs
+      "request": "launch",
+      "name": "Debug api server", // 디버그 모드에서의 디버그 모드 이름
+      "runtimeExecutable": "yarn", // 실행할 명령어
+      "runtimeArgs": ["dev"], // 실행할 명령어의 매개변수
+      "sourceMaps": true, // 소스맵 사용 여부
+      "envFile": "${workspaceRoot}/.env", // 환경변수 파일
+      "skipFiles": ["${workspaceFolder}/<node_internals>/**", "${workspaceFolder}/node_modules/**"], // 디버그 모드에서 제외할 파일
+      "cwd": "${workspaceRoot}/src", // 디버그 모드에서의 실행 경로
+      "console": "integratedTerminal", // 디버그 모드에서의 콘솔 종류
+      "protocol": "inspector" // 디버그 모드에서의 프로토콜 종류
+    }
+  ]
+}
