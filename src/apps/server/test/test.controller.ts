@@ -12,6 +12,8 @@ import { testApiSuccMd } from '🔥apps/server/test/docs/test-api.md';
 import { AuthService } from '🔥apps/server/auth/auth.service';
 import { TokenType } from '📚libs/enums/token.enum';
 import { TimeoutTestRequestQueryDto } from '🔥apps/server/test/dtos/timeout-test.dto';
+import { SetRequestTimeout } from '🔥apps/server/common/decorators/timeout.decorator';
+import { SECOND } from '🔥apps/server/common/consts/time.const';
 
 @ApiTags('🧑🏻‍💻 개발용 API')
 @Controller('test')
@@ -74,10 +76,32 @@ export class TestController {
       code: HttpStatus.OK,
       description: '### timeout 테스트.',
     },
-    description: 'timeout 테스트',
+    description: '# timeout을 테스트합니다.',
     summary: '🛠️ timeout 시간 테스트',
   })
   async timeout(@Query() timeoutTestRequestQueryDto: TimeoutTestRequestQueryDto) {
+    function sleep(ms: number) {
+      return new Promise((r) => setTimeout(r, ms));
+    }
+
+    await sleep(timeoutTestRequestQueryDto.time);
+    return ResponseEntity.OK_WITH_MESSAGE('Request successfully processed');
+  }
+
+  @SetRequestTimeout(SECOND * 40)
+  @Route({
+    request: {
+      path: 'timeout/check',
+      method: Method.GET,
+    },
+    response: {
+      code: HttpStatus.OK,
+      description: '### timeout 테스트.',
+    },
+    description: 'timeout 테스트',
+    summary: '🛠️ timeout 시간 테스트',
+  })
+  async timeoutCheck(@Query() timeoutTestRequestQueryDto: TimeoutTestRequestQueryDto) {
     function sleep(ms: number) {
       return new Promise((r) => setTimeout(r, ms));
     }
