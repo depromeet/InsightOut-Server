@@ -322,8 +322,9 @@ export class ExperienceController {
   public async update(
     @Body() upsertExperienceReqDto: UpdateExperienceReqDto,
     @Param() experienceIdParamReqDto: ExperienceIdParamReqDto,
+    @User() user: UserJwtToken,
   ): Promise<ResponseEntity<UpdateExperienceResDto>> {
-    const experience = await this.experienceService.update(upsertExperienceReqDto, experienceIdParamReqDto);
+    const experience = await this.experienceService.update(upsertExperienceReqDto, experienceIdParamReqDto, user);
 
     return ResponseEntity.CREATED_WITH_DATA(experience);
   }
