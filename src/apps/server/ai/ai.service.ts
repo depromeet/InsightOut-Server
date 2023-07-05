@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { Capability, Experience, KeywordType, Prisma } from '@prisma/client';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-token.type';
@@ -193,10 +193,14 @@ export class AiService {
   private parsingPromptResult(promptResult: OpenAiResponseInterface): string[] {
     const CHOICES_IDX = 0;
 
-    if (typeof promptResult.choices[CHOICES_IDX].message.content === 'string') {
-      return JSON.parse(promptResult.choices[CHOICES_IDX].message.content);
-    } else {
-      return promptResult.choices[CHOICES_IDX].message.content as string[];
+    try {
+      if (typeof promptResult.choices[CHOICES_IDX].message.content === 'string') {
+        return JSON.parse(promptResult.choices[CHOICES_IDX].message.content).keywords;
+      } else {
+        return promptResult.choices[CHOICES_IDX].message.content as string[];
+      }
+    } catch (error) {
+      throw new InternalServerErrorException('키워드 생성에 실패했습니다.');
     }
   }
 
