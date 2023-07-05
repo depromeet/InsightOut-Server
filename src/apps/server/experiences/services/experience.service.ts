@@ -111,9 +111,9 @@ export class ExperienceService {
     return new GetAiResumeResDto({ id: aiResume.id, content: aiResume.content });
   }
 
-  public async update(body: UpdateExperienceReqDto, query: ExperienceIdParamReqDto): Promise<UpdateExperienceResDto> {
+  public async update(body: UpdateExperienceReqDto, query: ExperienceIdParamReqDto, user: UserJwtToken): Promise<UpdateExperienceResDto> {
     // 생성 중인 경험 카드가 있는지 확인
-    const experinece = await this.experienceRepository.findOneById(query.experienceId);
+    const experinece = await this.experienceRepository.findOneById(query.experienceId, user.userId);
     if (!experinece) throw new NotFoundException('해당 ID의 경험카드는 존재하지 않습니다.');
     // 있으면 업데이트
     const updatedExperienceInfo = body.compareProperty(experinece);
@@ -121,9 +121,9 @@ export class ExperienceService {
     return await this.processUpdateExperience(experinece.id, updatedExperienceInfo);
   }
 
-  public async findOneById(experienceId: number): Promise<Experience & { AiResume; ExperienceInfo; AiRecommendQuestion }> {
+  public async findOneById(experienceId: number, userId: number): Promise<Experience & { AiResume; ExperienceInfo; AiRecommendQuestion }> {
     try {
-      const experience = await this.experienceRepository.findOneById(experienceId);
+      const experience = await this.experienceRepository.findOneById(experienceId, userId);
 
       return experience;
     } catch (error) {

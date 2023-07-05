@@ -43,7 +43,7 @@ export class AiService {
   ) {}
 
   public async postAiKeywordPrompt(body: PromptAiKeywordBodyReqDto, user: UserJwtToken): Promise<PromptKeywordResDto> {
-    await this.validationExperinece(body.experienceId);
+    await this.validationExperinece(body.experienceId, user.userId);
     const aiCapability = await this.prisma.aiResume.findUnique({
       where: { experienceId: body.experienceId },
       select: { AiResumeCapability: true },
@@ -77,7 +77,7 @@ export class AiService {
   }
 
   public async postResumePrompt(body: PromptResumeBodyResDto, user: UserJwtToken): Promise<PromptResumeResDto> {
-    const experience = await this.validationExperinece(body.experienceId);
+    const experience = await this.validationExperinece(body.experienceId, user.userId);
     if (experience.AiResume) throw new BadRequestException('해당 experienceId에 추천 AI 자기소개서가 이미 존재합니다.');
     const capabilities = await this.prisma.capability.findMany({ where: { id: { in: body.capabilityIds } }, select: { keyword: true } });
     if (capabilities.length !== body.capabilityIds.length) throw new ConflictException('역량 ID들 중 존재하지 않는 것이 있습니다.');
@@ -115,8 +115,8 @@ export class AiService {
     return new PromptResumeResDto(result.choices[CHOICES_IDX].message.content as string);
   }
 
-  public async postSummaryPrompt(body: PromptSummaryBodyReqDto): Promise<GetExperienceCardInfoResDto> {
-    const experience = await this.validationExperinece(body.experienceId);
+  public async postSummaryPrompt(body: PromptSummaryBodyReqDto, user: UserJwtToken): Promise<GetExperienceCardInfoResDto> {
+    const experience = await this.validationExperinece(body.experienceId, user.userId);
     if (experience.summaryKeywords.length !== 0) throw new ConflictException('이미 요약된 키워드가 있습니다.');
     if (experience.ExperienceInfo.analysis) throw new ConflictException('이미 요약된 정보가 있습니다.');
     if (experience.AiRecommendQuestion.length !== 0) throw new ConflictException('이미 추천된 자기소개서 항목이 있습니다.');
@@ -184,8 +184,11 @@ export class AiService {
   // ---public done
 
   // private
-  private async validationExperinece(experienceId: number): Promise<Experience & { AiResume; ExperienceInfo; AiRecommendQuestion }> {
-    const experience = await this.experienceService.findOneById(experienceId);
+  private async validationExperinece(
+    experienceId: number,
+    userId: number,
+  ): Promise<Experience & { AiResume; ExperienceInfo; AiRecommendQuestion }> {
+    const experience = await this.experienceService.findOneById(experienceId, userId);
     if (!experience) throw new NotFoundException('해당 ID의 경험 카드를 찾을 수 없습니다.');
     return experience;
   }
