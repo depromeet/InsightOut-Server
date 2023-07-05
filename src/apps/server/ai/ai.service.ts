@@ -195,7 +195,10 @@ export class AiService {
 
     try {
       if (typeof promptResult.choices[CHOICES_IDX].message.content === 'string') {
-        return JSON.parse(promptResult.choices[CHOICES_IDX].message.content).keywords;
+        return (
+          JSON.parse(promptResult.choices[CHOICES_IDX].message.content).keywords ??
+          JSON.parse(promptResult.choices[CHOICES_IDX].message.content)
+        );
       } else {
         return promptResult.choices[CHOICES_IDX].message.content as string[];
       }
