@@ -10,7 +10,6 @@ export class UpdateExperienceInfoResDto {
   @Exclude() private _experienceInfoId: number;
   @Exclude() private _experienceRole: string;
   @Exclude() private _motivation: string;
-  @Exclude() private _utilization: string;
   @Exclude() private _analysis: string;
 
   set setExperienceInfoId(experienceInfoId: number) {
@@ -23,10 +22,6 @@ export class UpdateExperienceInfoResDto {
 
   set setExperienceRole(experienceRole: string) {
     this._experienceRole = experienceRole;
-  }
-
-  set setUtilization(utiliaztion: string) {
-    this._utilization = utiliaztion;
   }
 
   set setAnalysis(analysis: string) {
@@ -53,14 +48,6 @@ export class UpdateExperienceInfoResDto {
   @IsOptionalString(0, 100)
   get experienceRole(): string {
     return this._experienceRole;
-  }
-
-  @ApiPropertyOptional({
-    example: '개발자와 협업이 많기로 알고 있는데 커뮤니케이션 역량을 발휘해 목표 일정에 맞게 일을 빠르고 정확하게 할 수 있을 것',
-  })
-  @IsOptionalString(0, 100)
-  get utilization(): string {
-    return this._utilization;
   }
 
   @ApiPropertyOptional({
@@ -99,7 +86,6 @@ export class UpdateExperienceResDto {
     experienceInfoRes.setExperienceInfoId = experienceInfo.id;
     experienceInfoRes.setExperienceRole = experienceInfo.experienceRole;
     experienceInfoRes.setMotivation = experienceInfo.motivation;
-    experienceInfoRes.setUtilization = experienceInfo.utilization;
     experienceInfoRes.setAnalysis = experienceInfo.analysis;
 
     this._experienceInfo = experienceInfoRes;

@@ -55,12 +55,6 @@ export class UpdateExperienceReqDto {
   @IsOptionalString(0, 100)
   motivation?: string;
 
-  @ApiPropertyOptional({
-    example: '개발자와 협업이 많기로 알고 있는데 커뮤니케이션 역량을 발휘해 목표 일정에 맞게 일을 빠르고 정확하게 할 수 있을 것',
-  })
-  @IsOptionalString(0, 100)
-  utilization?: string;
-
   // analysis는 따로 body 값으로 받지 않고 요약 프롬프트가 생성되면 저장됩니다.
   // 따로 데코레이터를 넣지 않습니다.
   analysis?: string;
@@ -82,7 +76,6 @@ export class UpdateExperienceReqDto {
     if (this.experienceStatus) experience.experienceStatus = this.experienceStatus;
     if (this.experienceRole) experience.ExperienceInfo.experienceRole = this.experienceRole;
     if (this.motivation) experience.ExperienceInfo.motivation = this.motivation;
-    if (this.utilization) experience.ExperienceInfo.utilization = this.utilization;
     if (this.analysis) experience.ExperienceInfo.analysis = this.analysis;
 
     return experience;

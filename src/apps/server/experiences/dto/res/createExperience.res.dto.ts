@@ -11,14 +11,12 @@ export class CreateExperienceInfoResDto {
   @Exclude() private _experienceInfoId: number;
   @Exclude() private _experienceRole: string;
   @Exclude() private _motivation: string;
-  @Exclude() private _utilization: string;
   @Exclude() private _analysis: string;
 
   constructor(data: ExperienceInfo) {
     this._experienceInfoId = data.id;
     this._experienceRole = data.experienceRole;
     this._motivation = data.motivation;
-    this._utilization = data.utilization;
     this._analysis = data.analysis;
   }
 
@@ -32,10 +30,6 @@ export class CreateExperienceInfoResDto {
 
   set setExperienceRole(experienceRole: string) {
     this._experienceRole = experienceRole;
-  }
-
-  set setUtilization(utiliaztion: string) {
-    this._utilization = utiliaztion;
   }
 
   set setAnalysis(analysis: string) {
@@ -62,14 +56,6 @@ export class CreateExperienceInfoResDto {
   @IsOptionalString(0, 100)
   get experienceRole(): string {
     return this._experienceRole;
-  }
-
-  @ApiPropertyOptional({
-    example: null,
-  })
-  @IsOptionalString(0, 100)
-  get utilization(): string {
-    return this._utilization;
   }
 
   @ApiPropertyOptional({

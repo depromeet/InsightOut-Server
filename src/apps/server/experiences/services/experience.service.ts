@@ -65,7 +65,6 @@ export class ExperienceService {
         data: {
           experienceRole: null,
           motivation: null,
-          utilization: null,
           analysis: null,
           experienceId: experience.id,
         },
@@ -167,7 +166,6 @@ export class ExperienceService {
         data: {
           experienceRole: updatedExperienceInfo.ExperienceInfo.experienceRole,
           motivation: updatedExperienceInfo.ExperienceInfo.motivation,
-          utilization: updatedExperienceInfo.ExperienceInfo.utilization,
           analysis: updatedExperienceInfo.ExperienceInfo.analysis,
         },
       });
