@@ -1,16 +1,19 @@
-import { Body, Controller, HttpStatus, Res } from '@nestjs/common';
+import { Body, Controller, HttpStatus, ParseIntPipe, Query, Res } from '@nestjs/common';
 import { TestService } from './test.service';
 import { Response } from 'express';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
 import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
 import { Method } from '📚libs/enums/method.enum';
 import { PostIssueTestTokenRequestBodyDto } from '🔥apps/server/test/dtos/post-issue-test-token.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { OpenAiService } from '📚libs/modules/open-ai/open-ai.service';
 import { PromptTestBodyReqDto } from '🔥apps/server/test/dtos/prompt-test-body-req.dto';
 import { testApiSuccMd } from '🔥apps/server/test/docs/test-api.md';
 import { AuthService } from '🔥apps/server/auth/auth.service';
 import { TokenType } from '📚libs/enums/token.enum';
+import { TimeoutTestRequestQueryDto } from '🔥apps/server/test/dtos/timeout-test.dto';
+import { SetRequestTimeout } from '🔥apps/server/common/decorators/timeout.decorator';
+import { SECOND } from '🔥apps/server/common/consts/time.const';
 
 @ApiTags('🧑🏻‍💻 개발용 API')
 @Controller('test')
@@ -62,5 +65,48 @@ export class TestController {
   })
   async test(@Body() body: PromptTestBodyReqDto) {
     return await this.openAiService.promptChatGPT(body.content);
+  }
+
+  @Route({
+    request: {
+      path: 'timeout',
+      method: Method.GET,
+    },
+    response: {
+      code: HttpStatus.OK,
+      description: '### timeout 테스트.',
+    },
+    description: '# timeout을 테스트합니다.',
+    summary: '🛠️ timeout 시간 테스트',
+  })
+  async timeout(@Query() timeoutTestRequestQueryDto: TimeoutTestRequestQueryDto) {
+    function sleep(ms: number) {
+      return new Promise((r) => setTimeout(r, ms));
+    }
+
+    await sleep(timeoutTestRequestQueryDto.time);
+    return ResponseEntity.OK_WITH_MESSAGE('Request successfully processed');
+  }
+
+  @SetRequestTimeout(SECOND * 40)
+  @Route({
+    request: {
+      path: 'timeout/check',
+      method: Method.GET,
+    },
+    response: {
+      code: HttpStatus.OK,
+      description: '### timeout 테스트.',
+    },
+    description: 'timeout 테스트',
+    summary: '🛠️ timeout 시간 테스트',
+  })
+  async timeoutCheck(@Query() timeoutTestRequestQueryDto: TimeoutTestRequestQueryDto) {
+    function sleep(ms: number) {
+      return new Promise((r) => setTimeout(r, ms));
+    }
+
+    await sleep(timeoutTestRequestQueryDto.time);
+    return ResponseEntity.OK_WITH_MESSAGE('Request successfully processed');
   }
 }

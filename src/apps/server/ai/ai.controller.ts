@@ -178,7 +178,7 @@ export class AiController {
     @Body() promptSummaryBodyReqDto: PromptSummaryBodyReqDto,
   ): Promise<ResponseEntity<GetExperienceCardInfoResDto>> {
     await this.aiService.restrictPrompt(user);
-    const newAi = await this.aiService.postSummaryPrompt(promptSummaryBodyReqDto);
+    const newAi = await this.aiService.postSummaryPrompt(promptSummaryBodyReqDto, user);
 
     return ResponseEntity.OK_WITH_DATA(newAi);
   }

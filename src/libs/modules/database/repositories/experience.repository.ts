@@ -54,9 +54,9 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
     });
   }
 
-  public async findOneById(experienceId: number): Promise<Experience & { AiResume; ExperienceInfo; AiRecommendQuestion }> {
-    return await this.prisma.experience.findUnique({
-      where: { id: experienceId },
+  public async findOneById(experienceId: number, userId: number): Promise<Experience & { AiResume; ExperienceInfo; AiRecommendQuestion }> {
+    return await this.prisma.experience.findFirst({
+      where: { id: experienceId, userId },
       include: { ExperienceInfo: true, AiResume: true, AiRecommendQuestion: true },
     });
   }
