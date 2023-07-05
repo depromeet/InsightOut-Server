@@ -226,7 +226,7 @@ model ExperienceInfo {
   experienceRole String? @map("experience_role") @db.VarChar(20) // 경험 나의 역할
   motivation     String? @db.VarChar(100) // 경험 수행 이유
   utilization    String? @db.VarChar(100) // 역량 활용
-  analysis       String? @db.VarChar(160) // AI 분석
+  analysis       String? @db.VarChar(250) // AI 분석
 
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
