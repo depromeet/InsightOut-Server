@@ -21,7 +21,6 @@ export class GetExperienceInfoResDto {
   @Exclude() _experienceId: number;
   @Exclude() _motivation: string;
   @Exclude() _experienceRole: string;
-  @Exclude() _utilization: string;
 
   @ApiProperty({ example: 1 })
   @IsOptionalNumber()
@@ -43,14 +42,6 @@ export class GetExperienceInfoResDto {
   @IsOptionalString(0, 100)
   get experienceRole(): string {
     return this._experienceRole;
-  }
-
-  @ApiPropertyOptional({
-    example: '역량 활용',
-  })
-  @IsOptionalString(0, 100)
-  get utilization(): string {
-    return this._utilization;
   }
 }
 
@@ -229,7 +220,6 @@ export class GetExperienceByIdResDto {
       experienceId: 1,
       experienceRole: 'UI/UX 디자이너',
       motivation: '개발자와 협업 역량을 기르기 위해 하게 됨',
-      utilization: '개발자와 협업이 많기로 알고 있는데 커뮤니케이션 역량을 발휘해 목표 일정에 맞게 일을 빠르고 정확하게 할 수 있을 것',
     },
   })
   get ExperienceInfo(): GetExperienceInfoResDto {

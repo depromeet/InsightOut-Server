@@ -19,7 +19,6 @@ export interface ExperienceSelect {
           experienceRole?: boolean;
           motivation?: boolean;
           analysis?: boolean;
-          utilization?: boolean;
           createdAt?: boolean;
           updatedAt?: boolean;
           experienceId?: boolean;
