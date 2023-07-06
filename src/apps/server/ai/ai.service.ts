@@ -53,7 +53,7 @@ export class AiService {
     const prompt = generateAiKeywordPrompt(body);
     const aiKeywords = await this.openAiService.promptChatGPT(prompt);
 
-    const parseAiKeywords = this.parsingPromptResult(aiKeywords);
+    const parseAiKeywords = this.parsingPromptResult(aiKeywords).slice(0, 2);
 
     // capability생성
     const capabilityInfos = parseAiKeywords.map((keyword) => {
@@ -130,7 +130,7 @@ export class AiService {
       this.openAiService.promptChatGPT(aiSummaryKeywords),
     ]);
 
-    const parseKeywords = this.parsingPromptResult(keywords);
+    const parseKeywords = this.parsingPromptResult(keywords).slice(0, 2);
     const aiRecommendResume = generateRecommendQuestionsPrompt(parseKeywords);
 
     // analysis, keyword 업데이트
@@ -144,7 +144,7 @@ export class AiService {
 
     // 추천 Resume 저장 Start
     const recommendQuestions = await this.openAiService.promptChatGPT(aiRecommendResume);
-    const parseRecommendQuestions: string[] = this.parsingPromptResult(recommendQuestions);
+    const parseRecommendQuestions: string[] = this.parsingPromptResult(recommendQuestions).slice(0, 2);
     const aiRecommendInfos = parseRecommendQuestions.map((question) => {
       return {
         experienceId: body.experienceId,
