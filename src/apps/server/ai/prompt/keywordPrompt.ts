@@ -22,7 +22,7 @@ export const generateSummaryKeywordPrompt = (body: PromptSummaryBodyReqDto): str
   return `${summayKeywordPrompt}Action: ${body.task}\\n\\nResult: ${body.result}\\n\n\`\`\`\\n"`;
 };
 
-export const generateRecommendQuestionsPrompt = (body: string[]): string => {
-  const summayKeywordPrompt = process.env.CHATGPT_RECOMMEND_QUESTIONS_PROMPT;
-  return summayKeywordPrompt.replace('변수', JSON.stringify(body));
+export const generateRecommendQuestionsPrompt = (keywords: string[]): string => {
+  const recommendQuestionsPrompt = process.env.CHATGPT_RECOMMEND_QUESTIONS_PROMPT;
+  return `${recommendQuestionsPrompt} \n\n\`${keywords}\``;
 };

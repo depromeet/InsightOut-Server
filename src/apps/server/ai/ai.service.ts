@@ -16,7 +16,7 @@ import { PromptResumeBodyResDto } from '🔥apps/server/ai/dto/req/promptResume.
 import { PromptSummaryBodyReqDto } from './dto/req/promptSummary.req.dto';
 import { ExperienceService } from '🔥apps/server/experiences/services/experience.service';
 import { PromptAiKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptAiKeyword.req.dto';
-import { OpenAiResponseInterface } from '📚libs/modules/open-ai/interface/openAiResponse.interface';
+import { AiResponse } from '📚libs/modules/open-ai/interface/aiResponse.interface';
 import { UpdateExperienceReqDto } from '🔥apps/server/experiences/dto/req/updateExperience.dto';
 import { RedisCacheService } from '📚libs/modules/cache/redis/redis.service';
 import { EnvService } from '📚libs/modules/env/env.service';
@@ -144,7 +144,7 @@ export class AiService {
 
     // 추천 Resume 저장 Start
     const recommendQuestions = await this.openAiService.promptChatGPT(aiRecommendResume);
-    const parseRecommendQuestions: string[] = this.parsingPromptResult(recommendQuestions).slice(0, 2);
+    const parseRecommendQuestions: string[] = this.parseRecommendQuestion(recommendQuestions).slice(0, 2);
     const aiRecommendInfos = parseRecommendQuestions.map((question) => {
       return {
         experienceId: body.experienceId,
@@ -193,18 +193,17 @@ export class AiService {
     return experience;
   }
 
-  private parsingPromptResult(promptResult: OpenAiResponseInterface): string[] {
-    const CHOICES_IDX = 0;
-
+  private parsingPromptResult(promptResult: AiResponse): string[] {
     try {
-      if (typeof promptResult.choices[CHOICES_IDX].message.content === 'string') {
-        return (
-          JSON.parse(promptResult.choices[CHOICES_IDX].message.content).keywords ??
-          JSON.parse(promptResult.choices[CHOICES_IDX].message.content)
-        );
-      } else {
-        return promptResult.choices[CHOICES_IDX].message.content as string[];
-      }
+      return JSON.parse(promptResult.choices[0].message.content).keywords;
+    } catch (error) {
+      throw new InternalServerErrorException('키워드 생성에 실패했습니다.');
+    }
+  }
+
+  private parseRecommendQuestion(aiResponse: AiResponse): string[] {
+    try {
+      return JSON.parse(aiResponse.choices[0].message.content).questions;
     } catch (error) {
       throw new InternalServerErrorException('키워드 생성에 실패했습니다.');
     }

@@ -1,4 +1,4 @@
-export interface OpenAiResponseInterface {
+export interface AiResponse {
   id: string;
   object: string;
   created: number;
@@ -12,7 +12,7 @@ export interface OpenAiResponseInterface {
     {
       message: {
         role: string;
-        content: string[] | string;
+        content: string;
       };
       finish_reason: string;
       index: number;
