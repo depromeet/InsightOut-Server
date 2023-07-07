@@ -144,7 +144,7 @@ export class AiService {
 
     // 추천 Resume 저장 Start
     const recommendQuestions = await this.openAiService.promptChatGPT(aiRecommendResume);
-    const parseRecommendQuestions: string[] = this.parsingPromptResult(recommendQuestions).slice(0, 2);
+    const parseRecommendQuestions: string[] = this.parseRecommendQuestion(recommendQuestions).slice(0, 2);
     const aiRecommendInfos = parseRecommendQuestions.map((question) => {
       return {
         experienceId: body.experienceId,
@@ -194,17 +194,16 @@ export class AiService {
   }
 
   private parsingPromptResult(promptResult: AiResponse): string[] {
-    const CHOICES_IDX = 0;
-
     try {
-      if (typeof promptResult.choices[CHOICES_IDX].message.content === 'string') {
-        return (
-          JSON.parse(promptResult.choices[CHOICES_IDX].message.content).keywords ??
-          JSON.parse(promptResult.choices[CHOICES_IDX].message.content)
-        );
-      } else {
-        return promptResult.choices[CHOICES_IDX].message.content as string[];
-      }
+      return JSON.parse(promptResult.choices[0].message.content).keywords;
+    } catch (error) {
+      throw new InternalServerErrorException('키워드 생성에 실패했습니다.');
+    }
+  }
+
+  private parseRecommendQuestion(aiResponse: AiResponse): string[] {
+    try {
+      return JSON.parse(aiResponse.choices[0].message.content).questions;
     } catch (error) {
       throw new InternalServerErrorException('키워드 생성에 실패했습니다.');
     }
