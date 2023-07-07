@@ -16,7 +16,7 @@ import { PromptResumeBodyResDto } from '🔥apps/server/ai/dto/req/promptResume.
 import { PromptSummaryBodyReqDto } from './dto/req/promptSummary.req.dto';
 import { ExperienceService } from '🔥apps/server/experiences/services/experience.service';
 import { PromptAiKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptAiKeyword.req.dto';
-import { OpenAiResponseInterface } from '📚libs/modules/open-ai/interface/openAiResponse.interface';
+import { AiResponse } from '📚libs/modules/open-ai/interface/aiResponse.interface';
 import { UpdateExperienceReqDto } from '🔥apps/server/experiences/dto/req/updateExperience.dto';
 import { RedisCacheService } from '📚libs/modules/cache/redis/redis.service';
 import { EnvService } from '📚libs/modules/env/env.service';
@@ -193,7 +193,7 @@ export class AiService {
     return experience;
   }
 
-  private parsingPromptResult(promptResult: OpenAiResponseInterface): string[] {
+  private parsingPromptResult(promptResult: AiResponse): string[] {
     const CHOICES_IDX = 0;
 
     try {

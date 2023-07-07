@@ -4,7 +4,7 @@ import { EnvEnum } from '📚libs/modules/env/env.enum';
 import { HttpService } from '@nestjs/axios';
 import { catchError, firstValueFrom } from 'rxjs';
 import { openAIModelEnum } from '📚libs/modules/open-ai/openAIModel.enum';
-import { OpenAiResponseInterface } from '📚libs/modules/open-ai/interface/openAiResponse.interface';
+import { AiResponse } from '📚libs/modules/open-ai/interface/aiResponse.interface';
 
 @Injectable()
 export class OpenAiService {
@@ -20,7 +20,7 @@ export class OpenAiService {
     this.OPEN_AI_URL = this.envService.get(EnvEnum.OPENAI_CHAT_URL);
   }
 
-  public async promptChatGPT(content: string): Promise<OpenAiResponseInterface> {
+  public async promptChatGPT(content: string): Promise<AiResponse> {
     const data = {
       model: this.OPEN_AI_MODEL,
       messages: [
@@ -42,6 +42,6 @@ export class OpenAiService {
 
     const responseData = response.data;
 
-    return responseData as OpenAiResponseInterface;
+    return responseData as AiResponse;
   }
 }
