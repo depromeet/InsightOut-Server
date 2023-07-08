@@ -92,8 +92,8 @@ export class GetExperienceByIdResDto {
   @Exclude() _experienceCapabilityKeywords: string[];
   @Exclude() _summaryKeywords: string[];
   @Exclude() _updatedAt: Date;
-  @Exclude() _experienceInfo: GetExperienceInfoResDto;
-  @Exclude() _aiResume: AiResume;
+  @Exclude() _ExperienceInfo: GetExperienceInfoResDto;
+  @Exclude() _AiResume: AiResume;
 
   constructor(
     experience: Partial<
@@ -118,8 +118,8 @@ export class GetExperienceByIdResDto {
     );
     this._summaryKeywords = experience.summaryKeywords;
     this._updatedAt = experience.updatedAt;
-    this._experienceInfo = experience.ExperienceInfo;
-    this._aiResume = experience.AiResume;
+    this._ExperienceInfo = experience.ExperienceInfo;
+    this._AiResume = experience.AiResume;
   }
   @ApiProperty({ example: 1 })
   @IsOptionalNumber()
@@ -245,7 +245,7 @@ export class GetExperienceByIdResDto {
     ],
   })
   get AiResume(): AiResume {
-    return this._aiResume;
+    return this._AiResume;
   }
 
   @Expose()
@@ -259,6 +259,6 @@ export class GetExperienceByIdResDto {
     },
   })
   get ExperienceInfo(): GetExperienceInfoResDto {
-    return this._experienceInfo;
+    return this._ExperienceInfo;
   }
 }
