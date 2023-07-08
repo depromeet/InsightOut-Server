@@ -162,7 +162,6 @@ export class ExperienceController {
     return ResponseEntity.OK_WITH_DATA(countOfExperience);
   }
 
-  //TODO: query 넣어주기
   @Route({
     request: {
       path: '/capability',
