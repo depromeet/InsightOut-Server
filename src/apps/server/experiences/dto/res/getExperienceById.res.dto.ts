@@ -93,8 +93,7 @@ export class GetExperienceByIdResDto {
   @Exclude() _summaryKeywords: string[];
   @Exclude() _updatedAt: Date;
   @Exclude() _experienceInfo: GetExperienceInfoResDto;
-  @Exclude() _aiResume: string;
-  @Exclude() _aiCapabilities: string[];
+  @Exclude() _aiResume: AiResume;
 
   constructor(
     experience: Partial<
@@ -120,10 +119,7 @@ export class GetExperienceByIdResDto {
     this._summaryKeywords = experience.summaryKeywords;
     this._updatedAt = experience.updatedAt;
     this._experienceInfo = experience.ExperienceInfo;
-    this._aiResume = experience.AiResume.content;
-    this._aiCapabilities = experience.AiResume.AiResumeCapability.map(
-      (aiResumeCapability: AiResumeCapability) => aiResumeCapability.Capability.keyword,
-    );
+    this._aiResume = experience.AiResume;
   }
   @ApiProperty({ example: 1 })
   @IsOptionalNumber()
@@ -248,7 +244,7 @@ export class GetExperienceByIdResDto {
       },
     ],
   })
-  get AiResume(): string {
+  get AiResume(): AiResume {
     return this._aiResume;
   }
 
@@ -264,16 +260,5 @@ export class GetExperienceByIdResDto {
   })
   get ExperienceInfo(): GetExperienceInfoResDto {
     return this._experienceInfo;
-  }
-
-  @Expose()
-  @ApiPropertyOptional({
-    description: 'AI 직무 역량 키워드',
-    example: ['창의력', '협동력'],
-    type: String,
-    isArray: true,
-  })
-  get aiCapabilities(): string[] {
-    return this._aiCapabilities;
   }
 }
