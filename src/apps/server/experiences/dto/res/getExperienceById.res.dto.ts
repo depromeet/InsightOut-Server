@@ -1,7 +1,8 @@
 import { Exclude, Expose, Type } from 'class-transformer';
-import { Experience, ExperienceStatus, KeywordType } from '@prisma/client';
+import { Experience, ExperienceCapability, ExperienceStatus, KeywordType } from '@prisma/client';
 import {
   ArrayMaxSize,
+  ArrayMinSize,
   IsArray,
   IsDate,
   IsEnum,
@@ -88,12 +89,22 @@ export class GetExperienceByIdResDto {
   @Exclude() _action: string;
   @Exclude() _result: string;
   @Exclude() _experienceStatus: ExperienceStatus;
+  @Exclude() _experienceCapabilityKeywords: string[];
   @Exclude() _summaryKeywords: string[];
   @Exclude() _updatedAt: Date;
-  @Exclude() _ExperienceInfo: GetExperienceInfoResDto;
-  @Exclude() _AiResume: AiResume;
+  @Exclude() _experienceInfo: GetExperienceInfoResDto;
+  @Exclude() _aiResume: string;
+  @Exclude() _aiCapabilities: string[];
 
-  constructor(experience: Partial<Experience & { ExperienceInfo; AiResume }>) {
+  constructor(
+    experience: Partial<
+      Experience & {
+        ExperienceInfo: GetExperienceInfoResDto;
+        AiResume: AiResume;
+        ExperienceCapability: (Partial<ExperienceCapability> & { Capability: Capability })[];
+      }
+    >,
+  ) {
     this._id = experience.id;
     this._title = experience.title;
     this._startDate = experience.startDate;
@@ -103,10 +114,16 @@ export class GetExperienceByIdResDto {
     this._action = experience.action;
     this._result = experience.result;
     this._experienceStatus = experience.experienceStatus;
+    this._experienceCapabilityKeywords = experience.ExperienceCapability.map(
+      (experienceCapability) => experienceCapability.Capability.keyword,
+    );
     this._summaryKeywords = experience.summaryKeywords;
     this._updatedAt = experience.updatedAt;
-    this._ExperienceInfo = experience.ExperienceInfo;
-    this._AiResume = experience.AiResume;
+    this._experienceInfo = experience.ExperienceInfo;
+    this._aiResume = experience.AiResume.content;
+    this._aiCapabilities = experience.AiResume.AiResumeCapability.map(
+      (aiResumeCapability: AiResumeCapability) => aiResumeCapability.Capability.keyword,
+    );
   }
   @ApiProperty({ example: 1 })
   @IsOptionalNumber()
@@ -134,17 +151,6 @@ export class GetExperienceByIdResDto {
     return this._endDate;
   }
 
-  @ApiPropertyOptional({
-    example: 'INPROGRESS or DONE',
-    default: 'INPROGRESS',
-  })
-  @IsEnum(ExperienceStatus)
-  @IsOptional()
-  @Expose()
-  get experienceStatus(): ExperienceStatus {
-    return this._experienceStatus;
-  }
-
   @ApiPropertyOptional({ example: '개발자와 협업 역량을 쌓기 위해 IT 동아리에 들어감' })
   @IsOptionalString(0, 100)
   get situation(): string {
@@ -169,7 +175,39 @@ export class GetExperienceByIdResDto {
     return this._result;
   }
 
-  @ApiPropertyOptional({ example: ['협업', '리더십'] })
+  @ApiPropertyOptional({
+    description: '경험 카드의 작성 상태로, 작성중과 작성 완료 상태인 INPROGRESS, DONE이 있습니다.',
+    example: 'INPROGRESS or DONE',
+    default: 'INPROGRESS',
+  })
+  @IsEnum(ExperienceStatus)
+  @IsOptional()
+  @Expose()
+  get experienceStatus(): ExperienceStatus {
+    return this._experienceStatus;
+  }
+
+  @Expose()
+  @ApiPropertyOptional({
+    description: '유저가 선택한 경험 역량 키워드',
+    example: ['도전정신', '추진력', '혁신사고력'],
+    type: String,
+    isArray: true,
+  })
+  @IsArray()
+  @IsString({ each: true })
+  @ArrayMinSize(1)
+  @IsNotEmpty({ each: true })
+  @IsOptional()
+  get experienceCapabilityKeywords(): string[] {
+    return this._experienceCapabilityKeywords;
+  }
+
+  @Expose()
+  @ApiPropertyOptional({
+    description: '경험 요약 키워드입니다. 경험카드 이미지 하단에 있는 두 개의 키워드를 일컫습니다.',
+    example: ['협업', '리더십'],
+  })
   @IsArray()
   @IsString({ each: true })
   @ArrayMaxSize(2)
@@ -178,16 +216,17 @@ export class GetExperienceByIdResDto {
     return this._summaryKeywords;
   }
 
+  @Expose()
+  @ApiPropertyOptional({ description: '경험 카드 최종 수정 일자', example: '2023-07-01T09:11:30.599Z' })
   @IsDate()
   @IsNotEmpty()
-  @Expose()
-  @ApiPropertyOptional({ example: '2023-07-01T09:11:30.599Z' })
   get updatedAt(): Date {
     return this._updatedAt;
   }
 
   @Expose()
-  @ApiProperty({
+  @ApiPropertyOptional({
+    description: 'AI 추천 자기소개서 예시',
     example: [
       {
         content:
@@ -209,12 +248,13 @@ export class GetExperienceByIdResDto {
       },
     ],
   })
-  get AiResume(): AiResume {
-    return this._AiResume;
+  get AiResume(): string {
+    return this._aiResume;
   }
 
   @Expose()
-  @ApiProperty({
+  @ApiPropertyOptional({
+    description: '경험 카드의 부가 정보입니다. 경험 속 역할(experienceRole)과 수행한 이유(motivation)이 있습니다.',
     type: GetExperienceInfoResDto,
     example: {
       experienceId: 1,
@@ -223,6 +263,17 @@ export class GetExperienceByIdResDto {
     },
   })
   get ExperienceInfo(): GetExperienceInfoResDto {
-    return this._ExperienceInfo;
+    return this._experienceInfo;
+  }
+
+  @Expose()
+  @ApiPropertyOptional({
+    description: 'AI 직무 역량 키워드',
+    example: ['창의력', '협동력'],
+    type: String,
+    isArray: true,
+  })
+  get aiCapabilities(): string[] {
+    return this._aiCapabilities;
   }
 }
