@@ -48,7 +48,7 @@ export class AiService {
       where: { experienceId: body.experienceId },
       select: { AiResumeCapability: true },
     });
-    if (aiCapability) throw new ConflictException('이미 ai Capability가 존재합니다.');
+    if (aiCapability?.AiResumeCapability?.length) throw new ConflictException('이미 ai Capability가 존재합니다.');
 
     const prompt = generateAiKeywordPrompt(body);
     const aiKeywords = await this.openAiService.promptChatGPT(prompt);

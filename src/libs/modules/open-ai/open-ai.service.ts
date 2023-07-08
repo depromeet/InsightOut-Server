@@ -5,6 +5,7 @@ import { HttpService } from '@nestjs/axios';
 import { catchError, firstValueFrom } from 'rxjs';
 import { openAIModelEnum } from '📚libs/modules/open-ai/openAIModel.enum';
 import { AiResponse } from '📚libs/modules/open-ai/interface/aiResponse.interface';
+import { MINUTES } from '🔥apps/server/common/consts/time.const';
 
 @Injectable()
 export class OpenAiService {
@@ -32,7 +33,7 @@ export class OpenAiService {
     };
 
     const response = await firstValueFrom(
-      this.httpService.post(this.OPEN_AI_URL, data, { headers: this.openAIHeader }).pipe(
+      this.httpService.post(this.OPEN_AI_URL, data, { headers: this.openAIHeader, timeout: MINUTES * 1000 }).pipe(
         catchError((error) => {
           console.error(error.response.data);
           throw error;
