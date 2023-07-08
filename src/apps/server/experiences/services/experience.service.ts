@@ -1,15 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { UpdateExperienceReqDto } from '../dto/req/updateExperience.dto';
 import { UserJwtToken } from '../../auth/types/jwt-token.type';
-import { UpdateExperienceResDto } from '../dto/res/updateExperienceInfo.res.dto';
-import { GetExperiencesResponseDto } from '../dto/res/getExperience.res.dto';
 import { Experience, ExperienceInfo, ExperienceStatus, Prisma } from '@prisma/client';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
 import { ExperienceRepository } from '📚libs/modules/database/repositories/experience.repository';
-import {
-  GetCountOfExperienceAndCapabilityResponseDto,
-  GetCountOfExperienceResponseDto,
-} from '🔥apps/server/experiences/dto/get-count-of-experience-and-capability.dto';
 import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
 import { CountExperienceAndCapability } from '🔥apps/server/experiences/types/count-experience-and-capability.type';
 import { GetExperienceRequestQueryDtoWithPagination } from '🔥apps/server/experiences/dto/req/get-experience.dto';
@@ -27,6 +20,13 @@ import {
   AiResumeResDto,
   GetExperienceCardInfoResDto,
 } from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.res.dto';
+import {
+  GetCountOfExperienceAndCapabilityResponseDto,
+  GetCountOfExperienceResponseDto,
+  GetExperiencesResponseDto,
+  UpdateExperienceReqDto,
+  UpdateExperienceResDto,
+} from '🔥apps/server/experiences/dto';
 
 @Injectable()
 export class ExperienceService {
@@ -189,8 +189,11 @@ export class ExperienceService {
     return new UpdateExperienceResDto(experience, experienceInfo);
   }
 
-  public async getCountOfExperienceAndCapability(userId: number): Promise<GetCountOfExperienceAndCapabilityResponseDto[]> {
-    const countOfExperienceAndCapability = await this.capabilityRepository.countExperienceAndCapability(userId);
+  public async getCountOfExperienceAndCapability(
+    userId: number,
+    isCompleted?: boolean,
+  ): Promise<GetCountOfExperienceAndCapabilityResponseDto[]> {
+    const countOfExperienceAndCapability = await this.capabilityRepository.countExperienceAndCapability(userId, isCompleted);
 
     // count가 0인 키워드는 필터링합니다.
     const filteredCountOfExperienceAndCapability = countOfExperienceAndCapability.filter(
