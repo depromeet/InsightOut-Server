@@ -62,7 +62,7 @@ import { GetExperienceCardInfoNotFoundErrorResDto } from '🔥apps/server/experi
 import { SuccessResponse } from '📚libs/decorators/success-response.dto';
 import { PaginationDto } from '📚libs/pagination/pagination.dto';
 import { GetExperienceCardInfoResDto } from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.res.dto';
-import { GetCountOfExperienceAndCapabilityQueryReqDto } from '🔥apps/server/experiences/dto/get-count-of-experience-and-capability.req.dto';
+import { GetCountOfExperienceAndCapabilityQueryReqDto } from '🔥apps/server/experiences/dto/req/get-count-of-experience-and-capability.req.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)

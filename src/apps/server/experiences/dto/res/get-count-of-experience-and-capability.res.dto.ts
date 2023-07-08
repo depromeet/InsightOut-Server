@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 import { IsInt, IsPositive, IsNotEmpty, Min } from 'class-validator';
-import { CountExperienceAndCapability } from '🔥apps/server/experiences/types/count-experience-and-capability.type';
+import { CountExperienceAndCapability } from '\uD83D\uDD25apps/server/experiences/types/count-experience-and-capability.type';
 
 export class GetCountOfExperienceAndCapabilityResponseDto {
   @Exclude() private readonly _id: number;
@@ -16,9 +16,9 @@ export class GetCountOfExperienceAndCapabilityResponseDto {
 
   @Expose()
   @ApiProperty({
-    description: '역량 키워드 id입니다. 해당 id를 통해서 이 키워드를 사용하는 모든 경험카드(experience)를 가져옵니다.',
-    example: 1234,
-    type: Number,
+    description: '역량 키워드 키워드입니다. 완료여부(isCompleted 쿼리)에 따라 완료된 것 또는 모든 키워드를 반환합니다.',
+    example: '추진력',
+    type: String,
   })
   @IsInt()
   @IsPositive()
@@ -30,7 +30,7 @@ export class GetCountOfExperienceAndCapabilityResponseDto {
   @Expose()
   @ApiProperty({
     description: '역량 키워드 id입니다. 해당 id를 통해서 이 키워드를 사용하는 모든 경험카드(experience)를 가져옵니다.',
-    example: 1234,
+    example: 1,
     type: Number,
   })
   @IsInt()
@@ -42,8 +42,8 @@ export class GetCountOfExperienceAndCapabilityResponseDto {
 
   @Expose()
   @ApiProperty({
-    description: '역량 키워드 id입니다. 해당 id를 통해서 이 키워드를 사용하는 모든 경험카드(experience)를 가져옵니다.',
-    example: 1234,
+    description: '역량 키워드 개수입니다.',
+    example: 100,
     type: Number,
   })
   @IsInt()
