@@ -3,7 +3,6 @@ import { PrismaService } from '../prisma.service';
 import { Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
 import { ExperienceSelect } from '🔥apps/server/experiences/interface/experience-select.interface';
 import { ExperienceRepositoryInterface } from '🔥apps/server/experiences/interface/experience-repository.interface';
-import { ExperienceCardType } from '🔥apps/server/experiences/types/experience-card.type';
 import { PaginationOptionsDto } from '📚libs/pagination/pagination-option.dto';
 
 @Injectable()
@@ -26,6 +25,7 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
         summaryKeywords: true,
         updatedAt: true,
         ExperienceInfo: { select: { experienceId: true, experienceRole: true, motivation: true } },
+        ExperienceCapability: { select: { Capability: { select: { id: true, keyword: true, keywordType: true } } } },
         AiResume: {
           select: { content: true, AiResumeCapability: { select: { Capability: { select: { keyword: true, keywordType: true } } } } },
         },
