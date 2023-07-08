@@ -1,5 +1,5 @@
 import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { Capability, Experience, KeywordType, Prisma } from '@prisma/client';
+import { Capability, Experience, ExperienceStatus, KeywordType, Prisma } from '@prisma/client';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-token.type';
 import { OpenAiService } from '📚libs/modules/open-ai/open-ai.service';
@@ -137,6 +137,7 @@ export class AiService {
     const upsertExperienceReqDto = new UpdateExperienceReqDto();
     upsertExperienceReqDto.analysis = summary.choices[CHOICES_IDX].message.content as string;
     upsertExperienceReqDto.summaryKeywords = parseKeywords;
+    upsertExperienceReqDto.experienceStatus = ExperienceStatus.DONE;
     const updateInfo = upsertExperienceReqDto.compareProperty(experience);
 
     await this.experienceService.processUpdateExperience(body.experienceId, updateInfo);
