@@ -14,34 +14,36 @@ datasource db {
 // ************ 유저 ***********
 // ****************************
 
+// 유저 테이블
 model User {
   id       Int    @id @default(autoincrement())
   email    String @unique @db.VarChar(100)
-  uid      String @unique @db.Text // 구글 uid
+  uid      String @unique @db.Text // 구글 uid, 추후 삭제 가능성 있음
   socialId String @map("social_id") @db.Text
 
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz
-  deletedAt DateTime? @map("deleted_at") @db.Timestamptz
-  nickname  String    @db.VarChar(10)
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz // 유저 생성일자
+  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz // 유저 수정일자
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz // 유저 탈퇴일자
+  nickname  String    @db.VarChar(10) // 닉네임
 
-  UserInfo    UserInfo?
-  Onboarding  Onboarding?
-  Resume      Resume[]
-  AiResumes   AiResume[]
-  Experiences Experience[]
-  Capability  Capability[]
+  UserInfo         UserInfo?
+  Onboarding       Onboarding?
+  Resumes          Resume[]
+  AiResumes        AiResume[]
+  Experiences      Experience[]
+  UserCapabilities UserCapability[]
+  AiCapabilities   AiCapability[]
 
-  @@map("user")
+  @@map("users")
 }
 
+// 소셜 로그인 API 제공자
 enum Provider {
   GOOGLE // 구글 로그인
   APPLE // 애플 로그인
   KAKAO // 카카오 로그인
 }
 
-// TODO 직무 모두 기입 필요
 enum Field {
   DEVELOPMENT // 개발
   MANAGEMENT // 경영
@@ -67,15 +69,16 @@ enum Field {
   PUBLIC_WELFARE // 공공 & 복지
 }
 
+// 유저 상세 정보
 model UserInfo {
-  userId   Int       @id @map("user_id")
+  userId   Int       @id @map("user_id") // user 테이블 pfk
   field    Field? // 직무 분야
-  provider Provider? // 소셜 로그인 제공자
+  provider Provider? // 소셜 로그인 API 제공자
   imageUrl String?   @map("image_url") @db.Text // 이미지 url
 
   User User @relation(references: [id], fields: [userId], onDelete: Cascade, onUpdate: Cascade)
 
-  @@map("user_info")
+  @@map("user_infos")
 }
 
 // ****************************
@@ -84,7 +87,7 @@ model UserInfo {
 
 // 회원가입 시 모든 온보딩 처리를 생성합니다.
 model Onboarding {
-  userId Int @id
+  userId Int @id @map("user_id")
 
   field             Boolean @default(false) // 직무 선택 온보딩
   experience        Boolean @default(false) // 경험분해 온보딩 여부
@@ -94,7 +97,7 @@ model Onboarding {
 
   User User @relation(references: [id], fields: [userId], onDelete: Cascade, onUpdate: Cascade)
 
-  @@map("onboarding")
+  @@map("onboardings")
 }
 
 // ****************************
@@ -106,55 +109,15 @@ model Resume {
   id    Int    @id @default(autoincrement())
   title String @default("새 자기소개서") @db.VarChar(20) // 자기소개서 제목
 
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz // 자기소개서 제목 생성일자
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz // 자기소개서 제목 수정일자
 
   userId Int @map("user_id")
 
-  User     User       @relation(references: [id], fields: [userId], onDelete: Cascade, onUpdate: Cascade)
-  Question Question[]
+  User      User       @relation(references: [id], fields: [userId], onDelete: Cascade, onUpdate: Cascade)
+  Questions Question[]
 
-  @@map("resume")
-}
-
-// ****************************
-// **** AI 추천 자기소개서 ****
-// ****************************
-
-// 자기소개서 내용
-model AiResume {
-  id      Int    @id @default(autoincrement())
-  content String @db.VarChar(1000) // AI가 추천해주는 자기소개서 내용
-
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
-
-  userId       Int @map("user_id")
-  experienceId Int @unique @map("experience_id") // 경험 id
-
-  User       User       @relation(references: [id], fields: [userId], onDelete: Cascade)
-  Experience Experience @relation(references: [id], fields: [experienceId], onDelete: NoAction)
-
-  AiResumeCapability AiResumeCapability[]
-
-  @@map("ai_resume")
-}
-
-// ********************************
-// ****** AI 추천 자기소개서 문항 ******
-// ********************************
-model AiRecommendQuestion {
-  id    Int     @id @default(autoincrement())
-  title String? @db.VarChar(300) // 문항 제목
-
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
-
-  experienceId Int @map("experience_id") // 경험 id
-
-  Experience Experience @relation(references: [id], fields: [experienceId], onDelete: NoAction, onUpdate: Cascade)
-
-  @@map("ai_recommend_question")
+  @@map("resumes")
 }
 
 // ********************************
@@ -176,6 +139,45 @@ model Question {
   @@map("question")
 }
 
+// ****************************
+// **** AI 추천 자기소개서 ****
+// ****************************
+
+// AI 자기소개서
+model AiResume {
+  id      Int    @id @default(autoincrement())
+  content String @db.VarChar(1000) // AI가 추천해주는 자기소개서 내용
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz // AI 자기소개서 생성 일자
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz // AI 자기소개서 수정 일자
+
+  userId       Int @map("user_id")
+  experienceId Int @unique @map("experience_id") // 경험 id
+
+  User                 User                 @relation(references: [id], fields: [userId], onDelete: Cascade)
+  Experience           Experience           @relation(references: [id], fields: [experienceId], onDelete: NoAction)
+  AiResumeCapabilities AiResumeCapability[]
+
+  @@map("ai_resumes")
+}
+
+// ********************************
+// ****** AI 자기소개서 추천 문항 ******
+// ********************************
+model AiRecommendQuestion {
+  id    Int     @id @default(autoincrement())
+  title String? @db.VarChar(300) // 문항 제목
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz // AI 자기소개서 추천 문항 생성일자
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz // AI 자기소개서 추천 문항 수정일자
+
+  experienceId Int @map("experience_id") // 경험 id
+
+  Experience Experience @relation(references: [id], fields: [experienceId], onDelete: NoAction, onUpdate: Cascade)
+
+  @@map("ai_recommend_questions")
+}
+
 // ********************************
 // ******* 경험 in 경험 분해 *********
 // ********************************
@@ -188,7 +190,7 @@ model Experience {
   startDate DateTime? @map("start_date") @db.Date // 시작 날짜 type: YYYY-MM
   endDate   DateTime? @map("end_date") @db.Date // 끝 날짜 type: YYYY-MM
 
-  experienceStatus ExperienceStatus @default(INPROGRESS) // 경험 분해 진행 척도 디폴트 inprogress
+  experienceStatus ExperienceStatus @default(INPROGRESS) @map("experience_status") // 경험 분해 진행 척도 디폴트 inprogress
 
   situation       String?  @db.VarChar(100) // S: Situation, 계기와 배경
   task            String?  @db.VarChar(100) // T: Task, 과제 및 목표
@@ -196,18 +198,19 @@ model Experience {
   result          String?  @db.VarChar(100) // R: Result, 결과
   summaryKeywords String[] @map("summary_keywords") // 요약 키워드 배열
 
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz // 경험 카드 생성일자
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz // 경험 카드 수정일자
 
   userId Int @map("user_id")
 
-  User                 User?                  @relation(references: [id], fields: [userId], onDelete: Cascade, onUpdate: Cascade)
-  AiResume             AiResume?
-  ExperienceInfo       ExperienceInfo?
-  AiRecommendQuestion  AiRecommendQuestion[]
-  ExperienceCapability ExperienceCapability[]
+  User                   User?                  @relation(references: [id], fields: [userId], onDelete: Cascade, onUpdate: Cascade)
+  AiResume               AiResume?
+  ExperienceInfo         ExperienceInfo?
+  ExperienceCapabilities ExperienceCapability[]
+  AiCapabilities         AiCapability[]
+  AiRecommendQuestions   AiRecommendQuestion[]
 
-  @@map("experience")
+  @@map("experiences")
 }
 
 // 경험 분해 진행 상태
@@ -219,7 +222,8 @@ enum ExperienceStatus {
 // ********************************
 // *********** 경험 정보 ************
 // ********************************
-// 임시 저장이 있기에 모든 필드는 Nullable입니다.
+
+// 경험 카드 상세 정보
 model ExperienceInfo {
   id Int @default(autoincrement()) @map("experience_info_id")
 
@@ -227,69 +231,79 @@ model ExperienceInfo {
   motivation     String? @db.VarChar(100) // 경험 수행 이유
   analysis       String? @db.VarChar(250) // AI 분석
 
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz // 경험 정보 생성일자
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz // 경험 정보 수정일자
 
   experienceId Int        @id @map("experience_id") // 경험 id
   Experience   Experience @relation(references: [id], fields: [experienceId], onDelete: Cascade, onUpdate: Cascade)
 
-  @@map("experience_info")
+  @@map("experience_infos")
 }
 
 // ********************************
 // ************* 역량 **************
 // ********************************
 
-model Capability {
-  id          Int         @id @default(autoincrement()) // 역량 id
-  keyword     String      @db.VarChar(10) // 역량 키워드
-  keywordType KeywordType
-  userId      Int         @map("user_id")
+// 유저가 추가한 역량 키워드
+model UserCapability {
+  id      Int    @id @default(autoincrement()) // 역량 id
+  keyword String @db.VarChar(10) // 역량 키워드
+  userId  Int    @map("user_id")
 
-  User                 User                   @relation(references: [id], fields: [userId], onDelete: Cascade, onUpdate: Cascade)
-  ExperienceCapability ExperienceCapability[]
-  AiResumeCapability   AiResumeCapability[]
+  User                   User                   @relation(references: [id], fields: [userId], onDelete: Cascade, onUpdate: Cascade)
+  ExperienceCapabilities ExperienceCapability[]
 
-  @@map("capability")
+  @@map("user_capabilities")
 }
 
-// 경험 분해 진행 상태
-enum KeywordType {
-  AI // ai 역량 키워드
-  USER // user가 선택한 키워드
+// AI가 분석한 역량 키워드
+model AiCapability {
+  id           Int    @id @default(autoincrement()) // 역량 id
+  keyword      String @db.VarChar(10) // 역량 키워드
+  userId       Int    @map("user_id")
+  experienceId Int    @map("experience_id")
+
+  User                 User                 @relation(references: [id], fields: [userId], onDelete: Cascade, onUpdate: Cascade)
+  Experience           Experience           @relation(references: [id], fields: [experienceId], onDelete: NoAction) // Experience가 삭제되더라도 AI Resume와의 정합성을 위해 삭제되어서는 안됨
+  AiResumeCapabilities AiResumeCapability[]
+
+  @@map("ai_capabilities")
 }
 
+// 경험카드에 등록한 유저의 역량 키워드
 model ExperienceCapability {
-  experienceId Int @map("experience_id")
-  capabilityId Int @map("capability_id")
+  experienceId     Int @map("experience_id")
+  userCapabilityId Int @map("user_capability_id")
 
-  Experience Experience @relation(references: [id], fields: [experienceId], onDelete: Cascade)
-  Capability Capability @relation(references: [id], fields: [capabilityId], onDelete: NoAction)
+  Experience     Experience     @relation(references: [id], fields: [experienceId], onDelete: Cascade)
+  UserCapability UserCapability @relation(references: [id], fields: [userCapabilityId], onDelete: NoAction)
 
-  @@id([experienceId, capabilityId])
-  @@map("experience_capability")
+  @@id([experienceId, userCapabilityId])
+  @@map("experience_capabilities")
 }
 
+// AI 자기소개서에 등록한 AI 역량 키워드
 model AiResumeCapability {
-  aiResumeId   Int @map("ai_resume_id")
-  capabilityId Int @map("capability_id")
+  aiResumeId     Int @map("ai_resume_id")
+  aiCapabilityId Int @map("ai_capability_id")
 
-  AiResume   AiResume   @relation(references: [id], fields: [aiResumeId], onDelete: Cascade)
-  Capability Capability @relation(references: [id], fields: [capabilityId], onDelete: NoAction)
+  AiResume     AiResume     @relation(references: [id], fields: [aiResumeId], onDelete: Cascade)
+  AiCapability AiCapability @relation(references: [id], fields: [aiCapabilityId], onDelete: NoAction)
 
-  @@id([aiResumeId, capabilityId])
-  @@map("ai_resume_capability")
+  @@id([aiResumeId, aiCapabilityId])
+  @@map("ai_resume_capabilities")
 }
 
 // *******************************
 // ************ 피드백 *************
 // *******************************
 
+// 피드백
 model Feedback {
   id       Int    @id @default(autoincrement())
   contents String @db.VarChar(300)
 
   createdAt DateTime @default(now()) @map("createdAt") @db.Timestamptz
 
-  @@map("feedback")
+  @@map("feedbacks")
 }
