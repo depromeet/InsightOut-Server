@@ -33,7 +33,7 @@ export class ResumesService {
       orderBy: { createdAt: 'desc' }, // 기본적으로 DB에서 순서가 바뀌기 때문에 정렬하여 고정적으로 데이터를 반환합니다.
     }); // Resume 테이블과 Question 타입을 인터섹션한 후에 타입 단언을 통해 해결합니다.
 
-    return resumes.map((resume) => new GetOneResumeResponseDto(resume as Resume & { Question: Question[] }));
+    return resumes.map((resume) => new GetOneResumeResponseDto(resume as Resume & { Questions: Question[] }));
   }
 
   /**
@@ -78,7 +78,7 @@ export class ResumesService {
     }
 
     // Entity -> DTO
-    const getOneResumeDto = new GetOneResumeResponseDto(resume as Resume & { Question: Question[] });
+    const getOneResumeDto = new GetOneResumeResponseDto(resume as Resume & { Questions: Question[] });
     return getOneResumeDto;
   }
 

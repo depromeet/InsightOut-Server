@@ -25,7 +25,7 @@ export class GetExperiencesResponseDto {
     experience: Partial<Experience> & {
       ExperienceCapabilities: { Capability: Capability }[];
       // AiResumes: { AiResumeCapabilities: AiResumeCapability[] } | { AiResumeCapability: { Capability: Capability }[] };
-      AiResumes?: { AiResumeCapabilities: AiResumeCapability[] } | { AiResumeCapabilities: { Capability: Capability }[] };
+      AiResume?: { AiResumeCapabilities: AiResumeCapability[] } | { AiResumeCapabilities: { Capability: Capability }[] };
       AiRecommendQuestions: AiRecommendQuestion[];
       ExperienceInfo: ExperienceInfo;
     },
@@ -44,7 +44,7 @@ export class GetExperiencesResponseDto {
       (experienceCapability) => experienceCapability.Capability.keyword,
     ); // 경험 역량 키워드
     this._aiRecommendKeywords =
-      experience?.AiResumes?.AiResumeCapabilities.map(
+      experience?.AiResume?.AiResumeCapabilities.map(
         (aiResumeCapability: AiResumeCapability & { Capability: Capability }) => aiResumeCapability.Capability?.keyword,
       ) ?? [];
     this._aiAnalysis = experience.ExperienceInfo?.analysis;
