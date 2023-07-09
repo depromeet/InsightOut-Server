@@ -19,6 +19,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('13기 4팀 서버')
     .setDescription(swaggerDescriptionMd)
+    .addServer(`${envService.get(EnvEnum.MAIN_SERVER)}/api`, 'Main서버')
     .addServer(`${envService.get(EnvEnum.DEV_SERVER)}/api`, '개발서버')
     .addServer(`http://localhost:${envService.get(EnvEnum.PORT)}/api`, '로컬서버')
     .addSecurity('bearer', {
