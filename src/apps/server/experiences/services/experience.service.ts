@@ -209,7 +209,6 @@ export class ExperienceService {
       (row: CountExperienceAndCapability) => row._count.ExperienceCapabilities !== 0,
     );
 
-    // any타입 죽이기
     const countOfExperienceAndCapabilityResponseDto = filteredCountOfExperienceAndCapability.map(
       (count) => new GetCountOfExperienceAndCapabilityResponseDto(count),
     );

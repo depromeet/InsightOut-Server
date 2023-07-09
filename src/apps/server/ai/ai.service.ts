@@ -183,8 +183,6 @@ export class AiService {
     );
 
     // 내 aiResume 키워드 가져오기
-    // TODO ai repository 가져오기
-    // TODO 로직 에러 많아서 수정하기
     const aiResumeCapabilityArr = await this.capabilityRepository.findAiResumeCapabilities(user.userId);
     const availableKeywords = aiResumeCapabilityArr.map((capability) => capability.keyword);
 
