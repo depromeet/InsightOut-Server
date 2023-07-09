@@ -1,7 +1,7 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
 import { CreateExperienceCapabilitiesdBodyDto } from '🔥apps/server/experiences/dto/req/create-experience-capabilities.dto';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-token.type';
-import { ExperienceCapability, KeywordType, Prisma } from '@prisma/client';
+import { Capability, ExperienceCapability, KeywordType, Prisma } from '@prisma/client';
 import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
 import { AddCapabilitydBodyDto } from '🔥apps/server/experiences/dto/req/add-capability.dto';
 import { CreateExperienceCapabilitiesResDto } from '🔥apps/server/experiences/dto/res/createExperienceCapabilities.res.dto';
@@ -19,11 +19,20 @@ export class ExperienceCapabilityService {
   ) {}
 
   public async getExperienceCapability(user: UserJwtToken, param: ExperienceIdParamReqDto): Promise<{ [key in string] }> {
-    const experienceCapabilities = await this.experienceCapabilityRepository.findManyByFilter({ experienceId: param.experienceId });
+    const userCapabilities = await this.capabilityRepository.findMany({ where: { userId: user.userId } });
+    const where = { experienceId: param.experienceId };
+    const experienceCapabilities = await this.experienceCapabilityRepository.findManyByFilter(where);
 
     const value = <{ [key in string] }>{};
-    experienceCapabilities.forEach((experienceCapability: { Capability: { keyword: string } }) => {
-      value[experienceCapability.Capability.keyword] = false;
+    userCapabilities.forEach((val: Capability) => {
+      value[val.keyword] = false;
+    });
+
+    experienceCapabilities.forEach((experienceCapability: ExperienceCapability) => {
+      const capability: Capability = userCapabilities.find((capability) => capability.id === experienceCapability.capabilityId);
+      if (!capability) throw new NotFoundException(`${capability.keyword} 해당 키워드를 찾을 수 없습니다.`);
+
+      value[capability.keyword] = true;
     });
     return value;
   }
