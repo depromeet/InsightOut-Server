@@ -11,7 +11,7 @@ export class GetCountOfExperienceAndCapabilityResponseDto {
   constructor(capabilityAndCount: CountExperienceAndCapability) {
     this._id = capabilityAndCount.id;
     this._keyword = capabilityAndCount.keyword;
-    this._count = capabilityAndCount._count.ExperienceCapability;
+    this._count = capabilityAndCount._count.ExperienceCapabilities;
   }
 
   @Expose()

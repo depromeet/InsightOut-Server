@@ -19,5 +19,5 @@ export const getExperienceAttribute: ExperienceSelect = {
       analysis: true,
     },
   },
-  AiResume: { select: { AiResumeCapability: true } },
+  AiResume: { select: { AiResumeCapabilities: true } },
 } as const;

@@ -9,6 +9,5 @@ export const experienceProviders = [
   ExperienceInfoRepository,
   CapabilityRepository,
   ExperienceCapabilityRepository,
-  CapabilityRepository,
   AiResumeRepository,
 ] as const;

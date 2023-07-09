@@ -1,4 +1,4 @@
-export * from './addCapability.res.dto';
+export * from './add-user-capability.res.dto';
 export * from './createExperienceCapabilities.res.dto';
 export * from './getExperience.res.dto';
 export * from './getExperienceById.res.dto';

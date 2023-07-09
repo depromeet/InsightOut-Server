@@ -159,12 +159,12 @@ export class GetOneResumeResponseDto {
   @Exclude() private readonly _updatedAt: Date;
   @Exclude() private readonly _questions?: Partial<QuestionResponse>[];
 
-  constructor(resume: Resume & { Question: Question[] }) {
+  constructor(resume: Resume & { Questions: Question[] }) {
     this._id = resume.id;
     this._title = resume.title;
     this._createdAt = resume.createdAt;
     this._updatedAt = resume.updatedAt;
-    this._questions = resume.Question.map((question) => {
+    this._questions = resume.Questions.map((question) => {
       const { resumeId, ...rest } = question;
       return rest;
     });

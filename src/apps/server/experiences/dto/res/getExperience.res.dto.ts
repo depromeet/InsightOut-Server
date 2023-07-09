@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { AiRecommendQuestion, AiResumeCapability, Capability, Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
+import { Capability, AiRecommendQuestion, AiResumeCapability, Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
 import { Exclude, Expose } from 'class-transformer';
 import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsPositive, IsString, Matches } from 'class-validator';
 import { getFormattedDate } from '📚libs/utils/date';
@@ -23,9 +23,10 @@ export class GetExperiencesResponseDto {
 
   constructor(
     experience: Partial<Experience> & {
-      ExperienceCapability: { Capability: Capability }[];
-      AiResume: { AiResumeCapability: AiResumeCapability[] } | { AiResumeCapability: { Capability: Capability }[] };
-      AiRecommendQuestion: AiRecommendQuestion[];
+      ExperienceCapabilities: { Capability: Capability }[];
+      // AiResumes: { AiResumeCapabilities: AiResumeCapability[] } | { AiResumeCapability: { Capability: Capability }[] };
+      AiResume?: { AiResumeCapabilities: AiResumeCapability[] } | { AiResumeCapabilities: { Capability: Capability }[] };
+      AiRecommendQuestions: AiRecommendQuestion[];
       ExperienceInfo: ExperienceInfo;
     },
   ) {
@@ -39,13 +40,15 @@ export class GetExperiencesResponseDto {
     this._endDate = getFormattedDate(experience.endDate);
     this._experienceStatus = experience.experienceStatus;
     this._summaryKeywords = experience?.summaryKeywords; // AI 요약 키워드
-    this._experienceCapabilityKeywords = experience?.ExperienceCapability.map((capability) => capability.Capability.keyword); // 경험 역량 키워드
+    this._experienceCapabilityKeywords = experience?.ExperienceCapabilities.map(
+      (experienceCapability) => experienceCapability.Capability.keyword,
+    ); // 경험 역량 키워드
     this._aiRecommendKeywords =
-      experience?.AiResume?.AiResumeCapability.map(
+      experience?.AiResume?.AiResumeCapabilities.map(
         (aiResumeCapability: AiResumeCapability & { Capability: Capability }) => aiResumeCapability.Capability?.keyword,
       ) ?? [];
     this._aiAnalysis = experience.ExperienceInfo?.analysis;
-    this._aiRecommendQuestions = experience.AiRecommendQuestion.map((aiRecommendQuestion) => {
+    this._aiRecommendQuestions = experience.AiRecommendQuestions.map((aiRecommendQuestion) => {
       const { createdAt, updatedAt, experienceId, ...restAiRecommendQuestion } = aiRecommendQuestion;
       return restAiRecommendQuestion;
     });

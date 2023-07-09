@@ -29,11 +29,11 @@ export class ResumesService {
     // 자기소개서와 문항을 함께 가져옵니다.
     const resumes = await this.resumesRepository.findMany({
       where: { userId },
-      include: { Question: { select: { id: true, title: true, answer, updatedAt: true }, orderBy: { createdAt: 'desc' } } }, // 문항의 제목은 모든 화면에서 사용하기 때문에 반드시 true로 지정합니다.
+      include: { Questions: { select: { id: true, title: true, answer, updatedAt: true }, orderBy: { createdAt: 'desc' } } }, // 문항의 제목은 모든 화면에서 사용하기 때문에 반드시 true로 지정합니다.
       orderBy: { createdAt: 'desc' }, // 기본적으로 DB에서 순서가 바뀌기 때문에 정렬하여 고정적으로 데이터를 반환합니다.
     }); // Resume 테이블과 Question 타입을 인터섹션한 후에 타입 단언을 통해 해결합니다.
 
-    return resumes.map((resume) => new GetOneResumeResponseDto(resume as Resume & { Question: Question[] }));
+    return resumes.map((resume) => new GetOneResumeResponseDto(resume as Resume & { Questions: Question[] }));
   }
 
   /**
@@ -69,7 +69,7 @@ export class ResumesService {
     const resume = await this.resumesRepository.findFirst({
       where: { userId, id: resumeId },
       include: {
-        Question: { select: { id: true, title: true, answer: true, createdAt: true, updatedAt: true }, orderBy: { createdAt: 'desc' } },
+        Questions: { select: { id: true, title: true, answer: true, createdAt: true, updatedAt: true }, orderBy: { createdAt: 'desc' } },
       }, // 자기소개서 문항을 left join, select 하며, 생성일자 기준 내림차순으로 모두 가져옵니다.
     });
 
@@ -78,7 +78,7 @@ export class ResumesService {
     }
 
     // Entity -> DTO
-    const getOneResumeDto = new GetOneResumeResponseDto(resume as Resume & { Question: Question[] });
+    const getOneResumeDto = new GetOneResumeResponseDto(resume as Resume & { Questions: Question[] });
     return getOneResumeDto;
   }
 

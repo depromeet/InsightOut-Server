@@ -3,15 +3,18 @@ import { Capability } from '@prisma/client';
 import { Exclude, Expose } from 'class-transformer';
 import { IsInt, IsNotEmpty, IsString } from 'class-validator';
 
-export class AddCapabilityResDto {
+/**
+ * 유저 역량 키워드 추가 응답 DTO
+ */
+export class AddUserCapabilityResDto {
   @Exclude() _id: number;
   @Exclude() _keyword: string;
   @Exclude() _userId: number;
 
-  constructor(capability: Capability) {
-    this._id = capability.id;
-    this._keyword = capability.keyword;
-    this._userId = capability.userId;
+  constructor(userCapability: Capability) {
+    this._id = userCapability.id;
+    this._keyword = userCapability.keyword;
+    this._userId = userCapability.userId;
   }
 
   @ApiProperty({ example: 1 })
@@ -40,7 +43,7 @@ export class AddCapabilityResDto {
   }
 }
 
-export class AddCapabilityConflictErrorResDto {
+export class AddUserCapabilityConflictErrorResDto {
   @ApiProperty({ example: 400 })
   statusCode: number;
   @ApiProperty({ example: 'BadRequestException' })

@@ -15,11 +15,11 @@ export class AiResumeRepository implements AiResumeRepositoryInterface {
     let where = <Prisma.AiResumeWhereInput>{ userId };
 
     if (aiKeyword) {
-      where = { userId, AiResumeCapability: { some: { Capability: { keyword: { equals: aiKeyword } } } } };
+      where = { userId, AiResumeCapabilities: { some: { Capability: { keyword: { equals: aiKeyword } } } } };
     }
 
     return await this.prisma.aiResume.findMany({
-      select: { id: true, content: true, updatedAt: true, AiResumeCapability: { select: { Capability: { select: { keyword: true } } } } },
+      select: { id: true, content: true, updatedAt: true, AiResumeCapabilities: { select: { Capability: { select: { keyword: true } } } } },
       where,
     });
   }
@@ -28,7 +28,7 @@ export class AiResumeRepository implements AiResumeRepositoryInterface {
     let where = <Prisma.AiResumeWhereInput>{ userId };
 
     if (aiKeyword) {
-      where = { userId, AiResumeCapability: { some: { Capability: { keyword: { equals: aiKeyword } } } } };
+      where = { userId, AiResumeCapabilities: { some: { Capability: { keyword: { equals: aiKeyword } } } } };
     }
 
     return await this.prisma.aiResume.count({ where });

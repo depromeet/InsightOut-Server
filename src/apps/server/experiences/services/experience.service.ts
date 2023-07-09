@@ -1,10 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserJwtToken } from '../../auth/types/jwt-token.type';
-import { Experience, ExperienceInfo, ExperienceStatus, Prisma } from '@prisma/client';
+import { AiRecommendQuestion, AiResume, Experience, ExperienceInfo, ExperienceStatus, Prisma } from '@prisma/client';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
 import { ExperienceRepository } from '📚libs/modules/database/repositories/experience.repository';
 import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
-import { CountExperienceAndCapability } from '🔥apps/server/experiences/types/count-experience-and-capability.type';
 import { GetExperienceRequestQueryDtoWithPagination } from '🔥apps/server/experiences/dto/req/get-experience.dto';
 import { GetStarFromExperienceResponseDto } from '🔥apps/server/experiences/dto/get-star-from-experience.dto';
 import { ExperienceCardType } from '🔥apps/server/experiences/types/experience-card.type';
@@ -27,6 +26,7 @@ import {
   UpdateExperienceReqDto,
   UpdateExperienceResDto,
 } from '🔥apps/server/experiences/dto';
+import { CountExperienceAndCapability } from '🔥apps/server/experiences/types/count-experience-and-capability.type';
 
 @Injectable()
 export class ExperienceService {
@@ -79,10 +79,10 @@ export class ExperienceService {
     const experience = await this.experienceRepository.getExperienceCardInfo(experienceId);
     if (!experience) throw new NotFoundException('해당 ID의 experience가 없습니다.');
 
-    const aiRecommendQuestionResDto = experience.AiRecommendQuestion.map((aiRecommend) => new AiRecommendQuestionResDto(aiRecommend));
+    const aiRecommendQuestionResDto = experience.AiRecommendQuestions.map((aiRecommend) => new AiRecommendQuestionResDto(aiRecommend));
     const aiResumeResDto = new AiResumeResDto({
-      content: experience.AiResume.content,
-      AiResumeCapability: experience.AiResume.AiResumeCapability.map((capability) => capability.Capability.keyword),
+      content: experience.AiResume?.content,
+      AiResumeCapability: experience.AiResume?.AiResumeCapabilities.map((aiResumeCapability) => aiResumeCapability.Capability.keyword),
     });
     const result: ExperienceCardType = {
       title: experience.title,
@@ -94,7 +94,7 @@ export class ExperienceService {
       action: experience.action,
       result: experience.result,
       ExperienceInfo: experience.ExperienceInfo,
-      ExperienceCapability: experience.ExperienceCapability.map((capability) => capability.Capability.keyword),
+      ExperienceCapability: experience.ExperienceCapabilities.map((experienceCapability) => experienceCapability.Capability.keyword),
       AiRecommendQuestion: aiRecommendQuestionResDto,
       AiResume: aiResumeResDto,
     };
@@ -120,7 +120,16 @@ export class ExperienceService {
     return await this.processUpdateExperience(experinece.id, updatedExperienceInfo);
   }
 
-  public async findOneById(experienceId: number, userId: number): Promise<Experience & { AiResume; ExperienceInfo; AiRecommendQuestion }> {
+  public async findOneById(
+    experienceId: number,
+    userId: number,
+  ): Promise<
+    Experience & {
+      AiResume: AiResume;
+      ExperienceInfo: ExperienceInfo;
+      AiRecommendQuestions: AiRecommendQuestion[];
+    }
+  > {
     try {
       const experience = await this.experienceRepository.findOneById(experienceId, userId);
 
@@ -197,11 +206,11 @@ export class ExperienceService {
 
     // count가 0인 키워드는 필터링합니다.
     const filteredCountOfExperienceAndCapability = countOfExperienceAndCapability.filter(
-      (row: CountExperienceAndCapability) => row._count.ExperienceCapability !== 0,
+      (row: CountExperienceAndCapability) => row._count.ExperienceCapabilities !== 0,
     );
 
     const countOfExperienceAndCapabilityResponseDto = filteredCountOfExperienceAndCapability.map(
-      (count) => new GetCountOfExperienceAndCapabilityResponseDto(count as CountExperienceAndCapability),
+      (count) => new GetCountOfExperienceAndCapabilityResponseDto(count),
     );
     return countOfExperienceAndCapabilityResponseDto;
   }
@@ -217,6 +226,10 @@ export class ExperienceService {
   // ✅ 경험카드 star 조회
   public async getStarFromExperienceByExperienceId(experienceId: number): Promise<GetStarFromExperienceResponseDto> {
     const star = await this.experienceRepository.getStarFromExperienceByExperienceId(experienceId);
+
+    if (!star) {
+      throw new NotFoundException('완성한 경험카드의 S, T, A, R이 없습니다.');
+    }
 
     // 만약 situation, task, action, result 중에서 하나라도 누락됐다면
     if (!(star.situation && star.task && star.action && star.result)) {

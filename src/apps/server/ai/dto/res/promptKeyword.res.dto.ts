@@ -10,10 +10,11 @@ class Keyword {
   keyword: string;
 }
 
+// AI 키워드 응답
 export class PromptKeywordResDto {
-  @Exclude() _capabilities: Omit<Capability, 'userId' | 'keywordType'>[];
+  @Exclude() _capabilities: Omit<Capability, 'userId' | 'keywordType' | 'experienceId'>[];
 
-  constructor(capabilities: Omit<Capability, 'userId' | 'keywordType'>[]) {
+  constructor(capabilities: Omit<Capability, 'userId' | 'keywordType' | 'experienceId'>[]) {
     this._capabilities = capabilities;
   }
 
@@ -24,12 +25,13 @@ export class PromptKeywordResDto {
   @ValidateNested({ each: true })
   @Type(() => Keyword)
   @ApiProperty({
+    description: 'ai 역량 키워드 리스트',
     example: [
       { id: 1, keyword: '협업' },
       { id: 1, keyword: '리더십' },
     ],
   })
-  get capabilities(): Omit<Capability, 'userId' | 'keywordType'>[] {
+  get capabilities(): Omit<Capability, 'userId' | 'keywordType' | 'experienceId'>[] {
     return this._capabilities;
   }
 }

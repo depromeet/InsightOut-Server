@@ -15,7 +15,7 @@ export class ExperienceCapabilityRepository implements ExperienceCapabilityRepos
     return await this.prisma.experienceCapability.deleteMany({ where: { experienceId } });
   }
 
-  public async findManyByFilter(where: unknown): Promise<ExperienceCapability[]> {
+  public async findManyByFilter(where: Prisma.ExperienceCapabilityWhereInput): Promise<ExperienceCapability[]> {
     return await this.prisma.experienceCapability.findMany({ where });
   }
 }

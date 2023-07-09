@@ -1,5 +1,15 @@
 import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
-import { Capability, Experience, ExperienceStatus, KeywordType, Prisma } from '@prisma/client';
+import {
+  Capability,
+  AiRecommendQuestion,
+  AiResume,
+  AiResumeCapability,
+  Experience,
+  ExperienceInfo,
+  ExperienceStatus,
+  Prisma,
+  KeywordType,
+} from '@prisma/client';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
 import { UserJwtToken } from '🔥apps/server/auth/types/jwt-token.type';
 import { OpenAiService } from '📚libs/modules/open-ai/open-ai.service';
@@ -44,11 +54,10 @@ export class AiService {
 
   public async postAiKeywordPrompt(body: PromptAiKeywordBodyReqDto, user: UserJwtToken): Promise<PromptKeywordResDto> {
     await this.validationExperinece(body.experienceId, user.userId);
-    const aiCapability = await this.prisma.aiResume.findUnique({
-      where: { experienceId: body.experienceId },
-      select: { AiResumeCapability: true },
+    const aiCapability = await this.prisma.capability.findFirst({
+      where: { experienceId: body.experienceId, keywordType: KeywordType.AI },
     });
-    if (aiCapability?.AiResumeCapability?.length) throw new ConflictException('이미 ai Capability가 존재합니다.');
+    if (aiCapability) throw new ConflictException('이미 ai Capability가 존재합니다.');
 
     const prompt = generateAiKeywordPrompt(body);
     const aiKeywords = await this.openAiService.promptChatGPT(prompt);
@@ -56,32 +65,36 @@ export class AiService {
     const parseAiKeywords = this.parsingPromptResult(aiKeywords).slice(0, 2);
 
     // capability생성
-    const capabilityInfos = parseAiKeywords.map((keyword) => {
+    const aiCapabilityInfos = parseAiKeywords.map((keyword) => {
       return {
         keyword,
         userId: user.userId,
         keywordType: KeywordType.AI,
+        experienceId: body.experienceId,
       };
     });
 
     // 저장할 키워드 Info 정보 생성
-    const capabilities: Omit<Capability, 'userId' | 'keywordType'>[] = await this.prisma.$transaction(async (tx) => {
+    const aiCapabilities: Omit<Capability, 'userId' | 'keywordType' | 'experienceId'>[] = await this.prisma.$transaction(async (tx) => {
       return await Promise.all(
-        capabilityInfos.map(
-          async (capabilityInfo) => await tx.capability.create({ data: capabilityInfo, select: { id: true, keyword: true } }),
+        aiCapabilityInfos.map(
+          async (aiCapabilityInfo) => await tx.capability.create({ data: aiCapabilityInfo, select: { id: true, keyword: true } }),
         ),
       );
     });
 
-    return new PromptKeywordResDto(capabilities);
+    return new PromptKeywordResDto(aiCapabilities);
   }
 
   public async postResumePrompt(body: PromptResumeBodyResDto, user: UserJwtToken): Promise<PromptResumeResDto> {
     const experience = await this.validationExperinece(body.experienceId, user.userId);
     if (experience.AiResume) throw new BadRequestException('해당 experienceId에 추천 AI 자기소개서가 이미 존재합니다.');
-    const capabilities = await this.prisma.capability.findMany({ where: { id: { in: body.capabilityIds } }, select: { keyword: true } });
-    if (capabilities.length !== body.capabilityIds.length) throw new ConflictException('역량 ID들 중 존재하지 않는 것이 있습니다.');
-    const keywords = capabilities.map((capability) => capability.keyword);
+    const aiCapabilities = await this.prisma.capability.findMany({
+      where: { id: { in: body.capabilityIds }, keywordType: KeywordType.AI },
+      select: { keyword: true },
+    });
+    if (aiCapabilities.length !== body.capabilityIds.length) throw new ConflictException('역량 ID들 중 존재하지 않는 것이 있습니다.');
+    const keywords = aiCapabilities.map((aiCapability) => aiCapability.keyword);
     // -- 유효성 검사
 
     // resume prompt
@@ -98,7 +111,7 @@ export class AiService {
             data: { userId: user.userId, content: resume, experienceId: body.experienceId },
           });
           const aiResumeCapabilityInfos = body.capabilityIds.map((capabilityId) => {
-            return { capabilityId: capabilityId, aiResumeId: newAiResume.id };
+            return { capabilityId, aiResumeId: newAiResume.id };
           });
           // aiResumeCapability 생성
           await tx.aiResumeCapability.createMany({ data: aiResumeCapabilityInfos });
@@ -119,7 +132,7 @@ export class AiService {
     const experience = await this.validationExperinece(body.experienceId, user.userId);
     if (experience.summaryKeywords.length !== 0) throw new ConflictException('이미 요약된 키워드가 있습니다.');
     if (experience.ExperienceInfo.analysis) throw new ConflictException('이미 요약된 정보가 있습니다.');
-    if (experience.AiRecommendQuestion.length !== 0) throw new ConflictException('이미 추천된 자기소개서 항목이 있습니다.');
+    if (experience.AiRecommendQuestions.length !== 0) throw new ConflictException('이미 추천된 자기소개서 항목이 있습니다.');
 
     const CHOICES_IDX = 0;
     const summaryPrompt = generateSummaryPrompt(body);
@@ -164,7 +177,7 @@ export class AiService {
     const aiResumeArr = await this.aiResumeRepository.getAiResumeByUserId(user.userId, query.aiKeyword);
 
     const aiResumeResDtoArr = aiResumeArr.map(
-      (aiResume: { AiResumeCapability: { Capability: { keyword: string } }[]; id: number; updatedAt: Date; content: string }) => {
+      (aiResume: AiResume & { AiResumeCapabilities: Partial<AiResumeCapability> & { Capability: Capability }[] }) => {
         return new AiResumeDto(aiResume);
       },
     );
@@ -188,7 +201,13 @@ export class AiService {
   private async validationExperinece(
     experienceId: number,
     userId: number,
-  ): Promise<Experience & { AiResume; ExperienceInfo; AiRecommendQuestion }> {
+  ): Promise<
+    Experience & {
+      AiResume: AiResume;
+      ExperienceInfo: ExperienceInfo;
+      AiRecommendQuestions: AiRecommendQuestion[];
+    }
+  > {
     const experience = await this.experienceService.findOneById(experienceId, userId);
     if (!experience) throw new NotFoundException('해당 ID의 경험 카드를 찾을 수 없습니다.');
     return experience;
