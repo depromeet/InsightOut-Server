@@ -172,7 +172,7 @@ model AiRecommendQuestion {
 
   experienceId Int @map("experience_id") // 경험 id
 
-  Experience Experience @relation(references: [id], fields: [experienceId], onDelete: NoAction, onUpdate: Cascade)
+  Experience Experience @relation(references: [id], fields: [experienceId], onDelete: Cascade, onUpdate: Cascade)
 
   @@map("ai_recommend_questions")
 }
