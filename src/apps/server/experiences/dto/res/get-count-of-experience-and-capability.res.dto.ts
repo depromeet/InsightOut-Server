@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
-import { IsInt, IsPositive, IsNotEmpty, Min } from 'class-validator';
+import { IsInt, IsPositive, IsNotEmpty, Min, IsString } from 'class-validator';
 import { CountExperienceAndCapability } from '🔥apps/server/experiences/types/count-experience-and-capability.type';
 
 export class GetCountOfExperienceAndCapabilityResponseDto {
@@ -16,12 +16,11 @@ export class GetCountOfExperienceAndCapabilityResponseDto {
 
   @Expose()
   @ApiProperty({
-    description: '역량 키워드 키워드입니다. 완료여부(isCompleted 쿼리)에 따라 완료된 것 또는 모든 키워드를 반환합니다.',
+    description: '역량 키워드입니다. 완료여부(isCompleted 쿼리)에 따라 완료된 것 또는 모든 키워드를 반환합니다.',
     example: '추진력',
     type: String,
   })
-  @IsInt()
-  @IsPositive()
+  @IsString()
   @IsNotEmpty()
   get keyword(): string {
     return this._keyword;
