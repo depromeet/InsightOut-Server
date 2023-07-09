@@ -109,4 +109,21 @@ export class TestController {
     await sleep(timeoutTestRequestQueryDto.time);
     return ResponseEntity.OK_WITH_MESSAGE('Request successfully processed');
   }
+
+  @Route({
+    request: {
+      path: 'random-nickname',
+      method: 'GET',
+    },
+    response: {
+      code: HttpStatus.OK,
+    },
+    summary: '랜덤 닉네임 생성기',
+    description: '랜덤 닉네임 생성기 테스트를 위해 만들었습니다. 다들 심심할 때 테스트 해보세요~',
+  })
+  getRandomNickname() {
+    const randomNickname = this.testService.getRandomNickname();
+
+    return ResponseEntity.OK_WITH_DATA(randomNickname);
+  }
 }

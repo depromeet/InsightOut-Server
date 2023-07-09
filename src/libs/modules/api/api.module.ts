@@ -5,6 +5,6 @@ import { ApiService } from './api.service';
 @Module({
   imports: [HttpModule.register({})],
   providers: [ApiService],
-  exports: [ApiService, HttpModule],
+  exports: [ApiService],
 })
 export class ApiModule {}
