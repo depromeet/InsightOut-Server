@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { CookieOptions } from 'express';
+import { ApiService } from '📚libs/modules/api/api.service';
 import { RedisCacheService } from '📚libs/modules/cache/redis/redis.service';
 import { EnvEnum } from '📚libs/modules/env/env.enum';
 import { EnvService } from '📚libs/modules/env/env.service';
@@ -13,6 +14,7 @@ export class TestService {
     private readonly redisService: RedisCacheService,
     private readonly jwtService: JwtService,
     private readonly envService: EnvService,
+    private readonly apiService: ApiService,
   ) {}
 
   async issueTestToken(body: PostIssueTestTokenRequestBodyDto) {
@@ -48,5 +50,11 @@ export class TestService {
           };
 
     return cookieOptions;
+  }
+
+  getRandomNickname(): string {
+    const randomNickName = this.apiService.getRandomNickname();
+
+    return randomNickName;
   }
 }

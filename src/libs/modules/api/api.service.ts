@@ -1,24 +1,20 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { catchError, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { byLength, parseJSON, parseJSONFromDaum, split } from '../../utils/hanspell.function';
 import { SpellCheckResult } from './api.type';
+import { NICKNAME_ADJECTIVE, NICKNAME_NOUN } from '📚libs/modules/api/data/nickname_word.data';
 
 @Injectable()
 export class ApiService {
   constructor(private readonly httpService: HttpService) {}
 
-  async getRandomNickname(): Promise<string> {
-    const response = await firstValueFrom(
-      this.httpService.get('https://nickname.hwanmoo.kr/?format=text&max_length=5').pipe(
-        catchError((error) => {
-          throw error;
-        }),
-      ),
-    );
-    const responseData = response.data;
+  getRandomNickname(): string {
+    const adjective = NICKNAME_ADJECTIVE[Math.floor(Math.random() * NICKNAME_ADJECTIVE.length)];
 
-    return responseData;
+    const noun = NICKNAME_NOUN[Math.floor(Math.random() * NICKNAME_NOUN.length)];
+
+    return adjective + ' ' + noun;
   }
 
   async spellCheckByPNU(sentence: string) {
