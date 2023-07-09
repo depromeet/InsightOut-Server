@@ -296,7 +296,7 @@ model Feedback {
   id       Int    @id @default(autoincrement())
   contents String @db.VarChar(300)
 
-  createdAt DateTime @default(now()) @map("createdAt") @db.Timestamptz
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
 
   @@map("feedbacks")
 }
