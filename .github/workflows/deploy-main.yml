@@ -57,6 +57,8 @@ jobs:
           echo REDIS_PORT_PROD=${{ secrets.REDIS_PORT_PROD }} >> .env
           echo SLACK_TOKEN=${{ secrets.SLACK_TOKEN }} >> .env
           echo NODE_ENV=${{ secrets.NODE_ENV }} >> .env
+          echo PROMPT_REDIS_KEY=${{ secrets.PROMPT_REDIS_KEY }} >> .env
+          echo MAIN_SERVER=${{ secrets.MAIN_SERVER }} >> .env
 
       - name: build server files
         working-directory: ./
