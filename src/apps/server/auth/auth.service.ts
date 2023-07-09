@@ -48,7 +48,7 @@ export class AuthService {
       const { email, picture, socialId, uid } = user;
 
       const existUser = await this.userRepository.findFirst({
-        where: { socialId, uid },
+        where: { email },
         select: { id: true, nickname: true },
       });
 

@@ -269,7 +269,7 @@ model ExperienceCapability {
   capabilityId Int @map("capability_id")
 
   Experience Experience @relation(references: [id], fields: [experienceId], onDelete: Cascade)
-  Capability Capability @relation(references: [id], fields: [capabilityId], onDelete: NoAction)
+  Capability Capability @relation(references: [id], fields: [capabilityId], onDelete: Cascade)
 
   @@id([experienceId, capabilityId])
   @@map("experience_capabilities")
