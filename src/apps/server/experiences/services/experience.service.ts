@@ -81,8 +81,8 @@ export class ExperienceService {
 
     const aiRecommendQuestionResDto = experience.AiRecommendQuestions.map((aiRecommend) => new AiRecommendQuestionResDto(aiRecommend));
     const aiResumeResDto = new AiResumeResDto({
-      content: experience.AiResume.content,
-      AiResumeCapability: experience.AiResume.AiResumeCapability.map((capability) => capability.Capability.keyword),
+      content: experience.AiResume?.content,
+      AiResumeCapability: experience.AiResume?.AiResumeCapabilities.map((aiResumeCapability) => aiResumeCapability.Capability.keyword),
     });
     const result: ExperienceCardType = {
       title: experience.title,
