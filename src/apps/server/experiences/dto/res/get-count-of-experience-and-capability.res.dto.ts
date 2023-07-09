@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 import { IsInt, IsPositive, IsNotEmpty, Min } from 'class-validator';
-import { CountExperienceAndCapability } from '\uD83D\uDD25apps/server/experiences/types/count-experience-and-capability.type';
+import { CountExperienceAndCapability } from '🔥apps/server/experiences/types/count-experience-and-capability.type';
 
 export class GetCountOfExperienceAndCapabilityResponseDto {
   @Exclude() private readonly _id: number;
