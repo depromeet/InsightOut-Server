@@ -2,7 +2,10 @@ export const GetCountOfExperienceAndCapabilityResponseDescriptionMd = `
 ### ✅ 경험카드 키워드 및 개수 조회에 성공했습니다.
 모아보기 상단 경험카드를 눌렀을 때, 유저가 작성한 경험카드의 역량 키워드를 탭에 보여줍니다.\n
 또한, 키워드 오른쪽에 키워드가 등록된 경험카드의 개수가 출력됩니다. \n
-\`isCompleted\` 쿼리 키워드를 true로 보내주시면 완료된 정보만 내려줍니다 :) false시 전체 데이터가 내려갑니다 :)
+\`isCompleted\` 쿼리 키워드를 true로 보내주시면 완료된 정보만 내려줍니다 :) false시 전체 데이터가 내려갑니다 :)\n
+isComleted는 Optional한 값이며 default 값은 false입니다. >> \`전체\`를 같이 내려주게 되는데 전체의 id 값은 0입니다.
+
+
 <img width="250" alt="image" src="https://github.com/depromeet/13th-4team-backend/assets/83271772/0ab94ec3-1ca1-4cea-8fc4-0cf9c8b73190">
 `;
 
