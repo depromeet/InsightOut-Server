@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { RedisCacheService } from '📚libs/modules/cache/redis/redis.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserRepository } from '📚libs/modules/database/repositories/user.repository';
@@ -54,8 +54,8 @@ export class AuthService {
 
       // If user exists, pass to signin
       if (!existUser) {
-        // 랜덤 닉네임 발급. 5글자 이하
-        const nickname = await this.apiService.getRandomNickname();
+        // 랜덤 닉네임 발급. 4 ~ 8글자
+        const nickname = this.apiService.getRandomNickname();
 
         /**
          * 트랜잭션을 시작합니다.
