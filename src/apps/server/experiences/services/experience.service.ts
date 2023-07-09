@@ -228,6 +228,10 @@ export class ExperienceService {
   public async getStarFromExperienceByExperienceId(experienceId: number): Promise<GetStarFromExperienceResponseDto> {
     const star = await this.experienceRepository.getStarFromExperienceByExperienceId(experienceId);
 
+    if (!star) {
+      throw new NotFoundException('완성한 경험카드의 S, T, A, R이 없습니다.');
+    }
+
     // 만약 situation, task, action, result 중에서 하나라도 누락됐다면
     if (!(star.situation && star.task && star.action && star.result)) {
       throw new NotFoundException('There are missing info about S, T, A, R');
