@@ -14,7 +14,7 @@ export class UserRepository extends AbstractRepository<UserDelegate, DelegateArg
   getOneUser(userId: number) {
     return this.findFirst({
       where: { id: userId },
-      select: { nickname: true, email: true, UserInfo: { select: { imageUrl: true } } },
+      select: { nickname: true, email: true, UserInfo: { select: { imageUrl: true, field: true } } },
     });
   }
 
