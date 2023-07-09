@@ -104,7 +104,7 @@ export class AuthService {
             data: {
               title: '자기소개서 예시',
               userId: user.id,
-              Question: {
+              Questions: {
                 create: {
                   title: '샘플) 자신의 경쟁력에 대해 구체적으로 적어 주세요.',
                 },

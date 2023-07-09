@@ -8,11 +8,11 @@ export class AiResumeDto {
   @Exclude() _updatedAt: Date;
   @Exclude() _AiCapabilities: string[];
 
-  constructor(AiResume: { AiResumeCapability: { Capability: { keyword: string } }[]; id: number; updatedAt: Date; content: string }) {
+  constructor(AiResume: { AiResumeCapabilities: { Capability: { keyword: string } }[]; id: number; updatedAt: Date; content: string }) {
     this._id = AiResume.id;
     this._content = AiResume.content;
     this._updatedAt = AiResume.updatedAt;
-    this._AiCapabilities = AiResume.AiResumeCapability.map((capabilities) => capabilities.Capability.keyword);
+    this._AiCapabilities = AiResume.AiResumeCapabilities.map((aiResumeCapabilities) => aiResumeCapabilities.Capability.keyword);
   }
 
   @Expose()

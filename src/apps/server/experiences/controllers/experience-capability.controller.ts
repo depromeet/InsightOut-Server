@@ -10,7 +10,10 @@ import { Method } from '📚libs/enums/method.enum';
 import { ExperienceCapabilityService } from '🔥apps/server/experiences/services/experience-capability.service';
 import { CreateExperienceCapabilitiesdBodyDto } from '🔥apps/server/experiences/dto/req/create-experience-capabilities.dto';
 import { AddCapabilitydBodyDto } from '🔥apps/server/experiences/dto/req/add-capability.dto';
-import { AddCapabilityConflictErrorResDto, AddCapabilityResDto } from '🔥apps/server/experiences/dto/res/addCapability.res.dto';
+import {
+  AddUserCapabilityConflictErrorResDto,
+  AddUserCapabilityResDto,
+} from '🔥apps/server/experiences/dto/res/add-user-capability.res.dto';
 import {
   addCapabilitySuccMd,
   createManyExperienceCapabilitiesSuccMd,
@@ -55,7 +58,7 @@ export class ExperienceKeywordController {
 
   @ApiConflictResponse({
     description: '⛔ {가지고 있는 키워드} 해당 키워드가 이미 존재합니다. 확인 부탁드립니다.',
-    type: AddCapabilityConflictErrorResDto,
+    type: AddUserCapabilityConflictErrorResDto,
   })
   @Route({
     request: {
@@ -64,13 +67,13 @@ export class ExperienceKeywordController {
     },
     response: {
       code: HttpStatus.CREATED,
-      type: AddCapabilityResDto,
+      type: AddUserCapabilityResDto,
     },
     description: addCapabilitySuccMd,
     summary: '🔵 경험 분해 키워드 추가하기 API',
   })
-  public async addCapability(@Body() addCapabilitydBodyDto: AddCapabilitydBodyDto, @User() user: UserJwtToken) {
-    const capability = await this.experienceCapabilityService.addCapability(addCapabilitydBodyDto, user);
+  public async addUserCapability(@Body() addCapabilitydBodyDto: AddCapabilitydBodyDto, @User() user: UserJwtToken) {
+    const capability = await this.experienceCapabilityService.addUserCapability(addCapabilitydBodyDto, user);
 
     return ResponseEntity.CREATED_WITH_DATA(capability);
   }

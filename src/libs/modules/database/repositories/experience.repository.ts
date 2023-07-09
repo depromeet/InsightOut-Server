@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
+import { AiRecommendQuestion, AiResume, Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
 import { ExperienceSelect } from '🔥apps/server/experiences/interface/experience-select.interface';
 import { ExperienceRepositoryInterface } from '🔥apps/server/experiences/interface/experience-repository.interface';
 import { PaginationOptionsDto } from '📚libs/pagination/pagination-option.dto';
@@ -25,9 +25,9 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
         summaryKeywords: true,
         updatedAt: true,
         ExperienceInfo: { select: { experienceId: true, experienceRole: true, motivation: true } },
-        ExperienceCapability: { select: { Capability: { select: { id: true, keyword: true, keywordType: true } } } },
+        ExperienceCapabilities: { select: { Capability: { select: { id: true, keyword: true } } } },
         AiResume: {
-          select: { content: true, AiResumeCapability: { select: { Capability: { select: { keyword: true, keywordType: true } } } } },
+          select: { content: true, AiResumeCapabilities: { select: { Capability: { select: { keyword: true } } } } },
         },
       },
     });
@@ -45,19 +45,22 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
         action: true,
         result: true,
         ExperienceInfo: { select: { analysis: true } },
-        ExperienceCapability: { select: { Capability: { select: { keyword: true, keywordType: true } } } },
+        ExperienceCapabilities: { select: { Capability: { select: { keyword: true } } } },
         AiResume: {
-          select: { content: true, AiResumeCapability: { select: { Capability: { select: { keyword: true, keywordType: true } } } } },
+          select: { content: true, AiResumeCapabilities: { select: { Capability: { select: { keyword: true } } } } },
         },
-        AiRecommendQuestion: { select: { id: true, title: true } },
+        AiRecommendQuestions: { select: { id: true, title: true } },
       },
     });
   }
 
-  public async findOneById(experienceId: number, userId: number): Promise<Experience & { AiResume; ExperienceInfo; AiRecommendQuestion }> {
+  public async findOneById(
+    experienceId: number,
+    userId: number,
+  ): Promise<Experience & { AiResume: AiResume; ExperienceInfo: ExperienceInfo; AiRecommendQuestions: AiRecommendQuestion[] }> {
     return await this.prisma.experience.findFirst({
       where: { id: experienceId, userId },
-      include: { ExperienceInfo: true, AiResume: true, AiRecommendQuestion: true },
+      include: { ExperienceInfo: true, AiResume: true, AiRecommendQuestions: true },
     });
   }
 
@@ -134,9 +137,9 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
         endDate: true,
         experienceStatus: true,
         summaryKeywords: true,
-        ExperienceCapability: { select: { Capability: true } },
-        AiResume: { select: { AiResumeCapability: { select: { Capability: true } } } },
-        AiRecommendQuestion: true,
+        ExperienceCapabilities: { select: { Capability: true } },
+        AiResume: { select: { AiResumeCapabilities: { select: { Capability: true } } } },
+        AiRecommendQuestions: true,
         ExperienceInfo: { select: { analysis: true } },
         ...select,
       },
@@ -147,7 +150,7 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
 
     if (capabilityId) {
       experiences = experiences.filter((experience) =>
-        experience.ExperienceCapability.find((experienceCapability) => experienceCapability.Capability.id === capabilityId),
+        experience.ExperienceCapabilities.find((experienceCapability) => experienceCapability.Capability.id === capabilityId),
       );
     }
 

@@ -26,13 +26,12 @@ model User {
   deletedAt DateTime? @map("deleted_at") @db.Timestamptz // 유저 탈퇴일자
   nickname  String    @db.VarChar(10) // 닉네임
 
-  UserInfo         UserInfo?
-  Onboarding       Onboarding?
-  Resumes          Resume[]
-  AiResumes        AiResume[]
-  Experiences      Experience[]
-  UserCapabilities UserCapability[]
-  AiCapabilities   AiCapability[]
+  UserInfo     UserInfo?
+  Onboarding   Onboarding?
+  Resumes      Resume[]
+  AiResumes    AiResume[]
+  Experiences  Experience[]
+  Capabilities Capability[]
 
   @@map("users")
 }
@@ -136,7 +135,7 @@ model Question {
   Resume Resume @relation(references: [id], fields: [resumeId], onDelete: Cascade, onUpdate: Cascade)
 
   // @@id([resumeId])
-  @@map("question")
+  @@map("questions")
 }
 
 // ****************************
@@ -207,7 +206,6 @@ model Experience {
   AiResume               AiResume?
   ExperienceInfo         ExperienceInfo?
   ExperienceCapabilities ExperienceCapability[]
-  AiCapabilities         AiCapability[]
   AiRecommendQuestions   AiRecommendQuestion[]
 
   @@map("experiences")
@@ -244,53 +242,48 @@ model ExperienceInfo {
 // ************* 역량 **************
 // ********************************
 
-// 유저가 추가한 역량 키워드
-model UserCapability {
-  id      Int    @id @default(autoincrement()) // 역량 id
-  keyword String @db.VarChar(10) // 역량 키워드
-  userId  Int    @map("user_id")
+// 역량 키워드
+model Capability {
+  id           Int         @id @default(autoincrement()) // 역량 id
+  keyword      String      @db.VarChar(10) // 역량 키워드
+  keywordType  KeywordType @map("keyword_type")
+  userId       Int         @map("user_id")
+  experienceId Int?        @map("experience_id")
 
   User                   User                   @relation(references: [id], fields: [userId], onDelete: Cascade, onUpdate: Cascade)
   ExperienceCapabilities ExperienceCapability[]
+  AiResumeCapabilities   AiResumeCapability[]
 
-  @@map("user_capabilities")
+  @@map("capabilities")
 }
 
-// AI가 분석한 역량 키워드
-model AiCapability {
-  id           Int    @id @default(autoincrement()) // 역량 id
-  keyword      String @db.VarChar(10) // 역량 키워드
-  userId       Int    @map("user_id")
-  experienceId Int    @map("experience_id")
-
-  User                 User                 @relation(references: [id], fields: [userId], onDelete: Cascade, onUpdate: Cascade)
-  Experience           Experience           @relation(references: [id], fields: [experienceId], onDelete: NoAction) // Experience가 삭제되더라도 AI Resume와의 정합성을 위해 삭제되어서는 안됨
-  AiResumeCapabilities AiResumeCapability[]
-
-  @@map("ai_capabilities")
+// 역량 키워드 종류
+enum KeywordType {
+  AI // ai 역량 키워드
+  USER // user가 선택한 키워드
 }
 
 // 경험카드에 등록한 유저의 역량 키워드
 model ExperienceCapability {
-  experienceId     Int @map("experience_id")
-  userCapabilityId Int @map("user_capability_id")
+  experienceId Int @map("experience_id")
+  capabilityId Int @map("capability_id")
 
-  Experience     Experience     @relation(references: [id], fields: [experienceId], onDelete: Cascade)
-  UserCapability UserCapability @relation(references: [id], fields: [userCapabilityId], onDelete: NoAction)
+  Experience Experience @relation(references: [id], fields: [experienceId], onDelete: Cascade)
+  Capability Capability @relation(references: [id], fields: [capabilityId], onDelete: NoAction)
 
-  @@id([experienceId, userCapabilityId])
+  @@id([experienceId, capabilityId])
   @@map("experience_capabilities")
 }
 
 // AI 자기소개서에 등록한 AI 역량 키워드
 model AiResumeCapability {
-  aiResumeId     Int @map("ai_resume_id")
-  aiCapabilityId Int @map("ai_capability_id")
+  aiResumeId   Int @map("ai_resume_id")
+  capabilityId Int @map("capability_id")
 
-  AiResume     AiResume     @relation(references: [id], fields: [aiResumeId], onDelete: Cascade)
-  AiCapability AiCapability @relation(references: [id], fields: [aiCapabilityId], onDelete: NoAction)
+  AiResume   AiResume   @relation(references: [id], fields: [aiResumeId], onDelete: Cascade)
+  Capability Capability @relation(references: [id], fields: [capabilityId], onDelete: NoAction)
 
-  @@id([aiResumeId, aiCapabilityId])
+  @@id([aiResumeId, capabilityId])
   @@map("ai_resume_capabilities")
 }
 

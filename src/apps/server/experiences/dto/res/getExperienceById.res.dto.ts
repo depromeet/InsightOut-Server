@@ -100,7 +100,7 @@ export class GetExperienceByIdResDto {
       Experience & {
         ExperienceInfo: GetExperienceInfoResDto;
         AiResume: AiResume;
-        ExperienceCapability: (Partial<ExperienceCapability> & { Capability: Capability })[];
+        ExperienceCapabilities: (Partial<ExperienceCapability> & { Capability: Capability })[];
       }
     >,
   ) {
@@ -113,7 +113,7 @@ export class GetExperienceByIdResDto {
     this._action = experience.action;
     this._result = experience.result;
     this._experienceStatus = experience.experienceStatus;
-    this._experienceCapabilityKeywords = experience.ExperienceCapability.map(
+    this._experienceCapabilityKeywords = experience.ExperienceCapabilities.map(
       (experienceCapability) => experienceCapability.Capability.keyword,
     );
     this._summaryKeywords = experience.summaryKeywords;
