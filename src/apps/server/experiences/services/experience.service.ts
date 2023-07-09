@@ -204,6 +204,15 @@ export class ExperienceService {
   ): Promise<GetCountOfExperienceAndCapabilityResponseDto[]> {
     const countOfExperienceAndCapability = await this.capabilityRepository.countExperienceAndCapability(userId, isCompleted);
 
+    // 전체(경험카드 개수)를 가져오기 위한 count문 만들기 >> ID를 0으로 넣자
+    const experienceCountByIsCompleted = await this.experienceRepository.getCountByIsCompleted(userId, isCompleted);
+
+    countOfExperienceAndCapability.unshift({
+      id: 0,
+      keyword: '전체',
+      _count: { ExperienceCapabilities: experienceCountByIsCompleted },
+    } as unknown as CountExperienceAndCapability);
+
     // count가 0인 키워드는 필터링합니다.
     const filteredCountOfExperienceAndCapability = countOfExperienceAndCapability.filter(
       (row: CountExperienceAndCapability) => row._count.ExperienceCapabilities !== 0,
@@ -212,6 +221,7 @@ export class ExperienceService {
     const countOfExperienceAndCapabilityResponseDto = filteredCountOfExperienceAndCapability.map(
       (count) => new GetCountOfExperienceAndCapabilityResponseDto(count),
     );
+
     return countOfExperienceAndCapabilityResponseDto;
   }
 
