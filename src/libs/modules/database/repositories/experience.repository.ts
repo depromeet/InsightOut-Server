@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { AiRecommendQuestion, AiResume, Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
+import { AiRecommendQuestion, AiResume, Experience, ExperienceInfo, ExperienceStatus, Prisma } from '@prisma/client';
 import { ExperienceSelect } from '🔥apps/server/experiences/interface/experience-select.interface';
 import { ExperienceRepositoryInterface } from '🔥apps/server/experiences/interface/experience-repository.interface';
 import { PaginationOptionsDto } from '📚libs/pagination/pagination-option.dto';
@@ -66,6 +66,14 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
 
   public async getCount(userId: number) {
     return await this.prisma.experience.count({ where: { userId } });
+  }
+
+  public async getCountByIsCompleted(userId: number, isCompleted: boolean) {
+    let where = <Prisma.ExperienceWhereInput>{ userId };
+    if (isCompleted) {
+      where.experienceStatus = ExperienceStatus.DONE;
+    }
+    return await this.prisma.experience.count({ where });
   }
 
   public async selectOneById(

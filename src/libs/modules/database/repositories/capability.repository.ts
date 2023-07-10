@@ -19,7 +19,7 @@ export class CapabilityRepository extends AbstractRepository<
   public async countExperienceAndCapability(userId: number, isCompleted?: boolean): Promise<CountExperienceAndCapability[]> {
     const where = <Prisma.CapabilityWhereInput>{ userId };
     if (isCompleted === true) {
-      where.ExperienceCapabilities = { some: { Experience: { is: { experienceStatus: ExperienceStatus.DONE } } } };
+      where.ExperienceCapabilities = { every: { Experience: { is: { experienceStatus: ExperienceStatus.DONE } } } };
     }
 
     return (await this.findMany({
