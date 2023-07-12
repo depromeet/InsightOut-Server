@@ -67,7 +67,7 @@ export class AiService {
     // capability생성
     const aiCapabilityInfos = parseAiKeywords.map((keyword) => {
       return {
-        keyword,
+        keyword: keyword.substring(0, 10),
         userId: user.userId,
         keywordType: KeywordType.AI,
         experienceId: body.experienceId,
@@ -108,7 +108,7 @@ export class AiService {
         async (tx) => {
           // aiResume생성
           const newAiResume = await tx.aiResume.create({
-            data: { userId: user.userId, content: resume, experienceId: body.experienceId },
+            data: { userId: user.userId, content: resume.substring(0, 1000), experienceId: body.experienceId },
           });
           const aiResumeCapabilityInfos = body.capabilityIds.map((capabilityId) => {
             return { capabilityId, aiResumeId: newAiResume.id };
@@ -148,8 +148,8 @@ export class AiService {
 
     // analysis, keyword 업데이트
     const upsertExperienceReqDto = new UpdateExperienceReqDto();
-    upsertExperienceReqDto.analysis = summary.choices[CHOICES_IDX].message.content as string;
-    upsertExperienceReqDto.summaryKeywords = parseKeywords;
+    upsertExperienceReqDto.analysis = (summary.choices[CHOICES_IDX].message.content as string).substring(0, 160);
+    upsertExperienceReqDto.summaryKeywords = parseKeywords.map((keyword) => keyword.substring(0, 10));
     upsertExperienceReqDto.experienceStatus = ExperienceStatus.DONE;
     const updateInfo = upsertExperienceReqDto.compareProperty(experience);
 
