@@ -35,13 +35,13 @@ export class OpenAiService {
     const response = await firstValueFrom(
       this.httpService.post(this.OPEN_AI_URL, data, { headers: this.openAIHeader, timeout: MINUTES * 1000 }).pipe(
         catchError((error) => {
-          console.error(error.response.data);
+          console.error(error.response?.data);
           throw error;
         }),
       ),
     );
 
-    const responseData = response.data;
+    const responseData = response?.data;
 
     return responseData as AiResponse;
   }
