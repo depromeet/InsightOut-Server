@@ -172,3 +172,14 @@ ChatGPT가 추천해준 자기소개서 조회에 성공하였습니다 :)
 `;
 
 // -- ChatGPT AI가 추천해준 자기소개서 내려주는 API
+
+export const deleteExperienceDescriptionMd = `
+### ✅ 경험 분해 삭제에 성공했습니다.
+유저의 삭제할 경험 분해가 존재하지 않으면 \`404\`에러를 반환합니다.\n
+경험 분해가 삭제되었으면 \`isDeleted에 true\` 값이, 삭제 되지 않았다면 \`isDeleted에 false\` 값이 들어있는 채로 반환됩니다 :)
+`;
+
+export const deleteExperienceSummaryMd = '🔵 경험 분해 삭제 API';
+export const deleteExperienceSuccMd = '✅ 경험 분해 삭제에 성공하였습니다.';
+
+// -- updateExperience
