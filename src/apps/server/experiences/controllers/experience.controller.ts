@@ -56,6 +56,9 @@ import {
   getExperienceCardInfoSuccMd,
   getExperienceCardInfoSummaryMd,
   getExperienceCardInfoDescriptionMd,
+  deleteExperienceSuccMd,
+  deleteExperienceSummaryMd,
+  deleteExperienceDescriptionMd,
 } from '🔥apps/server/experiences/markdown';
 import { GetAiResumeNotFoundException, GetAiResumeResDto } from '🔥apps/server/experiences/dto/res/getAiResume.res.dto';
 import { GetExperienceCardInfoNotFoundErrorResDto } from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.res.dto';
@@ -63,6 +66,7 @@ import { SuccessResponse } from '📚libs/decorators/success-response.dto';
 import { PaginationDto } from '📚libs/pagination/pagination.dto';
 import { GetExperienceCardInfoResDto } from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.res.dto';
 import { GetCountOfExperienceAndCapabilityQueryReqDto } from '🔥apps/server/experiences/dto/req/get-count-of-experience-and-capability.req.dto';
+import { DeleteExperienceResDto } from '🔥apps/server/experiences/dto/res/delete-experience.res.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -332,5 +336,27 @@ export class ExperienceController {
     const experience = await this.experienceService.update(upsertExperienceReqDto, experienceIdParamReqDto, user);
 
     return ResponseEntity.CREATED_WITH_DATA(experience);
+  }
+
+  //-- DELETE
+  @Route({
+    request: {
+      path: '/:experienceId',
+      method: Method.DELETE,
+    },
+    response: {
+      code: HttpStatus.OK,
+      type: DeleteExperienceResDto,
+      description: deleteExperienceSuccMd,
+    },
+    description: deleteExperienceDescriptionMd,
+    summary: deleteExperienceSummaryMd,
+  })
+  public async deleteExperience(
+    @Param() experienceIdParamReqDto: ExperienceIdParamReqDto,
+    @User() user: UserJwtToken,
+  ): Promise<ResponseEntity<DeleteExperienceResDto>> {
+    const deletedResult = await this.experienceService.deleteExperience(experienceIdParamReqDto, user);
+    return ResponseEntity.CREATED_WITH_DATA(deletedResult);
   }
 }

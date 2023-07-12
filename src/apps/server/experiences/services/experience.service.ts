@@ -27,6 +27,7 @@ import {
   UpdateExperienceResDto,
 } from '🔥apps/server/experiences/dto';
 import { CountExperienceAndCapability } from '🔥apps/server/experiences/types/count-experience-and-capability.type';
+import { DeleteExperienceResDto } from '🔥apps/server/experiences/dto/res/delete-experience.res.dto';
 
 @Injectable()
 export class ExperienceService {
@@ -248,5 +249,15 @@ export class ExperienceService {
 
     const getStarFromExperienceResponseDto = new GetStarFromExperienceResponseDto(star);
     return getStarFromExperienceResponseDto;
+  }
+
+  public async deleteExperience(param: ExperienceIdParamReqDto, user: UserJwtToken): Promise<DeleteExperienceResDto> {
+    const experinece = await this.experienceRepository.findOneById(param.experienceId, user.userId);
+    if (!experinece) throw new NotFoundException('해당 ID의 경험카드는 존재하지 않습니다.');
+
+    // experience가 존재하면 삭제
+    const deletedResult = await this.experienceRepository.deleteOneById(param.experienceId);
+    // 삭제 시 해당 experience의 값을 반환합니다 해당 id와 삭제하려는 experience id가 같으면 isDeleted를 true를 다르면 false를 반환합니다.
+    return deletedResult.id === experinece.id ? new DeleteExperienceResDto(true) : new DeleteExperienceResDto(false);
   }
 }

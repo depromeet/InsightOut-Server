@@ -174,4 +174,8 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
       select: { id: true, title: true, situation: true, task: true, action: true, result: true },
     });
   }
+
+  public async deleteOneById(id: number) {
+    return await this.prisma.experience.delete({ where: { id } });
+  }
 }
