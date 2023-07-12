@@ -12,7 +12,7 @@ export class ResponseEntity<T> {
     this._statusCode = status;
     this._success = success;
     this._message = options.message;
-    this._data = options.data;
+    this._data = options?.data;
   }
 
   static get OK(): ResponseEntity<string> {
