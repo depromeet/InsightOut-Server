@@ -151,10 +151,10 @@ model AiResume {
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz // AI 자기소개서 수정 일자
 
   userId       Int @map("user_id")
-  experienceId Int @unique @map("experience_id") // 경험 id
+  experienceId Int? @unique @map("experience_id")  // 경험 id
 
   User                 User                 @relation(references: [id], fields: [userId], onDelete: Cascade)
-  Experience           Experience           @relation(references: [id], fields: [experienceId], onDelete: NoAction)
+  Experience           Experience?          @relation(references: [id], fields: [experienceId], onDelete: SetNull)
   AiResumeCapabilities AiResumeCapability[]
 
   @@map("ai_resumes")
@@ -205,6 +205,7 @@ model Experience {
   User                   User?                  @relation(references: [id], fields: [userId], onDelete: Cascade, onUpdate: Cascade)
   AiResume               AiResume?
   ExperienceInfo         ExperienceInfo?
+  Capabilities           Capability[]
   ExperienceCapabilities ExperienceCapability[]
   AiRecommendQuestions   AiRecommendQuestion[]
 
@@ -251,6 +252,7 @@ model Capability {
   experienceId Int?        @map("experience_id")
 
   User                   User                   @relation(references: [id], fields: [userId], onDelete: Cascade, onUpdate: Cascade)
+  Experience             Experience?            @relation(references: [id], fields: [experienceId], onDelete: SetNull)
   ExperienceCapabilities ExperienceCapability[]
   AiResumeCapabilities   AiResumeCapability[]
 
