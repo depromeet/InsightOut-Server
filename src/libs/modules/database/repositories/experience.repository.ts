@@ -69,7 +69,7 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
   }
 
   public async getCountByIsCompleted(userId: number, isCompleted: boolean) {
-    let where = <Prisma.ExperienceWhereInput>{ userId };
+    const where = <Prisma.ExperienceWhereInput>{ userId };
     if (isCompleted) {
       where.experienceStatus = ExperienceStatus.DONE;
     }
@@ -161,6 +161,26 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
         experience.ExperienceCapabilities.find((experienceCapability) => experienceCapability.Capability.id === capabilityId),
       );
     }
+
+    experiences = experiences.filter((experience) => {
+      if (experience.experienceStatus === ExperienceStatus.DONE) {
+        return (
+          experience.title &&
+          experience.situation &&
+          experience.task &&
+          experience.action &&
+          experience.result &&
+          experience.startDate instanceof Date &&
+          experience.endDate instanceof Date &&
+          experience.ExperienceInfo.analysis &&
+          experience.AiResume &&
+          experience.ExperienceCapabilities.length &&
+          experience.AiRecommendQuestions.length &&
+          experience.summaryKeywords.length
+        );
+      }
+      return true;
+    });
 
     return experiences;
   }
