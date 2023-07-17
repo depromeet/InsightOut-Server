@@ -29,6 +29,7 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
         AiResume: {
           select: { content: true, AiResumeCapabilities: { select: { Capability: { select: { keyword: true } } } } },
         },
+        AiRecommendQuestions: true,
       },
     });
   }
