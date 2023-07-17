@@ -1,5 +1,5 @@
 import { Exclude, Expose, Type } from 'class-transformer';
-import { Experience, ExperienceCapability, ExperienceStatus, KeywordType } from '@prisma/client';
+import { AiRecommendQuestion, Experience, ExperienceCapability, ExperienceStatus, KeywordType } from '@prisma/client';
 import {
   ArrayMaxSize,
   ArrayMinSize,
@@ -94,6 +94,7 @@ export class GetExperienceByIdResDto {
   @Exclude() _updatedAt: Date;
   @Exclude() _ExperienceInfo: GetExperienceInfoResDto;
   @Exclude() _AiResume: AiResume;
+  @Exclude() _AiRecommendQuestions: Omit<AiRecommendQuestion, 'experienceId'>[];
 
   constructor(
     experience: Partial<
@@ -101,6 +102,7 @@ export class GetExperienceByIdResDto {
         ExperienceInfo: GetExperienceInfoResDto;
         AiResume: AiResume;
         ExperienceCapabilities: (Partial<ExperienceCapability> & { Capability: Capability })[];
+        AiRecommendQuestions: AiRecommendQuestion[];
       }
     >,
   ) {
@@ -120,6 +122,11 @@ export class GetExperienceByIdResDto {
     this._updatedAt = experience.updatedAt;
     this._ExperienceInfo = experience.ExperienceInfo;
     this._AiResume = experience.AiResume;
+    this._AiRecommendQuestions = experience.AiRecommendQuestions.map((aiRecommendQuestion) => {
+      const { experienceId, ...rest } = aiRecommendQuestion;
+
+      return rest;
+    });
   }
   @ApiProperty({ example: 1 })
   @IsOptionalNumber()
@@ -260,5 +267,28 @@ export class GetExperienceByIdResDto {
   })
   get ExperienceInfo(): GetExperienceInfoResDto {
     return this._ExperienceInfo;
+  }
+
+  @Expose()
+  @ApiPropertyOptional({
+    description: '경험카드 하단의 ai 자기소개서 추천 문항입니다.',
+    example: [
+      {
+        id: 3,
+        title: '본인이 어떤 어려운 상황에서 빠르게 대응하여 성공을 이룬 경험에 대해 이야기해 주세요.',
+        createdAt: '2023-07-16T12:06:29.062Z',
+        updatedAt: '2023-07-16T12:06:29.062Z',
+      },
+      {
+        id: 4,
+        title: '본인이 성공을 위해 여러 가지 어려움을 극복한 과정에 대해 설명해 주세요.',
+        createdAt: '2023-07-16T12:06:29.062Z',
+        updatedAt: '2023-07-16T12:06:29.062Z',
+      },
+    ],
+    isArray: true,
+  })
+  get AiRecommendQuestions(): Omit<AiRecommendQuestion, 'experienceId'>[] {
+    return this._AiRecommendQuestions;
   }
 }
