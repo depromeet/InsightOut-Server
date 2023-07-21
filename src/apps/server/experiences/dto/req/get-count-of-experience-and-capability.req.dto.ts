@@ -9,5 +9,5 @@ export class GetCountOfExperienceAndCapabilityQueryReqDto {
   @Transform((_) => {
     return _.obj.isCompleted === 'true';
   })
-  isCompleted: boolean = false;
+  isCompleted = false;
 }
