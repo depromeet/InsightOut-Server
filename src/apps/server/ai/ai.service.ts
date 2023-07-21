@@ -100,9 +100,23 @@ export class AiService {
     // resume prompt
     const CHOICES_IDX = 0;
     const prompt = generateResumePrompt(body, keywords);
-    const result = await this.openAiService.promptChatGPT(prompt);
-    const resume = result.choices[CHOICES_IDX].message.content as string;
+    let result;
 
+    try {
+      result = await this.openAiService.promptChatGPT(prompt);
+    } catch (error) {
+      await this.processResumePrompt(user, '', body);
+
+      return new PromptResumeResDto('추천된 Ai Resume가 없습니다.');
+    }
+
+    const resume = result.choices[CHOICES_IDX].message.content as string;
+    await this.processResumePrompt(user, resume, body);
+
+    return new PromptResumeResDto(result.choices[CHOICES_IDX].message.content as string);
+  }
+
+  private async processResumePrompt(user: UserJwtToken, resume: string, body: PromptResumeBodyResDto) {
     try {
       await this.prisma.$transaction(
         async (tx) => {
@@ -124,52 +138,60 @@ export class AiService {
       }
       throw error;
     }
-
-    return new PromptResumeResDto(result.choices[CHOICES_IDX].message.content as string);
   }
 
   public async postSummaryPrompt(body: PromptSummaryBodyReqDto, user: UserJwtToken): Promise<GetExperienceCardInfoResDto> {
     const experience = await this.validationExperinece(body.experienceId, user.userId);
-    if (experience.summaryKeywords.length !== 0) throw new ConflictException('이미 요약된 키워드가 있습니다.');
-    if (experience.ExperienceInfo.analysis) throw new ConflictException('이미 요약된 정보가 있습니다.');
-    if (experience.AiRecommendQuestions.length !== 0) throw new ConflictException('이미 추천된 자기소개서 항목이 있습니다.');
+    try {
+      if (experience.summaryKeywords.length !== 0) throw new ConflictException('이미 요약된 키워드가 있습니다.');
+      if (experience.ExperienceInfo.analysis) throw new ConflictException('이미 요약된 정보가 있습니다.');
+      if (experience.AiRecommendQuestions.length !== 0) throw new ConflictException('이미 추천된 자기소개서 항목이 있습니다.');
 
-    const CHOICES_IDX = 0;
-    const summaryPrompt = generateSummaryPrompt(body);
-    const aiSummaryKeywords = generateSummaryKeywordPrompt(body);
+      const CHOICES_IDX = 0;
+      const summaryPrompt = generateSummaryPrompt(body);
+      const aiSummaryKeywords = generateSummaryKeywordPrompt(body);
 
-    const [summary, keywords] = await Promise.all([
-      this.openAiService.promptChatGPT(summaryPrompt),
-      this.openAiService.promptChatGPT(aiSummaryKeywords),
-    ]);
+      const [summary, keywords] = await Promise.all([
+        this.openAiService.promptChatGPT(summaryPrompt),
+        this.openAiService.promptChatGPT(aiSummaryKeywords),
+      ]);
 
-    const parseKeywords = this.parsingPromptResult(keywords).slice(0, 2);
-    const aiRecommendResume = generateRecommendQuestionsPrompt(parseKeywords);
+      const parseKeywords = this.parsingPromptResult(keywords).slice(0, 2);
+      const aiRecommendResume = generateRecommendQuestionsPrompt(parseKeywords);
 
-    // analysis, keyword 업데이트
-    const upsertExperienceReqDto = new UpdateExperienceReqDto();
-    upsertExperienceReqDto.analysis = (summary.choices[CHOICES_IDX].message.content as string).substring(0, 160);
-    upsertExperienceReqDto.summaryKeywords = parseKeywords.map((keyword) => keyword.substring(0, 10));
-    upsertExperienceReqDto.experienceStatus = ExperienceStatus.DONE;
-    const updateInfo = upsertExperienceReqDto.compareProperty(experience);
+      // analysis, keyword 업데이트
+      const upsertExperienceReqDto = new UpdateExperienceReqDto();
+      upsertExperienceReqDto.analysis = (summary.choices[CHOICES_IDX].message.content as string).substring(0, 160);
+      upsertExperienceReqDto.summaryKeywords = parseKeywords.map((keyword) => keyword.substring(0, 10));
+      upsertExperienceReqDto.experienceStatus = ExperienceStatus.DONE;
+      const updateInfo = upsertExperienceReqDto.compareProperty(experience);
 
-    await this.experienceService.processUpdateExperience(body.experienceId, updateInfo);
-    // analysis, keyword 업데이트 Done
+      await this.experienceService.processUpdateExperience(body.experienceId, updateInfo);
+      // analysis, keyword 업데이트 Done
 
-    // 추천 Resume 저장 Start
-    const recommendQuestions = await this.openAiService.promptChatGPT(aiRecommendResume);
-    const parseRecommendQuestions: string[] = this.parseRecommendQuestion(recommendQuestions).slice(0, 2);
-    const aiRecommendInfos = parseRecommendQuestions.map((question) => {
-      return {
-        experienceId: body.experienceId,
-        title: question,
-      };
-    });
-    await this.prisma.aiRecommendQuestion.createMany({ data: aiRecommendInfos });
-    // 추천 Resume 저장 Done
+      // 추천 Resume 저장 Start
+      const recommendQuestions = await this.openAiService.promptChatGPT(aiRecommendResume);
+      const parseRecommendQuestions: string[] = this.parseRecommendQuestion(recommendQuestions).slice(0, 2);
+      const aiRecommendInfos = parseRecommendQuestions.map((question) => {
+        return {
+          experienceId: body.experienceId,
+          title: question,
+        };
+      });
+      await this.prisma.aiRecommendQuestion.createMany({ data: aiRecommendInfos });
+      // 추천 Resume 저장 Done
 
-    // 생성된 경험 분해 키드에 들어갈 데이터 return
-    return await this.experienceService.getExperienceCardInfo(body.experienceId);
+      // 생성된 경험 분해 키드에 들어갈 데이터 return
+      return await this.experienceService.getExperienceCardInfo(body.experienceId);
+    } catch (error) {
+      const upsertExperienceReqDto = new UpdateExperienceReqDto();
+      upsertExperienceReqDto.analysis = null;
+      upsertExperienceReqDto.summaryKeywords = [];
+      upsertExperienceReqDto.experienceStatus = ExperienceStatus.DONE;
+      const updateInfo = upsertExperienceReqDto.compareProperty(experience);
+      await this.experienceService.processUpdateExperience(body.experienceId, updateInfo);
+      return await this.experienceService.getExperienceCardInfo(body.experienceId);
+    }
   }
 
   public async getAiResumes(user: UserJwtToken, query?: GetAiResumeQueryReqDto): Promise<GetAiResumeResDto> {
