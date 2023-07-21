@@ -66,8 +66,9 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
     });
   }
 
-  public async getCount(userId: number) {
-    return await this.prisma.experience.count({ where: { userId } });
+  public async getCount(userId: number, select: Partial<ExperienceSelect>, capabilityId?: number) {
+    const experiences = await this.getExperiences(userId, select, { skip: undefined, take: undefined }, capabilityId);
+    return experiences.length;
   }
 
   public async getCountByIsCompleted(userId: number, isCompleted: boolean) {

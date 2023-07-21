@@ -155,7 +155,7 @@ export class ExperienceService {
       (experience) => new GetExperiencesResponseDto(experience),
     );
 
-    const itemCount = await this.experienceRepository.getCount(userId);
+    const itemCount = await this.experienceRepository.getCount(userId, select, capabilityId);
 
     const experienceDto = new PaginationDto(
       getExperienceByCapabilityResponseDto,
