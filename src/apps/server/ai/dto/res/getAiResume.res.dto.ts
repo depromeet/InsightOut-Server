@@ -4,13 +4,21 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class AiResumeDto {
   @Exclude() _id: number;
+  @Exclude() _experienceId: number;
   @Exclude() _content: string;
   @Exclude() _updatedAt: Date;
   @Exclude() _AiCapabilities: string[];
 
-  constructor(AiResume: { AiResumeCapabilities: { Capability: { keyword: string } }[]; id: number; updatedAt: Date; content: string }) {
+  constructor(AiResume: {
+    AiResumeCapabilities: { Capability: { keyword: string } }[];
+    id: number;
+    updatedAt: Date;
+    content: string;
+    experienceId: number;
+  }) {
     this._id = AiResume.id;
     this._content = AiResume.content;
+    this._experienceId = AiResume.experienceId;
     this._updatedAt = AiResume.updatedAt;
     this._AiCapabilities = AiResume.AiResumeCapabilities.map((aiResumeCapabilities) => aiResumeCapabilities.Capability.keyword);
   }
@@ -21,6 +29,14 @@ export class AiResumeDto {
   @ApiProperty({ example: 1, description: 'AI 추천 자기소개서의 Id입니다.' })
   get id(): number {
     return this._id;
+  }
+
+  @Expose()
+  @IsNotEmpty()
+  @IsInt()
+  @ApiProperty({ example: 1, description: 'AI 추천 자기소개서와 연결된 experienceId입니다.' })
+  get experienceId(): number {
+    return this._experienceId;
   }
 
   @Expose()
