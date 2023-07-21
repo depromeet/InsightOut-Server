@@ -4,6 +4,7 @@
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "target": "es2017",
@@ -16,10 +17,8 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
-    "paths": {
-      "@prisma/generated": ["./prisma/generated/index"]
-    }
+    "noFallthroughCasesInSwitch": false
   },
-  "include": ["src/**/*", "test/**/*"]
+  "include": ["src/**/*", "test/**/*"],
+  "extends": ["./tsconfig.paths"]
 }

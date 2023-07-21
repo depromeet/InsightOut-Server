@@ -1,25 +1,47 @@
-import {
-  ClassSerializerInterceptor,
-  Module,
-  ValidationPipe,
-} from '@nestjs/common';
+import { ClassSerializerInterceptor, Module, ValidationPipe } from '@nestjs/common';
 import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
-import { DatabaseModule } from 'src/modules/database/database.module';
-import { EnvModule } from 'src/modules/env/env.module';
-import { LogModule } from 'src/modules/log/log.module';
-import { ValidationException } from './exceptions/validation.exception';
-import { CustomExceptionFilter } from './filters/custom-exception.filter';
-import { LogInterceptor } from './interceptors/log.interceptor';
-import { IndexRouterModule } from './router/index.router';
-import { SlackModule } from 'src/modules/slack/slack.module';
+import { DatabaseModule } from '📚libs/modules/database/database.module';
+import { EnvModule } from '📚libs/modules/env/env.module';
+import { LogModule } from '📚libs/modules/log/log.module';
+import { ValidationException } from './common/exceptions/validation.exception';
+import { CustomExceptionFilter } from './common/filters/custom-exception.filter';
+import { LogInterceptor } from './common/interceptors/log.interceptor';
+import { SlackModule } from '📚libs/modules/slack/slack.module';
+import { AuthModule } from './auth/auth.module';
+import { AppController } from './app.controller';
+import { RedisModule } from '@liaoliaots/nestjs-redis';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { RedisConfigFactory } from '📚libs/modules/cache/redis/redis.factory';
+import { ResumesModule } from './resumes/resumes.module';
+import { TestModule } from './test/test.module';
+import { ExperienceModule } from '🔥apps/server/experiences/experience.module';
+import { UserModule } from '🔥apps/server/users/user.module';
+import { OnboardingsModule } from '🔥apps/server/onboarding/onboarding.module';
+import { AiModule } from './ai/ai.module';
+import { CronModule } from '📚libs/modules/cron/cron.module';
 
 @Module({
+  controllers: [AppController],
   imports: [
     DatabaseModule.forRoot(),
     EnvModule.forRoot(),
     LogModule.forRoot(),
-    IndexRouterModule,
+    CronModule.forRoot(),
     SlackModule,
+    RedisModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useClass: RedisConfigFactory,
+    }),
+
+    // Domains
+    AuthModule,
+    ExperienceModule,
+    ResumesModule,
+    TestModule,
+    UserModule,
+    OnboardingsModule,
+    AiModule,
   ],
   providers: [
     {
@@ -39,9 +61,6 @@ import { SlackModule } from 'src/modules/slack/slack.module';
       useFactory: () =>
         new ValidationPipe({
           transform: true,
-          transformOptions: {
-            enableImplicitConversion: true,
-          },
           whitelist: true,
           forbidNonWhitelisted: true,
           exceptionFactory: (errors) => {

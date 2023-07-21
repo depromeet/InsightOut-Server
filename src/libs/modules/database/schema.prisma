@@ -1,0 +1,304 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ****************************
+// ************ 유저 ***********
+// ****************************
+
+// 유저 테이블
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique @db.VarChar(100)
+  uid      String @unique @db.Text // 구글 uid, 추후 삭제 가능성 있음
+  socialId String @map("social_id") @db.Text
+
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz // 유저 생성일자
+  updatedAt DateTime  @updatedAt @map("updated_at") @db.Timestamptz // 유저 수정일자
+  deletedAt DateTime? @map("deleted_at") @db.Timestamptz // 유저 탈퇴일자
+  nickname  String    @db.VarChar(10) // 닉네임
+
+  UserInfo     UserInfo?
+  Onboarding   Onboarding?
+  Resumes      Resume[]
+  AiResumes    AiResume[]
+  Experiences  Experience[]
+  Capabilities Capability[]
+
+  @@map("users")
+}
+
+// 소셜 로그인 API 제공자
+enum Provider {
+  GOOGLE // 구글 로그인
+  APPLE // 애플 로그인
+  KAKAO // 카카오 로그인
+}
+
+enum Field {
+  DEVELOPMENT // 개발
+  MANAGEMENT // 경영
+  MARKETING // 마케팅
+  ADVERTISING // 광고
+  DESIGN // 디자인
+  SALES // 영업
+  CUSTOMER_SERVICE // 고객 서비스
+  RETAIL // 리테일
+  GAME_PRODUCTION // 게임 제작
+  MEDIA // 미디어
+  HUMAN_RESOURCE // 인사
+  ENGINEERING // 엔지니어링 & 설계
+  FINANCE // 금융
+  MANUFACTURING // 제조 & 생산
+  MEDICAL // 의료
+  BIO // 바이오
+  LOGISTICS // 물류
+  TRADE // 무역
+  EDUCATION // 교육
+  LAW // 법률
+  CONSTRUCTION // 건설
+  PUBLIC_WELFARE // 공공 & 복지
+}
+
+// 유저 상세 정보
+model UserInfo {
+  userId   Int       @id @map("user_id") // user 테이블 pfk
+  field    Field? // 직무 분야
+  provider Provider? // 소셜 로그인 API 제공자
+  imageUrl String?   @map("image_url") @db.Text // 이미지 url
+
+  User User @relation(references: [id], fields: [userId], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("user_infos")
+}
+
+// ****************************
+// *********** 온보딩 ***********
+// ****************************
+
+// 회원가입 시 모든 온보딩 처리를 생성합니다.
+model Onboarding {
+  userId Int @id @map("user_id")
+
+  field             Boolean @default(false) // 직무 선택 온보딩
+  experience        Boolean @default(false) // 경험분해 온보딩 여부
+  experienceStepper Boolean @default(false) @map("experience_stepper") // 경험분해 stepper 온보딩 여부
+  resume            Boolean @default(false) // 자기소개서 작성 온보딩 여부
+  collection        Boolean @default(false) // 모아보기 온보딩 여부
+
+  User User @relation(references: [id], fields: [userId], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("onboardings")
+}
+
+// ****************************
+// ********** 자기소개서 *********
+// ****************************
+
+// 자기소개서 제목
+model Resume {
+  id    Int    @id @default(autoincrement())
+  title String @default("새 자기소개서") @db.VarChar(20) // 자기소개서 제목
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz // 자기소개서 제목 생성일자
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz // 자기소개서 제목 수정일자
+
+  userId Int @map("user_id")
+
+  User      User       @relation(references: [id], fields: [userId], onDelete: Cascade, onUpdate: Cascade)
+  Questions Question[]
+
+  @@map("resumes")
+}
+
+// ********************************
+// ********** 자기소개서 문항 *********
+// ********************************
+model Question {
+  id       Int @id @default(autoincrement())
+  resumeId Int @map("resume_id") // 자기소개서 제목 pfk
+
+  title  String? @db.VarChar(300) // 문항 제목
+  answer String? @db.VarChar(2500) // 문항 내용
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz
+
+  Resume Resume @relation(references: [id], fields: [resumeId], onDelete: Cascade, onUpdate: Cascade)
+
+  // @@id([resumeId])
+  @@map("questions")
+}
+
+// ****************************
+// **** AI 추천 자기소개서 ****
+// ****************************
+
+// AI 자기소개서
+model AiResume {
+  id      Int    @id @default(autoincrement())
+  content String @db.VarChar(1000) // AI가 추천해주는 자기소개서 내용
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz // AI 자기소개서 생성 일자
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz // AI 자기소개서 수정 일자
+
+  userId       Int @map("user_id")
+  experienceId Int? @unique @map("experience_id")  // 경험 id
+
+  User                 User                 @relation(references: [id], fields: [userId], onDelete: Cascade)
+  Experience           Experience?          @relation(references: [id], fields: [experienceId], onDelete: SetNull)
+  AiResumeCapabilities AiResumeCapability[]
+
+  @@map("ai_resumes")
+}
+
+// ********************************
+// ****** AI 자기소개서 추천 문항 ******
+// ********************************
+model AiRecommendQuestion {
+  id    Int     @id @default(autoincrement())
+  title String? @db.VarChar(300) // 문항 제목
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz // AI 자기소개서 추천 문항 생성일자
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz // AI 자기소개서 추천 문항 수정일자
+
+  experienceId Int @map("experience_id") // 경험 id
+
+  Experience Experience @relation(references: [id], fields: [experienceId], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("ai_recommend_questions")
+}
+
+// ********************************
+// ******* 경험 in 경험 분해 *********
+// ********************************
+
+// 임시 저장이 있기에 모든 필드는 Nullable입니다.
+model Experience {
+  id Int @id @default(autoincrement()) @map("id") // 경험 id
+
+  title     String?   @db.VarChar(50) // 경험 제목
+  startDate DateTime? @map("start_date") @db.Date // 시작 날짜 type: YYYY-MM
+  endDate   DateTime? @map("end_date") @db.Date // 끝 날짜 type: YYYY-MM
+
+  experienceStatus ExperienceStatus @default(INPROGRESS) @map("experience_status") // 경험 분해 진행 척도 디폴트 inprogress
+
+  situation       String?  @db.VarChar(100) // S: Situation, 계기와 배경
+  task            String?  @db.VarChar(100) // T: Task, 과제 및 목표
+  action          String?  @db.VarChar(100) // A: Action, 행동
+  result          String?  @db.VarChar(100) // R: Result, 결과
+  summaryKeywords String[] @map("summary_keywords") // 요약 키워드 배열
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz // 경험 카드 생성일자
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz // 경험 카드 수정일자
+
+  userId Int @map("user_id")
+
+  User                   User?                  @relation(references: [id], fields: [userId], onDelete: Cascade, onUpdate: Cascade)
+  AiResume               AiResume?
+  ExperienceInfo         ExperienceInfo?
+  Capabilities           Capability[]
+  ExperienceCapabilities ExperienceCapability[]
+  AiRecommendQuestions   AiRecommendQuestion[]
+
+  @@map("experiences")
+}
+
+// 경험 분해 진행 상태
+enum ExperienceStatus {
+  INPROGRESS // 진행중
+  DONE // 끝
+}
+
+// ********************************
+// *********** 경험 정보 ************
+// ********************************
+
+// 경험 카드 상세 정보
+model ExperienceInfo {
+  id Int @default(autoincrement()) @map("experience_info_id")
+
+  experienceRole String? @map("experience_role") @db.VarChar(20) // 경험 나의 역할
+  motivation     String? @db.VarChar(100) // 경험 수행 이유
+  analysis       String? @db.VarChar(250) // AI 분석
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz // 경험 정보 생성일자
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz // 경험 정보 수정일자
+
+  experienceId Int        @id @map("experience_id") // 경험 id
+  Experience   Experience @relation(references: [id], fields: [experienceId], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("experience_infos")
+}
+
+// ********************************
+// ************* 역량 **************
+// ********************************
+
+// 역량 키워드
+model Capability {
+  id           Int         @id @default(autoincrement()) // 역량 id
+  keyword      String      @db.VarChar(10) // 역량 키워드
+  keywordType  KeywordType @map("keyword_type")
+  userId       Int         @map("user_id")
+  experienceId Int?        @map("experience_id")
+
+  User                   User                   @relation(references: [id], fields: [userId], onDelete: Cascade, onUpdate: Cascade)
+  Experience             Experience?            @relation(references: [id], fields: [experienceId], onDelete: SetNull)
+  ExperienceCapabilities ExperienceCapability[]
+  AiResumeCapabilities   AiResumeCapability[]
+
+  @@map("capabilities")
+}
+
+// 역량 키워드 종류
+enum KeywordType {
+  AI // ai 역량 키워드
+  USER // user가 선택한 키워드
+}
+
+// 경험카드에 등록한 유저의 역량 키워드
+model ExperienceCapability {
+  experienceId Int @map("experience_id")
+  capabilityId Int @map("capability_id")
+
+  Experience Experience @relation(references: [id], fields: [experienceId], onDelete: Cascade)
+  Capability Capability @relation(references: [id], fields: [capabilityId], onDelete: Cascade)
+
+  @@id([experienceId, capabilityId])
+  @@map("experience_capabilities")
+}
+
+// AI 자기소개서에 등록한 AI 역량 키워드
+model AiResumeCapability {
+  aiResumeId   Int @map("ai_resume_id")
+  capabilityId Int @map("capability_id")
+
+  AiResume   AiResume   @relation(references: [id], fields: [aiResumeId], onDelete: Cascade)
+  Capability Capability @relation(references: [id], fields: [capabilityId], onDelete: NoAction)
+
+  @@id([aiResumeId, capabilityId])
+  @@map("ai_resume_capabilities")
+}
+
+// *******************************
+// ************ 피드백 *************
+// *******************************
+
+// 피드백
+model Feedback {
+  id       Int    @id @default(autoincrement())
+  contents String @db.VarChar(300)
+
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+
+  @@map("feedbacks")
+}
