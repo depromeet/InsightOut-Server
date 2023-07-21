@@ -205,15 +205,21 @@ export class ExperienceService {
     isCompleted?: boolean,
   ): Promise<GetCountOfExperienceAndCapabilityResponseDto[]> {
     let countOfExperienceAndCapability = await this.capabilityRepository.countExperienceAndCapability(userId, isCompleted);
-    countOfExperienceAndCapability = countOfExperienceAndCapability.filter((experienceAndCapability) => {
-      const validExperienceAndCapability = experienceAndCapability.ExperienceCapabilities.map((ExperienceCapability) =>
-        this.checkExperienceIsValid(ExperienceCapability.Experience),
-      );
-      return validExperienceAndCapability.length > 0 && validExperienceAndCapability;
-    });
+    countOfExperienceAndCapability = countOfExperienceAndCapability
+      .map((experienceAndCapability) => {
+        const validExperienceAndCapability = experienceAndCapability.ExperienceCapabilities.filter((ExperienceCapability) =>
+          this.checkExperienceIsValid(ExperienceCapability.Experience, isCompleted),
+        );
+
+        if (validExperienceAndCapability.length > 0) {
+          experienceAndCapability.ExperienceCapabilities = validExperienceAndCapability;
+          return experienceAndCapability;
+        }
+      })
+      .filter((experienceAndCapability) => experienceAndCapability);
 
     // 전체(경험카드 개수)를 가져오기 위한 count문 만들기 >> ID를 0으로 넣자
-    const totalCountOfCapabilities = countOfExperienceAndCapability.reduce((prev, curr) => prev + curr._count.ExperienceCapabilities, 0);
+    const totalCountOfCapabilities = countOfExperienceAndCapability.reduce((prev, curr) => prev + curr.ExperienceCapabilities.length, 0);
 
     countOfExperienceAndCapability.unshift({
       id: 0,
@@ -275,6 +281,7 @@ export class ExperienceService {
       ExperienceCapabilities: Partial<ExperienceCapability>[];
       AiRecommendQuestions: Partial<AiRecommendQuestion>[];
     },
+    isCompleted = false,
   ) {
     return (
       experience.title &&
@@ -284,7 +291,8 @@ export class ExperienceService {
       experience.result &&
       experience.startDate instanceof Date &&
       experience.endDate instanceof Date &&
-      experience.ExperienceCapabilities.length
+      experience.ExperienceCapabilities.length &&
+      (isCompleted ? experience.experienceStatus === ExperienceStatus.DONE : true)
     );
   }
 }
