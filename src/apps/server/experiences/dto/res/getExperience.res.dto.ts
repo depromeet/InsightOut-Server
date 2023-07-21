@@ -36,8 +36,8 @@ export class GetExperiencesResponseDto {
     this._task = experience.task;
     this._action = experience.action;
     this._result = experience.result;
-    this._startDate = getFormattedDate(experience.startDate);
-    this._endDate = getFormattedDate(experience.endDate);
+    this._startDate = experience.startDate ? getFormattedDate(experience.startDate) : null;
+    this._endDate = experience.endDate ? getFormattedDate(experience.endDate) : null;
     this._experienceStatus = experience.experienceStatus;
     this._summaryKeywords = experience?.summaryKeywords; // AI 요약 키워드
     this._experienceCapabilityKeywords = experience?.ExperienceCapabilities.map(
