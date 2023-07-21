@@ -173,11 +173,8 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
           experience.result &&
           experience.startDate instanceof Date &&
           experience.endDate instanceof Date &&
-          experience.ExperienceInfo.analysis &&
           experience.AiResume &&
-          experience.ExperienceCapabilities.length &&
-          experience.AiRecommendQuestions.length &&
-          experience.summaryKeywords.length
+          experience.ExperienceCapabilities.length
         );
       }
       return true;
