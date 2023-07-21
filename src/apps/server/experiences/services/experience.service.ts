@@ -208,7 +208,6 @@ export class ExperienceService {
       const validExperienceAndCapability = experienceAndCapability.ExperienceCapabilities.filter((ExperienceCapability) =>
         this.checkExperienceIsValid(ExperienceCapability.Experience),
       );
-      console.log(validExperienceAndCapability.length);
       return validExperienceAndCapability.length > 0;
     });
 
