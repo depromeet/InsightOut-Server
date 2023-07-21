@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserJwtToken } from '../../auth/types/jwt-token.type';
-import { AiRecommendQuestion, AiResume, Experience, ExperienceInfo, ExperienceStatus, Prisma } from '@prisma/client';
+import { AiRecommendQuestion, AiResume, Experience, ExperienceCapability, ExperienceInfo, ExperienceStatus, Prisma } from '@prisma/client';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
 import { ExperienceRepository } from '📚libs/modules/database/repositories/experience.repository';
 import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
@@ -204,7 +204,13 @@ export class ExperienceService {
     userId: number,
     isCompleted?: boolean,
   ): Promise<GetCountOfExperienceAndCapabilityResponseDto[]> {
-    const countOfExperienceAndCapability = await this.capabilityRepository.countExperienceAndCapability(userId, isCompleted);
+    let countOfExperienceAndCapability = await this.capabilityRepository.countExperienceAndCapability(userId, isCompleted);
+    countOfExperienceAndCapability = countOfExperienceAndCapability.filter((experienceAndCapability) => {
+      const validExperienceAndCapability = experienceAndCapability.ExperienceCapabilities.filter((ExperienceCapability) =>
+        this.checkExperienceIsValid(ExperienceCapability.Experience),
+      );
+      return validExperienceAndCapability.length > 0;
+    });
 
     // 전체(경험카드 개수)를 가져오기 위한 count문 만들기 >> ID를 0으로 넣자
     const experienceCountByIsCompleted = await this.experienceRepository.getCountByIsCompleted(userId, isCompleted);
@@ -260,5 +266,25 @@ export class ExperienceService {
     const deletedResult = await this.experienceRepository.deleteOneById(param.experienceId);
     // 삭제 시 해당 experience의 값을 반환합니다 해당 id와 삭제하려는 experience id가 같으면 isDeleted를 true를 다르면 false를 반환합니다.
     return deletedResult.id === experinece.id ? new DeleteExperienceResDto(true) : new DeleteExperienceResDto(false);
+  }
+
+  checkExperienceIsValid(
+    experience: Partial<Experience> & {
+      ExperienceInfo: Partial<ExperienceInfo>;
+      AiResume: Partial<AiResume>;
+      ExperienceCapabilities: Partial<ExperienceCapability>[];
+      AiRecommendQuestions: Partial<AiRecommendQuestion>[];
+    },
+  ) {
+    return (
+      experience.title &&
+      experience.situation &&
+      experience.task &&
+      experience.action &&
+      experience.result &&
+      experience.startDate instanceof Date &&
+      experience.endDate instanceof Date &&
+      experience.ExperienceCapabilities.length
+    );
   }
 }
