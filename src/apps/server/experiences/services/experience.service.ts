@@ -206,10 +206,10 @@ export class ExperienceService {
   ): Promise<GetCountOfExperienceAndCapabilityResponseDto[]> {
     let countOfExperienceAndCapability = await this.capabilityRepository.countExperienceAndCapability(userId, isCompleted);
     countOfExperienceAndCapability = countOfExperienceAndCapability.filter((experienceAndCapability) => {
-      const validExperienceAndCapability = experienceAndCapability.ExperienceCapabilities.filter((ExperienceCapability) =>
+      const validExperienceAndCapability = experienceAndCapability.ExperienceCapabilities.map((ExperienceCapability) =>
         this.checkExperienceIsValid(ExperienceCapability.Experience),
       );
-      return validExperienceAndCapability.length > 0;
+      return validExperienceAndCapability.length > 0 && validExperienceAndCapability;
     });
 
     // 전체(경험카드 개수)를 가져오기 위한 count문 만들기 >> ID를 0으로 넣자
