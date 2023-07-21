@@ -3,6 +3,7 @@ import { IsNotEmptyNumber } from '🔥apps/server/common/decorators/validation/i
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsDate, IsNotEmpty, IsString } from 'class-validator';
 import { ExperienceCardType } from '🔥apps/server/experiences/types/experience-card.type';
+import { ExperienceStatus } from '@prisma/client';
 export class AiRecommendQuestionResDto {
   @Exclude() _id: number;
   @Exclude() _title: string;
@@ -64,6 +65,7 @@ export class GetExperienceCardInfoResDto {
   @Exclude() _task: string;
   @Exclude() _action: string;
   @Exclude() _result: string;
+  @Exclude() _experienceStatus: ExperienceStatus;
   @Exclude() _startDate: Date;
   @Exclude() _endDate: Date;
   @Exclude() _ExperienceInfo: { analysis: string };
@@ -79,6 +81,7 @@ export class GetExperienceCardInfoResDto {
     this._action = experienceCardInfo.action;
     this._result = experienceCardInfo.result;
     this._startDate = experienceCardInfo.startDate;
+    this._experienceStatus = experienceCardInfo.experienceStatus;
     this._endDate = experienceCardInfo.endDate;
     this._ExperienceInfo = experienceCardInfo.ExperienceInfo;
     this._ExperienceCapability = experienceCardInfo.ExperienceCapability;
@@ -167,6 +170,12 @@ export class GetExperienceCardInfoResDto {
   @ApiProperty({ example: '2022-07-01T00:00:00.000Z', description: '경험의 마지막 날짜입니다.' })
   get endDate(): Date {
     return this._endDate;
+  }
+
+  @Expose()
+  @ApiProperty({ example: ExperienceStatus.DONE, description: '경험 분해 상태입니다.' })
+  get experienceStatus(): ExperienceStatus {
+    return this._experienceStatus;
   }
 }
 

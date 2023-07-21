@@ -1,4 +1,5 @@
 import { AiRecommendQuestionResDto, AiResumeResDto } from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.res.dto';
+import { ExperienceStatus } from '@prisma/client';
 
 export type ExperienceCardType = {
   title: string;
@@ -8,6 +9,7 @@ export type ExperienceCardType = {
   task: string;
   action: string;
   result: string;
+  experienceStatus: ExperienceStatus;
   summaryKeywords: string[];
   ExperienceInfo: { analysis: string };
   ExperienceCapability: string[];

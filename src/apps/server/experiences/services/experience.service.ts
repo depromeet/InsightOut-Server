@@ -94,6 +94,7 @@ export class ExperienceService {
       task: experience.task,
       action: experience.action,
       result: experience.result,
+      experienceStatus: experience.experienceStatus,
       ExperienceInfo: experience.ExperienceInfo,
       ExperienceCapability: experience.ExperienceCapabilities.map((experienceCapability) => experienceCapability.Capability.keyword),
       AiRecommendQuestion: aiRecommendQuestionResDto,
