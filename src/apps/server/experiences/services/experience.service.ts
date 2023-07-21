@@ -206,19 +206,19 @@ export class ExperienceService {
   ): Promise<GetCountOfExperienceAndCapabilityResponseDto[]> {
     let countOfExperienceAndCapability = await this.capabilityRepository.countExperienceAndCapability(userId, isCompleted);
     countOfExperienceAndCapability = countOfExperienceAndCapability.filter((experienceAndCapability) => {
-      const validExperienceAndCapability = experienceAndCapability.ExperienceCapabilities.filter((ExperienceCapability) =>
+      const validExperienceAndCapability = experienceAndCapability.ExperienceCapabilities.map((ExperienceCapability) =>
         this.checkExperienceIsValid(ExperienceCapability.Experience),
       );
-      return validExperienceAndCapability.length > 0;
+      return validExperienceAndCapability.length > 0 && validExperienceAndCapability;
     });
 
     // 전체(경험카드 개수)를 가져오기 위한 count문 만들기 >> ID를 0으로 넣자
-    const experienceCountByIsCompleted = await this.experienceRepository.getCountByIsCompleted(userId, isCompleted);
+    const totalCountOfCapabilities = countOfExperienceAndCapability.reduce((prev, curr) => prev + curr._count.ExperienceCapabilities, 0);
 
     countOfExperienceAndCapability.unshift({
       id: 0,
       keyword: '전체',
-      _count: { ExperienceCapabilities: experienceCountByIsCompleted },
+      _count: { ExperienceCapabilities: totalCountOfCapabilities },
     } as unknown as CountExperienceAndCapability);
 
     // count가 0인 키워드는 필터링합니다.
