@@ -100,9 +100,23 @@ export class AiService {
     // resume prompt
     const CHOICES_IDX = 0;
     const prompt = generateResumePrompt(body, keywords);
-    const result = await this.openAiService.promptChatGPT(prompt);
-    const resume = result.choices[CHOICES_IDX].message.content as string;
+    let result;
 
+    try {
+      result = await this.openAiService.promptChatGPT(prompt);
+    } catch (error) {
+      await this.processResumePrompt(user, '', body);
+
+      return new PromptResumeResDto('추천된 Ai Resume가 없습니다.');
+    }
+
+    const resume = result.choices[CHOICES_IDX].message.content as string;
+    await this.processResumePrompt(user, resume, body);
+
+    return new PromptResumeResDto(result.choices[CHOICES_IDX].message.content as string);
+  }
+
+  private async processResumePrompt(user: UserJwtToken, resume: string, body: PromptResumeBodyResDto) {
     try {
       await this.prisma.$transaction(
         async (tx) => {
@@ -124,8 +138,6 @@ export class AiService {
       }
       throw error;
     }
-
-    return new PromptResumeResDto(result.choices[CHOICES_IDX].message.content as string);
   }
 
   public async postSummaryPrompt(body: PromptSummaryBodyReqDto, user: UserJwtToken): Promise<GetExperienceCardInfoResDto> {
@@ -178,6 +190,7 @@ export class AiService {
       upsertExperienceReqDto.experienceStatus = ExperienceStatus.DONE;
       const updateInfo = upsertExperienceReqDto.compareProperty(experience);
       await this.experienceService.processUpdateExperience(body.experienceId, updateInfo);
+      return await this.experienceService.getExperienceCardInfo(body.experienceId);
     }
   }
 
