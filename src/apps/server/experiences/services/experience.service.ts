@@ -213,12 +213,12 @@ export class ExperienceService {
     });
 
     // 전체(경험카드 개수)를 가져오기 위한 count문 만들기 >> ID를 0으로 넣자
-    const experienceCountByIsCompleted = await this.experienceRepository.getCountByIsCompleted(userId, isCompleted);
+    const totalCountOfCapabilities = countOfExperienceAndCapability.reduce((prev, curr) => prev + curr._count.ExperienceCapabilities, 0);
 
     countOfExperienceAndCapability.unshift({
       id: 0,
       keyword: '전체',
-      _count: { ExperienceCapabilities: experienceCountByIsCompleted },
+      _count: { ExperienceCapabilities: totalCountOfCapabilities },
     } as unknown as CountExperienceAndCapability);
 
     // count가 0인 키워드는 필터링합니다.
