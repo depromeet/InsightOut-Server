@@ -19,7 +19,13 @@ export class AiResumeRepository implements AiResumeRepositoryInterface {
     }
 
     return await this.prisma.aiResume.findMany({
-      select: { id: true, content: true, updatedAt: true, AiResumeCapabilities: { select: { Capability: { select: { keyword: true } } } } },
+      select: {
+        id: true,
+        content: true,
+        updatedAt: true,
+        experienceId: true,
+        AiResumeCapabilities: { select: { Capability: { select: { keyword: true } } } },
+      },
       where,
     });
   }
