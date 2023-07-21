@@ -166,16 +166,30 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
 
     experiences = experiences.filter((experience) => {
       if (experience.experienceStatus === ExperienceStatus.DONE) {
-        return (
+        let isValidExperience =
           experience.title &&
-          experience.situation &&
-          experience.task &&
-          experience.action &&
-          experience.result &&
           experience.startDate instanceof Date &&
           experience.endDate instanceof Date &&
-          experience.ExperienceCapabilities.length
-        );
+          experience.ExperienceCapabilities.length &&
+          true;
+
+        if (select.situation) {
+          isValidExperience = experience.situation && isValidExperience;
+        }
+
+        if (select.task) {
+          isValidExperience = experience.task && isValidExperience;
+        }
+
+        if (select.action) {
+          isValidExperience = experience.action && isValidExperience;
+        }
+
+        if (select.result) {
+          isValidExperience = experience.result && isValidExperience;
+        }
+
+        return isValidExperience;
       }
       return true;
     });
