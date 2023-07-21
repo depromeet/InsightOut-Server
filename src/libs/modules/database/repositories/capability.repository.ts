@@ -29,7 +29,28 @@ export class CapabilityRepository extends AbstractRepository<
         _count: { select: { ExperienceCapabilities: true } },
         id: true,
         keyword: true,
-        ExperienceCapabilities: { orderBy: { Experience: { createdAt: 'desc' } } },
+        ExperienceCapabilities: {
+          orderBy: { Experience: { createdAt: 'desc' } },
+          select: {
+            Experience: {
+              select: {
+                title: true,
+                situation: true,
+                task: true,
+                action: true,
+                result: true,
+                startDate: true,
+                endDate: true,
+                experienceStatus: true,
+                summaryKeywords: true,
+                ExperienceInfo: true,
+                AiResume: true,
+                AiRecommendQuestions: true,
+                ExperienceCapabilities: true,
+              },
+            },
+          },
+        },
       },
       distinct: 'keyword',
     })) as unknown as CountExperienceAndCapability[];
