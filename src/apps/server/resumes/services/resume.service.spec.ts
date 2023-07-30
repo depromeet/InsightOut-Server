@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Question, Resume } from '@prisma/client';
 import { DatabaseModule } from '📚libs/modules/database/database.module';
 import { ResumeRepository } from '📚libs/modules/database/repositories/resume.repository';
-import { GetOneResumeResponseDto, GetOneResumeWithTitleResponseDto } from '🔥apps/server/resumes/dtos/resumes/get-resume.dto';
+import { GetOneResumeResponseDto, GetOneResumeWithTitleResponseDto } from '\uD83D\uDD25apps/server/resumes/dtos/resumes/getResume.dto';
 import { ResumesService } from '🔥apps/server/resumes/services/resumes.service';
 
 const mockCreatedAt = new Date();

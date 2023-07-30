@@ -1,10 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { QuestionRepository } from '📚libs/modules/database/repositories/question.repository';
 import { ResumeRepository } from '📚libs/modules/database/repositories/resume.repository';
-import { PostQuestionResponseDto } from '../dtos/questions/post-question.dto';
-import { PatchQuestionRequestBodyDto, PatchQuestionResponseDto } from '🔥apps/server/resumes/dtos/questions/patch-question-request.dto';
-import { GetOneQuestionResponseDto } from '🔥apps/server/resumes/dtos/questions/get-question.dto';
-import { PostSpellCheckRequestBodyDto } from '🔥apps/server/resumes/dtos/questions/post-spell-check-request.body.dto';
+import { PostQuestionResponseDto } from '../dtos/questions/postQuestion.dto';
+import { PatchQuestionRequestBodyDto, PatchQuestionResponseDto } from '🔥apps/server/resumes/dtos/questions/patchQuestionRequest.dto';
+import { GetOneQuestionResponseDto } from '🔥apps/server/resumes/dtos/questions/getQuestion.dto';
+import { PostSpellCheckRequestBodyDto } from '🔥apps/server/resumes/dtos/questions/postSpellCheck.body.dto';
 import { SpellCheckResult } from '📚libs/modules/api/api.type';
 import { ApiService } from '📚libs/modules/api/api.service';
 

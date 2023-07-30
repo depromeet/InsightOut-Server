@@ -1,4 +1,4 @@
-import { PaginationOptionsDto } from '📚libs/pagination/pagination-option.dto';
+import { PaginationOptionsDto } from '\uD83D\uDCDAlibs/pagination/paginationOption.dto';
 
 /**
  * ### 정렬 순서

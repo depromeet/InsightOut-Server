@@ -1,23 +1,23 @@
 import { UseGuards, Controller, Query, HttpStatus, Body, Param } from '@nestjs/common';
 import { ApiTags, ApiQuery, ApiParam } from '@nestjs/swagger';
-import { SuccessResponse } from '📚libs/decorators/success-response.dto';
+import { SuccessResponse } from '📚libs/decorators/successResponse.dto';
 
 import { Method } from '📚libs/enums/method.enum';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
-import { UserJwtToken } from '🔥apps/server/auth/types/jwt-token.type';
-import { User } from '🔥apps/server/common/decorators/request/user.decorator';
-import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
-import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
+import { UserJwtToken } from '🔥apps/server/auth/types/jwtToken.type';
+import { User } from '🔥apps/server/common/decorators/req/user.decorator';
+import { Route } from '🔥apps/server/common/decorators/routers/route.decorator';
+import { JwtAuthGuard } from '🔥apps/server/common/guards/jwtAuth.guard';
 import {
   DeleteResumeDescriptionMd,
   DeleteResumeResponseDescriptionMd,
   DeleteResumeSummaryMd,
-} from '🔥apps/server/resumes/docs/resumes/delete-resume.doc';
+} from '🔥apps/server/resumes/docs/resumes/deleteResume.doc';
 import {
   GetCountOfResumeDescriptionMd,
   GetCountOfResumeResponseDescriptionMd,
   GetCountOfResumeSummaryMd,
-} from '🔥apps/server/resumes/docs/resumes/get-count-of-resume.dto';
+} from '🔥apps/server/resumes/docs/resumes/getCountOfResume.dto';
 import {
   GetAllResumeDescriptionMd,
   GetAllResumeResponseDescriptionMd,
@@ -28,28 +28,28 @@ import {
   GetOneResumeDescriptionMd,
   GetOneResumeResponseDescriptionMd,
   GetOneResumeSummaryMd,
-} from '🔥apps/server/resumes/docs/resumes/get-resume.doc';
+} from '🔥apps/server/resumes/docs/resumes/getResume.doc';
 import {
   PatchResumeDescriptionMd,
   PatchResumeResponseDescriptionMd,
   PatchResumeSummaryMd,
-} from '🔥apps/server/resumes/docs/resumes/patch-resume.doc';
+} from '🔥apps/server/resumes/docs/resumes/patchResume.doc';
 import {
   PostResumeDescriptionMd,
   PostResumeResponseDescriptionMd,
   PostResumeSummaryMd,
-} from '🔥apps/server/resumes/docs/resumes/post-resume.doc';
-import { DeleteResumeRequestParamDto } from '🔥apps/server/resumes/dtos/resumes/delete-resume.dto';
-import { GetCountOfResumeResponseDto } from '🔥apps/server/resumes/dtos/resumes/get-count-of-resume.dto';
+} from '🔥apps/server/resumes/docs/resumes/postResume.doc';
+import { DeleteResumeRequestParamDto } from '🔥apps/server/resumes/dtos/resumes/deleteResume.dto';
+import { GetCountOfResumeResponseDto } from '🔥apps/server/resumes/dtos/resumes/getCountOfResume.dto';
 import {
   GetAllResumeRequestQueryDto,
   GetOneResumeRequestParamDto,
   GetOneResumeResponseDto,
   GetOneResumeWithAnswerResponseDto,
   GetOneResumeWithTitleResponseDto,
-} from '🔥apps/server/resumes/dtos/resumes/get-resume.dto';
-import { PatchResumeRequestBodyDto, PatchResumeRequestParamDto } from '🔥apps/server/resumes/dtos/resumes/patch-resume.dto';
-import { PostResumeResponseDto } from '🔥apps/server/resumes/dtos/resumes/post-resume.dto';
+} from '🔥apps/server/resumes/dtos/resumes/getResume.dto';
+import { PatchResumeRequestBodyDto, PatchResumeRequestParamDto } from '🔥apps/server/resumes/dtos/resumes/patchResume.dto';
+import { PostResumeResponseDto } from '🔥apps/server/resumes/dtos/resumes/postResume.dto';
 import { ResumesService } from '🔥apps/server/resumes/services/resumes.service';
 
 @ApiTags('🗂️ 자기소개서 API')

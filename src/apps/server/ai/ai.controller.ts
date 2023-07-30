@@ -14,7 +14,7 @@ import {
   postResumeSummarySuccMd,
   postResumeSummarySummaryMd,
   postSummaryPromptDescriptionMd,
-} from '🔥apps/server/ai/markdown/ai.md';
+} from '🔥apps/server/ai/docs/ai.md';
 import {
   GetAiResumeQueryReqDto,
   PromptAiKeywordBodyReqDto,
@@ -22,26 +22,27 @@ import {
   PromptSummaryBodyReqDto,
 } from '🔥apps/server/ai/dto/req';
 import {
-  GetAiResumeCountResDto,
-  GetAiResumeResDto,
-  PromptKeywordResDto,
+  GetAiResumeCountDto,
+  GetAiResumeDto,
+  PromptKeywordDto,
   PromptResumeBadRequestErrorDto,
   PromptResumeConflictErrorDto,
   PromptResumeKeywordsConflictErrorDto,
   PromptResumeNotFoundErrorDto,
-  PromptResumeResDto,
+  PromptResumeDto,
 } from '🔥apps/server/ai/dto/res';
 import { Body, HttpStatus, Query, UseGuards } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiConflictResponse, ApiNotFoundResponse } from '@nestjs/swagger';
 import { Method } from '📚libs/enums/method.enum';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
 import { AiService } from '🔥apps/server/ai/ai.service';
-import { UserJwtToken } from '🔥apps/server/auth/types/jwt-token.type';
-import { User } from '🔥apps/server/common/decorators/request/user.decorator';
-import { RouteTable } from '🔥apps/server/common/decorators/router/route-table.decorator';
-import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
-import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
-import { GetExperienceCardInfoResDto } from '🔥apps/server/experiences/dto';
+import { UserJwtToken } from '🔥apps/server/auth/types/jwtToken.type';
+import { User } from '🔥apps/server/common/decorators/req/user.decorator';
+
+import { Route } from '🔥apps/server/common/decorators/routers/route.decorator';
+import { JwtAuthGuard } from '🔥apps/server/common/guards/jwtAuth.guard';
+import { GetExperienceCardInfoDto } from '🔥apps/server/experiences/dto';
+import { RouteTable } from '🔥apps/server/common/decorators/routers/routeTable.decorator';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -61,7 +62,7 @@ export class AiController {
     },
     response: {
       code: HttpStatus.OK,
-      type: GetAiResumeResDto,
+      type: GetAiResumeDto,
       description: getAiResumeSuccMd,
     },
     description: getAiResumeDescriptionMd,
@@ -70,7 +71,7 @@ export class AiController {
   public async getAiResume(
     @User() user: UserJwtToken,
     @Query() getAiResumeQueryReqDto?: GetAiResumeQueryReqDto,
-  ): Promise<ResponseEntity<GetAiResumeResDto>> {
+  ): Promise<ResponseEntity<GetAiResumeDto>> {
     const aiResumes = await this.aiService.getAiResumes(user, getAiResumeQueryReqDto);
 
     return ResponseEntity.OK_WITH_DATA(aiResumes);
@@ -83,7 +84,7 @@ export class AiController {
     },
     response: {
       code: HttpStatus.OK,
-      type: GetAiResumeCountResDto,
+      type: GetAiResumeCountDto,
       description: getAiResumeCountSuccMd,
     },
     description: getAiResumeCountDescriptionMd,
@@ -92,7 +93,7 @@ export class AiController {
   public async getAiResumeCount(
     @User() user: UserJwtToken,
     @Query() getAiResumeQueryReqDto?: GetAiResumeQueryReqDto,
-  ): Promise<ResponseEntity<GetAiResumeCountResDto>> {
+  ): Promise<ResponseEntity<GetAiResumeCountDto>> {
     const aiResumes = await this.aiService.getAiResumeCount(user, getAiResumeQueryReqDto);
 
     return ResponseEntity.OK_WITH_DATA(aiResumes);
@@ -109,7 +110,7 @@ export class AiController {
     },
     response: {
       code: HttpStatus.OK,
-      type: PromptKeywordResDto,
+      type: PromptKeywordDto,
       description: postKeywordPromptSuccMd,
     },
     description: postKeywordPromptDescriptionMd,
@@ -118,7 +119,7 @@ export class AiController {
   public async postAiKeywordPrompt(
     @Body() promptKeywordBodyReqDto: PromptAiKeywordBodyReqDto,
     @User() user: UserJwtToken,
-  ): Promise<ResponseEntity<PromptKeywordResDto>> {
+  ): Promise<ResponseEntity<PromptKeywordDto>> {
     await this.aiService.restrictPrompt(user);
     const newAi = await this.aiService.postAiKeywordPrompt(promptKeywordBodyReqDto, user);
 
@@ -144,7 +145,7 @@ export class AiController {
     },
     response: {
       code: HttpStatus.OK,
-      type: PromptResumeResDto,
+      type: PromptResumeDto,
       description: postResumePromptSuccMd,
     },
     description: postResumePromptDescriptionMd,
@@ -153,7 +154,7 @@ export class AiController {
   public async postResumePrompt(
     @Body() promptKeywordBodyReqDto: PromptResumeBodyResDto,
     @User() user: UserJwtToken,
-  ): Promise<ResponseEntity<PromptResumeResDto>> {
+  ): Promise<ResponseEntity<PromptResumeDto>> {
     await this.aiService.restrictPrompt(user);
     const newAi = await this.aiService.postResumePrompt(promptKeywordBodyReqDto, user);
 
@@ -167,7 +168,7 @@ export class AiController {
     },
     response: {
       code: HttpStatus.OK,
-      type: GetExperienceCardInfoResDto,
+      type: GetExperienceCardInfoDto,
       description: postResumeSummarySuccMd,
     },
     description: postSummaryPromptDescriptionMd,
@@ -176,7 +177,7 @@ export class AiController {
   public async postSummaryPrompt(
     @User() user: UserJwtToken,
     @Body() promptSummaryBodyReqDto: PromptSummaryBodyReqDto,
-  ): Promise<ResponseEntity<GetExperienceCardInfoResDto>> {
+  ): Promise<ResponseEntity<GetExperienceCardInfoDto>> {
     await this.aiService.restrictPrompt(user);
     const newAi = await this.aiService.postSummaryPrompt(promptSummaryBodyReqDto, user);
 

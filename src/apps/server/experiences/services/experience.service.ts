@@ -1,24 +1,24 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { UserJwtToken } from '../../auth/types/jwt-token.type';
+import { UserJwtToken } from '../../auth/types/jwtToken.type';
 import { AiRecommendQuestion, AiResume, Experience, ExperienceCapability, ExperienceInfo, ExperienceStatus, Prisma } from '@prisma/client';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
 import { ExperienceRepository } from '📚libs/modules/database/repositories/experience.repository';
 import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
-import { GetExperienceRequestQueryDtoWithPagination } from '🔥apps/server/experiences/dto/req/get-experience.dto';
-import { GetStarFromExperienceResponseDto } from '🔥apps/server/experiences/dto/get-star-from-experience.dto';
-import { ExperienceCardType } from '🔥apps/server/experiences/types/experience-card.type';
+import { GetExperienceRequestQueryDtoWithPagination } from '🔥apps/server/experiences/dto/req/getExperience.dto';
+import { GetStarFromExperienceResponseDto } from '🔥apps/server/experiences/dto/getStarFromExperience.dto';
+import { ExperienceCardType } from '🔥apps/server/experiences/types/experienceCard.type';
 import { PaginationDto } from '📚libs/pagination/pagination.dto';
-import { PaginationMetaDto } from '📚libs/pagination/pagination-meta.dto';
-import { CreateExperienceResDto } from '🔥apps/server/experiences/dto/res/createExperience.res.dto';
+import { PaginationMetaDto } from '📚libs/pagination/paginationMeta.dto';
+import { CreateExperienceDto } from '🔥apps/server/experiences/dto/res/createExperience.dto';
 import { ExperienceIdParamReqDto } from '🔥apps/server/experiences/dto/req/experienceIdParam.dto';
-import { GetExperienceByIdResDto } from '🔥apps/server/experiences/dto/res/getExperienceById.res.dto';
-import { AiResumeRepository } from '📚libs/modules/database/repositories/ai-resume.repository';
-import { GetAiResumeResDto } from '🔥apps/server/experiences/dto/res/getAiResume.res.dto';
+import { GetExperienceByIdDto } from '🔥apps/server/experiences/dto/res/getExperienceById.dto';
+import { AiResumeRepository } from '📚libs/modules/database/repositories/aiResume.repository';
+import { GetAiResumeDto } from '🔥apps/server/experiences/dto/res/getAiResume.dto';
 import {
   AiRecommendQuestionResDto,
   AiResumeResDto,
-  GetExperienceCardInfoResDto,
-} from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.res.dto';
+  GetExperienceCardInfoDto,
+} from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.dto';
 import {
   GetCountOfExperienceAndCapabilityResponseDto,
   GetCountOfExperienceResponseDto,
@@ -26,8 +26,8 @@ import {
   UpdateExperienceReqDto,
   UpdateExperienceResDto,
 } from '🔥apps/server/experiences/dto';
-import { CountExperienceAndCapability } from '🔥apps/server/experiences/types/count-experience-and-capability.type';
-import { DeleteExperienceResDto } from '🔥apps/server/experiences/dto/res/delete-experience.res.dto';
+import { CountExperienceAndCapability } from '🔥apps/server/experiences/types/countExperienceAndCapability.type';
+import { DeleteExperienceDto } from '🔥apps/server/experiences/dto/res/delete-experience.dto';
 
 @Injectable()
 export class ExperienceService {
@@ -38,14 +38,14 @@ export class ExperienceService {
     private readonly aiResumeRepository: AiResumeRepository,
   ) {}
 
-  public async getExperienceById(param: ExperienceIdParamReqDto): Promise<GetExperienceByIdResDto> {
+  public async getExperienceById(param: ExperienceIdParamReqDto): Promise<GetExperienceByIdDto> {
     const experience = await this.experienceRepository.getExperienceById(param.experienceId);
     if (!experience) throw new NotFoundException('해당 ID의 경험카드는 존재하지 않습니다.');
 
-    return new GetExperienceByIdResDto(experience);
+    return new GetExperienceByIdDto(experience);
   }
 
-  public async create(user: UserJwtToken): Promise<CreateExperienceResDto> {
+  public async create(user: UserJwtToken): Promise<CreateExperienceDto> {
     const [experience, experienceInfo] = await this.prisma.$transaction(async (tx) => {
       const experience = await tx.experience.create({
         data: {
@@ -73,10 +73,10 @@ export class ExperienceService {
       return [experience, experienceInfo];
     });
 
-    return new CreateExperienceResDto(experience, experienceInfo);
+    return new CreateExperienceDto(experience, experienceInfo);
   }
 
-  public async getExperienceCardInfo(experienceId: number): Promise<GetExperienceCardInfoResDto> {
+  public async getExperienceCardInfo(experienceId: number): Promise<GetExperienceCardInfoDto> {
     const experience = await this.experienceRepository.getExperienceCardInfo(experienceId);
     if (!experience) throw new NotFoundException('해당 ID의 experience가 없습니다.');
 
@@ -101,15 +101,15 @@ export class ExperienceService {
       AiResume: aiResumeResDto,
     };
 
-    return new GetExperienceCardInfoResDto(result);
+    return new GetExperienceCardInfoDto(result);
   }
 
-  public async getAiResume(param: ExperienceIdParamReqDto, user: UserJwtToken): Promise<GetAiResumeResDto> {
+  public async getAiResume(param: ExperienceIdParamReqDto, user: UserJwtToken): Promise<GetAiResumeDto> {
     const where = <Prisma.AiResumeWhereInput>{ userId: user.userId, experienceId: param.experienceId };
     const aiResume = await this.aiResumeRepository.findOneByFilter(where);
     if (!aiResume) throw new NotFoundException('해당 experienceId로 추천된 AI Resuem가 없습니다.');
 
-    return new GetAiResumeResDto({ id: aiResume.id, content: aiResume.content });
+    return new GetAiResumeDto({ id: aiResume.id, content: aiResume.content });
   }
 
   public async update(body: UpdateExperienceReqDto, query: ExperienceIdParamReqDto, user: UserJwtToken): Promise<UpdateExperienceResDto> {
@@ -264,14 +264,14 @@ export class ExperienceService {
     return getStarFromExperienceResponseDto;
   }
 
-  public async deleteExperience(param: ExperienceIdParamReqDto, user: UserJwtToken): Promise<DeleteExperienceResDto> {
+  public async deleteExperience(param: ExperienceIdParamReqDto, user: UserJwtToken): Promise<DeleteExperienceDto> {
     const experinece = await this.experienceRepository.findOneById(param.experienceId, user.userId);
     if (!experinece) throw new NotFoundException('해당 ID의 경험카드는 존재하지 않습니다.');
 
     // experience가 존재하면 삭제
     const deletedResult = await this.experienceRepository.deleteOneById(param.experienceId);
     // 삭제 시 해당 experience의 값을 반환합니다 해당 id와 삭제하려는 experience id가 같으면 isDeleted를 true를 다르면 false를 반환합니다.
-    return deletedResult.id === experinece.id ? new DeleteExperienceResDto(true) : new DeleteExperienceResDto(false);
+    return deletedResult.id === experinece.id ? new DeleteExperienceDto(true) : new DeleteExperienceDto(false);
   }
 
   checkExperienceIsValid(

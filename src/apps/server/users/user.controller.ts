@@ -2,19 +2,19 @@ import { Body, Controller, HttpStatus, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Method } from '📚libs/enums/method.enum';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
-import { UserJwtToken } from '🔥apps/server/auth/types/jwt-token.type';
-import { User } from '🔥apps/server/common/decorators/request/user.decorator';
-import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
-import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
-import { GetUserDescription, GetUserResponseDescription, GetUserSummary } from '🔥apps/server/users/docs/get-user.doc';
+import { UserJwtToken } from '🔥apps/server/auth/types/jwtToken.type';
+import { User } from '🔥apps/server/common/decorators/req/user.decorator';
+import { Route } from '🔥apps/server/common/decorators/routers/route.decorator';
+import { JwtAuthGuard } from '🔥apps/server/common/guards/jwtAuth.guard';
+import { GetUserDescription, GetUserResponseDescription, GetUserSummary } from '🔥apps/server/users/docs/getUser.doc';
 import {
   PatchUserInfoDescriptionMd,
   PatchUserInfoResponseDescriptionMd,
   PatchUserInfoSummaryMd,
-} from '🔥apps/server/users/docs/patch-user-info.doc';
-import { GetUserResponseDto } from '🔥apps/server/users/dtos/get-user.dto';
-import { PatchUserInfoRequestBodyDto } from '🔥apps/server/users/dtos/patch-user-info.dto';
-import { PostSendFeedbackRequestBodyDto } from '🔥apps/server/users/dtos/post-feedback.dto';
+} from '🔥apps/server/users/docs/patchUserInfo.doc';
+import { GetUserResponseDto } from '🔥apps/server/users/dtos/getUser.dto';
+import { PatchUserInfoRequestBodyDto } from '🔥apps/server/users/dtos/patchUserInfo.dto';
+import { PostSendFeedbackRequestBodyDto } from '🔥apps/server/users/dtos/postFeedback.dto';
 import { UserService } from '🔥apps/server/users/user.service';
 
 @ApiTags('👶🏻 유저 API')
