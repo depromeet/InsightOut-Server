@@ -1,4 +1,4 @@
-import { AiRecommendQuestionResDto, AiResumeResDto } from '\uD83D\uDD25apps/server/experiences/dto/res/getExperienceCardInfo.dto';
+import { AiRecommendQuestionResDto, AiResumeResDto } from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.dto';
 import { ExperienceStatus } from '@prisma/client';
 
 export type ExperienceCardType = {

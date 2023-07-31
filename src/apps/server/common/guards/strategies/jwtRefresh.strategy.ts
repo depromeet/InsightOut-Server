@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Request } from 'express';
 import { AuthService } from '🔥apps/server/auth/auth.service';
-import { UserJwtToken, UserWithRefreshTokenPayload } from '\uD83D\uDD25apps/server/auth/types/jwtToken.type';
+import { UserJwtToken, UserWithRefreshTokenPayload } from '🔥apps/server/auth/types/jwtToken.type';
 import { EnvService } from '📚libs/modules/env/env.service';
 import { EnvEnum } from '📚libs/modules/env/env.enum';
 

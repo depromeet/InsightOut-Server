@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { AiRecommendQuestion, AiResume, Experience, ExperienceInfo, ExperienceStatus, Prisma } from '@prisma/client';
 
-import { PaginationOptionsDto } from '\uD83D\uDCDAlibs/pagination/paginationOption.dto';
+import { PaginationOptionsDto } from '📚libs/pagination/paginationOption.dto';
 import { ExperienceRepositoryInterface } from '🔥apps/server/experiences/interfaces/experienceRepository.interface';
 import { ExperienceSelect } from '🔥apps/server/experiences/interfaces/experienceSelect.interface';
 
