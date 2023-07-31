@@ -39,6 +39,7 @@ import { CapabilityRepository } from '📚libs/modules/database/repositories/cap
 import { removeDuplicatesInArr } from '📚libs/utils/array.util';
 import { GetAiResumeCountResDto } from '🔥apps/server/ai/dto/res/getAiResumeCount.res.dto';
 import { GetExperienceCardInfoResDto } from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.res.dto';
+import { PostAiResumeRequestDto } from '🔥apps/server/ai/dto/req/postAiResume.dto';
 
 @Injectable()
 export class AiService {
@@ -279,5 +280,11 @@ export class AiService {
         await this.redisCheckService.set(String(PROMPT_REDIS_KEY), JSON.stringify(promptCountObj), DAY);
       }
     }
+  }
+
+  public async postAiResume(postAiResumeDto: PostAiResumeRequestDto) {
+    const { capabilities, ...body } = postAiResumeDto;
+    const prompt = generateResumePrompt(body, capabilities);
+    return this.openAiService.getStreamGPTResponse(prompt);
   }
 }
