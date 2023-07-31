@@ -7,7 +7,7 @@ export const generateAiKeywordPrompt = (body: PromptAiKeywordBodyReqDto): string
   return `${keywordPrompt}\n\`\`\`\\nsituation: \`${body.situation}\`\\ntask: \`${body.task}\`\\naction: \`${body.action}\`\\nresult: \`${body.result}\`\\n\`\`\``;
 };
 
-export const generateResumePrompt = (body: PromptResumeBodyResDto, keywords: string[]): string => {
+export const generateResumePrompt = (body: Partial<PromptResumeBodyResDto>, keywords: string[]): string => {
   const resumePrompt = process.env.CHATGPT_RESUME_PROMPT;
   return `${resumePrompt}Situation: ${body.situation}\\n\\nTask: ${body.task}\\n\\nAction: ${body.task}\\n\\nResult: ${body.result}\\n\`\`\`\\n\\nKeywords: ${keywords}"`;
 };
