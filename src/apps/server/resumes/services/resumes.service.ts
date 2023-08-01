@@ -4,12 +4,12 @@ import {
   GetAllResumeRequestQueryDto,
   GetOneResumeResponseDto,
   GetOneResumeWithTitleResponseDto,
-} from '🔥apps/server/resumes/dtos/resumes/get-resume.dto';
-import { PatchResumeRequestBodyDto } from '🔥apps/server/resumes/dtos/resumes/patch-resume.dto';
-import { PostResumeResponseDto } from '🔥apps/server/resumes/dtos/resumes/post-resume.dto';
+} from '🔥apps/server/resumes/dtos/resumes/getResume.dto';
+import { PatchResumeRequestBodyDto } from '🔥apps/server/resumes/dtos/resumes/patchResume.dto';
+import { PostResumeResponseDto } from '🔥apps/server/resumes/dtos/resumes/postResume.dto';
 import { Question, Resume } from '@prisma/client';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
-import { GetCountOfResumeResponseDto } from '🔥apps/server/resumes/dtos/resumes/get-count-of-resume.dto';
+import { GetCountOfResumeResponseDto } from '🔥apps/server/resumes/dtos/resumes/getCountOfResume.dto';
 
 @Injectable()
 export class ResumesService {

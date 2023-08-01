@@ -11,34 +11,35 @@ import {
   KeywordType,
 } from '@prisma/client';
 import { PrismaService } from '📚libs/modules/database/prisma.service';
-import { UserJwtToken } from '🔥apps/server/auth/types/jwt-token.type';
-import { OpenAiService } from '📚libs/modules/open-ai/open-ai.service';
+import { UserJwtToken } from '🔥apps/server/auth/types/jwtToken.type';
+import { OpenAiService } from '📚libs/modules/open-ai/openAi.service';
 import {
   generateAiKeywordPrompt,
   generateRecommendQuestionsPrompt,
   generateResumePrompt,
   generateSummaryKeywordPrompt,
   generateSummaryPrompt,
-} from '🔥apps/server/ai/prompt/keywordPrompt';
-import { PromptKeywordResDto } from '🔥apps/server/ai/dto/res/promptKeyword.res.dto';
-import { PromptResumeResDto } from '🔥apps/server/ai/dto/res/promptResume.res.dto';
-import { PromptResumeBodyResDto } from '🔥apps/server/ai/dto/req/promptResume.req.dto';
-import { PromptSummaryBodyReqDto } from './dto/req/promptSummary.req.dto';
+} from '🔥apps/server/ai/prompts/keywordPrompt';
+import { PromptKeywordDto } from '🔥apps/server/ai/dto/res/promptKeyword.dto';
+import { PromptResumeDto } from '🔥apps/server/ai/dto/res/promptResume.dto';
+import { PromptResumeBodyResDto } from '🔥apps/server/ai/dto/req/promptResume.dto';
+
 import { ExperienceService } from '🔥apps/server/experiences/services/experience.service';
-import { PromptAiKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptAiKeyword.req.dto';
+import { PromptAiKeywordBodyReqDto } from '🔥apps/server/ai/dto/req/promptAiKeyword.dto';
 import { AiResponse } from '📚libs/modules/open-ai/interface/aiResponse.interface';
 import { UpdateExperienceReqDto } from '🔥apps/server/experiences/dto/req/updateExperience.dto';
 import { RedisCacheService } from '📚libs/modules/cache/redis/redis.service';
 import { EnvService } from '📚libs/modules/env/env.service';
 import { EnvEnum } from '📚libs/modules/env/env.enum';
 import { DAY } from '🔥apps/server/common/consts/time.const';
-import { AiResumeRepository } from '📚libs/modules/database/repositories/ai-resume.repository';
-import { GetAiResumeQueryReqDto } from '🔥apps/server/ai/dto/req/getAiResume.req.dto';
-import { AiResumeDto, GetAiResumeResDto } from '🔥apps/server/ai/dto/res/getAiResume.res.dto';
+import { AiResumeRepository } from '📚libs/modules/database/repositories/aiResume.repository';
+import { GetAiResumeQueryReqDto } from '🔥apps/server/ai/dto/req/getAiResume.dto';
+import { AiResumeDto, GetAiResumeDto } from '🔥apps/server/ai/dto/res/getAiResume.dto';
 import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
 import { removeDuplicatesInArr } from '📚libs/utils/array.util';
-import { GetAiResumeCountResDto } from '🔥apps/server/ai/dto/res/getAiResumeCount.res.dto';
-import { GetExperienceCardInfoResDto } from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.res.dto';
+import { GetAiResumeCountDto } from '🔥apps/server/ai/dto/res/getAiResumeCount.dto';
+import { GetExperienceCardInfoDto } from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.dto';
+import { PromptSummaryBodyReqDto } from '🔥apps/server/ai/dto/req';
 
 @Injectable()
 export class AiService {
@@ -52,7 +53,7 @@ export class AiService {
     private readonly capabilityRepository: CapabilityRepository,
   ) {}
 
-  public async postAiKeywordPrompt(body: PromptAiKeywordBodyReqDto, user: UserJwtToken): Promise<PromptKeywordResDto> {
+  public async postAiKeywordPrompt(body: PromptAiKeywordBodyReqDto, user: UserJwtToken): Promise<PromptKeywordDto> {
     await this.validationExperinece(body.experienceId, user.userId);
     const aiCapability = await this.prisma.capability.findFirst({
       where: { experienceId: body.experienceId, keywordType: KeywordType.AI },
@@ -83,10 +84,10 @@ export class AiService {
       );
     });
 
-    return new PromptKeywordResDto(aiCapabilities);
+    return new PromptKeywordDto(aiCapabilities);
   }
 
-  public async postResumePrompt(body: PromptResumeBodyResDto, user: UserJwtToken): Promise<PromptResumeResDto> {
+  public async postResumePrompt(body: PromptResumeBodyResDto, user: UserJwtToken): Promise<PromptResumeDto> {
     const experience = await this.validationExperinece(body.experienceId, user.userId);
     if (experience.AiResume) throw new BadRequestException('해당 experienceId에 추천 AI 자기소개서가 이미 존재합니다.');
     const aiCapabilities = await this.prisma.capability.findMany({
@@ -107,13 +108,13 @@ export class AiService {
     } catch (error) {
       await this.processResumePrompt(user, '', body);
 
-      return new PromptResumeResDto('추천된 Ai Resume가 없습니다.');
+      return new PromptResumeDto('추천된 Ai Resume가 없습니다.');
     }
 
     const resume = result.choices[CHOICES_IDX].message.content as string;
     await this.processResumePrompt(user, resume, body);
 
-    return new PromptResumeResDto(result.choices[CHOICES_IDX].message.content as string);
+    return new PromptResumeDto(result.choices[CHOICES_IDX].message.content as string);
   }
 
   private async processResumePrompt(user: UserJwtToken, resume: string, body: PromptResumeBodyResDto) {
@@ -140,7 +141,7 @@ export class AiService {
     }
   }
 
-  public async postSummaryPrompt(body: PromptSummaryBodyReqDto, user: UserJwtToken): Promise<GetExperienceCardInfoResDto> {
+  public async postSummaryPrompt(body: PromptSummaryBodyReqDto, user: UserJwtToken): Promise<GetExperienceCardInfoDto> {
     const experience = await this.validationExperinece(body.experienceId, user.userId);
     try {
       if (experience.summaryKeywords.length !== 0) throw new ConflictException('이미 요약된 키워드가 있습니다.');
@@ -194,7 +195,7 @@ export class AiService {
     }
   }
 
-  public async getAiResumes(user: UserJwtToken, query?: GetAiResumeQueryReqDto): Promise<GetAiResumeResDto> {
+  public async getAiResumes(user: UserJwtToken, query?: GetAiResumeQueryReqDto): Promise<GetAiResumeDto> {
     // aiResume 가져오기
     const aiResumeArr = await this.aiResumeRepository.getAiResumeByUserId(user.userId, query.aiKeyword);
 
@@ -208,13 +209,13 @@ export class AiService {
     const aiResumeCapabilityArr = await this.capabilityRepository.findAiResumeCapabilities(user.userId);
     const availableKeywords = aiResumeCapabilityArr.map((capability) => capability.keyword);
 
-    return new GetAiResumeResDto(aiResumeResDtoArr, removeDuplicatesInArr<string>(availableKeywords));
+    return new GetAiResumeDto(aiResumeResDtoArr, removeDuplicatesInArr<string>(availableKeywords));
   }
 
-  public async getAiResumeCount(user: UserJwtToken, query?: GetAiResumeQueryReqDto): Promise<GetAiResumeCountResDto> {
+  public async getAiResumeCount(user: UserJwtToken, query?: GetAiResumeQueryReqDto): Promise<GetAiResumeCountDto> {
     const aiResumeCount = await this.aiResumeRepository.getAiResumeCount(user.userId, query.aiKeyword);
 
-    return new GetAiResumeCountResDto(aiResumeCount);
+    return new GetAiResumeCountDto(aiResumeCount);
   }
 
   // ---public done

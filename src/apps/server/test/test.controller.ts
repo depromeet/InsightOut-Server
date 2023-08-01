@@ -2,16 +2,16 @@ import { Body, Controller, HttpStatus, ParseIntPipe, Query, Res } from '@nestjs/
 import { TestService } from './test.service';
 import { Response } from 'express';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
-import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
+import { Route } from '🔥apps/server/common/decorators/routers/route.decorator';
 import { Method } from '📚libs/enums/method.enum';
-import { PostIssueTestTokenRequestBodyDto } from '🔥apps/server/test/dtos/post-issue-test-token.dto';
-import { ApiQuery, ApiTags } from '@nestjs/swagger';
-import { OpenAiService } from '📚libs/modules/open-ai/open-ai.service';
-import { PromptTestBodyReqDto } from '🔥apps/server/test/dtos/prompt-test-body-req.dto';
-import { testApiSuccMd } from '🔥apps/server/test/docs/test-api.md';
+import { PostIssueTestTokenRequestBodyDto } from '🔥apps/server/test/dtos/postIssueTestToken.dto';
+import { ApiTags } from '@nestjs/swagger';
+import { OpenAiService } from '📚libs/modules/open-ai/openAi.service';
+import { PromptTestBodydto } from '🔥apps/server/test/dtos/promptTest.bodydto';
+import { testApiSuccMd } from '🔥apps/server/test/docs/testApi.md';
 import { AuthService } from '🔥apps/server/auth/auth.service';
 import { TokenType } from '📚libs/enums/token.enum';
-import { TimeoutTestRequestQueryDto } from '🔥apps/server/test/dtos/timeout-test.dto';
+import { TimeoutTestRequestQueryDto } from '🔥apps/server/test/dtos/timeoutTest.dto';
 import { SetRequestTimeout } from '🔥apps/server/common/decorators/timeout.decorator';
 import { SECOND } from '🔥apps/server/common/consts/time.const';
 
@@ -63,7 +63,7 @@ export class TestController {
     description: testApiSuccMd,
     summary: '✅ openai 프롬프트 테스트 API',
   })
-  async test(@Body() body: PromptTestBodyReqDto) {
+  async test(@Body() body: PromptTestBodydto) {
     return await this.openAiService.promptChatGPT(body.content);
   }
 

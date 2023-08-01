@@ -5,7 +5,7 @@ import { EnvEnum } from '📚libs/modules/env/env.enum';
 import { EnvService } from '📚libs/modules/env/env.service';
 import { AppModule } from './app.module';
 import cookieParser from 'cookie-parser';
-import { swaggerDescriptionMd } from '🔥apps/server/common/markdowns/swagger-description.markdown';
+import { swaggerDescriptionMd } from '🔥apps/server/common/docs/swaggerDescription.markdown';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

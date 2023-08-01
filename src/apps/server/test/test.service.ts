@@ -6,7 +6,7 @@ import { RedisCacheService } from '📚libs/modules/cache/redis/redis.service';
 import { EnvEnum } from '📚libs/modules/env/env.enum';
 import { EnvService } from '📚libs/modules/env/env.service';
 import { ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } from '🔥apps/server/common/consts/jwt.const';
-import { PostIssueTestTokenRequestBodyDto } from '🔥apps/server/test/dtos/post-issue-test-token.dto';
+import { PostIssueTestTokenRequestBodyDto } from '🔥apps/server/test/dtos/postIssueTestToken.dto';
 
 @Injectable()
 export class TestService {

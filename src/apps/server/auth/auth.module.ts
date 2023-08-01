@@ -4,17 +4,17 @@ import { AuthService } from './auth.service';
 import { RedisCacheModule } from '📚libs/modules/cache/redis/redis.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserRepository } from '📚libs/modules/database/repositories/user.repository';
-import { UserInfoRepository } from '📚libs/modules/database/repositories/user-info.repository';
+import { UserInfoRepository } from '📚libs/modules/database/repositories/userInfo.repository';
 import { ApiModule } from '📚libs/modules/api/api.module';
 
 import { SigninGuard } from '../common/guards/signin.guard';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from '../common/guards/strategies/jwt.strategy';
-import { JwtRefreshStrategy } from '../common/guards/strategies/jwt-refresh.strategy';
+import { JwtRefreshStrategy } from '../common/guards/strategies/jwtRefresh.strategy';
 import { FirebaseModule } from '📚libs/modules/firebase/firebase.module';
 import { ResumeRepository } from '📚libs/modules/database/repositories/resume.repository';
 import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
-import { OnboardingsModule } from '🔥apps/server/onboarding/onboarding.module';
+import { OnboardingsModule } from '🔥apps/server/onboardings/onboarding.module';
 import { EnvService } from '📚libs/modules/env/env.service';
 import { EnvEnum } from '📚libs/modules/env/env.enum';
 
