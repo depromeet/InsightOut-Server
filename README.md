@@ -5,7 +5,7 @@
 ---
 
 <div>
-    <div style='display:flex; justify-content:center; align-items: center;'>
+    <div align='center'>
         <img src='https://github.com/depromeet/InsightOut-Server/assets/83271772/35d596b3-0f14-4f12-9023-b1bd62a1376e' width='30%' />
         <p>
             <strong>자기소개서로 매일 밤 지새우는 취업준비생이신가요?</strong>
@@ -19,68 +19,67 @@
 
 ---
 
-<aside style='text-align:center'>
+<aside align='center'>
 
 <img src='https://github.com/depromeet/InsightOut-Server/assets/83271772/19c9398d-8a1a-47ef-bc36-8df1c502cc27' />
-
 <img src='https://github.com/depromeet/InsightOut-Server/assets/83271772/86d4fd4d-225c-4332-b26f-542db740edbd' />
 
-### 경험분해
+<h3 align='center'>경험분해</h3>
 
-👀 **첫 번째, 내가 가진 경험을 분해해봐요**
-
-1️⃣ 내 **경험을 쉽게 풀어낼 수 있는 문항**들을 제공해요
-2️⃣ **핵심 키워드**들을 선택하고 추가 할 수 있어요
-3️⃣ **S.T.A.R 기법**을 활용해 내 경험을 논리적으로 구조화해봐요
-
+<p align='center'>👀 <strong>첫 번째, 내가 가진 경험을 분해해봐요</strong><br />
+<br />
+1️⃣ 내 <strong>경험을 쉽게 풀어낼 수 있는 문항</strong>들을 제공해요<br />
+2️⃣ <strong>핵심 키워드</strong>들을 선택하고 추가 할 수 있어요<br />
+3️⃣ <strong>S.T.A.R 기법</strong>을 활용해 내 경험을 논리적으로 구조화해봐요<br />
+</p>
 </aside>
 
 ---
 
-<aside style='text-align:center'>
+<aside align='center'>
 
 <img src='https://github.com/depromeet/InsightOut-Server/assets/83271772/edbc8da1-98ab-4b5b-a9d3-ea72b4a96ede' />
 
-### AI 역량 키워드 및 자기소개서 추천
+<h3 align='center'>AI 역량 키워드 및 자기소개서 추천</h3>
 
-👀 **두 번째, AI루모스가 막막한 취준을 도와줘요**
-
-1️⃣ 내 경험을 통해 루모스가 **키워드를 추천**해줘요
-2️⃣ 앞서 작성한 내용을 기반으로 **자기소개서를 생성해줘요**
-3️⃣ 경험을 통해 받을 수 있는 **예상 자기소개서 질문**도 제공해줘요
-
+<p align='center'>👀 <strong>두 번째, AI루모스가 막막한 취준을 도와줘요</strong><br />
+<br />
+1️⃣ 내 경험을 통해 루모스가 <strong>키워드를 추천</strong>해줘요<br />
+2️⃣ 앞서 작성한 내용을 기반으로 <strong>자기소개서를 생성해줘요</strong><br />
+3️⃣ 경험을 통해 받을 수 있는 <strong>예상 자기소개서 질문</strong>도 제공해줘요<br />
+</p>
 </aside>
 
 ---
 
-<aside style='text-align:center'>
+<aside align='center'>
 
 <img src='https://github.com/depromeet/InsightOut-Server/assets/83271772/a0950979-fc38-4142-84c8-24e059f041dc' />
 
-### 모아보기
+<h3 align='center'>모아보기</h3>
 
-👀 **네 번째, 내가 작성한 경험, 자기소개서, AI가 추천해준 자기소개서를 큐레이션 할 수 있어요**
-
-1️⃣ 역량 **키워드 중심**으로 경험카드를 모아볼 수 있어요
-2️⃣ 내가 작성한 **자기소개서들을 확인** 할 수 있어요
-3️⃣ AI 루모스가 추천해준 키워드로 **루모스가 추천하는 자기소개서들**을 모아 볼 수 있어요
-
+<p align='center'>👀 <strong>네 번째, 내가 작성한 경험, 자기소개서, AI가 추천해준 자기소개서를 큐레이션 할 수 있어요</strong><br />
+<br />
+1️⃣ 역량 <strong>키워드 중심</strong>으로 경험카드를 모아볼 수 있어요<br />
+2️⃣ 내가 작성한 <strong>자기소개서들을 확인</strong> 할 수 있어요<br />
+3️⃣ AI 루모스가 추천해준 키워드로 <strong>루모스가 추천하는 자기소개서들</strong>을 모아 볼 수 있어요<br />
+</p>
 </aside>
 
 ---
 
-<aside style='text-align:center'>
+<aside align='center'>
 
 <img src='https://github.com/depromeet/InsightOut-Server/assets/83271772/e57d6cfa-3aa1-4dab-8044-9f36f2943b6b' />
 
-### 자기소개서 작성
+<h3 align='center'>자기소개서 작성</h3>
 
-👀 **세 번째, 생성한 경험 카드를 활용해서 자기소개서를 작성할 수 있어요**
-
-1️⃣ **폴더 형식**으로 자기소개서를 작성하고 관리 할 수 있어요
-2️⃣ 작성 중인 자기소개서의 **맞춤법 검사**도 가능하답니다.
-3️⃣ 작성을 완료한 **경험카드를 참고**하며 자기소개서를 작성할 수 있어요
-
+<p align='center'>👀 <strong>세 번째, 생성한 경험 카드를 활용해서 자기소개서를 작성할 수 있어요</strong><br />
+<br />
+1️⃣ <strong>폴더 형식</strong>으로 자기소개서를 작성하고 관리 할 수 있어요<br />
+2️⃣ 작성 중인 자기소개서의 <strong>맞춤법 검사</strong>도 가능하답니다.<br />
+3️⃣ 작성을 완료한 <strong>경험카드를 참고</strong>하며 자기소개서를 작성할 수 있어요<br />
+</p>
 </aside>
 
 ---
@@ -89,8 +88,10 @@
 <img src='https://github.com/depromeet/InsightOut-Server/assets/83271772/758d1b60-cd1f-4c87-812f-b0fd9193f186'/>
 <br />
 <br />
-자기소개서 작성의 시작을 인사이트 아웃과 함께해요.
+<div align='center'>자기소개서 작성의 시작을 인사이트 아웃과 함께해요.</div>
 </div>
+
+---
 
 ### Insight-out의 서버는 어떻게 구성되었을까요?
 
