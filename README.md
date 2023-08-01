@@ -1,4 +1,23 @@
-# 13기 4팀 백엔드
+<div style='text-align:center'><img src='https://github.com/depromeet/InsightOut-Server/assets/83271772/29424c20-830f-4d22-b1f5-2a10d610cc88' />
+<h3>💫 자기소개서가 막막한 순간, 그 시작을 함께하는 인사이트 아웃</h3>
+</div>
+
+---
+
+<div>
+    <div style='display:flex; justify-content:center; align-items: center;'>
+        <img src='https://github.com/depromeet/InsightOut-Server/assets/83271772/35d596b3-0f14-4f12-9023-b1bd62a1376e' width='30%' />
+        <p>
+            <strong>자기소개서로 매일 밤 지새우는 취업준비생이신가요?</strong>
+            <br />
+            <br />인사이트 아웃에서 경험 분해를 통해 직무역량을 파헤치고
+            <br />나만의 <strong>경험 카드</strong>를 만들어보세요. <strong>AI 역량 키워드 추천</strong>부터
+            <br /><strong>자기소개서 작성</strong>까지, 취업 준비 과정의 고민을 해결해보세요!
+        </p>
+    </div>
+</div>
+
+---
 
 ## 목차
 
