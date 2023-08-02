@@ -1,5 +1,5 @@
-<div style='text-align:center'><img src='https://github.com/depromeet/InsightOut-Server/assets/83271772/29424c20-830f-4d22-b1f5-2a10d610cc88' />
-<h3>💫 자기소개서가 막막한 순간, 그 시작을 함께하는 인사이트 아웃</h3>
+<div align='center'><img src='https://github.com/depromeet/InsightOut-Server/assets/83271772/29424c20-830f-4d22-b1f5-2a10d610cc88' />
+<h3 align='center'>💫 자기소개서가 막막한 순간, 그 시작을 함께하는 인사이트 아웃</h3>
 </div>
 
 ---
