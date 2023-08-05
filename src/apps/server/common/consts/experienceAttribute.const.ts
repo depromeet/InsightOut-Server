@@ -1,4 +1,4 @@
-import { ExperienceSelect } from '🔥apps/server/experiences/interfaces/experienceSelect.interface';
+import { ExperienceSelect } from '@apps/server/experiences/interfaces/experienceSelect.interface';
 
 export const getExperienceAttribute: ExperienceSelect = {
   id: true,

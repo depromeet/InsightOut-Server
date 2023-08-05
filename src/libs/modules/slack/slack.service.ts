@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
+import { WebClient } from '@slack/web-api';
+
 import { ExceptionResponse } from 'src/apps/server/common/exceptions/exception.type';
+
+import { SlackBlockType } from './slack.enum';
 import { EnvEnum } from '../env/env.enum';
 import { EnvService } from '../env/env.service';
-import { WebClient } from '@slack/web-api';
-import { SlackBlockType } from './slack.enum';
 
 @Injectable()
 export class SlackService {

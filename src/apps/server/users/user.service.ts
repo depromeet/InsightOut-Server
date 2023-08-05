@@ -1,9 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { FeedbackRepository } from '📚libs/modules/database/repositories/feedback.repository';
-import { UserRepository } from '📚libs/modules/database/repositories/user.repository';
-import { GetUserResponseDto } from '🔥apps/server/users/dtos/res/getUser.dto';
-import { PostSendFeedbackBodyRequestDto } from '🔥apps/server/users/dtos/req/postFeedback.dto';
-import { PatchUserInfoBodyRequestDto } from '🔥apps/server/users/dtos/req/patchUserInfo.dto';
+
+import { PatchUserInfoBodyRequestDto } from '@apps/server/users/dtos/req/patchUserInfo.dto';
+import { PostSendFeedbackBodyRequestDto } from '@apps/server/users/dtos/req/postFeedback.dto';
+import { GetUserResponseDto } from '@apps/server/users/dtos/res/getUser.dto';
+import { FeedbackRepository } from '@libs/modules/database/repositories/feedback.repository';
+import { UserRepository } from '@libs/modules/database/repositories/user.repository';
 
 @Injectable()
 export class UserService {

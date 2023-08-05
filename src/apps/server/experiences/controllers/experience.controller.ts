@@ -1,20 +1,9 @@
-import * as ExperienceDocs from '../docs/experience.md';
 import { Body, HttpStatus, Param, Query, UseGuards } from '@nestjs/common';
-import { Route } from '🔥apps/server/common/decorators/routers/route.decorator';
-import { RouteTable } from '🔥apps/server/common/decorators/routers/routeTable.decorator';
-import { UpdateExperienceRequestDto } from '../dto/req/updateExperience.dto';
-import { ExperienceService } from '../services/experience.service';
-import { User } from '🔥apps/server/common/decorators/req/user.decorator';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiNotFoundResponse } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../common/guards/jwtAuth.guard';
-import { UserJwtToken } from '../../auth/types/jwtToken.type';
-import {
-  BadRequestErrorResDto,
-  UpdateExperienceInfoNotFoundErrorResDto,
-  UpdateExperienceResDto,
-} from '../dto/res/updateExperienceInfo.dto';
-import { ResponseEntity } from '📚libs/utils/respone.entity';
-import { Method } from '📚libs/enums/method.enum';
+
+import { User } from '@apps/server/common/decorators/req/user.decorator';
+import { Route } from '@apps/server/common/decorators/routers/route.decorator';
+import { RouteTable } from '@apps/server/common/decorators/routers/routeTable.decorator';
 import {
   CreateExperienceDto,
   ExperienceIdParamReqDto,
@@ -26,14 +15,27 @@ import {
   GetExperienceRequestQueryRequestDto,
   GetStarFromExperienceRequestParamDto,
   GetStarFromExperienceResponseDto,
-} from '🔥apps/server/experiences/dto';
-import { GetAiResumeNotFoundException, GetAiResumeResponseDto } from '🔥apps/server/experiences/dto/res/getAiResume.dto';
-import { GetExperienceCardInfoNotFoundErrorResDto } from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.dto';
-import { SuccessResponse } from '📚libs/decorators/successResponse.dto';
-import { PaginationDto } from '📚libs/pagination/pagination.dto';
-import { GetExperienceCardInfoDto } from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.dto';
-import { DeleteExperienceResponseDto } from '🔥apps/server/experiences/dto/res/delete-experience.dto';
-import { GetCountOfExperienceAndCapabilityQueryRequestDto } from '🔥apps/server/experiences/dto/req/getCountOfExperienceAndCapability.dto';
+  UpdateExperienceInfoNotFoundErrorResDto,
+  BadRequestErrorResDto,
+  UpdateExperienceResDto,
+  UpdateExperienceRequestDto,
+} from '@apps/server/experiences/dto';
+import { GetCountOfExperienceAndCapabilityQueryRequestDto } from '@apps/server/experiences/dto/req/getCountOfExperienceAndCapability.dto';
+import { DeleteExperienceResponseDto } from '@apps/server/experiences/dto/res/deleteExperience.dto';
+import { GetAiResumeNotFoundException, GetAiResumeResponseDto } from '@apps/server/experiences/dto/res/getAiResume.dto';
+import {
+  GetExperienceCardInfoNotFoundErrorResDto,
+  GetExperienceCardInfoDto,
+} from '@apps/server/experiences/dto/res/getExperienceCardInfo.dto';
+import { SuccessResponse } from '@libs/decorators/successResponse.dto';
+import { Method } from '@libs/enums/method.enum';
+import { PaginationDto } from '@libs/pagination/pagination.dto';
+import { ResponseEntity } from '@libs/utils/respone.entity';
+
+import { UserJwtToken } from '../../auth/types/jwtToken.type';
+import { JwtAuthGuard } from '../../common/guards/jwtAuth.guard';
+import * as ExperienceDocs from '../docs/experience.md';
+import { ExperienceService } from '../services/experience.service';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)

@@ -4,10 +4,7 @@ import { Redis } from 'ioredis';
 
 @Injectable()
 export class RedisCacheService {
-  constructor(
-    @InjectRedis() private readonly redisClient: Redis,
-    private readonly redisService: RedisService,
-  ) {
+  constructor(@InjectRedis() private readonly redisClient: Redis, private readonly redisService: RedisService) {
     this.redisClient = redisService.getClient();
   }
 

@@ -1,11 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
-import { EnvEnum } from '📚libs/modules/env/env.enum';
-import { EnvService } from '📚libs/modules/env/env.service';
-import { AppModule } from './app.module';
 import cookieParser from 'cookie-parser';
-import { swaggerDescriptionMd } from '🔥apps/server/common/docs/swaggerDescription.markdown';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+
+import { swaggerDescriptionMd } from '@apps/server/common/docs/swaggerDescription.markdown';
+import { EnvEnum } from '@libs/modules/env/env.enum';
+import { EnvService } from '@libs/modules/env/env.service';
+
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

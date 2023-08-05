@@ -1,6 +1,6 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 import { IsBoolean, IsNotEmpty } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
 
 export class DeleteExperienceResponseDto {
   @Exclude() _isDeleted: boolean;

@@ -1,8 +1,9 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
 import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsPositive } from 'class-validator';
-import { PaginationOptionsDto } from '📚libs/pagination/paginationOption.dto';
-import { OrderBy, OrderCriteria } from '📚libs/pagination/pagination.type';
+
+import { OrderBy, OrderCriteria } from '@libs/pagination/pagination.type';
+import { PaginationOptionsDto } from '@libs/pagination/paginationOption.dto';
 
 export class GetExperienceRequestQueryRequestDto extends PaginationOptionsDto {
   @ApiPropertyOptional({

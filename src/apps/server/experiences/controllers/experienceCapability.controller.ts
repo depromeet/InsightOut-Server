@@ -1,25 +1,24 @@
 import { Body, HttpStatus, Param, UseGuards } from '@nestjs/common';
-import { Route } from '🔥apps/server/common/decorators/routers/route.decorator';
-import { RouteTable } from '🔥apps/server/common/decorators/routers/routeTable.decorator';
-import { User } from '🔥apps/server/common/decorators/req/user.decorator';
 import { ApiBearerAuth, ApiConflictResponse, ApiNotFoundResponse } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../common/guards/jwtAuth.guard';
-import { UserJwtToken } from '../../auth/types/jwtToken.type';
-import { ResponseEntity } from '📚libs/utils/respone.entity';
-import { Method } from '📚libs/enums/method.enum';
-import { ExperienceCapabilityService } from '🔥apps/server/experiences/services/experienceCapability.service';
-import { CreateExperienceCapabilitiesdBodyRequestDto } from '🔥apps/server/experiences/dto/req/createExperienceCapabilities.dto';
-import { AddCapabilitydBodyRequestDto } from '🔥apps/server/experiences/dto/req/addCapability.dto';
-import {
-  AddUserCapabilityConflictErrorResDto,
-  AddUserCapabilityResponseDto,
-} from '🔥apps/server/experiences/dto/res/addUserCapability.dto';
-import * as ExperienceDocs from '../docs/experience.md';
+
+import { User } from '@apps/server/common/decorators/req/user.decorator';
+import { Route } from '@apps/server/common/decorators/routers/route.decorator';
+import { RouteTable } from '@apps/server/common/decorators/routers/routeTable.decorator';
+import { AddCapabilitydBodyRequestDto } from '@apps/server/experiences/dto/req/addCapability.dto';
+import { CreateExperienceCapabilitiesdBodyRequestDto } from '@apps/server/experiences/dto/req/createExperienceCapabilities.dto';
+import { ExperienceIdParamReqDto } from '@apps/server/experiences/dto/req/experienceIdParam.dto';
+import { AddUserCapabilityConflictErrorResDto, AddUserCapabilityResponseDto } from '@apps/server/experiences/dto/res/addUserCapability.dto';
 import {
   CreateExperienceCapabilitiesResponseDto,
   CreateExperienceCapabillitiesNotFoundErrorResDto,
-} from '🔥apps/server/experiences/dto/res/createExperienceCapabilities.dto';
-import { ExperienceIdParamReqDto } from '🔥apps/server/experiences/dto/req/experienceIdParam.dto';
+} from '@apps/server/experiences/dto/res/createExperienceCapabilities.dto';
+import { ExperienceCapabilityService } from '@apps/server/experiences/services/experienceCapability.service';
+import { Method } from '@libs/enums/method.enum';
+import { ResponseEntity } from '@libs/utils/respone.entity';
+
+import { UserJwtToken } from '../../auth/types/jwtToken.type';
+import { JwtAuthGuard } from '../../common/guards/jwtAuth.guard';
+import * as ExperienceDocs from '../docs/experience.md';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)

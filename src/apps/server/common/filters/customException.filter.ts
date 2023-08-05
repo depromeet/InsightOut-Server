@@ -1,10 +1,12 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, InternalServerErrorException } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
-import { LogService } from '📚libs/modules/log/log.service';
+import { Prisma } from '@prisma/client';
+
+import { LogService } from '@libs/modules/log/log.service';
+import { SlackService } from '@libs/modules/slack/slack.service';
+
 import { BaseException } from '../exceptions/base.exception';
 import { UnknownException } from '../exceptions/unknown.exception';
-import { SlackService } from '📚libs/modules/slack/slack.service';
-import { Prisma } from '@prisma/client';
 
 @Catch()
 export class CustomExceptionFilter implements ExceptionFilter {

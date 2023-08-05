@@ -1,8 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Onboarding } from '@prisma/client';
-import { OnboardingRepository } from '📚libs/modules/database/repositories/onboarding.repository';
-import { PatchOnboardingResponseDto } from '🔥apps/server/onboardings/dtos/req/patchOnboarding.dto';
-import { GetAllOnboardingsResponseDto } from '🔥apps/server/onboardings/dtos/res/getOnboarding.dto';
+
+import { PatchOnboardingResponseDto } from '@apps/server/onboardings/dtos/req/patchOnboarding.dto';
+import { GetAllOnboardingsResponseDto } from '@apps/server/onboardings/dtos/res/getOnboarding.dto';
+import { OnboardingRepository } from '@libs/modules/database/repositories/onboarding.repository';
 
 @Injectable()
 export class OnboardingsService {

@@ -1,6 +1,6 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose, Type } from 'class-transformer';
 import { ArrayMaxSize, ArrayMinSize, IsArray, IsDate, IsInt, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
 
 export class AiResumeResponseDto {
   @Exclude() _id: number;

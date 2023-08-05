@@ -10,36 +10,36 @@ import {
   Prisma,
   KeywordType,
 } from '@prisma/client';
-import { PrismaService } from '📚libs/modules/database/prisma.service';
-import { UserJwtToken } from '🔥apps/server/auth/types/jwtToken.type';
-import { OpenAiService } from '📚libs/modules/open-ai/openAi.service';
+
+import { PromptSummaryBodyRequestDto } from '@apps/server/ai/dto/req';
+import { GetAiResumeQueryRequestDto } from '@apps/server/ai/dto/req/getAiResume.dto';
+import { PromptAiKeywordRequestDto } from '@apps/server/ai/dto/req/promptAiKeyword.dto';
+import { PromptResumeBodyRequestDto } from '@apps/server/ai/dto/req/promptResume.dto';
+import { GetAiResumeCountResponseDto } from '@apps/server/ai/dto/res';
+import { AiResumeResponseDto, GetAiResumeDto } from '@apps/server/ai/dto/res/getAiResume.dto';
+import { PromptKeywordResponseDto } from '@apps/server/ai/dto/res/promptKeyword.dto';
+import { PromptResumeResponseDto } from '@apps/server/ai/dto/res/promptResume.dto';
 import {
   generateAiKeywordPrompt,
   generateRecommendQuestionsPrompt,
   generateResumePrompt,
   generateSummaryKeywordPrompt,
   generateSummaryPrompt,
-} from '🔥apps/server/ai/prompts/keywordPrompt';
-import { PromptKeywordResponseDto } from '🔥apps/server/ai/dto/res/promptKeyword.dto';
-import { PromptResumeResponseDto } from '🔥apps/server/ai/dto/res/promptResume.dto';
-import { PromptResumeBodyRequestDto } from '🔥apps/server/ai/dto/req/promptResume.dto';
-
-import { ExperienceService } from '🔥apps/server/experiences/services/experience.service';
-import { PromptAiKeywordRequestDto } from '🔥apps/server/ai/dto/req/promptAiKeyword.dto';
-import { AiResponse } from '📚libs/modules/open-ai/interface/aiResponse.interface';
-import { UpdateExperienceRequestDto } from '🔥apps/server/experiences/dto/req/updateExperience.dto';
-import { RedisCacheService } from '📚libs/modules/cache/redis/redis.service';
-import { EnvService } from '📚libs/modules/env/env.service';
-import { EnvEnum } from '📚libs/modules/env/env.enum';
-import { DAY } from '🔥apps/server/common/consts/time.const';
-import { AiResumeRepository } from '📚libs/modules/database/repositories/aiResume.repository';
-import { GetAiResumeQueryRequestDto } from '🔥apps/server/ai/dto/req/getAiResume.dto';
-import { AiResumeResponseDto, GetAiResumeDto } from '🔥apps/server/ai/dto/res/getAiResume.dto';
-import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
-import { removeDuplicatesInArr } from '📚libs/utils/array.util';
-import { GetExperienceCardInfoDto } from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.dto';
-import { PromptSummaryBodyRequestDto } from '🔥apps/server/ai/dto/req';
-import { GetAiResumeCountResponseDto } from '🔥apps/server/ai/dto/res';
+} from '@apps/server/ai/prompts/keywordPrompt';
+import { UserJwtToken } from '@apps/server/auth/types/jwtToken.type';
+import { DAY } from '@apps/server/common/consts/time.const';
+import { UpdateExperienceRequestDto } from '@apps/server/experiences/dto/req/updateExperience.dto';
+import { GetExperienceCardInfoDto } from '@apps/server/experiences/dto/res/getExperienceCardInfo.dto';
+import { ExperienceService } from '@apps/server/experiences/services/experience.service';
+import { RedisCacheService } from '@libs/modules/cache/redis/redis.service';
+import { PrismaService } from '@libs/modules/database/prisma.service';
+import { EnvEnum } from '@libs/modules/env/env.enum';
+import { EnvService } from '@libs/modules/env/env.service';
+import { AiResponse } from '@libs/modules/open-ai/interface/aiResponse.interface';
+import { OpenAiService } from '@libs/modules/open-ai/openAi.service';
+import { AiResumeRepository } from '@libs/modules/database/repositories/aiResume.repository';
+import { CapabilityRepository } from '@libs/modules/database/repositories/capability.repository';
+import { removeDuplicatesInArr } from '@libs/utils/array.util';
 
 @Injectable()
 export class AiService {

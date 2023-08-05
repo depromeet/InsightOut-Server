@@ -1,33 +1,35 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { UserJwtToken } from '../../auth/types/jwtToken.type';
 import { AiRecommendQuestion, AiResume, Experience, ExperienceCapability, ExperienceInfo, ExperienceStatus, Prisma } from '@prisma/client';
-import { PrismaService } from '📚libs/modules/database/prisma.service';
-import { ExperienceRepository } from '📚libs/modules/database/repositories/experience.repository';
-import { CapabilityRepository } from '📚libs/modules/database/repositories/capability.repository';
-import { GetExperienceRequestQueryDtoWithPagination } from '🔥apps/server/experiences/dto/req/getExperience.dto';
-import { GetStarFromExperienceResponseDto } from '🔥apps/server/experiences/dto/req/getStarFromExperience.dto';
-import { ExperienceCardType } from '🔥apps/server/experiences/types/experienceCard.type';
-import { PaginationDto } from '📚libs/pagination/pagination.dto';
-import { PaginationMetaDto } from '📚libs/pagination/paginationMeta.dto';
-import { CreateExperienceDto } from '🔥apps/server/experiences/dto/res/createExperience.dto';
-import { ExperienceIdParamReqDto } from '🔥apps/server/experiences/dto/req/experienceIdParam.dto';
-import { GetExperienceByIdDto } from '🔥apps/server/experiences/dto/res/getExperienceById.dto';
-import { AiResumeRepository } from '📚libs/modules/database/repositories/aiResume.repository';
-import { GetAiResumeResponseDto } from '🔥apps/server/experiences/dto/res/getAiResume.dto';
-import {
-  AiRecommendQuestionResponseDto,
-  AiResumeResDto,
-  GetExperienceCardInfoDto,
-} from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.dto';
+
 import {
   GetCountOfExperienceAndCapabilityResponseDto,
   GetCountOfExperienceResponseDto,
   GetExperiencesResponseDto,
   UpdateExperienceRequestDto,
   UpdateExperienceResDto,
-} from '🔥apps/server/experiences/dto';
-import { CountExperienceAndCapability } from '🔥apps/server/experiences/types/countExperienceAndCapability.type';
-import { DeleteExperienceResponseDto } from '🔥apps/server/experiences/dto/res/delete-experience.dto';
+} from '@apps/server/experiences/dto';
+import { ExperienceIdParamReqDto } from '@apps/server/experiences/dto/req/experienceIdParam.dto';
+import { GetExperienceRequestQueryDtoWithPagination } from '@apps/server/experiences/dto/req/getExperience.dto';
+import { GetStarFromExperienceResponseDto } from '@apps/server/experiences/dto/req/getStarFromExperience.dto';
+import { CreateExperienceDto } from '@apps/server/experiences/dto/res/createExperience.dto';
+import { DeleteExperienceResponseDto } from '@apps/server/experiences/dto/res/deleteExperience.dto';
+import { GetAiResumeResponseDto } from '@apps/server/experiences/dto/res/getAiResume.dto';
+import { GetExperienceByIdDto } from '@apps/server/experiences/dto/res/getExperienceById.dto';
+import {
+  AiRecommendQuestionResponseDto,
+  AiResumeResDto,
+  GetExperienceCardInfoDto,
+} from '@apps/server/experiences/dto/res/getExperienceCardInfo.dto';
+import { CountExperienceAndCapability } from '@apps/server/experiences/types/countExperienceAndCapability.type';
+import { ExperienceCardType } from '@apps/server/experiences/types/experienceCard.type';
+import { PrismaService } from '@libs/modules/database/prisma.service';
+import { AiResumeRepository } from '@libs/modules/database/repositories/aiResume.repository';
+import { CapabilityRepository } from '@libs/modules/database/repositories/capability.repository';
+import { ExperienceRepository } from '@libs/modules/database/repositories/experience.repository';
+import { PaginationDto } from '@libs/pagination/pagination.dto';
+import { PaginationMetaDto } from '@libs/pagination/paginationMeta.dto';
+
+import { UserJwtToken } from '../../auth/types/jwtToken.type';
 
 @Injectable()
 export class ExperienceService {

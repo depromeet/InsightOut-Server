@@ -1,9 +1,11 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
-import { byLength, parseJSON, parseJSONFromDaum, split } from '../../utils/hanspell.function';
+
+import { NICKNAME_ADJECTIVE, NICKNAME_NOUN } from '@libs/modules/api/data/nickname_word.data';
+
 import { SpellCheckResult } from './api.type';
-import { NICKNAME_ADJECTIVE, NICKNAME_NOUN } from '📚libs/modules/api/data/nickname_word.data';
+import { byLength, parseJSON, parseJSONFromDaum, split } from '../../utils/hanspell.function';
 
 @Injectable()
 export class ApiService {

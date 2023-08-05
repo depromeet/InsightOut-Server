@@ -10,11 +10,7 @@ type RouterProps = {
 };
 
 export const RouteTable = ({ path = '', tag }: RouterProps) => {
-  const conditionDecorator: (
-    | ClassDecorator
-    | MethodDecorator
-    | PropertyDecorator
-  )[] = [];
+  const conditionDecorator: (ClassDecorator | MethodDecorator | PropertyDecorator)[] = [];
 
   return applyDecorators(
     ...conditionDecorator,

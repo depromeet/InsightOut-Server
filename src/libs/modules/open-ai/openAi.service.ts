@@ -1,11 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { EnvService } from '📚libs/modules/env/env.service';
-import { EnvEnum } from '📚libs/modules/env/env.enum';
 import { HttpService } from '@nestjs/axios';
+import { Injectable } from '@nestjs/common';
 import { catchError, firstValueFrom } from 'rxjs';
-import { openAIModelEnum } from '📚libs/modules/open-ai/openAIModel.enum';
-import { AiResponse } from '📚libs/modules/open-ai/interface/aiResponse.interface';
-import { MINUTES } from '🔥apps/server/common/consts/time.const';
+
+import { MINUTES } from '@apps/server/common/consts/time.const';
+import { EnvEnum } from '@libs/modules/env/env.enum';
+import { EnvService } from '@libs/modules/env/env.service';
+import { AiResponse } from '@libs/modules/open-ai/interface/aiResponse.interface';
+import { openAIModelEnum } from '@libs/modules/open-ai/openAIModel.enum';
 
 @Injectable()
 export class OpenAiService {

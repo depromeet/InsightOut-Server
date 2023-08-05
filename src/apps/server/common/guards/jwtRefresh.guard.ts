@@ -1,9 +1,10 @@
 import { ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
-import { TokenType } from '📚libs/enums/token.enum';
-import { NoAuthTokenException } from '🔥apps/server/common/exceptions/noToken.exception';
-import { TokenExpiredException } from '🔥apps/server/common/exceptions/tokenExpired.exception';
+
+import { NoAuthTokenException } from '@apps/server/common/exceptions/noToken.exception';
+import { TokenExpiredException } from '@apps/server/common/exceptions/tokenExpired.exception';
+import { TokenType } from '@libs/enums/token.enum';
 
 @Injectable()
 export class JwtRefreshGuard extends AuthGuard('refresh') {

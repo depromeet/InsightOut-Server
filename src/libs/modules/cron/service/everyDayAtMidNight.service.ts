@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { RedisCacheService } from '📚libs/modules/cache/redis/redis.service';
-import { EnvService } from '📚libs/modules/env/env.service';
-import { EnvEnum } from '📚libs/modules/env/env.enum';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import AbstractCronJob from '📚libs/modules/cron/cron.abstract';
-import { CronJobTypeEnum } from '📚libs/modules/cron/enum/cron.enum';
+
+import { RedisCacheService } from '@libs/modules/cache/redis/redis.service';
+import AbstractCronJob from '@libs/modules/cron/cron.abstract';
+import { CronJobTypeEnum } from '@libs/modules/cron/enum/cron.enum';
+import { EnvEnum } from '@libs/modules/env/env.enum';
+import { EnvService } from '@libs/modules/env/env.service';
 
 /**
  * 매일 자정에 이루어질 로직은 해당 부분에 구현하시면 됩니다.

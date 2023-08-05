@@ -1,6 +1,6 @@
-import { PromptResumeBodyRequestDto } from '🔥apps/server/ai/dto/req/promptResume.dto';
-import { PromptSummaryBodyRequestDto } from '🔥apps/server/ai/dto/req/promptSummary.dto';
-import { PromptAiKeywordRequestDto } from '🔥apps/server/ai/dto/req/promptAiKeyword.dto';
+import { PromptAiKeywordRequestDto } from '@apps/server/ai/dto/req/promptAiKeyword.dto';
+import { PromptResumeBodyRequestDto } from '@apps/server/ai/dto/req/promptResume.dto';
+import { PromptSummaryBodyRequestDto } from '@apps/server/ai/dto/req/promptSummary.dto';
 
 export const generateAiKeywordPrompt = (body: PromptAiKeywordRequestDto): string => {
   const keywordPrompt = process.env.CHATGPT_AI_KEYWORD_PROMPT;

@@ -1,9 +1,11 @@
-import { Exclude, Expose } from 'class-transformer';
-import { IsNotEmptyNumber } from '🔥apps/server/common/decorators/validations/isCustomNumber.decorator';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsDate, IsNotEmpty, IsString } from 'class-validator';
-import { ExperienceCardType } from '🔥apps/server/experiences/types/experienceCard.type';
 import { ExperienceStatus } from '@prisma/client';
+import { Exclude, Expose } from 'class-transformer';
+import { IsArray, IsDate, IsNotEmpty, IsString } from 'class-validator';
+
+import { IsNotEmptyNumber } from '@apps/server/common/decorators/validations/isCustomNumber.decorator';
+import { ExperienceCardType } from '@apps/server/experiences/types/experienceCard.type';
+
 export class AiRecommendQuestionResponseDto {
   @Exclude() _id: number;
   @Exclude() _title: string;

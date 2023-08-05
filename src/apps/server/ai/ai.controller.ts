@@ -1,10 +1,14 @@
-import * as AiDocs from '🔥apps/server/ai/docs/ai.md';
+import { Body, HttpStatus, Query, UseGuards } from '@nestjs/common';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiConflictResponse, ApiNotFoundResponse } from '@nestjs/swagger';
+
+import { AiService } from '@apps/server/ai/ai.service';
+import * as AiDocs from '@apps/server/ai/docs/ai.md';
 import {
   GetAiResumeQueryRequestDto,
   PromptAiKeywordRequestDto,
   PromptResumeBodyRequestDto,
   PromptSummaryBodyRequestDto,
-} from '🔥apps/server/ai/dto/req';
+} from '@apps/server/ai/dto/req';
 import {
   GetAiResumeCountResponseDto,
   GetAiResumeDto,
@@ -14,19 +18,15 @@ import {
   PromptResumeKeywordsConflictErrorDto,
   PromptResumeNotFoundErrorDto,
   PromptResumeResponseDto,
-} from '🔥apps/server/ai/dto/res';
-import { Body, HttpStatus, Query, UseGuards } from '@nestjs/common';
-import { ApiBadRequestResponse, ApiBearerAuth, ApiConflictResponse, ApiNotFoundResponse } from '@nestjs/swagger';
-import { Method } from '📚libs/enums/method.enum';
-import { ResponseEntity } from '📚libs/utils/respone.entity';
-import { AiService } from '🔥apps/server/ai/ai.service';
-import { UserJwtToken } from '🔥apps/server/auth/types/jwtToken.type';
-import { User } from '🔥apps/server/common/decorators/req/user.decorator';
-
-import { Route } from '🔥apps/server/common/decorators/routers/route.decorator';
-import { JwtAuthGuard } from '🔥apps/server/common/guards/jwtAuth.guard';
-import { GetExperienceCardInfoDto } from '🔥apps/server/experiences/dto';
-import { RouteTable } from '🔥apps/server/common/decorators/routers/routeTable.decorator';
+} from '@apps/server/ai/dto/res';
+import { UserJwtToken } from '@apps/server/auth/types/jwtToken.type';
+import { User } from '@apps/server/common/decorators/req/user.decorator';
+import { Route } from '@apps/server/common/decorators/routers/route.decorator';
+import { RouteTable } from '@apps/server/common/decorators/routers/routeTable.decorator';
+import { JwtAuthGuard } from '@apps/server/common/guards/jwtAuth.guard';
+import { GetExperienceCardInfoDto } from '@apps/server/experiences/dto';
+import { Method } from '@libs/enums/method.enum';
+import { ResponseEntity } from '@libs/utils/respone.entity';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)

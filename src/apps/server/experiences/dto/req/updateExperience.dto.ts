@@ -1,8 +1,9 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
 import { IsEnum, IsOptional, Matches } from 'class-validator';
-import { dateValidation } from '🔥apps/server/common/consts/dateValidation.const';
-import { IsOptionalString } from '🔥apps/server/common/decorators/validations/isCustomString.decorator';
+
+import { dateValidation } from '@apps/server/common/consts/dateValidation.const';
+import { IsOptionalString } from '@apps/server/common/decorators/validations/isCustomString.decorator';
 
 export class UpdateExperienceRequestDto {
   @ApiPropertyOptional({ example: '00직무 디자인 인턴' })

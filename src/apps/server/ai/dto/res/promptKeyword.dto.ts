@@ -1,7 +1,7 @@
-import { Exclude, Expose, Type } from 'class-transformer';
-import { ArrayMaxSize, IsArray, IsNotEmpty, IsNumber, IsString, ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Capability } from '@prisma/client';
+import { Exclude, Expose, Type } from 'class-transformer';
+import { ArrayMaxSize, IsArray, IsNotEmpty, IsNumber, IsString, ValidateNested } from 'class-validator';
 
 class Keyword {
   @IsNumber()

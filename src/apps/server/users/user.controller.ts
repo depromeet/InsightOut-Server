@@ -1,21 +1,22 @@
 import { Body, Controller, HttpStatus, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Method } from '📚libs/enums/method.enum';
-import { ResponseEntity } from '📚libs/utils/respone.entity';
-import { UserJwtToken } from '🔥apps/server/auth/types/jwtToken.type';
-import { User } from '🔥apps/server/common/decorators/req/user.decorator';
-import { Route } from '🔥apps/server/common/decorators/routers/route.decorator';
-import { JwtAuthGuard } from '🔥apps/server/common/guards/jwtAuth.guard';
-import { GetUserDescription, GetUserResponseDescription, GetUserSummary } from '🔥apps/server/users/docs/getUser.doc';
+
+import { UserJwtToken } from '@apps/server/auth/types/jwtToken.type';
+import { User } from '@apps/server/common/decorators/req/user.decorator';
+import { Route } from '@apps/server/common/decorators/routers/route.decorator';
+import { JwtAuthGuard } from '@apps/server/common/guards/jwtAuth.guard';
+import { GetUserDescription, GetUserResponseDescription, GetUserSummary } from '@apps/server/users/docs/getUser.doc';
 import {
   PatchUserInfoDescriptionMd,
   PatchUserInfoResponseDescriptionMd,
   PatchUserInfoSummaryMd,
-} from '🔥apps/server/users/docs/patchUserInfo.doc';
-import { GetUserResponseDto } from '🔥apps/server/users/dtos/res/getUser.dto';
-import { PatchUserInfoBodyRequestDto } from '🔥apps/server/users/dtos/req/patchUserInfo.dto';
-import { PostSendFeedbackBodyRequestDto } from '🔥apps/server/users/dtos/req/postFeedback.dto';
-import { UserService } from '🔥apps/server/users/user.service';
+} from '@apps/server/users/docs/patchUserInfo.doc';
+import { PatchUserInfoBodyRequestDto } from '@apps/server/users/dtos/req/patchUserInfo.dto';
+import { PostSendFeedbackBodyRequestDto } from '@apps/server/users/dtos/req/postFeedback.dto';
+import { GetUserResponseDto } from '@apps/server/users/dtos/res/getUser.dto';
+import { UserService } from '@apps/server/users/user.service';
+import { Method } from '@libs/enums/method.enum';
+import { ResponseEntity } from '@libs/utils/respone.entity';
 
 @ApiTags('👶🏻 유저 API')
 @Controller('users')

@@ -1,15 +1,16 @@
-import { ResumeRepository } from '📚libs/modules/database/repositories/resume.repository';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Question, Resume } from '@prisma/client';
-import { PrismaService } from '📚libs/modules/database/prisma.service';
+
 import {
   GetAllResumeRequestQueryDto,
   GetOneResumeResponseDto,
   GetOneResumeWithTitleResponseDto,
-} from '🔥apps/server/resumes/dtos/resumes/req/getResume.dto';
-import { GetCountOfResumeResponseDto } from '🔥apps/server/resumes/dtos/resumes/res/getCountOfResume.dto';
-import { PatchResumeBodyRequestDto } from '🔥apps/server/resumes/dtos/resumes/req/patchResume.dto';
-import { PostResumeResponseDto } from '🔥apps/server/resumes/dtos/resumes/req/postResume.dto';
+} from '@apps/server/resumes/dtos/resumes/req/getResume.dto';
+import { PatchResumeBodyRequestDto } from '@apps/server/resumes/dtos/resumes/req/patchResume.dto';
+import { PostResumeResponseDto } from '@apps/server/resumes/dtos/resumes/req/postResume.dto';
+import { GetCountOfResumeResponseDto } from '@apps/server/resumes/dtos/resumes/res/getCountOfResume.dto';
+import { PrismaService } from '@libs/modules/database/prisma.service';
+import { ResumeRepository } from '@libs/modules/database/repositories/resume.repository';
 
 @Injectable()
 export class ResumesService {

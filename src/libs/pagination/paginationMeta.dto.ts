@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { PaginationMetaDtoParameters } from '📚libs/pagination/pagination.type';
+
+import { PaginationMetaDtoParameters } from '@libs/pagination/pagination.type';
 
 /**
  * ### 페이지네이션 메타데이터
