@@ -6,17 +6,7 @@ import { UserJwtToken } from '🔥apps/server/auth/types/jwtToken.type';
 import { User } from '🔥apps/server/common/decorators/req/user.decorator';
 import { Route } from '🔥apps/server/common/decorators/routers/route.decorator';
 import { JwtAuthGuard } from '🔥apps/server/common/guards/jwtAuth.guard';
-import {
-  GetOnboardingSummaryMd,
-  GetOnboardingDescriptionMd,
-  GetOnBoardingResponseDescription,
-} from '🔥apps/server/onboardings/docs/getOnboarding.doc';
-import {
-  PatchOnboardingDescriptionMd,
-  PatchOnboardingResponseDescriptionMd,
-  PatchOnboardingSummaryMd,
-} from '🔥apps/server/onboardings/docs/patchOnboarding.doc';
-
+import * as OnboardingDocs from './docs/onboarding.doc';
 import { OnboardingsService } from '🔥apps/server/onboardings/onboarding.service';
 import { GetAllOnboardingsResponseDto } from '🔥apps/server/onboardings/dtos/res/getOnboarding.dto';
 import { PatchOnboardingRequestBodyDto, PatchOnboardingResponseDto } from '🔥apps/server/onboardings/dtos/req/patchOnboarding.dto';
@@ -34,11 +24,11 @@ export class OnboardingsController {
     },
     response: {
       code: HttpStatus.OK,
-      description: GetOnBoardingResponseDescription,
+      description: OnboardingDocs.getOnBoardingResponseDescription,
       type: GetAllOnboardingsResponseDto,
     },
-    summary: GetOnboardingSummaryMd,
-    description: GetOnboardingDescriptionMd,
+    summary: OnboardingDocs.getOnboardingSummaryMd,
+    description: OnboardingDocs.getOnboardingDescriptionMd,
   })
   async getAllOnboardings(@User() user: UserJwtToken): Promise<ResponseEntity<GetAllOnboardingsResponseDto>> {
     const onboarding = await this.onboardingsService.getAllOnboardings(user.userId);
@@ -54,10 +44,10 @@ export class OnboardingsController {
     response: {
       code: HttpStatus.OK,
       type: PatchOnboardingResponseDto,
-      description: PatchOnboardingResponseDescriptionMd,
+      description: OnboardingDocs.patchOnboardingResponseDescriptionMd,
     },
-    summary: PatchOnboardingSummaryMd,
-    description: PatchOnboardingDescriptionMd,
+    summary: OnboardingDocs.patchOnboardingSummaryMd,
+    description: OnboardingDocs.patchOnboardingDescriptionMd,
   })
   async updateOnboarding(
     @User() user: UserJwtToken,

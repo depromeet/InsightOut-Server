@@ -1,20 +1,4 @@
-import {
-  getAiResumeCountDescriptionMd,
-  getAiResumeCountSuccMd,
-  getAiResumeCountSummaryMd,
-  getAiResumeDescriptionMd,
-  getAiResumeSuccMd,
-  getAiResumeSummaryMd,
-  postKeywordPromptDescriptionMd,
-  postKeywordPromptSuccMd,
-  postKeywordPromptSummaryMd,
-  postResumePromptDescriptionMd,
-  postResumePromptSuccMd,
-  postResumePromptSummaryMd,
-  postResumeSummarySuccMd,
-  postResumeSummarySummaryMd,
-  postSummaryPromptDescriptionMd,
-} from '🔥apps/server/ai/docs/ai.md';
+import * as AiDocs from '🔥apps/server/ai/docs/ai.md';
 import {
   GetAiResumeQueryRequestDto,
   PromptAiKeywordRequestDto,
@@ -63,10 +47,10 @@ export class AiController {
     response: {
       code: HttpStatus.OK,
       type: GetAiResumeDto,
-      description: getAiResumeSuccMd,
+      description: AiDocs.getAiResumeSuccessMd,
     },
-    description: getAiResumeDescriptionMd,
-    summary: getAiResumeSummaryMd,
+    description: AiDocs.getAiResumeDescriptionMd,
+    summary: AiDocs.getAiResumeSummaryMd,
   })
   public async getAiResume(
     @User() user: UserJwtToken,
@@ -85,10 +69,10 @@ export class AiController {
     response: {
       code: HttpStatus.OK,
       type: GetAiResumeCountResponseDto,
-      description: getAiResumeCountSuccMd,
+      description: AiDocs.getAiResumeCountSuccessMd,
     },
-    description: getAiResumeCountDescriptionMd,
-    summary: getAiResumeCountSummaryMd,
+    description: AiDocs.getAiResumeCountDescriptionMd,
+    summary: AiDocs.getAiResumeCountSummaryMd,
   })
   public async getAiResumeCount(
     @User() user: UserJwtToken,
@@ -111,10 +95,10 @@ export class AiController {
     response: {
       code: HttpStatus.OK,
       type: PromptKeywordResponseDto,
-      description: postKeywordPromptSuccMd,
+      description: AiDocs.postKeywordPromptSuccessMd,
     },
-    description: postKeywordPromptDescriptionMd,
-    summary: postKeywordPromptSummaryMd,
+    description: AiDocs.postKeywordPromptDescriptionMd,
+    summary: AiDocs.postKeywordPromptSummaryMd,
   })
   public async postAiKeywordPrompt(
     @Body() promptKeywordBodyReqDto: PromptAiKeywordRequestDto,
@@ -146,10 +130,10 @@ export class AiController {
     response: {
       code: HttpStatus.OK,
       type: PromptResumeResponseDto,
-      description: postResumePromptSuccMd,
+      description: AiDocs.postResumePromptSuccessMd,
     },
-    description: postResumePromptDescriptionMd,
-    summary: postResumePromptSummaryMd,
+    description: AiDocs.postResumePromptDescriptionMd,
+    summary: AiDocs.postResumePromptSummaryMd,
   })
   public async postResumePrompt(
     @Body() promptKeywordBodyReqDto: PromptResumeBodyRequestDto,
@@ -169,10 +153,10 @@ export class AiController {
     response: {
       code: HttpStatus.OK,
       type: GetExperienceCardInfoDto,
-      description: postResumeSummarySuccMd,
+      description: AiDocs.postResumeSummarySuccessMd,
     },
-    description: postSummaryPromptDescriptionMd,
-    summary: postResumeSummarySummaryMd,
+    description: AiDocs.postSummaryPromptDescriptionMd,
+    summary: AiDocs.postResumeSummarySummaryMd,
   })
   public async postSummaryPrompt(
     @User() user: UserJwtToken,

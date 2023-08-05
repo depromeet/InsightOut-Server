@@ -14,11 +14,7 @@ import {
   AddUserCapabilityConflictErrorResDto,
   AddUserCapabilityResponseDto,
 } from '🔥apps/server/experiences/dto/res/addUserCapability.dto';
-import {
-  addCapabilitySuccMd,
-  createManyExperienceCapabilitiesSuccMd,
-  getExperienceCapabilitySuccMd,
-} from '🔥apps/server/experiences/docs/experience.md';
+import * as ExperienceDocs from '../docs/experience.md';
 import {
   CreateExperienceCapabilitiesResponseDto,
   CreateExperienceCapabillitiesNotFoundErrorResDto,
@@ -44,7 +40,7 @@ export class ExperienceKeywordController {
     response: {
       code: HttpStatus.OK,
     },
-    description: getExperienceCapabilitySuccMd,
+    description: ExperienceDocs.getExperienceCapabilitySuccessMd,
     summary: '🔵 경험 분해 키워드 가져오기 API',
   })
   public async getExperienceCapability(
@@ -69,7 +65,7 @@ export class ExperienceKeywordController {
       code: HttpStatus.CREATED,
       type: AddUserCapabilityResponseDto,
     },
-    description: addCapabilitySuccMd,
+    description: ExperienceDocs.addCapabilitySuccessMd,
     summary: '🔵 경험 분해 키워드 추가하기 API',
   })
   public async addUserCapability(@Body() addCapabilitydBodyDto: AddCapabilitydBodyRequestDto, @User() user: UserJwtToken) {
@@ -91,7 +87,7 @@ export class ExperienceKeywordController {
       code: HttpStatus.CREATED,
       type: CreateExperienceCapabilitiesResponseDto,
     },
-    description: createManyExperienceCapabilitiesSuccMd,
+    description: ExperienceDocs.createManyExperienceCapabilitiesSuccessMd,
     summary: '🔵 경험 분해 키워드 임시 저장 API',
   })
   public async createManyExperienceCapabilities(

@@ -14,7 +14,7 @@ export const postKeywordPromptSummaryMd = `
 🔵 ChatGPT 추천 키워드 생성 및 저장 프롬프트 API
 `;
 
-export const postKeywordPromptSuccMd = `
+export const postKeywordPromptSuccessMd = `
 ChatGPT 추천 키워드가 생성 및 저장 되었습니다 :)
 `;
 
@@ -34,7 +34,7 @@ export const postResumePromptSummaryMd = `
 🔵 ChatGPT 추천 자기소개서 생성 프롬프트 API
 `;
 
-export const postResumePromptSuccMd = `
+export const postResumePromptSuccessMd = `
 ChatGPT 추천 자기소개서가 생성되었습니다 :)
 `;
 
@@ -58,7 +58,7 @@ export const postResumeSummarySummaryMd = `
 🔵 ChatGPT 경험 요약 프롬프트, 요약 키워드 생성 프롬프트, 추천 자기소개서 작성 프롬프트 API
 `;
 
-export const postResumeSummarySuccMd = `
+export const postResumeSummarySuccessMd = `
 ChatGPT 경험 요약 프롬프트, 요약 키워드 생성 프롬프트, 추천 자기소개서 작성 프롬프트가 생성되고 저장되었습니다 :)
 `;
 
@@ -75,7 +75,7 @@ query를 넣어주지 않으면 전체 목록이 내려옵니다.\n
 export const getAiResumeSummaryMd = `
 ✅ ChatGPT 추천 자기소개서 조회 API
 `;
-export const getAiResumeSuccMd = `
+export const getAiResumeSuccessMd = `
 ChatGPT 추천 자기소개서 목록 조회에 성공하였습니다.
 `;
 
@@ -93,7 +93,7 @@ ChatGPT가 유저에게 추천해준 자기소개서의 개수가 나옵니다.\
 export const getAiResumeCountSummaryMd = `
 ✅ ChatGPT 추천 자기소개서 개수 조회 API
 `;
-export const getAiResumeCountSuccMd = `
+export const getAiResumeCountSuccessMd = `
 ChatGPT 추천 자기소개서 개수 조회에 성공하였습니다.
 `;
 
