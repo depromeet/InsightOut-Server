@@ -16,9 +16,10 @@ import {
   PatchOnboardingResponseDescriptionMd,
   PatchOnboardingSummaryMd,
 } from '🔥apps/server/onboardings/docs/patchOnboarding.doc';
-import { GetAllOnboardingsResponseDto } from '🔥apps/server/onboardings/dtos/getOnboarding.dto';
-import { PatchOnboardingRequestBodyDto, PatchOnboardingResponseDto } from '🔥apps/server/onboardings/dtos/patchOnboarding.dto';
+
 import { OnboardingsService } from '🔥apps/server/onboardings/onboarding.service';
+import { GetAllOnboardingsResponseDto } from '🔥apps/server/onboardings/dtos/res/getOnboarding.dto';
+import { PatchOnboardingRequestBodyDto, PatchOnboardingResponseDto } from '🔥apps/server/onboardings/dtos/req/patchOnboarding.dto';
 
 @ApiTags('🏂 온보딩 API')
 @UseGuards(JwtAuthGuard)

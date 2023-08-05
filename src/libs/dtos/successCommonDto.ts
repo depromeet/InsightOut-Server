@@ -4,7 +4,7 @@ import { Expose } from 'class-transformer';
 
 import { EnumToArray } from '../utils/enumNumberToArray.function';
 
-export class SuccessCommonEsponseDto<T> {
+export class SuccessCommonResponseDto<T> {
   @ApiProperty({ enum: EnumToArray(HttpStatus), description: '상태코드', example: 200 })
   @Expose()
   readonly statusCode: number;

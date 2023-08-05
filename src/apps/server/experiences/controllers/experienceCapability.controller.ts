@@ -8,16 +8,19 @@ import { UserJwtToken } from '../../auth/types/jwtToken.type';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
 import { Method } from '📚libs/enums/method.enum';
 import { ExperienceCapabilityService } from '🔥apps/server/experiences/services/experienceCapability.service';
-import { CreateExperienceCapabilitiesdBodyDto } from '🔥apps/server/experiences/dto/req/createExperienceCapabilities.dto';
-import { AddCapabilitydBodyDto } from '🔥apps/server/experiences/dto/req/addCapability.dto';
-import { AddUserCapabilityConflictErrorResDto, AddUserCapabilityResDto } from '🔥apps/server/experiences/dto/res/addUserCapability.dto';
+import { CreateExperienceCapabilitiesdBodyRequestDto } from '🔥apps/server/experiences/dto/req/createExperienceCapabilities.dto';
+import { AddCapabilitydBodyRequestDto } from '🔥apps/server/experiences/dto/req/addCapability.dto';
+import {
+  AddUserCapabilityConflictErrorResDto,
+  AddUserCapabilityResponseDto,
+} from '🔥apps/server/experiences/dto/res/addUserCapability.dto';
 import {
   addCapabilitySuccMd,
   createManyExperienceCapabilitiesSuccMd,
   getExperienceCapabilitySuccMd,
 } from '🔥apps/server/experiences/docs/experience.md';
 import {
-  CreateExperienceCapabilitiesDto,
+  CreateExperienceCapabilitiesResponseDto,
   CreateExperienceCapabillitiesNotFoundErrorResDto,
 } from '🔥apps/server/experiences/dto/res/createExperienceCapabilities.dto';
 import { ExperienceIdParamReqDto } from '🔥apps/server/experiences/dto/req/experienceIdParam.dto';
@@ -64,12 +67,12 @@ export class ExperienceKeywordController {
     },
     response: {
       code: HttpStatus.CREATED,
-      type: AddUserCapabilityResDto,
+      type: AddUserCapabilityResponseDto,
     },
     description: addCapabilitySuccMd,
     summary: '🔵 경험 분해 키워드 추가하기 API',
   })
-  public async addUserCapability(@Body() addCapabilitydBodyDto: AddCapabilitydBodyDto, @User() user: UserJwtToken) {
+  public async addUserCapability(@Body() addCapabilitydBodyDto: AddCapabilitydBodyRequestDto, @User() user: UserJwtToken) {
     const capability = await this.experienceCapabilityService.addUserCapability(addCapabilitydBodyDto, user);
 
     return ResponseEntity.CREATED_WITH_DATA(capability);
@@ -86,13 +89,13 @@ export class ExperienceKeywordController {
     },
     response: {
       code: HttpStatus.CREATED,
-      type: CreateExperienceCapabilitiesDto,
+      type: CreateExperienceCapabilitiesResponseDto,
     },
     description: createManyExperienceCapabilitiesSuccMd,
     summary: '🔵 경험 분해 키워드 임시 저장 API',
   })
   public async createManyExperienceCapabilities(
-    @Body() createExperienceKeywordBodyDto: CreateExperienceCapabilitiesdBodyDto,
+    @Body() createExperienceKeywordBodyDto: CreateExperienceCapabilitiesdBodyRequestDto,
     @User() user: UserJwtToken,
   ) {
     const experienceCapabilities = await this.experienceCapabilityService.createManyExperienceCapabilities(

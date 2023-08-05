@@ -6,7 +6,7 @@ import { RedisCacheService } from '📚libs/modules/cache/redis/redis.service';
 import { EnvEnum } from '📚libs/modules/env/env.enum';
 import { EnvService } from '📚libs/modules/env/env.service';
 import { ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } from '🔥apps/server/common/consts/jwt.const';
-import { PostIssueTestTokenRequestBodyDto } from '🔥apps/server/test/dtos/postIssueTestToken.dto';
+import { PostIssueTestTokenBodyRequestDto } from '🔥apps/server/test/dtos/req/postIssueTestToken.dto';
 
 @Injectable()
 export class TestService {
@@ -17,7 +17,7 @@ export class TestService {
     private readonly apiService: ApiService,
   ) {}
 
-  async issueTestToken(body: PostIssueTestTokenRequestBodyDto) {
+  async issueTestToken(body: PostIssueTestTokenBodyRequestDto) {
     const { userId } = body;
     const accessToken = this.jwtService.sign(
       { userId },

@@ -11,7 +11,7 @@ class Keyword {
 }
 
 // AI 키워드 응답
-export class PromptKeywordDto {
+export class PromptKeywordResponseDto {
   @Exclude() _capabilities: Omit<Capability, 'userId' | 'keywordType' | 'experienceId'>[];
 
   constructor(capabilities: Omit<Capability, 'userId' | 'keywordType' | 'experienceId'>[]) {

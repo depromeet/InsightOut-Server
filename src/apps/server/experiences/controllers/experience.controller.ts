@@ -1,7 +1,7 @@
 import { Body, HttpStatus, Param, Query, UseGuards } from '@nestjs/common';
 import { Route } from '🔥apps/server/common/decorators/routers/route.decorator';
 import { RouteTable } from '🔥apps/server/common/decorators/routers/routeTable.decorator';
-import { UpdateExperienceReqDto } from '../dto/req/updateExperience.dto';
+import { UpdateExperienceRequestDto } from '../dto/req/updateExperience.dto';
 import { ExperienceService } from '../services/experience.service';
 import { User } from '🔥apps/server/common/decorators/req/user.decorator';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiNotFoundResponse } from '@nestjs/swagger';
@@ -22,7 +22,7 @@ import {
   GetExperiencesResponseDto,
   GetExperienceByIdDto,
   GetExperienceNotFoundErrorResDto,
-  GetExperienceRequestQueryDto,
+  GetExperienceRequestQueryRequestDto,
   GetStarFromExperienceRequestParamDto,
   GetStarFromExperienceResponseDto,
 } from '🔥apps/server/experiences/dto';
@@ -60,14 +60,14 @@ import {
   deleteExperienceSummaryMd,
   deleteExperienceDescriptionMd,
 } from 'src/apps/server/experiences/docs';
-import { GetAiResumeNotFoundException, GetAiResumeDto } from '🔥apps/server/experiences/dto/res/getAiResume.dto';
+import { GetAiResumeNotFoundException, GetAiResumeResponseDto } from '🔥apps/server/experiences/dto/res/getAiResume.dto';
 import { GetExperienceCardInfoNotFoundErrorResDto } from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.dto';
 import { SuccessResponse } from '📚libs/decorators/successResponse.dto';
 import { PaginationDto } from '📚libs/pagination/pagination.dto';
 import { GetExperienceCardInfoDto } from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.dto';
 
-import { DeleteExperienceDto } from '🔥apps/server/experiences/dto/res/delete-experience.dto';
-import { GetCountOfExperienceAndCapabilityQueryReqDto } from '🔥apps/server/experiences/dto/req/getCountOfExperienceAndCapability.dto';
+import { DeleteExperienceResponseDto } from '🔥apps/server/experiences/dto/res/delete-experience.dto';
+import { GetCountOfExperienceAndCapabilityQueryRequestDto } from '🔥apps/server/experiences/dto/req/getCountOfExperienceAndCapability.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -140,7 +140,7 @@ export class ExperienceController {
   })
   public async getExperiences(
     @User() user: UserJwtToken,
-    @Query() getExperienceRequestQueryDto?: GetExperienceRequestQueryDto,
+    @Query() getExperienceRequestQueryDto?: GetExperienceRequestQueryRequestDto,
   ): Promise<ResponseEntity<PaginationDto<GetExperiencesResponseDto>>> {
     const dto = getExperienceRequestQueryDto.toRequestDto();
 
@@ -183,7 +183,7 @@ export class ExperienceController {
   })
   public async getCountOfExperienceAndCapability(
     @User() user: UserJwtToken,
-    @Query() getCountOfExperienceAndCapabilityQueryReqDto: GetCountOfExperienceAndCapabilityQueryReqDto,
+    @Query() getCountOfExperienceAndCapabilityQueryReqDto: GetCountOfExperienceAndCapabilityQueryRequestDto,
   ): Promise<ResponseEntity<GetCountOfExperienceAndCapabilityResponseDto[]>> {
     const countOfExperienceAndCapability = await this.experienceService.getCountOfExperienceAndCapability(
       user.userId,
@@ -202,7 +202,7 @@ export class ExperienceController {
     },
     response: {
       code: HttpStatus.OK,
-      type: GetAiResumeDto,
+      type: GetAiResumeResponseDto,
       description: getAiResumeSuccMd,
     },
     description: getAiResumeDescriptionMd,
@@ -211,7 +211,7 @@ export class ExperienceController {
   public async getAiResume(
     @Param() experienceIdParamReqDto: ExperienceIdParamReqDto,
     @User() user: UserJwtToken,
-  ): Promise<ResponseEntity<GetAiResumeDto>> {
+  ): Promise<ResponseEntity<GetAiResumeResponseDto>> {
     return ResponseEntity.OK_WITH_DATA(await this.experienceService.getAiResume(experienceIdParamReqDto, user));
   }
 
@@ -328,7 +328,7 @@ export class ExperienceController {
     summary: updateExperienceSummaryMd,
   })
   public async update(
-    @Body() upsertExperienceReqDto: UpdateExperienceReqDto,
+    @Body() upsertExperienceReqDto: UpdateExperienceRequestDto,
     @Param() experienceIdParamReqDto: ExperienceIdParamReqDto,
     @User() user: UserJwtToken,
   ): Promise<ResponseEntity<UpdateExperienceResDto>> {
@@ -345,7 +345,7 @@ export class ExperienceController {
     },
     response: {
       code: HttpStatus.OK,
-      type: DeleteExperienceDto,
+      type: DeleteExperienceResponseDto,
       description: deleteExperienceSuccMd,
     },
     description: deleteExperienceDescriptionMd,
@@ -354,7 +354,7 @@ export class ExperienceController {
   public async deleteExperience(
     @Param() experienceIdParamReqDto: ExperienceIdParamReqDto,
     @User() user: UserJwtToken,
-  ): Promise<ResponseEntity<DeleteExperienceDto>> {
+  ): Promise<ResponseEntity<DeleteExperienceResponseDto>> {
     const deletedResult = await this.experienceService.deleteExperience(experienceIdParamReqDto, user);
     return ResponseEntity.CREATED_WITH_DATA(deletedResult);
   }

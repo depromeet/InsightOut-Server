@@ -4,7 +4,7 @@ import { IsEnum, IsOptional, Matches } from 'class-validator';
 import { dateValidation } from '🔥apps/server/common/consts/dateValidation.const';
 import { IsOptionalString } from '🔥apps/server/common/decorators/validations/isCustomString.decorator';
 
-export class UpdateExperienceReqDto {
+export class UpdateExperienceRequestDto {
   @ApiPropertyOptional({ example: '00직무 디자인 인턴' })
   @IsOptionalString(0, 100)
   title?: string;

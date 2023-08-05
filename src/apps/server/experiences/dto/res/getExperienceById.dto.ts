@@ -18,7 +18,7 @@ import { IsOptionalNumber } from '🔥apps/server/common/decorators/validations/
 import { IsOptionalString } from '🔥apps/server/common/decorators/validations/isCustomString.decorator';
 import { dateValidation } from '🔥apps/server/common/consts/dateValidation.const';
 
-export class GetExperienceInfoResDto {
+export class GetExperienceInfoResponseDto {
   @Exclude() _experienceId: number;
   @Exclude() _motivation: string;
   @Exclude() _experienceRole: string;
@@ -92,14 +92,14 @@ export class GetExperienceByIdDto {
   @Exclude() _experienceCapabilityKeywords: string[];
   @Exclude() _summaryKeywords: string[];
   @Exclude() _updatedAt: Date;
-  @Exclude() _ExperienceInfo: GetExperienceInfoResDto;
+  @Exclude() _ExperienceInfo: GetExperienceInfoResponseDto;
   @Exclude() _AiResume: AiResume;
   @Exclude() _AiRecommendQuestions: Omit<AiRecommendQuestion, 'experienceId'>[];
 
   constructor(
     experience: Partial<
       Experience & {
-        ExperienceInfo: GetExperienceInfoResDto;
+        ExperienceInfo: GetExperienceInfoResponseDto;
         AiResume: AiResume;
         ExperienceCapabilities: (Partial<ExperienceCapability> & { Capability: Capability })[];
         AiRecommendQuestions: AiRecommendQuestion[];
@@ -258,14 +258,14 @@ export class GetExperienceByIdDto {
   @Expose()
   @ApiPropertyOptional({
     description: '경험 카드의 부가 정보입니다. 경험 속 역할(experienceRole)과 수행한 이유(motivation)이 있습니다.',
-    type: GetExperienceInfoResDto,
+    type: GetExperienceInfoResponseDto,
     example: {
       experienceId: 1,
       experienceRole: 'UI/UX 디자이너',
       motivation: '개발자와 협업 역량을 기르기 위해 하게 됨',
     },
   })
-  get ExperienceInfo(): GetExperienceInfoResDto {
+  get ExperienceInfo(): GetExperienceInfoResponseDto {
     return this._ExperienceInfo;
   }
 

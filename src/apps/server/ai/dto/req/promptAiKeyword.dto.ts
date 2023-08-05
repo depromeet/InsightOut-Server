@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsNotEmpty, Min } from 'class-validator';
 import { IsNotEmptyString } from '🔥apps/server/common/decorators/validations/isCustomString.decorator';
 
-export class PromptAiKeywordBodyReqDto {
+export class PromptAiKeywordRequestDto {
   @IsInt()
   @IsNotEmpty()
   @Min(1)

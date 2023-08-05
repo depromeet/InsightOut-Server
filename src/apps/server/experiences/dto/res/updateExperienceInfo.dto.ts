@@ -6,7 +6,7 @@ import { Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
 import { IsOptionalNumber } from '🔥apps/server/common/decorators/validations/isCustomNumber.decorator';
 import { IsOptionalString } from '🔥apps/server/common/decorators/validations/isCustomString.decorator';
 
-export class UpdateExperienceInfoDto {
+export class UpdateExperienceInfoResponseDto {
   @Exclude() private _experienceInfoId: number;
   @Exclude() private _experienceRole: string;
   @Exclude() private _motivation: string;
@@ -69,7 +69,7 @@ export class UpdateExperienceResDto {
   @Exclude() private readonly _startDate: Date;
   @Exclude() private readonly _endDate: Date;
   @Exclude() private readonly _experienceStatus: ExperienceStatus;
-  @Exclude() private readonly _experienceInfo: UpdateExperienceInfoDto;
+  @Exclude() private readonly _experienceInfo: UpdateExperienceInfoResponseDto;
 
   constructor(experience: Experience, experienceInfo: ExperienceInfo) {
     this._experienceId = experience.id;
@@ -82,7 +82,7 @@ export class UpdateExperienceResDto {
     this._result = experience.result;
     this._experienceStatus = experience.experienceStatus;
 
-    const experienceInfoRes = new UpdateExperienceInfoDto();
+    const experienceInfoRes = new UpdateExperienceInfoResponseDto();
     experienceInfoRes.setExperienceInfoId = experienceInfo.id;
     experienceInfoRes.setExperienceRole = experienceInfo.experienceRole;
     experienceInfoRes.setMotivation = experienceInfo.motivation;
@@ -151,9 +151,9 @@ export class UpdateExperienceResDto {
     return this._experienceStatus;
   }
 
-  @ApiProperty({ type: UpdateExperienceInfoDto })
+  @ApiProperty({ type: UpdateExperienceInfoResponseDto })
   @Expose()
-  get experienceInfo(): UpdateExperienceInfoDto {
+  get experienceInfo(): UpdateExperienceInfoResponseDto {
     return this._experienceInfo;
   }
 }

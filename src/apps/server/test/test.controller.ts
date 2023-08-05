@@ -1,17 +1,17 @@
-import { Body, Controller, HttpStatus, ParseIntPipe, Query, Res } from '@nestjs/common';
+import { Body, Controller, HttpStatus, Query, Res } from '@nestjs/common';
 import { TestService } from './test.service';
 import { Response } from 'express';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
 import { Route } from '🔥apps/server/common/decorators/routers/route.decorator';
 import { Method } from '📚libs/enums/method.enum';
-import { PostIssueTestTokenRequestBodyDto } from '🔥apps/server/test/dtos/postIssueTestToken.dto';
+import { PostIssueTestTokenBodyRequestDto } from '🔥apps/server/test/dtos/req/postIssueTestToken.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { OpenAiService } from '📚libs/modules/open-ai/openAi.service';
-import { PromptTestBodydto } from '🔥apps/server/test/dtos/promptTest.bodydto';
+import { PromptTestBodyRequestDto } from '🔥apps/server/test/dtos/req/promptTest.dto';
 import { testApiSuccMd } from '🔥apps/server/test/docs/testApi.md';
 import { AuthService } from '🔥apps/server/auth/auth.service';
 import { TokenType } from '📚libs/enums/token.enum';
-import { TimeoutTestRequestQueryDto } from '🔥apps/server/test/dtos/timeoutTest.dto';
+import { TimeoutTestQueryRequestDto } from '🔥apps/server/test/dtos/req/timeoutTest.dto';
 import { SetRequestTimeout } from '🔥apps/server/common/decorators/timeout.decorator';
 import { SECOND } from '🔥apps/server/common/consts/time.const';
 
@@ -37,7 +37,7 @@ export class TestController {
     },
   })
   async issueTestToken(
-    @Body() postIssueTestTokenRequestBodyDto: PostIssueTestTokenRequestBodyDto,
+    @Body() postIssueTestTokenRequestBodyDto: PostIssueTestTokenBodyRequestDto,
     @Res({ passthrough: true }) response: Response,
   ): Promise<ResponseEntity<string>> {
     const { accessToken, refreshToken } = await this.testService.issueTestToken(postIssueTestTokenRequestBodyDto);
@@ -63,7 +63,7 @@ export class TestController {
     description: testApiSuccMd,
     summary: '✅ openai 프롬프트 테스트 API',
   })
-  async test(@Body() body: PromptTestBodydto) {
+  async test(@Body() body: PromptTestBodyRequestDto) {
     return await this.openAiService.promptChatGPT(body.content);
   }
 
@@ -79,7 +79,7 @@ export class TestController {
     description: '# timeout을 테스트합니다.',
     summary: '🛠️ timeout 시간 테스트',
   })
-  async timeout(@Query() timeoutTestRequestQueryDto: TimeoutTestRequestQueryDto) {
+  async timeout(@Query() timeoutTestRequestQueryDto: TimeoutTestQueryRequestDto) {
     function sleep(ms: number) {
       return new Promise((r) => setTimeout(r, ms));
     }
@@ -101,7 +101,7 @@ export class TestController {
     description: 'timeout 테스트',
     summary: '🛠️ timeout 시간 테스트',
   })
-  async timeoutCheck(@Query() timeoutTestRequestQueryDto: TimeoutTestRequestQueryDto) {
+  async timeoutCheck(@Query() timeoutTestRequestQueryDto: TimeoutTestQueryRequestDto) {
     function sleep(ms: number) {
       return new Promise((r) => setTimeout(r, ms));
     }

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 import { IsEmail, IsInstance, IsInt, IsNotEmpty, IsObject, IsPositive, IsString, IsUUID, IsUrl } from 'class-validator';
-import { GetAllOnboardingsResponseDto } from '🔥apps/server/onboardings/dtos/getOnboarding.dto';
+import { GetAllOnboardingsResponseDto } from '🔥apps/server/onboardings/dtos/res/getOnboarding.dto';
 
 export class PostSinginRequestBodyForGuard {
   body: {

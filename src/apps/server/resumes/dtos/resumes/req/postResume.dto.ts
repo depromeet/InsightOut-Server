@@ -3,7 +3,7 @@ import { Resume } from '@prisma/client';
 import { Exclude, Expose } from 'class-transformer';
 import { IsString } from 'class-validator';
 
-export class PostResumeRequestBodyDto {
+export class PostResumeBodyRequestDto {
   @ApiProperty({
     description: '자기소개서 폴더 제목',
     example: '디프만 13기',

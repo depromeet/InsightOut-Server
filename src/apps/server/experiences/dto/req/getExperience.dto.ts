@@ -4,7 +4,7 @@ import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsPositive } from 'class-vali
 import { PaginationOptionsDto } from '📚libs/pagination/paginationOption.dto';
 import { OrderBy, OrderCriteria } from '📚libs/pagination/pagination.type';
 
-export class GetExperienceRequestQueryDto extends PaginationOptionsDto {
+export class GetExperienceRequestQueryRequestDto extends PaginationOptionsDto {
   @ApiPropertyOptional({
     description: '역량 키워드 id',
   })
@@ -71,7 +71,7 @@ export class GetExperienceRequestQueryDto extends PaginationOptionsDto {
   })
   result?: boolean;
 
-  toRequestDto(this: GetExperienceRequestQueryDto): GetExperienceRequestQueryDtoWithPagination {
+  toRequestDto(this: GetExperienceRequestQueryRequestDto): GetExperienceRequestQueryDtoWithPagination {
     const { criteria, order, take, page, skip, ...getExperienceRequestQueryDto } = this;
     const pagination = { criteria, order, take, page, skip };
     return { pagination, ...getExperienceRequestQueryDto };

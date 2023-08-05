@@ -6,7 +6,7 @@ import { IsInt, IsNotEmpty, IsString } from 'class-validator';
 /**
  * 유저 역량 키워드 추가 응답 DTO
  */
-export class AddUserCapabilityResDto {
+export class AddUserCapabilityResponseDto {
   @Exclude() _id: number;
   @Exclude() _keyword: string;
   @Exclude() _userId: number;

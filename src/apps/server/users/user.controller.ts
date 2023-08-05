@@ -12,9 +12,9 @@ import {
   PatchUserInfoResponseDescriptionMd,
   PatchUserInfoSummaryMd,
 } from '🔥apps/server/users/docs/patchUserInfo.doc';
-import { GetUserResponseDto } from '🔥apps/server/users/dtos/getUser.dto';
-import { PatchUserInfoRequestBodyDto } from '🔥apps/server/users/dtos/patchUserInfo.dto';
-import { PostSendFeedbackRequestBodyDto } from '🔥apps/server/users/dtos/postFeedback.dto';
+import { GetUserResponseDto } from '🔥apps/server/users/dtos/res/getUser.dto';
+import { PatchUserInfoBodyRequestDto } from '🔥apps/server/users/dtos/req/patchUserInfo.dto';
+import { PostSendFeedbackBodyRequestDto } from '🔥apps/server/users/dtos/req/postFeedback.dto';
 import { UserService } from '🔥apps/server/users/user.service';
 
 @ApiTags('👶🏻 유저 API')
@@ -63,7 +63,7 @@ export class UserController {
     description:
       '# 피드백 제출 API\n## Description\n유저가 회원 탈퇴한 후에 피드백을 서버로 제출합니다.   \n주로 탈퇴한 이유 등의 피드백이 제출됩니다. 최종적으로 데이터베이스에 적재될 예정이며, 별도로 부가 데이터는 필요하지 않습니다.\n## Note.\n피드백의 제한 길이는 300자 입니다.\n## etc.\n⛳️ [피드백 전송](https://www.figma.com/file/0ZJ1ulwtU8k0KQuroxU9Wc/%EC%9D%B8%EC%82%AC%EC%9D%B4%ED%8A%B8%EC%95%84%EC%9B%83?type=design&node-id=1815-11807&t=fcBrncd1yBcOT49W-4)',
   })
-  async sendFeedback(@Body() postSendFeedbackRequestBodyDto: PostSendFeedbackRequestBodyDto): Promise<ResponseEntity<string>> {
+  async sendFeedback(@Body() postSendFeedbackRequestBodyDto: PostSendFeedbackBodyRequestDto): Promise<ResponseEntity<string>> {
     await this.userService.sendFeedback(postSendFeedbackRequestBodyDto);
 
     return ResponseEntity.CREATED_WITH_MESSAGE('Feedback has been sent');
@@ -84,7 +84,7 @@ export class UserController {
   })
   async updateUserInfo(
     @User() user: UserJwtToken,
-    @Body() patchUserInfoRequestBodyDto: PatchUserInfoRequestBodyDto,
+    @Body() patchUserInfoRequestBodyDto: PatchUserInfoBodyRequestDto,
   ): Promise<ResponseEntity<string>> {
     await this.userService.updateUserInfo(user.userId, patchUserInfoRequestBodyDto);
 

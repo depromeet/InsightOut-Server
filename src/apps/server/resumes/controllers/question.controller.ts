@@ -32,16 +32,16 @@ import {
   PostSpellCheckResponseDescriptionMd,
   PostSpellCheckSummaryMd,
 } from '🔥apps/server/resumes/docs/questions/postSpellCheck.doc';
-import { DeleteQuestionRequestParamDto } from '🔥apps/server/resumes/dtos/questions/deleteQuestion.dto';
-import { GetOneQuestionRequestParamDto, GetOneQuestionResponseDto } from '🔥apps/server/resumes/dtos/questions/getQuestion.dto';
-import {
-  PatchQuestionRequestParamDto,
-  PatchQuestionRequestBodyDto,
-  PatchQuestionResponseDto,
-} from '🔥apps/server/resumes/dtos/questions/patchQuestionRequest.dto';
-import { PostQuestionResponseDto, PostQuestionRequestBodyDto } from '🔥apps/server/resumes/dtos/questions/postQuestion.dto';
-import { PostSpellCheckRequestBodyDto } from '🔥apps/server/resumes/dtos/questions/postSpellCheck.body.dto';
 import { QuestionsService } from '🔥apps/server/resumes/services/question.service';
+import { GetOneQuestionRequestParamDto, GetOneQuestionResponseDto } from '🔥apps/server/resumes/dtos/questions/req/getQuestion.dto';
+import { PostQuestionRequestBodyDto, PostQuestionResponseDto } from '🔥apps/server/resumes/dtos/questions/req/postQuestion.dto';
+import { PostSpellCheckRequestBodyDto } from '🔥apps/server/resumes/dtos/questions/req/postSpellCheck.dto';
+import {
+  PatchQuestionRequestBodyDto,
+  PatchQuestionRequestParamDto,
+  PatchQuestionResponseDto,
+} from '🔥apps/server/resumes/dtos/questions/req/patchQuestion.dto';
+import { DeleteQuestionRequestParamDto } from '🔥apps/server/resumes/dtos/questions/req/deleteQuestion.dto';
 
 @ApiTags('📑 자기소개서 문항 API')
 @Controller('resumes/questions')
@@ -119,7 +119,7 @@ export class QuestionsController {
     description: PostSpellCheckDescriptionMd,
   })
   async spellCheck(@Body() body: PostSpellCheckRequestBodyDto) {
-    const checkedSpell = await this.questionService.spellCheck(body);
+    const checkedSpell = await this.questionService.spellCheck({ body: body });
 
     return ResponseEntity.OK_WITH_DATA(checkedSpell);
   }

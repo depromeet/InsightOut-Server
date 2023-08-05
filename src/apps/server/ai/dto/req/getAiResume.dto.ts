@@ -1,7 +1,7 @@
 import { IsOptional, IsString } from 'class-validator';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 
-export class GetAiResumeQueryReqDto {
+export class GetAiResumeQueryRequestDto {
   @IsOptional()
   @IsString()
   @ApiPropertyOptional({ example: '추진력' })
