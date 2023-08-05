@@ -1,24 +1,26 @@
-import { ClassSerializerInterceptor, Module, ValidationPipe } from '@nestjs/common';
-import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
-import { DatabaseModule } from '📚libs/modules/database/database.module';
-import { EnvModule } from '📚libs/modules/env/env.module';
-import { LogModule } from '📚libs/modules/log/log.module';
-import { ValidationException } from './common/exceptions/validation.exception';
-import { CustomExceptionFilter } from './common/filters/custom-exception.filter';
-import { LogInterceptor } from './common/interceptors/log.interceptor';
-import { SlackModule } from '📚libs/modules/slack/slack.module';
-import { AuthModule } from './auth/auth.module';
-import { AppController } from './app.controller';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
+import { ClassSerializerInterceptor, Module, ValidationPipe } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { RedisConfigFactory } from '📚libs/modules/cache/redis/redis.factory';
+import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+
+import { ExperienceModule } from '@apps/server/experiences/experience.module';
+import { OnboardingsModule } from '@apps/server/onboardings/onboarding.module';
+import { UserModule } from '@apps/server/users/user.module';
+import { RedisConfigFactory } from '@libs/modules/cache/redis/redis.factory';
+import { CronModule } from '@libs/modules/cron/cron.module';
+import { DatabaseModule } from '@libs/modules/database/database.module';
+import { EnvModule } from '@libs/modules/env/env.module';
+import { LogModule } from '@libs/modules/log/log.module';
+import { SlackModule } from '@libs/modules/slack/slack.module';
+
+import { AiModule } from './ai/ai.module';
+import { AppController } from './app.controller';
+import { AuthModule } from './auth/auth.module';
+import { ValidationException } from './common/exceptions/validation.exception';
+import { CustomExceptionFilter } from './common/filters/customException.filter';
+import { LogInterceptor } from './common/interceptors/log.interceptor';
 import { ResumesModule } from './resumes/resumes.module';
 import { TestModule } from './test/test.module';
-import { ExperienceModule } from '🔥apps/server/experiences/experience.module';
-import { UserModule } from '🔥apps/server/users/user.module';
-import { OnboardingsModule } from '🔥apps/server/onboarding/onboarding.module';
-import { AiModule } from './ai/ai.module';
-import { CronModule } from '📚libs/modules/cron/cron.module';
 
 @Module({
   controllers: [AppController],

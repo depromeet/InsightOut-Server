@@ -1,6 +1,7 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { WinstonModule, utilities } from 'nest-winston';
 import * as winston from 'winston';
+
 import { LogService } from './log.service';
 
 @Module({
@@ -12,8 +13,7 @@ import { LogService } from './log.service';
             return [
               //Console
               ...(() => {
-                const consoles: winston.transports.ConsoleTransportInstance[] =
-                  [];
+                const consoles: winston.transports.ConsoleTransportInstance[] = [];
 
                 consoles.push(
                   new winston.transports.Console({

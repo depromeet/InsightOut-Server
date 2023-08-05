@@ -1,5 +1,10 @@
-import { createParser } from '📚libs/modules/open-ai/streams/eventParser/eventParser';
-import { EventSourceParser, ParsedEvent, ReconnectInterval } from '📚libs/modules/open-ai/streams/eventParser/types';
+import { createParser } from '@libs/modules/open-ai/streams/eventParser/eventParser';
+import { EventSourceParser, ParsedEvent, ReconnectInterval } from '@libs/modules/open-ai/streams/eventParser/types';
+
+export interface FunctionCallPayload {
+  name: string;
+  arguments: Record<string, unknown>;
+}
 
 export function readableFromAsyncIterable<T>(iterable: AsyncIterable<T>) {
   // 비동기 iterator를 평가해 변수에 저장

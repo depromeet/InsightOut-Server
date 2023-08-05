@@ -1,4 +1,4 @@
-import { EventSourceParseCallback, EventSourceParser } from '📚libs/modules/open-ai/streams/eventParser/types';
+import { EventSourceParseCallback, EventSourceParser } from '@libs/modules/open-ai/streams/eventParser/types';
 
 export function createParser(onParse: EventSourceParseCallback): EventSourceParser {
   // Processing state

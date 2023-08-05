@@ -74,6 +74,9 @@
     "@typescript-eslint/parser": "^5.0.0",
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.3.0",
+    "eslint-import-resolver-typescript": "^3.5.5",
+    "eslint-import-resolver-webpack": "^0.13.2",
+    "eslint-plugin-import": "^2.28.0",
     "eslint-plugin-prettier": "^4.0.0",
     "jest": "29.3.1",
     "prettier": "^2.3.2",
@@ -109,8 +112,8 @@
       "<rootDir>"
     ],
     "moduleNameMapper": {
-      "^📚libs/(.*)$": "<rootDir>/libs/$1",
-      "^🔥apps/(.*)$": "<rootDir>/apps/$1"
+      "^@libs/(.*)$": "<rootDir>/libs/$1",
+      "^@apps/(.*)$": "<rootDir>/apps/$1"
     },
     "testTimeout": 10000
   }

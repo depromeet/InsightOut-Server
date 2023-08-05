@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
+
+import { ApiModule } from '@libs/modules/api/api.module';
+
+import { QuestionsController } from './controllers/question.controller';
 import { ResumesController } from './controllers/resumes.controller';
-import { ResumesService } from './services/resumes.service';
 import { Repositories } from './resume.provider';
 import { QuestionsService } from './services/question.service';
-import { QuestionsController } from './controllers/question.controller';
-import { ApiModule } from '📚libs/modules/api/api.module';
+import { ResumesService } from './services/resumes.service';
 
 @Module({
   imports: [ApiModule],

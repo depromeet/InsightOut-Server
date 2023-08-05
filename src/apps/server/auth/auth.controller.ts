@@ -1,18 +1,20 @@
 import { Body, Controller, HttpStatus, Res, UseGuards } from '@nestjs/common';
 import { ApiBadRequestResponse, ApiCreatedResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
-import { SigninGuard } from '../common/guards/signin.guard';
-import { User } from '../common/decorators/request/user.decorator';
-import { AuthService } from './auth.service';
 import { Response } from 'express';
-import { UserWithRefreshTokenPayload } from './types/jwt-token.type';
-import { TokenType } from '📚libs/enums/token.enum';
-import { JwtRefreshGuard } from '../common/guards/jwt-refresh.guard';
-import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
-import { Method } from '📚libs/enums/method.enum';
-import { PostReissueResponseDto } from '🔥apps/server/auth/dtos/post-reissue.dto';
-import { PostSigninRequestBodyDto, PostSigninResponseDto, UserPayload } from '🔥apps/server/auth/dtos/post-signin.dto';
-import { ResponseEntity } from '📚libs/utils/respone.entity';
-import { OnboardingsService } from '🔥apps/server/onboarding/onboarding.service';
+
+import { PostReissueResponseDto } from '@apps/server/auth/dtos/postReissue.dto';
+import { PostSigninRequestBodyDto, PostSigninResponseDto, UserPayload } from '@apps/server/auth/dtos/postSignin.dto';
+import { User } from '@apps/server/common/decorators/req/user.decorator';
+import { Route } from '@apps/server/common/decorators/routers/route.decorator';
+import { OnboardingsService } from '@apps/server/onboardings/onboarding.service';
+import { Method } from '@libs/enums/method.enum';
+import { TokenType } from '@libs/enums/token.enum';
+import { ResponseEntity } from '@libs/utils/respone.entity';
+
+import { AuthService } from './auth.service';
+import { UserWithRefreshTokenPayload } from './types/jwtToken.type';
+import { JwtRefreshGuard } from '../common/guards/jwtRefresh.guard';
+import { SigninGuard } from '../common/guards/signin.guard';
 
 @ApiTags('🔐 권한 관련 API')
 @Controller('auth')

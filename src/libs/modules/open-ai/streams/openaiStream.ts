@@ -1,12 +1,48 @@
-import { OpenAIStreamCallbacks } from 'ai';
 import {
   AIStream,
   AIStreamCallbacks,
+  FunctionCallPayload,
   createCallbacksTransformer,
   readableFromAsyncIterable,
   trimStartOfStreamHelper,
-} from '📚libs/modules/open-ai/streams/aiStream';
-import { CreateMessage } from '📚libs/modules/open-ai/streams/types/openaiStream.type';
+} from '@libs/modules/open-ai/streams/aiStream';
+import { CreateMessage } from '@libs/modules/open-ai/streams/types/openaiStream.type';
+
+type JSONValue = null | string | number | boolean | { [x: string]: JSONValue } | Array<JSONValue>;
+
+export type OpenAIStreamCallbacks = AIStreamCallbacks & {
+  /**
+   * @example
+   * ```js
+   * const response = await openai.createChatCompletion({
+   *   model: 'gpt-3.5-turbo-0613',
+   *   stream: true,
+   *   messages,
+   *   functions,
+   * })
+   *
+   * const stream = OpenAIStream(response, {
+   *   experimental_onFunctionCall: async (functionCallPayload, createFunctionCallMessages) => {
+   *     // ... run your custom logic here
+   *     const result = await myFunction(functionCallPayload)
+   *
+   *     // Ask for another completion, or return a string to send to the client as an assistant message.
+   *     return await openai.createChatCompletion({
+   *       model: 'gpt-3.5-turbo-0613',
+   *       stream: true,
+   *       // Append the relevant "assistant" and "function" call messages
+   *       messages: [...messages, ...createFunctionCallMessages(result)],
+   *       functions,
+   *     })
+   *   }
+   * })
+   * ```
+   */
+  experimental_onFunctionCall?: (
+    functionCallPayload: FunctionCallPayload,
+    createFunctionCallMessages: (functionCallResult: JSONValue) => CreateMessage[],
+  ) => Promise<Response | undefined | void | string>;
+};
 
 /**
  * Chat Completion Chunk 데이터
