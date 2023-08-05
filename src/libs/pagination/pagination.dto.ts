@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray } from 'class-validator';
-import { PaginationMetaDto } from '📚libs/pagination/paginationMeta.dto';
+
+import { PaginationMetaDto } from '@libs/pagination/paginationMeta.dto';
 
 /**
  * ### Response의 Pagination DTO

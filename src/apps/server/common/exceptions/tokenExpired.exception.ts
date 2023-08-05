@@ -1,7 +1,8 @@
 import { HttpStatus } from '@nestjs/common';
-import { TokenType } from '📚libs/enums/token.enum';
-import { BaseException } from '🔥apps/server/common/exceptions/base.exception';
-import { JwtExpiredType } from '🔥apps/server/common/types/jwtExpiration.type';
+
+import { BaseException } from '@apps/server/common/exceptions/base.exception';
+import { JwtExpiredType } from '@apps/server/common/types/jwtExpiration.type';
+import { TokenType } from '@libs/enums/token.enum';
 
 export class TokenExpiredException extends BaseException {
   constructor(tokenType: TokenType) {

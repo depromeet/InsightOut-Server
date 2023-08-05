@@ -1,10 +1,11 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Question, Resume } from '@prisma/client';
-import { DatabaseModule } from '📚libs/modules/database/database.module';
-import { ResumeRepository } from '📚libs/modules/database/repositories/resume.repository';
-import { GetOneResumeResponseDto, GetOneResumeWithTitleResponseDto } from '🔥apps/server/resumes/dtos/resumes/getResume.dto';
-import { ResumesService } from '🔥apps/server/resumes/services/resumes.service';
+
+import { GetOneResumeResponseDto, GetOneResumeWithTitleResponseDto } from '@apps/server/resumes/dtos/resumes/req/getResume.dto';
+import { ResumesService } from '@apps/server/resumes/services/resumes.service';
+import { DatabaseModule } from '@libs/modules/database/database.module';
+import { ResumeRepository } from '@libs/modules/database/repositories/resume.repository';
 
 const mockCreatedAt = new Date();
 const mockUpdatedAt = new Date();

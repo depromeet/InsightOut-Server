@@ -1,7 +1,8 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, Max, Min } from 'class-validator';
-import { OrderBy, OrderCriteria } from '📚libs/pagination/pagination.type';
+
+import { OrderBy, OrderCriteria } from '@libs/pagination/pagination.type';
 
 const criteriaDiscription = `
 ### 데이터를 가져오는 기준

@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Field } from '@prisma/client';
 import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class PatchUserInfoRequestBodyDto {
+export class PatchUserInfoBodyRequestDto {
   @ApiProperty({
     description: '유저 닉네임',
     example: '저뉴진스하입보이요',

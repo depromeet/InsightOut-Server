@@ -1,5 +1,6 @@
-import { AiRecommendQuestionResDto, AiResumeResDto } from '🔥apps/server/experiences/dto/res/getExperienceCardInfo.dto';
 import { ExperienceStatus } from '@prisma/client';
+
+import { AiRecommendQuestionResponseDto, AiResumeResDto } from '@apps/server/experiences/dto/res/getExperienceCardInfo.dto';
 
 export type ExperienceCardType = {
   title: string;
@@ -13,6 +14,6 @@ export type ExperienceCardType = {
   summaryKeywords: string[];
   ExperienceInfo: { analysis: string };
   ExperienceCapability: string[];
-  AiRecommendQuestion: AiRecommendQuestionResDto[];
+  AiRecommendQuestion: AiRecommendQuestionResponseDto[];
   AiResume: AiResumeResDto;
 };

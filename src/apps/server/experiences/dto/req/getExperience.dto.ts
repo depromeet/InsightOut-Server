@@ -1,10 +1,11 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
 import { IsBoolean, IsInt, IsNotEmpty, IsOptional, IsPositive } from 'class-validator';
-import { PaginationOptionsDto } from '📚libs/pagination/paginationOption.dto';
-import { OrderBy, OrderCriteria } from '📚libs/pagination/pagination.type';
 
-export class GetExperienceRequestQueryDto extends PaginationOptionsDto {
+import { OrderBy, OrderCriteria } from '@libs/pagination/pagination.type';
+import { PaginationOptionsDto } from '@libs/pagination/paginationOption.dto';
+
+export class GetExperienceRequestQueryRequestDto extends PaginationOptionsDto {
   @ApiPropertyOptional({
     description: '역량 키워드 id',
   })
@@ -71,7 +72,7 @@ export class GetExperienceRequestQueryDto extends PaginationOptionsDto {
   })
   result?: boolean;
 
-  toRequestDto(this: GetExperienceRequestQueryDto): GetExperienceRequestQueryDtoWithPagination {
+  toRequestDto(this: GetExperienceRequestQueryRequestDto): GetExperienceRequestQueryDtoWithPagination {
     const { criteria, order, take, page, skip, ...getExperienceRequestQueryDto } = this;
     const pagination = { criteria, order, take, page, skip };
     return { pagination, ...getExperienceRequestQueryDto };

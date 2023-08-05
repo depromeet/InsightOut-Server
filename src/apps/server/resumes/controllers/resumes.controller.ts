@@ -1,23 +1,20 @@
 import { UseGuards, Controller, Query, HttpStatus, Body, Param } from '@nestjs/common';
 import { ApiTags, ApiQuery, ApiParam } from '@nestjs/swagger';
-import { SuccessResponse } from '📚libs/decorators/successResponse.dto';
 
-import { Method } from '📚libs/enums/method.enum';
-import { ResponseEntity } from '📚libs/utils/respone.entity';
-import { UserJwtToken } from '🔥apps/server/auth/types/jwtToken.type';
-import { User } from '🔥apps/server/common/decorators/req/user.decorator';
-import { Route } from '🔥apps/server/common/decorators/routers/route.decorator';
-import { JwtAuthGuard } from '🔥apps/server/common/guards/jwtAuth.guard';
+import { UserJwtToken } from '@apps/server/auth/types/jwtToken.type';
+import { User } from '@apps/server/common/decorators/req/user.decorator';
+import { Route } from '@apps/server/common/decorators/routers/route.decorator';
+import { JwtAuthGuard } from '@apps/server/common/guards/jwtAuth.guard';
 import {
   DeleteResumeDescriptionMd,
   DeleteResumeResponseDescriptionMd,
   DeleteResumeSummaryMd,
-} from '🔥apps/server/resumes/docs/resumes/deleteResume.doc';
+} from '@apps/server/resumes/docs/resumes/deleteResume.doc';
 import {
   GetCountOfResumeDescriptionMd,
   GetCountOfResumeResponseDescriptionMd,
   GetCountOfResumeSummaryMd,
-} from '🔥apps/server/resumes/docs/resumes/getCountOfResume.dto';
+} from '@apps/server/resumes/docs/resumes/getCountOfResume.doc';
 import {
   GetAllResumeDescriptionMd,
   GetAllResumeResponseDescriptionMd,
@@ -28,29 +25,32 @@ import {
   GetOneResumeDescriptionMd,
   GetOneResumeResponseDescriptionMd,
   GetOneResumeSummaryMd,
-} from '🔥apps/server/resumes/docs/resumes/getResume.doc';
+} from '@apps/server/resumes/docs/resumes/getResume.doc';
 import {
   PatchResumeDescriptionMd,
   PatchResumeResponseDescriptionMd,
   PatchResumeSummaryMd,
-} from '🔥apps/server/resumes/docs/resumes/patchResume.doc';
+} from '@apps/server/resumes/docs/resumes/patchResume.doc';
 import {
   PostResumeDescriptionMd,
   PostResumeResponseDescriptionMd,
   PostResumeSummaryMd,
-} from '🔥apps/server/resumes/docs/resumes/postResume.doc';
-import { DeleteResumeRequestParamDto } from '🔥apps/server/resumes/dtos/resumes/deleteResume.dto';
-import { GetCountOfResumeResponseDto } from '🔥apps/server/resumes/dtos/resumes/getCountOfResume.dto';
+} from '@apps/server/resumes/docs/resumes/postResume.doc';
+import { DeleteResumeParamRequestDto } from '@apps/server/resumes/dtos/resumes/req/deleteResume.dto';
 import {
   GetAllResumeRequestQueryDto,
   GetOneResumeRequestParamDto,
   GetOneResumeResponseDto,
   GetOneResumeWithAnswerResponseDto,
   GetOneResumeWithTitleResponseDto,
-} from '🔥apps/server/resumes/dtos/resumes/getResume.dto';
-import { PatchResumeRequestBodyDto, PatchResumeRequestParamDto } from '🔥apps/server/resumes/dtos/resumes/patchResume.dto';
-import { PostResumeResponseDto } from '🔥apps/server/resumes/dtos/resumes/postResume.dto';
-import { ResumesService } from '🔥apps/server/resumes/services/resumes.service';
+} from '@apps/server/resumes/dtos/resumes/req/getResume.dto';
+import { PatchResumeBodyRequestDto, PatchResumeRequestParamDto } from '@apps/server/resumes/dtos/resumes/req/patchResume.dto';
+import { PostResumeResponseDto } from '@apps/server/resumes/dtos/resumes/req/postResume.dto';
+import { GetCountOfResumeResponseDto } from '@apps/server/resumes/dtos/resumes/res/getCountOfResume.dto';
+import { ResumesService } from '@apps/server/resumes/services/resumes.service';
+import { SuccessResponse } from '@libs/decorators/successResponse.dto';
+import { Method } from '@libs/enums/method.enum';
+import { ResponseEntity } from '@libs/utils/respone.entity';
 
 @ApiTags('🗂️ 자기소개서 API')
 @UseGuards(JwtAuthGuard)
@@ -205,7 +205,7 @@ export class ResumesController {
   async updateResumeFolder(
     @Param() patchResumeRequestParamDto: PatchResumeRequestParamDto,
     @User() user: UserJwtToken,
-    @Body() patchResumeRequestDto: PatchResumeRequestBodyDto,
+    @Body() patchResumeRequestDto: PatchResumeBodyRequestDto,
   ): Promise<ResponseEntity<string>> {
     await this.resumesService.updateResumeFolder(patchResumeRequestDto, patchResumeRequestParamDto.resumeId, user.userId);
 
@@ -233,7 +233,7 @@ export class ResumesController {
     type: Number,
   })
   async deleteResume(
-    @Param() deleteResumeRequestParamDto: DeleteResumeRequestParamDto,
+    @Param() deleteResumeRequestParamDto: DeleteResumeParamRequestDto,
     @User() user: UserJwtToken,
   ): Promise<ResponseEntity<string>> {
     await this.resumesService.deleteResume({ resumeId: deleteResumeRequestParamDto.resumeId, userId: user.userId });

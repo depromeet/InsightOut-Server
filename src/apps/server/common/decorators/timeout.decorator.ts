@@ -1,5 +1,6 @@
 import { applyDecorators, SetMetadata, UseInterceptors } from '@nestjs/common';
-import { TimeoutInterceptor } from '🔥apps/server/common/interceptors/timeout.interceptor';
+
+import { TimeoutInterceptor } from '@apps/server/common/interceptors/timeout.interceptor';
 
 /**
  * ### 요청 타임아웃을 설정하는 데코레이터

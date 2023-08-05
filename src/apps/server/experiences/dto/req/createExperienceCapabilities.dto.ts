@@ -10,7 +10,7 @@ const example = {
   '협상/설득력': false,
   팀워크: false,
 };
-export class CreateExperienceCapabilitiesdBodyDto {
+export class CreateExperienceCapabilitiesdBodyRequestDto {
   @IsNotEmpty()
   @IsObject()
   @ApiProperty({ example })

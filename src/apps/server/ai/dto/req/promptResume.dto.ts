@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ArrayMaxSize, IsArray, IsInt, IsNotEmpty, Min } from 'class-validator';
-import { IsNotEmptyString } from '🔥apps/server/common/decorators/validations/isCustomString.decorator';
 
-export class PromptResumeBodyResDto {
+import { IsNotEmptyString } from '@apps/server/common/decorators/validations/isCustomString.decorator';
+
+export class PromptResumeBodyRequestDto {
   @IsInt()
   @IsNotEmpty()
   @Min(1)

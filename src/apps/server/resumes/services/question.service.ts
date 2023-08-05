@@ -1,12 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { QuestionRepository } from '📚libs/modules/database/repositories/question.repository';
-import { ResumeRepository } from '📚libs/modules/database/repositories/resume.repository';
-import { PostQuestionResponseDto } from '../dtos/questions/postQuestion.dto';
-import { PatchQuestionRequestBodyDto, PatchQuestionResponseDto } from '🔥apps/server/resumes/dtos/questions/patchQuestionRequest.dto';
-import { GetOneQuestionResponseDto } from '🔥apps/server/resumes/dtos/questions/getQuestion.dto';
-import { PostSpellCheckRequestBodyDto } from '🔥apps/server/resumes/dtos/questions/postSpellCheck.body.dto';
-import { SpellCheckResult } from '📚libs/modules/api/api.type';
-import { ApiService } from '📚libs/modules/api/api.service';
+
+import { GetOneQuestionResponseDto } from '@apps/server/resumes/dtos/questions/req/getQuestion.dto';
+import { PatchQuestionRequestBodyDto, PatchQuestionResponseDto } from '@apps/server/resumes/dtos/questions/req/patchQuestion.dto';
+import { PostSpellCheckRequestBodyDto } from '@apps/server/resumes/dtos/questions/req/postSpellCheck.dto';
+import { ApiService } from '@libs/modules/api/api.service';
+import { SpellCheckResult } from '@libs/modules/api/api.type';
+import { QuestionRepository } from '@libs/modules/database/repositories/question.repository';
+import { ResumeRepository } from '@libs/modules/database/repositories/resume.repository';
+
+import { PostQuestionResponseDto } from '../dtos/questions/req/postQuestion.dto';
 
 @Injectable()
 export class QuestionsService {
@@ -39,7 +41,7 @@ export class QuestionsService {
     return questionReponseDto;
   }
 
-  public async spellCheck(body: PostSpellCheckRequestBodyDto): Promise<SpellCheckResult[][]> {
+  public async spellCheck({ body }: { body: PostSpellCheckRequestBodyDto }): Promise<SpellCheckResult[][]> {
     const { sentence } = body;
     const checkedSpellByDAUM = await this.apiService.spellCheckByDaum(sentence);
 

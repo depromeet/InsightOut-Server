@@ -1,26 +1,24 @@
 import { Body, HttpStatus, Param, UseGuards } from '@nestjs/common';
-import { Route } from '🔥apps/server/common/decorators/routers/route.decorator';
-import { RouteTable } from '🔥apps/server/common/decorators/routers/routeTable.decorator';
-import { User } from '🔥apps/server/common/decorators/req/user.decorator';
 import { ApiBearerAuth, ApiConflictResponse, ApiNotFoundResponse } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../../common/guards/jwtAuth.guard';
-import { UserJwtToken } from '../../auth/types/jwtToken.type';
-import { ResponseEntity } from '📚libs/utils/respone.entity';
-import { Method } from '📚libs/enums/method.enum';
-import { ExperienceCapabilityService } from '🔥apps/server/experiences/services/experienceCapability.service';
-import { CreateExperienceCapabilitiesdBodyDto } from '🔥apps/server/experiences/dto/req/createExperienceCapabilities.dto';
-import { AddCapabilitydBodyDto } from '🔥apps/server/experiences/dto/req/addCapability.dto';
-import { AddUserCapabilityConflictErrorResDto, AddUserCapabilityResDto } from '🔥apps/server/experiences/dto/res/addUserCapability.dto';
+
+import { User } from '@apps/server/common/decorators/req/user.decorator';
+import { Route } from '@apps/server/common/decorators/routers/route.decorator';
+import { RouteTable } from '@apps/server/common/decorators/routers/routeTable.decorator';
+import { AddCapabilitydBodyRequestDto } from '@apps/server/experiences/dto/req/addCapability.dto';
+import { CreateExperienceCapabilitiesdBodyRequestDto } from '@apps/server/experiences/dto/req/createExperienceCapabilities.dto';
+import { ExperienceIdParamReqDto } from '@apps/server/experiences/dto/req/experienceIdParam.dto';
+import { AddUserCapabilityConflictErrorResDto, AddUserCapabilityResponseDto } from '@apps/server/experiences/dto/res/addUserCapability.dto';
 import {
-  addCapabilitySuccMd,
-  createManyExperienceCapabilitiesSuccMd,
-  getExperienceCapabilitySuccMd,
-} from '🔥apps/server/experiences/docs/experience.md';
-import {
-  CreateExperienceCapabilitiesDto,
+  CreateExperienceCapabilitiesResponseDto,
   CreateExperienceCapabillitiesNotFoundErrorResDto,
-} from '🔥apps/server/experiences/dto/res/createExperienceCapabilities.dto';
-import { ExperienceIdParamReqDto } from '🔥apps/server/experiences/dto/req/experienceIdParam.dto';
+} from '@apps/server/experiences/dto/res/createExperienceCapabilities.dto';
+import { ExperienceCapabilityService } from '@apps/server/experiences/services/experienceCapability.service';
+import { Method } from '@libs/enums/method.enum';
+import { ResponseEntity } from '@libs/utils/respone.entity';
+
+import { UserJwtToken } from '../../auth/types/jwtToken.type';
+import { JwtAuthGuard } from '../../common/guards/jwtAuth.guard';
+import * as ExperienceDocs from '../docs/experience.md';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
@@ -41,7 +39,7 @@ export class ExperienceKeywordController {
     response: {
       code: HttpStatus.OK,
     },
-    description: getExperienceCapabilitySuccMd,
+    description: ExperienceDocs.getExperienceCapabilitySuccessMd,
     summary: '🔵 경험 분해 키워드 가져오기 API',
   })
   public async getExperienceCapability(
@@ -64,12 +62,12 @@ export class ExperienceKeywordController {
     },
     response: {
       code: HttpStatus.CREATED,
-      type: AddUserCapabilityResDto,
+      type: AddUserCapabilityResponseDto,
     },
-    description: addCapabilitySuccMd,
+    description: ExperienceDocs.addCapabilitySuccessMd,
     summary: '🔵 경험 분해 키워드 추가하기 API',
   })
-  public async addUserCapability(@Body() addCapabilitydBodyDto: AddCapabilitydBodyDto, @User() user: UserJwtToken) {
+  public async addUserCapability(@Body() addCapabilitydBodyDto: AddCapabilitydBodyRequestDto, @User() user: UserJwtToken) {
     const capability = await this.experienceCapabilityService.addUserCapability(addCapabilitydBodyDto, user);
 
     return ResponseEntity.CREATED_WITH_DATA(capability);
@@ -86,13 +84,13 @@ export class ExperienceKeywordController {
     },
     response: {
       code: HttpStatus.CREATED,
-      type: CreateExperienceCapabilitiesDto,
+      type: CreateExperienceCapabilitiesResponseDto,
     },
-    description: createManyExperienceCapabilitiesSuccMd,
+    description: ExperienceDocs.createManyExperienceCapabilitiesSuccessMd,
     summary: '🔵 경험 분해 키워드 임시 저장 API',
   })
   public async createManyExperienceCapabilities(
-    @Body() createExperienceKeywordBodyDto: CreateExperienceCapabilitiesdBodyDto,
+    @Body() createExperienceKeywordBodyDto: CreateExperienceCapabilitiesdBodyRequestDto,
     @User() user: UserJwtToken,
   ) {
     const experienceCapabilities = await this.experienceCapabilityService.createManyExperienceCapabilities(

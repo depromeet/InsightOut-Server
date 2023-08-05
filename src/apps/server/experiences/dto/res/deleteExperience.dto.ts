@@ -1,8 +1,8 @@
-import { Exclude, Expose, Transform } from 'class-transformer';
-import { IsBoolean, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude, Expose } from 'class-transformer';
+import { IsBoolean, IsNotEmpty } from 'class-validator';
 
-export class DeleteExperienceDto {
+export class DeleteExperienceResponseDto {
   @Exclude() _isDeleted: boolean;
 
   constructor(isDeleted: boolean) {

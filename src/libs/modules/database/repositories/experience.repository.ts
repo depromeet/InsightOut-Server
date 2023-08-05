@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
 import { AiRecommendQuestion, AiResume, Experience, ExperienceInfo, ExperienceStatus, Prisma } from '@prisma/client';
 
-import { PaginationOptionsDto } from '📚libs/pagination/paginationOption.dto';
-import { ExperienceRepositoryInterface } from '🔥apps/server/experiences/interfaces/experienceRepository.interface';
-import { ExperienceSelect } from '🔥apps/server/experiences/interfaces/experienceSelect.interface';
+import { ExperienceRepositoryInterface } from '@apps/server/experiences/interfaces/experienceRepository.interface';
+import { ExperienceSelect } from '@apps/server/experiences/interfaces/experienceSelect.interface';
+import { PaginationOptionsDto } from '@libs/pagination/paginationOption.dto';
+
+import { PrismaService } from '../prisma.service';
 
 @Injectable()
 export class ExperienceRepository implements ExperienceRepositoryInterface {

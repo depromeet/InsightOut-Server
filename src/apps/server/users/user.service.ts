@@ -1,9 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { FeedbackRepository } from '📚libs/modules/database/repositories/feedback.repository';
-import { UserRepository } from '📚libs/modules/database/repositories/user.repository';
-import { GetUserResponseDto } from '🔥apps/server/users/dtos/getUser.dto';
-import { PatchUserInfoRequestBodyDto } from '🔥apps/server/users/dtos/patchUserInfo.dto';
-import { PostSendFeedbackRequestBodyDto } from '🔥apps/server/users/dtos/postFeedback.dto';
+
+import { PatchUserInfoBodyRequestDto } from '@apps/server/users/dtos/req/patchUserInfo.dto';
+import { PostSendFeedbackBodyRequestDto } from '@apps/server/users/dtos/req/postFeedback.dto';
+import { GetUserResponseDto } from '@apps/server/users/dtos/res/getUser.dto';
+import { FeedbackRepository } from '@libs/modules/database/repositories/feedback.repository';
+import { UserRepository } from '@libs/modules/database/repositories/user.repository';
 
 @Injectable()
 export class UserService {
@@ -32,14 +33,14 @@ export class UserService {
    *
    * @param body 유저가 작성한 피드백이 담긴 객체입니다.
    */
-  async sendFeedback(body: PostSendFeedbackRequestBodyDto): Promise<void> {
+  async sendFeedback(body: PostSendFeedbackBodyRequestDto): Promise<void> {
     const { contents } = body;
     await this.feedbackRepository.create({
       data: { contents },
     });
   }
 
-  async updateUserInfo(userId: number, body: PatchUserInfoRequestBodyDto): Promise<void> {
+  async updateUserInfo(userId: number, body: PatchUserInfoBodyRequestDto): Promise<void> {
     if (!Object.keys(body).length) {
       throw new BadRequestException('Please input information to be updated');
     }

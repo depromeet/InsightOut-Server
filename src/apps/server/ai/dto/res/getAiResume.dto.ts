@@ -1,8 +1,8 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose, Type } from 'class-transformer';
 import { ArrayMaxSize, ArrayMinSize, IsArray, IsDate, IsInt, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
 
-export class AiResumeDto {
+export class AiResumeResponseDto {
   @Exclude() _id: number;
   @Exclude() _experienceId: number;
   @Exclude() _content: string;
@@ -73,10 +73,10 @@ export class AiResumeDto {
 }
 
 export class GetAiResumeDto {
-  @Exclude() _AiResumes: AiResumeDto[];
+  @Exclude() _AiResumes: AiResumeResponseDto[];
   @Exclude() _availableKeywords: string[];
 
-  constructor(AiResumeResDtoArr: AiResumeDto[], availableKeywords: string[]) {
+  constructor(AiResumeResDtoArr: AiResumeResponseDto[], availableKeywords: string[]) {
     this._AiResumes = AiResumeResDtoArr;
     this._availableKeywords = availableKeywords;
   }
@@ -91,11 +91,11 @@ export class GetAiResumeDto {
   }
 
   @IsArray()
-  @Type(() => AiResumeDto)
+  @Type(() => AiResumeResponseDto)
   @ValidateNested({ each: true })
   @Expose()
-  @ApiProperty({ type: AiResumeDto, isArray: true })
-  get AiResumes(): AiResumeDto[] {
+  @ApiProperty({ type: AiResumeResponseDto, isArray: true })
+  get AiResumes(): AiResumeResponseDto[] {
     return this._AiResumes;
   }
 }

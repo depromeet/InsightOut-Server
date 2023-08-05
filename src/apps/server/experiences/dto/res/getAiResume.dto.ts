@@ -1,8 +1,8 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
 
-export class GetAiResumeDto {
+export class GetAiResumeResponseDto {
   @Exclude() _content: string;
   @Exclude() _id: number;
 

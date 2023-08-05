@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Capability, ExperienceStatus, KeywordType, Prisma } from '@prisma/client';
-import { PrismaService } from '📚libs/modules/database/prisma.service';
-import { AbstractRepository, DelegateArgs, DelegateReturnTypes } from '📚libs/modules/database/repositories/abstract.repository';
-import { CountExperienceAndCapability } from '🔥apps/server/experiences/types/countExperienceAndCapability.type';
+
+import { CountExperienceAndCapability } from '@apps/server/experiences/types/countExperienceAndCapability.type';
+import { PrismaService } from '@libs/modules/database/prisma.service';
+import { AbstractRepository, DelegateArgs, DelegateReturnTypes } from '@libs/modules/database/repositories/abstract.repository';
 
 type CapabilityDelegate = Prisma.CapabilityDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>;
 

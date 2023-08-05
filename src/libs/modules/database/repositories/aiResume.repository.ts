@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
 import { AiResume, Prisma } from '@prisma/client';
-import { AiResumeRepositoryInterface } from '🔥apps/server/ai/interfaces/aiRepository.interface';
+
+import { PrismaService } from '../prisma.service';
 
 @Injectable()
-export class AiResumeRepository implements AiResumeRepositoryInterface {
+export class AiResumeRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   public async findOneByFilter(where: Prisma.AiResumeWhereInput): Promise<AiResume> {

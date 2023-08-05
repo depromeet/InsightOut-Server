@@ -1,10 +1,12 @@
-import { Exclude, Expose } from 'class-transformer';
-import { IsNotEmptyNumber } from '🔥apps/server/common/decorators/validations/isCustomNumber.decorator';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsDate, IsNotEmpty, IsString } from 'class-validator';
-import { ExperienceCardType } from '🔥apps/server/experiences/types/experienceCard.type';
 import { ExperienceStatus } from '@prisma/client';
-export class AiRecommendQuestionResDto {
+import { Exclude, Expose } from 'class-transformer';
+import { IsArray, IsDate, IsNotEmpty, IsString } from 'class-validator';
+
+import { IsNotEmptyNumber } from '@apps/server/common/decorators/validations/isCustomNumber.decorator';
+import { ExperienceCardType } from '@apps/server/experiences/types/experienceCard.type';
+
+export class AiRecommendQuestionResponseDto {
   @Exclude() _id: number;
   @Exclude() _title: string;
 
@@ -71,7 +73,7 @@ export class GetExperienceCardInfoDto {
   @Exclude() _ExperienceInfo: { analysis: string };
   @Exclude() _ExperienceCapability: string[];
   @Exclude() _AiResume: AiResumeResDto;
-  @Exclude() _AiRecommendQuestion: AiRecommendQuestionResDto[];
+  @Exclude() _AiRecommendQuestion: AiRecommendQuestionResponseDto[];
 
   constructor(experienceCardInfo: ExperienceCardType) {
     this._summaryKeywords = experienceCardInfo.summaryKeywords;
@@ -90,8 +92,8 @@ export class GetExperienceCardInfoDto {
   }
 
   @Expose()
-  @ApiProperty({ type: AiRecommendQuestionResDto, isArray: true, description: 'AI 추천 자기소개서 재목 배열입니다..' })
-  get AiRecommendQuestion(): AiRecommendQuestionResDto[] {
+  @ApiProperty({ type: AiRecommendQuestionResponseDto, isArray: true, description: 'AI 추천 자기소개서 재목 배열입니다..' })
+  get AiRecommendQuestion(): AiRecommendQuestionResponseDto[] {
     return this._AiRecommendQuestion;
   }
   @Expose()

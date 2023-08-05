@@ -2,7 +2,8 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Onboarding } from '@prisma/client';
 import { Exclude, Expose } from 'class-transformer';
 import { IsBoolean, IsNotEmpty, IsOptional } from 'class-validator';
-import { IsTrue } from '🔥apps/server/common/decorators/validations/isTrue.decorator';
+
+import { IsTrue } from '@apps/server/common/decorators/validations/isTrue.decorator';
 
 export class PatchOnboardingRequestBodyDto {
   @ApiPropertyOptional({

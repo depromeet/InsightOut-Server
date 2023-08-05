@@ -1,8 +1,8 @@
-import { Exclude, Expose } from 'class-transformer';
-import { IsInt, IsNotEmpty, IsNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude, Expose } from 'class-transformer';
+import { IsInt, IsNotEmpty } from 'class-validator';
 
-export class GetAiResumeCountDto {
+export class GetAiResumeCountResponseDto {
   @Exclude() _count: number;
 
   constructor(count: number) {

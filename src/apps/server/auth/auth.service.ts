@@ -1,22 +1,23 @@
 import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { RedisCacheService } from '📚libs/modules/cache/redis/redis.service';
 import { JwtService } from '@nestjs/jwt';
-import { UserRepository } from '📚libs/modules/database/repositories/user.repository';
-import { CookieOptions } from 'express';
 import { KeywordType, Provider } from '@prisma/client';
-import { Request } from 'express';
+import { CookieOptions, Request } from 'express';
+
+import { UserPayload } from '@apps/server/auth/dtos/postSignin.dto';
+import { DEFAULT_CAPABILITIES } from '@apps/server/common/consts/defaultCapability.const';
+import { ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } from '@apps/server/common/consts/jwt.const';
+import { TokenExpiredException } from '@apps/server/common/exceptions/tokenExpired.exception';
+import { isFirebaseAuthError } from '@apps/server/common/types/firebaseAuth.type';
+import { TokenType } from '@libs/enums/token.enum';
+import { ApiService } from '@libs/modules/api/api.service';
+import { RedisCacheService } from '@libs/modules/cache/redis/redis.service';
+import { PrismaService } from '@libs/modules/database/prisma.service';
+import { UserRepository } from '@libs/modules/database/repositories/user.repository';
+import { EnvEnum } from '@libs/modules/env/env.enum';
+import { EnvService } from '@libs/modules/env/env.service';
+import { FirebaseService } from '@libs/modules/firebase/firebase.service';
+
 import { AccessTokenAndRefreshToken, UserWithRefreshTokenPayload } from './types/jwtToken.type';
-import { ApiService } from '📚libs/modules/api/api.service';
-import { ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } from '🔥apps/server/common/consts/jwt.const';
-import { UserPayload } from '🔥apps/server/auth/dtos/postSignin.dto';
-import { PrismaService } from '📚libs/modules/database/prisma.service';
-import { DEFAULT_CAPABILITIES } from '🔥apps/server/common/consts/defaultCapability.const';
-import { isFirebaseAuthError } from '🔥apps/server/common/types/firebaseAuth.type';
-import { FirebaseService } from '📚libs/modules/firebase/firebase.service';
-import { EnvService } from '📚libs/modules/env/env.service';
-import { EnvEnum } from '📚libs/modules/env/env.enum';
-import { TokenType } from '📚libs/enums/token.enum';
-import { TokenExpiredException } from '🔥apps/server/common/exceptions/tokenExpired.exception';
 
 @Injectable()
 export class AuthService {

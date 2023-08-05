@@ -1,8 +1,9 @@
 import { HttpStatus, Type, applyDecorators } from '@nestjs/common';
 import { ApiExtraModels, ApiResponse, getSchemaPath } from '@nestjs/swagger';
-import { SuccessCommonEsponseDto } from '📚libs/dtos/successCommon.esponse.dto';
-import { makeInstanceByApiProperty } from '📚libs/helpers/makeInstanceByApiPropertyFunction';
-import { mergeObjects } from '📚libs/utils/mergeTwoObject.function';
+
+import { SuccessCommonResponseDto } from '@libs/dtos/successCommonDto';
+import { makeInstanceByApiProperty } from '@libs/helpers/makeInstanceByApiPropertyFunction';
+import { mergeObjects } from '@libs/utils/mergeTwoObject.function';
 
 interface SuccessResponseOption {
   /**
@@ -35,7 +36,7 @@ export const SuccessResponse = (statusCode: HttpStatus, successResponseOptions: 
   const examples = successResponseOptions
     .map((response: SuccessResponseOption) => {
       // base CommonResponse 생성
-      const commonResponseInstance = makeInstanceByApiProperty<SuccessCommonEsponseDto<any>>(SuccessCommonEsponseDto);
+      const commonResponseInstance = makeInstanceByApiProperty<SuccessCommonResponseDto<any>>(SuccessCommonResponseDto);
 
       const dtoModel = response.model;
 
@@ -88,7 +89,7 @@ export const SuccessResponse = (statusCode: HttpStatus, successResponseOptions: 
   // 데코레이터 생성
   return applyDecorators(
     // $ref를 사용하기 위해서 extraModel로 등록 시켜야 함.
-    ApiExtraModels(...extraModel, ...extraGeneric, SuccessCommonEsponseDto),
+    ApiExtraModels(...extraModel, ...extraGeneric, SuccessCommonResponseDto),
     ApiResponse({
       status: statusCode,
       content: {
@@ -96,7 +97,7 @@ export const SuccessResponse = (statusCode: HttpStatus, successResponseOptions: 
           schema: {
             // 베이스 스키마
             additionalProperties: {
-              $ref: getSchemaPath(SuccessCommonEsponseDto),
+              $ref: getSchemaPath(SuccessCommonResponseDto),
             },
             // dto 스키마들
             oneOf: [...pathsOfDto, ...pathsOfGeneric],

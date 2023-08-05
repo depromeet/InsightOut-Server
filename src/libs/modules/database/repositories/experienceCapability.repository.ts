@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
-
 import { ExperienceCapability, Prisma } from '@prisma/client';
-import { ExperienceCapabilityRepositoryInterface } from '🔥apps/server/experiences/interfaces/experienceRepository.interface';
+
+import { ExperienceCapabilityRepositoryInterface } from '@apps/server/experiences/interfaces/experienceRepository.interface';
+
+import { PrismaService } from '../prisma.service';
 
 @Injectable()
 export class ExperienceCapabilityRepository implements ExperienceCapabilityRepositoryInterface {
