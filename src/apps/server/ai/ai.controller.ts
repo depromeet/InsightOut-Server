@@ -182,19 +182,4 @@ export class AiController {
 
     return ResponseEntity.OK_WITH_DATA(newAi);
   }
-
-  @Route({
-    request: {
-      method: 'POST',
-      path: 'ai-resume',
-    },
-    response: {
-      code: HttpStatus.OK,
-      description: 'AI 자기소개서 추천을 stream 방식으로 응답을 전송합니다.',
-    },
-    summary: 'AI 자기소개서 stream test',
-  })
-  public async postAiResume(@Body() postAiResumeRequestDto: PostAiResumeRequestDto) {
-    return await this.aiService.postAiResume(postAiResumeRequestDto);
-  }
 }

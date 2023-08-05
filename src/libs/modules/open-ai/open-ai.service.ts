@@ -7,8 +7,6 @@ import { openAIModelEnum } from '📚libs/modules/open-ai/openAIModel.enum';
 import { AiResponse } from '📚libs/modules/open-ai/interface/aiResponse.interface';
 import { MINUTES } from '🔥apps/server/common/consts/time.const';
 import { Configuration, OpenAIApi } from 'openai';
-import { OpenAIStream, StreamingTextResponse, streamToResponse } from 'ai';
-import { Response } from 'express';
 
 @Injectable()
 export class OpenAiService {
@@ -56,14 +54,54 @@ export class OpenAiService {
   }
 
   public async getStreamGPTResponse(content: string) {
-    const aiResponse = await this.openai.createChatCompletion({
-      model: this.OPEN_AI_MODEL,
-      messages: [{ role: 'user', content }],
-      stream: true,
-    });
+    const aiResponse = await this.openai.createChatCompletion(
+      {
+        model: this.OPEN_AI_MODEL,
+        messages: [{ role: 'user', content }],
+        stream: true,
+      },
+      { responseType: 'stream' },
+    );
 
-    const stream = OpenAIStream(aiResponse);
+    // try {
+    //   aiResponse.data.on('data', (data) => {
+    //     const lines = data
+    //       ?.toString()
+    //       ?.split('\n')
+    //       .filter((line) => line.trim() !== '');
 
-    return new StreamingTextResponse(stream);
+    //     console.log(lines);
+    //     for (const line of lines) {
+    //       const message = line.replace(/^data: /, '');
+    //       if (message === '[DONE]') {
+    //         break; // Stream finished
+    //       }
+    //       try {
+    //         const parsed = JSON.parse(message);
+    //         console.log(parsed.choices[0].delta?.content);
+    //       } catch (error) {
+    //         console.error('Could not JSON parse stream message', message, error);
+    //       }
+    //     }
+    //   });
+
+    //   return aiResponse.data;
+    // } catch (error) {
+    //   if (error.response?.status) {
+    //     console.error(error.response.status, error.message);
+    //     error.response.data.on('data', (data) => {
+    //       const message = data.toString();
+    //       try {
+    //         const parsed = JSON.parse(message);
+    //         console.error('An error occurred during OpenAI request: ', parsed);
+    //       } catch (error) {
+    //         console.error('An error occurred during OpenAI request: ', message);
+    //       }
+    //     });
+    //   } else {
+    //     console.error('An error occurred during OpenAI request', error);
+    //   }
+    // }
+    return aiResponse;
   }
 }

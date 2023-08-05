@@ -5,8 +5,11 @@ import { ApiService } from '📚libs/modules/api/api.service';
 import { RedisCacheService } from '📚libs/modules/cache/redis/redis.service';
 import { EnvEnum } from '📚libs/modules/env/env.enum';
 import { EnvService } from '📚libs/modules/env/env.service';
+import { OpenAiService } from '📚libs/modules/open-ai/open-ai.service';
+import { generateResumePrompt } from '🔥apps/server/ai/prompt/keywordPrompt';
 import { ACCESS_TOKEN_EXPIRES_IN, REFRESH_TOKEN_EXPIRES_IN } from '🔥apps/server/common/consts/jwt.const';
 import { PostIssueTestTokenRequestBodyDto } from '🔥apps/server/test/dtos/post-issue-test-token.dto';
+import { PostAiResumeRequestDto } from '🔥apps/server/test/dtos/req/postAiResume.dto';
 
 @Injectable()
 export class TestService {
@@ -15,6 +18,7 @@ export class TestService {
     private readonly jwtService: JwtService,
     private readonly envService: EnvService,
     private readonly apiService: ApiService,
+    private readonly openAiService: OpenAiService,
   ) {}
 
   async issueTestToken(body: PostIssueTestTokenRequestBodyDto) {
@@ -56,5 +60,11 @@ export class TestService {
     const randomNickName = this.apiService.getRandomNickname();
 
     return randomNickName;
+  }
+
+  public async postAiResume(postAiResumeDto: PostAiResumeRequestDto) {
+    const { capabilities, ...body } = postAiResumeDto;
+    const prompt = generateResumePrompt(body, capabilities);
+    return this.openAiService.getStreamGPTResponse(prompt);
   }
 }

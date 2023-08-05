@@ -1,4 +1,4 @@
-import { Body, Controller, HttpStatus, ParseIntPipe, Query, Res } from '@nestjs/common';
+import { Body, Controller, Header, HttpStatus, ParseIntPipe, Query, Res } from '@nestjs/common';
 import { TestService } from './test.service';
 import { Response } from 'express';
 import { ResponseEntity } from '📚libs/utils/respone.entity';
@@ -14,6 +14,7 @@ import { TokenType } from '📚libs/enums/token.enum';
 import { TimeoutTestRequestQueryDto } from '🔥apps/server/test/dtos/timeout-test.dto';
 import { SetRequestTimeout } from '🔥apps/server/common/decorators/timeout.decorator';
 import { SECOND } from '🔥apps/server/common/consts/time.const';
+import { PostAiResumeRequestDto } from '🔥apps/server/test/dtos/req/postAiResume.dto';
 
 @ApiTags('🧑🏻‍💻 개발용 API')
 @Controller('test')
@@ -125,5 +126,28 @@ export class TestController {
     const randomNickname = this.testService.getRandomNickname();
 
     return ResponseEntity.OK_WITH_DATA(randomNickname);
+  }
+
+  @Route({
+    request: {
+      method: 'POST',
+      path: 'ai-resume-stream',
+    },
+    response: {
+      code: HttpStatus.OK,
+      description: 'AI 자기소개서 추천을 stream 방식으로 응답을 전송합니다.',
+    },
+    summary: 'AI 자기소개서 stream test',
+  })
+  @Header('Content-Type', 'text/event-stream')
+  public async postAiResume(@Body() postAiResumeRequestDto: PostAiResumeRequestDto, @Res() response: Response) {
+    const aiResume = await this.testService.postAiResume(postAiResumeRequestDto);
+    aiResume.data.on('data', (chunk) => {
+      response.write(chunk);
+    });
+
+    aiResume.data.on('end', () => {
+      response.end();
+    });
   }
 }
