@@ -17,7 +17,7 @@ import {
   GetCountOfResumeDescriptionMd,
   GetCountOfResumeResponseDescriptionMd,
   GetCountOfResumeSummaryMd,
-} from '🔥apps/server/resumes/docs/resumes/getCountOfResume.dto';
+} from '🔥apps/server/resumes/docs/resumes/getCountOfResume.doc';
 import {
   GetAllResumeDescriptionMd,
   GetAllResumeResponseDescriptionMd,
