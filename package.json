@@ -51,6 +51,7 @@
     "jest-mock-extended": "^3.0.4",
     "nest-winston": "^1.9.1",
     "openai": "^3.2.1",
+    "openai-edge": "^1.2.2",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.1.13",
