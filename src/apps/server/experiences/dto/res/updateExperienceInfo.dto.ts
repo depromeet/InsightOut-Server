@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
-import { Exclude, Expose } from 'class-transformer';
-import { IsEnum, IsOptional, Matches } from 'class-validator';
+import { AiResume, Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
+import { Exclude, Expose, Type } from 'class-transformer';
+import { IsEnum, IsInt, IsObject, IsOptional, IsPositive, IsString, Matches, ValidateNested } from 'class-validator';
 
 import { dateValidation } from '@apps/server/common/consts/dateValidation.const';
 import { IsOptionalNumber } from '@apps/server/common/decorators/validations/isCustomNumber.decorator';
@@ -60,6 +60,40 @@ export class UpdateExperienceInfoResponseDto {
   }
 }
 
+export class UpdateAiResumeResponseDto {
+  @Exclude() private readonly _aiResumeId: number;
+  @Exclude() private readonly _content: string;
+
+  constructor({ id: aiResumeId, content }: AiResume) {
+    this._aiResumeId = aiResumeId;
+    this._content = content;
+  }
+
+  @ApiProperty({
+    description: 'ai 추천 자기소개서 id',
+    example: 1,
+    type: Number,
+  })
+  @IsInt()
+  @IsPositive()
+  @IsOptional()
+  @Expose()
+  get aiResumeId(): number {
+    return this._aiResumeId;
+  }
+
+  @ApiProperty({
+    description: 'ai 추천 자기소개서 내용',
+    type: String,
+  })
+  @IsString()
+  @IsOptional()
+  @Expose()
+  get content(): string {
+    return this._content;
+  }
+}
+
 export class UpdateExperienceResDto {
   @Exclude() private readonly _experienceId: number;
   @Exclude() private readonly _title: string;
@@ -71,8 +105,9 @@ export class UpdateExperienceResDto {
   @Exclude() private readonly _endDate: Date;
   @Exclude() private readonly _experienceStatus: ExperienceStatus;
   @Exclude() private readonly _experienceInfo: UpdateExperienceInfoResponseDto;
+  @Exclude() private readonly _aiResume: UpdateAiResumeResponseDto;
 
-  constructor(experience: Experience, experienceInfo: ExperienceInfo) {
+  constructor(experience: Experience, experienceInfo: ExperienceInfo, aiResume: AiResume) {
     this._experienceId = experience.id;
     this._title = experience.title;
     this._startDate = experience.startDate;
@@ -90,6 +125,7 @@ export class UpdateExperienceResDto {
     experienceInfoRes.setAnalysis = experienceInfo.analysis;
 
     this._experienceInfo = experienceInfoRes;
+    this._aiResume = new UpdateAiResumeResponseDto(aiResume);
   }
 
   @ApiProperty({ example: 1 })
@@ -156,6 +192,15 @@ export class UpdateExperienceResDto {
   @Expose()
   get experienceInfo(): UpdateExperienceInfoResponseDto {
     return this._experienceInfo;
+  }
+
+  @ApiProperty({ description: 'ai 추천 자기소개서', type: UpdateAiResumeResponseDto })
+  @IsObject()
+  @ValidateNested()
+  @Type(() => UpdateAiResumeResponseDto)
+  @Expose()
+  get aiResume(): UpdateAiResumeResponseDto {
+    return this._aiResume;
   }
 }
 
