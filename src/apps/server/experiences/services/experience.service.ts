@@ -175,9 +175,10 @@ export class ExperienceService {
     id: number,
     updatedExperienceInfo: Experience & {
       ExperienceInfo?: ExperienceInfo;
+      AiResume?: AiResume;
     },
   ): Promise<UpdateExperienceResDto> {
-    const [experience, experienceInfo] = await this.prisma.$transaction(async (tx) => {
+    const [experience, experienceInfo, aiResume] = await this.prisma.$transaction(async (tx) => {
       const experienceInfo = await tx.experienceInfo.update({
         where: { experienceId: id },
         data: {
@@ -201,9 +202,16 @@ export class ExperienceService {
           summaryKeywords: updatedExperienceInfo.summaryKeywords,
         },
       });
-      return [experience, experienceInfo];
+
+      const aiResume = await tx.aiResume.upsert({
+        where: { experienceId: id },
+        create: updatedExperienceInfo.AiResume,
+        update: updatedExperienceInfo.AiResume,
+      });
+
+      return [experience, experienceInfo, aiResume];
     });
-    return new UpdateExperienceResDto(experience, experienceInfo);
+    return new UpdateExperienceResDto(experience, experienceInfo, aiResume);
   }
 
   public async getCountOfExperienceAndCapability(
