@@ -125,7 +125,7 @@ export class UpdateExperienceResDto {
     experienceInfoRes.setAnalysis = experienceInfo.analysis;
 
     this._experienceInfo = experienceInfoRes;
-    this._aiResume = new UpdateAiResumeResponseDto(aiResume);
+    this._aiResume = aiResume && new UpdateAiResumeResponseDto(aiResume);
   }
 
   @ApiProperty({ example: 1 })
