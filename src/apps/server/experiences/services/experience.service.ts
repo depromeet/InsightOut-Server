@@ -120,12 +120,12 @@ export class ExperienceService {
     user: UserJwtToken,
   ): Promise<UpdateExperienceResDto> {
     // 생성 중인 경험 카드가 있는지 확인
-    const experinece = await this.experienceRepository.findOneById(query.experienceId, user.userId);
-    if (!experinece) throw new NotFoundException('해당 ID의 경험카드는 존재하지 않습니다.');
+    const experience = await this.experienceRepository.findOneById(query.experienceId, user.userId);
+    if (!experience) throw new NotFoundException('해당 ID의 경험카드는 존재하지 않습니다.');
     // 있으면 업데이트
-    const updatedExperienceInfo = body.compareProperty(experinece);
+    const updatedExperienceInfo = body.compareProperty(experience);
 
-    return await this.processUpdateExperience(experinece.id, updatedExperienceInfo);
+    return await this.processUpdateExperience(experience.id, updatedExperienceInfo);
   }
 
   public async findOneById(
@@ -203,11 +203,14 @@ export class ExperienceService {
         },
       });
 
-      const aiResume = await tx.aiResume.upsert({
-        where: { experienceId: id },
-        create: updatedExperienceInfo.AiResume,
-        update: updatedExperienceInfo.AiResume,
-      });
+      let aiResume = null;
+      if (updatedExperienceInfo && updatedExperienceInfo?.AiResume) {
+        aiResume = await tx.aiResume.upsert({
+          where: { experienceId: id },
+          create: updatedExperienceInfo.AiResume,
+          update: updatedExperienceInfo.AiResume,
+        });
+      }
 
       return [experience, experienceInfo, aiResume];
     });
