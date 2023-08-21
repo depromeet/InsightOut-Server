@@ -16,12 +16,13 @@ import { PostSendFeedbackBodyRequestDto } from '@apps/server/users/dtos/req/post
 import { GetUserResponseDto } from '@apps/server/users/dtos/res/getUser.dto';
 import { UserService } from '@apps/server/users/user.service';
 import { Method } from '@libs/enums/method.enum';
+import { SlackService } from '@libs/modules/slack/slack.service';
 import { ResponseEntity } from '@libs/utils/respone.entity';
 
 @ApiTags('👶🏻 유저 API')
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService, private readonly slackService: SlackService) {}
 
   @UseGuards(JwtAuthGuard)
   @Route({
@@ -66,6 +67,8 @@ export class UserController {
   })
   async sendFeedback(@Body() postSendFeedbackRequestBodyDto: PostSendFeedbackBodyRequestDto): Promise<ResponseEntity<string>> {
     await this.userService.sendFeedback(postSendFeedbackRequestBodyDto);
+
+    await this.slackService.sendFeedback(postSendFeedbackRequestBodyDto.contents);
 
     return ResponseEntity.CREATED_WITH_MESSAGE('Feedback has been sent');
   }
