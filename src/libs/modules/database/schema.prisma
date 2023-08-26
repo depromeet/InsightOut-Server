@@ -150,8 +150,8 @@ model AiResume {
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz // AI 자기소개서 생성 일자
   updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz // AI 자기소개서 수정 일자
 
-  userId       Int @map("user_id")
-  experienceId Int? @unique @map("experience_id")  // 경험 id
+  userId       Int  @map("user_id")
+  experienceId Int? @unique @map("experience_id") // 경험 id
 
   User                 User                 @relation(references: [id], fields: [userId], onDelete: Cascade)
   Experience           Experience?          @relation(references: [id], fields: [experienceId], onDelete: SetNull)
