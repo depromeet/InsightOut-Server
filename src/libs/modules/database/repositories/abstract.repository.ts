@@ -1,3 +1,7 @@
+import { DefaultArgs } from '@prisma/client/runtime/library';
+
+import { PrismaService } from '@libs/modules/database/prisma.service';
+
 type Operations =
   | 'aggregate'
   | 'count'
@@ -8,27 +12,32 @@ type Operations =
   | 'findFirst'
   | 'findMany'
   | 'findUnique'
+  | 'findUniqueOrThrow'
   | 'update'
   | 'updateMany'
   | 'upsert';
 
 export class AbstractRepository<
-  Db extends { [Key in Operations]: (data: any) => unknown },
+  Db extends { [K in Operations]: (data: any) => unknown },
   Args extends { [K in Operations]: unknown },
   Return extends { [K in Operations]: unknown },
 > {
-  constructor(protected db: Db) {}
+  constructor(protected db: Db, protected readDb: Db) {}
 
   findFirst(data?: Args['findFirst']): Return['findFirst'] {
-    return this.db.findFirst(data);
+    return this.readDb.findFirst(data);
   }
 
   findUnique(data: Args['findUnique']): Return['findUnique'] {
-    return this.db.findUnique(data);
+    return this.readDb.findUnique(data);
+  }
+
+  findUniqueOrThrow(data: Args['findUniqueOrThrow']): Return['findUniqueOrThrow'] {
+    return this.readDb.findUniqueOrThrow(data);
   }
 
   findMany(data?: Args['findMany']): Return['findMany'] {
-    return this.db.findMany(data);
+    return this.readDb.findMany(data);
   }
 
   create(data: Args['create']): Return['create'] {
@@ -56,7 +65,7 @@ export class AbstractRepository<
   }
 
   count(data?: Args['count']): Return['count'] {
-    return this.db.count(data);
+    return this.readDb.count(data);
   }
 }
 
@@ -65,5 +74,5 @@ export type DelegateArgs<T> = {
 };
 
 export type DelegateReturnTypes<T> = {
-  [Key in keyof T]: T[Key] extends (...args: any[]) => any ? ReturnType<T[Key]> : never;
+  [Key in keyof T]: T[Key] extends (...args: any[]) => any ? ReturnType<T[Key] | any> : never;
 };
