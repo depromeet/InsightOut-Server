@@ -14,6 +14,6 @@ export class ResumeRepository extends AbstractRepository<
   DelegateReturnTypes<ResumeDelegate>
 > {
   constructor(private readonly prisma: PrismaService) {
-    super(prisma.resume, prisma.readonlyInstance.resume);
+    super(prisma.resume);
   }
 }

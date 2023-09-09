@@ -15,7 +15,7 @@ export class CapabilityRepository extends AbstractRepository<
   DelegateReturnTypes<CapabilityDelegate>
 > {
   constructor(private readonly prisma: PrismaService) {
-    super(prisma.capability, prisma.readonlyInstance.capability);
+    super(prisma.capability);
   }
 
   public async countExperienceAndCapability(userId: number, isCompleted?: boolean): Promise<CountExperienceAndCapability[]> {

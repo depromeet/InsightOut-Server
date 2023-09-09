@@ -1,37 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import {
-  AiRecommendQuestion,
-  AiResume,
-  AiResumeCapability,
-  Capability,
-  Experience,
-  ExperienceCapability,
-  ExperienceInfo,
-  ExperienceStatus,
-  Prisma,
-} from '@prisma/client';
-import { DefaultArgs } from '@prisma/client/runtime/library';
+import { AiRecommendQuestion, AiResume, Experience, ExperienceInfo, ExperienceStatus, Prisma } from '@prisma/client';
 
 import { ExperienceRepositoryInterface } from '@apps/server/experiences/interfaces/experienceRepository.interface';
 import { ExperienceSelect } from '@apps/server/experiences/interfaces/experienceSelect.interface';
-import { AbstractRepository, DelegateArgs, DelegateReturnTypes } from '@libs/modules/database/repositories/abstract.repository';
 import { PaginationOptionsDto } from '@libs/pagination/paginationOption.dto';
 
 import { PrismaService } from '../prisma.service';
 
-type ExperienceDelegate = Prisma.ExperienceDelegate<DefaultArgs>;
-
 @Injectable()
-export class ExperienceRepository
-  extends AbstractRepository<ExperienceDelegate, DelegateArgs<ExperienceDelegate>, DelegateReturnTypes<ExperienceDelegate>>
-  implements ExperienceRepositoryInterface
-{
-  constructor(private readonly prisma: PrismaService) {
-    super(prisma.experience, prisma.readonlyInstance.experience);
-  }
+export class ExperienceRepository implements ExperienceRepositoryInterface {
+  constructor(private readonly prisma: PrismaService) {}
 
-  public async getExperienceById(experienceId: number): Promise<Experience> {
-    return await this.findUnique({
+  public async getExperienceById(experienceId: number): Promise<Partial<Experience & { ExperienceInfo; AiResume }>> {
+    return await this.prisma.experience.findUnique({
       where: { id: experienceId },
       select: {
         id: true,
@@ -80,8 +61,8 @@ export class ExperienceRepository
   public async findOneById(
     experienceId: number,
     userId: number,
-  ): Promise<Partial<Experience & { AiResume: AiResume; ExperienceInfo: ExperienceInfo; AiRecommendQuestions: AiRecommendQuestion[] }>> {
-    return await this.findFirst({
+  ): Promise<Experience & { AiResume: AiResume; ExperienceInfo: ExperienceInfo; AiRecommendQuestions: AiRecommendQuestion[] }> {
+    return await this.prisma.experience.findFirst({
       where: { id: experienceId, userId },
       include: { ExperienceInfo: true, AiResume: true, AiRecommendQuestions: true },
     });
@@ -97,14 +78,14 @@ export class ExperienceRepository
     if (isCompleted) {
       where.experienceStatus = ExperienceStatus.DONE;
     }
-    return await this.count({ where });
+    return await this.prisma.experience.count({ where });
   }
 
   public async selectOneById(
     experienceId: number,
     select: ExperienceSelect,
   ): Promise<Partial<Experience & { experienceInfo: ExperienceInfo }>> {
-    return await this.findUnique({
+    return await this.prisma.experience.findUniqueOrThrow({
       select,
       where: { id: experienceId },
     });
@@ -114,21 +95,21 @@ export class ExperienceRepository
     userId: number,
     select: ExperienceSelect,
   ): Promise<Partial<Experience & { experienceInfo: ExperienceInfo }>> {
-    return await this.findFirst({
+    return await this.prisma.experience.findFirstOrThrow({
       select,
       where: { userId, experienceStatus: ExperienceStatus.INPROGRESS },
     });
   }
 
   public async findOneByUserId(userId: number): Promise<Experience> {
-    return await this.findFirst({
+    return await this.prisma.experience.findFirst({
       include: { ExperienceInfo: true },
       where: { userId, experienceStatus: ExperienceStatus.INPROGRESS },
     });
   }
 
   public async countExperience(userId: number): Promise<number> {
-    return await this.count({
+    return await this.prisma.experience.count({
       where: { userId },
     });
   }
@@ -160,7 +141,7 @@ export class ExperienceRepository
    */
   public async getExperiences(userId: number, select: Partial<ExperienceSelect>, pagination: PaginationOptionsDto, capabilityId?: number) {
     const { criteria, order, take, skip } = pagination;
-    let experiences = await this.findMany({
+    let experiences = await this.prisma.experience.findMany({
       where: { userId },
       select: {
         id: true,
@@ -181,14 +162,12 @@ export class ExperienceRepository
     });
 
     if (capabilityId) {
-      experiences = experiences.filter((experience: Experience & { ExperienceCapabilities: ExperienceCapability[] }) =>
-        experience.ExperienceCapabilities.find(
-          (experienceCapability: ExperienceCapability & { Capability: Capability }) => experienceCapability.Capability.id === capabilityId,
-        ),
+      experiences = experiences.filter((experience) =>
+        experience.ExperienceCapabilities.find((experienceCapability) => experienceCapability.Capability.id === capabilityId),
       );
     }
 
-    experiences = experiences.filter((experience: Experience & { ExperienceCapabilities: ExperienceCapability[] }) => {
+    experiences = experiences.filter((experience) => {
       if (experience.experienceStatus === ExperienceStatus.DONE) {
         let isValidExperience =
           experience.title &&
@@ -222,7 +201,7 @@ export class ExperienceRepository
   }
 
   public async getStarFromExperienceByExperienceId(experienceId: number) {
-    return await this.findFirst({
+    return await this.prisma.experience.findFirst({
       where: {
         id: experienceId,
         experienceStatus: ExperienceStatus.DONE,
@@ -232,6 +211,6 @@ export class ExperienceRepository
   }
 
   public async deleteOneById(id: number) {
-    return await this.delete({ where: { id } });
+    return await this.prisma.experience.delete({ where: { id } });
   }
 }

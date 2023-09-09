@@ -12,9 +12,7 @@ export enum EnvEnum {
   DB_USERNAME,
   DB_PASSWORD,
   DB_DATABASE,
-
   DATABASE_URL,
-  REPLICA_DATABASE_URL,
   TEST_DATABASE_URL,
 
   //jwt

@@ -11,7 +11,7 @@ type UserDelegate = Prisma.UserDelegate<DefaultArgs>;
 @Injectable()
 export class UserRepository extends AbstractRepository<UserDelegate, DelegateArgs<UserDelegate>, DelegateReturnTypes<UserDelegate>> {
   constructor(private readonly prisma: PrismaService) {
-    super(prisma.user, prisma.readonlyInstance.user);
+    super(prisma.user);
   }
 
   getOneUser(userId: number) {

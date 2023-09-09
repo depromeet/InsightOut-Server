@@ -14,6 +14,6 @@ export class QuestionRepository extends AbstractRepository<
   DelegateReturnTypes<QuestionDelegate>
 > {
   constructor(private readonly prisma: PrismaService) {
-    super(prisma.question, prisma.readonlyInstance.question);
+    super(prisma.question);
   }
 }

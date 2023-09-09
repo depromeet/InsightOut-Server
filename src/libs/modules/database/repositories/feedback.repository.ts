@@ -14,6 +14,6 @@ export class FeedbackRepository extends AbstractRepository<
   DelegateReturnTypes<FeedbackDelegate>
 > {
   constructor(private readonly prisma: PrismaService) {
-    super(prisma.feedback, prisma.readonlyInstance.feedback);
+    super(prisma.feedback);
   }
 }

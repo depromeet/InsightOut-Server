@@ -14,6 +14,6 @@ export class OnboardingRepository extends AbstractRepository<
   DelegateReturnTypes<OnboardingDelegate>
 > {
   constructor(private readonly prisma: PrismaService) {
-    super(prisma.onboarding, prisma.readonlyInstance.onboarding);
+    super(prisma.onboarding);
   }
 }
