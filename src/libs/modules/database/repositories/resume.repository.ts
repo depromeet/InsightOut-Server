@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { DefaultArgs } from '@prisma/client/runtime/library';
 
 import { AbstractRepository, DelegateArgs, DelegateReturnTypes } from './abstract.repository';
 import { PrismaService } from '../prisma.service';
 
-type ResumeDelegate = Prisma.ResumeDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>;
+type ResumeDelegate = Prisma.ResumeDelegate<DefaultArgs>;
 
 @Injectable()
 export class ResumeRepository extends AbstractRepository<
