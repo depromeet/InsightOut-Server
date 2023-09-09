@@ -1,18 +1,12 @@
 import { INestApplication, Injectable, OnModuleInit } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PrismaClient } from '@prisma/client';
-
-import { EnvEnum } from '@libs/modules/env/env.enum';
-import { EnvService } from '@libs/modules/env/env.service';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
-  readonly readonlyInstance: PrismaClient;
-
-  constructor(readonly envService: EnvService) {
+  constructor(readonly configService: ConfigService) {
     const url =
-      envService.get<string>(EnvEnum.NODE_ENV) === 'test'
-        ? envService.get<string>(EnvEnum.TEST_DATABASE_URL)
-        : envService.get<string>(EnvEnum.DATABASE_URL);
+      configService.get('NODE_ENV') === 'test' ? configService.getOrThrow('TEST_DATABASE_URL') : configService.getOrThrow('DATABASE_URL');
     super({
       datasources: {
         db: {
@@ -38,18 +32,9 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
         },
       ],
     });
-
-    this.readonlyInstance = new PrismaClient({
-      datasources: {
-        db: {
-          url: envService.get(EnvEnum.REPLICA_DATABASE_URL),
-        },
-      },
-    });
   }
 
   async onModuleInit() {
-    await this.readonlyInstance.$connect();
     await this.$connect();
   }
 
