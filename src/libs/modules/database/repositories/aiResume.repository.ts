@@ -1,25 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { AiResume, Prisma } from '@prisma/client';
-import { DefaultArgs } from '@prisma/client/runtime/library';
-
-import { AbstractRepository, DelegateArgs, DelegateReturnTypes } from '@libs/modules/database/repositories/abstract.repository';
 
 import { PrismaService } from '../prisma.service';
 
-type AiResumeDelegate = Prisma.AiResumeDelegate<DefaultArgs>;
-
 @Injectable()
-export class AiResumeRepository extends AbstractRepository<
-  AiResumeDelegate,
-  DelegateArgs<AiResumeDelegate>,
-  DelegateReturnTypes<AiResumeDelegate>
-> {
-  constructor(private readonly prisma: PrismaService) {
-    super(prisma.aiResume, prisma.readonlyInstance.aiResume);
-  }
+export class AiResumeRepository {
+  constructor(private readonly prisma: PrismaService) {}
 
   public async findOneByFilter(where: Prisma.AiResumeWhereInput): Promise<AiResume> {
-    return await this.findFirst({ where });
+    return await this.prisma.aiResume.findFirst({ where });
   }
 
   public async getAiResumeByUserId(userId: number, aiKeyword?: string) {
@@ -29,7 +18,7 @@ export class AiResumeRepository extends AbstractRepository<
       where = { userId, AiResumeCapabilities: { some: { Capability: { keyword: { equals: aiKeyword } } } } };
     }
 
-    return await this.findMany({
+    return await this.prisma.aiResume.findMany({
       select: {
         id: true,
         content: true,
@@ -48,6 +37,6 @@ export class AiResumeRepository extends AbstractRepository<
       where = { userId, AiResumeCapabilities: { some: { Capability: { keyword: { equals: aiKeyword } } } } };
     }
 
-    return await this.count({ where });
+    return await this.prisma.aiResume.count({ where });
   }
 }
