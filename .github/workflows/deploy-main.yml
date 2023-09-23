@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     environment: prod
 
     strategy:
@@ -77,7 +77,7 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: upload to S3
-        run: aws s3 put-object --bucket insightout-prod-s3 --key deploy/server.zip --body s3://insightout-prod-s3/deploy/server.zip
+        run: aws s3 put-object --bucket insightout-prod-s3 --key deploy/${{ env.GITHUB_SHA }}.zip --body s3://insightout-prod-s3/deploy/${{ env.GITHUB_SHA }}.zip
 
       - name: deploy with AWS codeDeploy
         run: aws deploy create-deployment --application-name insightout-prod --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name insight-out-prod-group --s3-location bucket=insightout-prod-s3,bundleType=zip,key=deploy/${{ env.GITHUB_SHA }}.zip
