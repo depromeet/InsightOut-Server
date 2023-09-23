@@ -103,7 +103,7 @@ describe('Resume Service', () => {
       const resumes = await service.getAllResumes(1, { answer: false });
 
       const mockResumesReponseDto = mockAllResumeData.map(
-        (resume) => new GetOneResumeResponseDto(resume as Resume & { Question: Question[] }),
+        (resume) => new GetOneResumeResponseDto(resume as unknown as Resume & { Questions: Question[] }),
       );
 
       // 서비스 레이어의 결과 객체가 같은지 깊게 비교
@@ -115,7 +115,7 @@ describe('Resume Service', () => {
       const resumes = await service.getAllResumes(1, { answer: true });
 
       const mockResumesReponseDto = mockAllResumeDataWithAnswer.map(
-        (resume) => new GetOneResumeResponseDto(resume as Resume & { Question: Question[] }),
+        (resume) => new GetOneResumeResponseDto(resume as unknown as Resume & { Questions: Question[] }),
       );
 
       // 서비스 레이어의 결과 객체가 같은지 깊게 비교
@@ -155,7 +155,7 @@ describe('Resume Service', () => {
     it('should get one resume', async () => {
       const resume = await service.getOneResume(1, 1);
 
-      const mockOneResume = new GetOneResumeResponseDto(mockAllResumeData[0] as Resume & { Question: Question[] });
+      const mockOneResume = new GetOneResumeResponseDto(mockAllResumeData[0] as unknown as Resume & { Questions: Question[] });
 
       expect(resume).toBeDefined();
       expect(resume).toStrictEqual(mockOneResume);

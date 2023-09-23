@@ -7,16 +7,16 @@ import { SECOND } from '@apps/server/common/consts/time.const';
 import { Route } from '@apps/server/common/decorators/routers/route.decorator';
 import { SetRequestTimeout } from '@apps/server/common/decorators/timeout.decorator';
 import { testApiSuccMd } from '@apps/server/test/docs/testApi.md';
+import { PostAiResumeRequestDto } from '@apps/server/test/dtos/req/postAiResume.dto';
 import { PostIssueTestTokenBodyRequestDto } from '@apps/server/test/dtos/req/postIssueTestToken.dto';
 import { PromptTestBodyRequestDto } from '@apps/server/test/dtos/req/promptTest.dto';
 import { TimeoutTestQueryRequestDto } from '@apps/server/test/dtos/req/timeoutTest.dto';
 import { Method } from '@libs/enums/method.enum';
 import { TokenType } from '@libs/enums/token.enum';
-import { OpenAiService } from '@libs/modules/open-ai/openAi.service';
+import { OpenAiService } from '@libs/modules/openAi/openAi.service';
 import { ResponseEntity } from '@libs/utils/respone.entity';
 
 import { TestService } from './test.service';
-import { PostAiResumeRequestDto } from '@apps/server/test/dtos/req/postAiResume.dto';
 
 @ApiTags('🧑🏻‍💻 개발용 API')
 @Controller('test')

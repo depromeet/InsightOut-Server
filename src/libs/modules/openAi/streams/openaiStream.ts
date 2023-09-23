@@ -5,8 +5,8 @@ import {
   createCallbacksTransformer,
   readableFromAsyncIterable,
   trimStartOfStreamHelper,
-} from '@libs/modules/open-ai/streams/aiStream';
-import { CreateMessage } from '@libs/modules/open-ai/streams/types/openaiStream.type';
+} from '@libs/modules/openAi/streams/aiStream';
+import { CreateMessage } from '@libs/modules/openAi/streams/types/openaiStream.type';
 
 type JSONValue = null | string | number | boolean | { [x: string]: JSONValue } | Array<JSONValue>;
 

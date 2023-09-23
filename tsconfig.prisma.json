@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "extends" : "./tsconfig.json",
+    "extends": "./tsconfig.json",
     "baseUrl": "./",
     "paths": {
       "@prisma/generated": ["./prisma/generated/index"]
