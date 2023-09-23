@@ -83,12 +83,11 @@ jobs:
         id: create-deployment
         run: |
           id=$(aws deploy create-deployment \
-            --application-name 42manito-development-cd \
-            --deployment-config-name CodeDeployDefault.OneAtATime \
-            --output text --deployment-group-name 42manito-development-deployment-group \
-            --file-exists-behavior OVERWRITE \
-            --s3-location bucket=manito42-code-deploy-bucket-test,bundleType=zip,key=server.zip)
-            echo "deploymentId=$id" >> $GITHUB_OUTPUT
+          --application-name insightout-prod \
+          --deployment-config-name CodeDeployDefault.AllAtOnce \
+          --deployment-group-name insight-out-prod-group \
+          --s3-location bucket=insightout-prod-s3,bundleType=zip,key=deploy/$GITHUB_SHA.zip)
+          echo "deploymentId=$id" >> $GITHUB_OUTPUT
 
       - name: Wait for deployment to finish
         run: |
