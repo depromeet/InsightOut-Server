@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { PrismaService } from '📚libs/modules/database/prisma.service';
-import { AbstractRepository, DelegateArgs, DelegateReturnTypes } from '📚libs/modules/database/repositories/abstract.repository';
+import { DefaultArgs } from '@prisma/client/runtime/library';
 
-type OnboardingDelegate = Prisma.OnboardingDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>;
+import { PrismaService } from '@libs/modules/database/prisma.service';
+import { AbstractRepository, DelegateArgs, DelegateReturnTypes } from '@libs/modules/database/repositories/abstract.repository';
+
+type OnboardingDelegate = Prisma.OnboardingDelegate<DefaultArgs>;
 
 @Injectable()
 export class OnboardingRepository extends AbstractRepository<

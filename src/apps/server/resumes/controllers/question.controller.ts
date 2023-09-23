@@ -1,47 +1,48 @@
 import { UseGuards, HttpStatus, Param, Body, Controller } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Method } from '📚libs/enums/method.enum';
-import { SpellCheckResult } from '📚libs/modules/api/api.type';
-import { ResponseEntity } from '📚libs/utils/respone.entity';
-import { UserJwtToken } from '🔥apps/server/auth/types/jwt-token.type';
-import { User } from '🔥apps/server/common/decorators/request/user.decorator';
-import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
-import { JwtAuthGuard } from '🔥apps/server/common/guards/jwt-auth.guard';
+
+import { UserJwtToken } from '@apps/server/auth/types/jwtToken.type';
+import { User } from '@apps/server/common/decorators/req/user.decorator';
+import { Route } from '@apps/server/common/decorators/routers/route.decorator';
+import { JwtAuthGuard } from '@apps/server/common/guards/jwtAuth.guard';
 import {
   DeleteQuestionDescriptionMd,
   DeleteQuestionResponseDescriptionMd,
   DeleteQuestionSummaryMd,
-} from '🔥apps/server/resumes/docs/questions/delete-question.doc';
+} from '@apps/server/resumes/docs/questions/deleteQuestion.doc';
 import {
   GetOneQuestionDescriptionMd,
   GetOneQuestionResponseDescriptionMd,
   GetOneQuestionSummaryMd,
-} from '🔥apps/server/resumes/docs/questions/get-question.doc';
+} from '@apps/server/resumes/docs/questions/getQuestion.doc';
 import {
   PatchQuestionDescriptionMd,
   PatchQuestionResponseDescriptionMd,
   PatchQuestionSummaryMd,
-} from '🔥apps/server/resumes/docs/questions/patch-question.doc';
+} from '@apps/server/resumes/docs/questions/patchQuestion.doc';
 import {
   PostQuestionDesciptionMd,
   PostQuestionResponseDescriptionMd,
   PostQuestionSummaryMd,
-} from '🔥apps/server/resumes/docs/questions/post-question.doc';
+} from '@apps/server/resumes/docs/questions/postQuestion.doc';
 import {
   PostSpellCheckDescriptionMd,
   PostSpellCheckResponseDescriptionMd,
   PostSpellCheckSummaryMd,
-} from '🔥apps/server/resumes/docs/questions/post-spell-check.doc';
-import { DeleteQuestionRequestParamDto } from '🔥apps/server/resumes/dtos/questions/delete-question.dto';
-import { GetOneQuestionRequestParamDto, GetOneQuestionResponseDto } from '🔥apps/server/resumes/dtos/questions/get-question.dto';
+} from '@apps/server/resumes/docs/questions/postSpellCheck.doc';
+import { DeleteQuestionRequestParamDto } from '@apps/server/resumes/dtos/questions/req/deleteQuestion.dto';
+import { GetOneQuestionRequestParamDto, GetOneQuestionResponseDto } from '@apps/server/resumes/dtos/questions/req/getQuestion.dto';
 import {
-  PatchQuestionRequestParamDto,
   PatchQuestionRequestBodyDto,
+  PatchQuestionRequestParamDto,
   PatchQuestionResponseDto,
-} from '🔥apps/server/resumes/dtos/questions/patch-question-request.dto';
-import { PostQuestionResponseDto, PostQuestionRequestBodyDto } from '🔥apps/server/resumes/dtos/questions/post-question.dto';
-import { PostSpellCheckRequestBodyDto } from '🔥apps/server/resumes/dtos/questions/post-spell-check-request.body.dto';
-import { QuestionsService } from '🔥apps/server/resumes/services/question.service';
+} from '@apps/server/resumes/dtos/questions/req/patchQuestion.dto';
+import { PostQuestionRequestBodyDto, PostQuestionResponseDto } from '@apps/server/resumes/dtos/questions/req/postQuestion.dto';
+import { PostSpellCheckRequestBodyDto } from '@apps/server/resumes/dtos/questions/req/postSpellCheck.dto';
+import { QuestionsService } from '@apps/server/resumes/services/question.service';
+import { Method } from '@libs/enums/method.enum';
+import { SpellCheckResult } from '@libs/modules/api/api.type';
+import { ResponseEntity } from '@libs/utils/respone.entity';
 
 @ApiTags('📑 자기소개서 문항 API')
 @Controller('resumes/questions')
@@ -119,7 +120,7 @@ export class QuestionsController {
     description: PostSpellCheckDescriptionMd,
   })
   async spellCheck(@Body() body: PostSpellCheckRequestBodyDto) {
-    const checkedSpell = await this.questionService.spellCheck(body);
+    const checkedSpell = await this.questionService.spellCheck({ body: body });
 
     return ResponseEntity.OK_WITH_DATA(checkedSpell);
   }

@@ -1,5 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
-import { CronJobTypeEnum } from '📚libs/modules/cron/enum/cron.enum';
+
+import { CronJobTypeEnum } from '@libs/modules/cron/enum/cron.enum';
 
 /**
  * CronJob을 돌릴 때 해당 작업(job)에 맞게 구상할 수 있는 abstract class입니다.

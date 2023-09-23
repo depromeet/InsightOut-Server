@@ -1,5 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 import { ValidationError } from 'class-validator';
+
 import { BaseException } from './base.exception';
 
 export class ValidationException extends BaseException {
@@ -10,9 +11,7 @@ export class ValidationException extends BaseException {
       message: errors
         .map(
           (error) =>
-            `${error.property} / ${error.value} / ${Object.values(
-              error.constraints,
-            )
+            `${error.property} / ${error.value} / ${Object.values(error.constraints)
               .map((value) => value)
               .join(',')}`,
         )

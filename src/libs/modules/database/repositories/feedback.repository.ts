@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { PrismaService } from '📚libs/modules/database/prisma.service';
-import { AbstractRepository, DelegateArgs, DelegateReturnTypes } from '📚libs/modules/database/repositories/abstract.repository';
+import { DefaultArgs } from '@prisma/client/runtime/library';
 
-type FeedbackDelegate = Prisma.FeedbackDelegate<Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined>;
+import { PrismaService } from '@libs/modules/database/prisma.service';
+import { AbstractRepository, DelegateArgs, DelegateReturnTypes } from '@libs/modules/database/repositories/abstract.repository';
+
+type FeedbackDelegate = Prisma.FeedbackDelegate<DefaultArgs>;
 
 @Injectable()
 export class FeedbackRepository extends AbstractRepository<

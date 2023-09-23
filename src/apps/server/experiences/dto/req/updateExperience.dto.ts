@@ -1,10 +1,11 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
-import { IsEnum, IsOptional, Matches } from 'class-validator';
-import { dateValidation } from '🔥apps/server/common/consts/date-validation.const';
-import { IsOptionalString } from '🔥apps/server/common/decorators/validation/isCustomString.decorator';
+import { AiResume, Experience, ExperienceInfo, ExperienceStatus } from '@prisma/client';
+import { IsEnum, IsNotEmpty, IsOptional, IsString, Matches } from 'class-validator';
 
-export class UpdateExperienceReqDto {
+import { dateValidation } from '@apps/server/common/consts/dateValidation.const';
+import { IsOptionalString } from '@apps/server/common/decorators/validations/isCustomString.decorator';
+
+export class UpdateExperienceRequestDto {
   @ApiPropertyOptional({ example: '00직무 디자인 인턴' })
   @IsOptionalString(0, 100)
   title?: string;
@@ -64,7 +65,16 @@ export class UpdateExperienceReqDto {
   // 키워드 요약 후 저장할 떄 필요하기 떄문입니다 :)
   summaryKeywords?: string[];
 
-  public compareProperty(experience: Experience & { ExperienceInfo?: ExperienceInfo }) {
+  @ApiPropertyOptional({
+    description: 'AI 추천 자기소개서',
+    type: String,
+  })
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  aiResume: string;
+
+  public compareProperty(experience: Experience & { ExperienceInfo?: ExperienceInfo; AiResume: AiResume }) {
     if (this.title) experience.title = this.title;
     if (this.startDate) experience.startDate = new Date(this.startDate);
     if (this.endDate) experience.endDate = new Date(this.endDate);
@@ -77,6 +87,13 @@ export class UpdateExperienceReqDto {
     if (this.experienceRole) experience.ExperienceInfo.experienceRole = this.experienceRole;
     if (this.motivation) experience.ExperienceInfo.motivation = this.motivation;
     if (this.analysis) experience.ExperienceInfo.analysis = this.analysis;
+    if (this.aiResume)
+      experience.AiResume = {
+        ...experience.AiResume,
+        experienceId: experience.id,
+        userId: experience.userId,
+        content: this.aiResume,
+      };
 
     return experience;
   }

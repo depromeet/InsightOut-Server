@@ -1,12 +1,16 @@
-import { INestApplication, Injectable, OnModuleInit } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+
+import { EnvEnum } from '@libs/modules/env/env.enum';
+import { EnvService } from '@libs/modules/env/env.service';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
-  constructor(readonly configService: ConfigService) {
+  constructor(readonly envService: EnvService) {
     const url =
-      configService.get('NODE_ENV') === 'test' ? configService.getOrThrow('TEST_DATABASE_URL') : configService.getOrThrow('DATABASE_URL');
+      envService.get<string>(EnvEnum.NODE_ENV) === 'test'
+        ? envService.get<string>(EnvEnum.TEST_DATABASE_URL)
+        : envService.get<string>(EnvEnum.DATABASE_URL);
     super({
       datasources: {
         db: {
@@ -36,11 +40,5 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
 
   async onModuleInit() {
     await this.$connect();
-  }
-
-  async enableShutdownHooks(app: INestApplication) {
-    this.$on('beforeExit', async () => {
-      await app.close();
-    });
   }
 }

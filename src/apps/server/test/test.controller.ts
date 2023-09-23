@@ -1,19 +1,22 @@
-import { Body, Controller, HttpStatus, ParseIntPipe, Query, Res } from '@nestjs/common';
-import { TestService } from './test.service';
+import { Body, Controller, Header, HttpStatus, Query, Res } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
-import { ResponseEntity } from '📚libs/utils/respone.entity';
-import { Route } from '🔥apps/server/common/decorators/router/route.decorator';
-import { Method } from '📚libs/enums/method.enum';
-import { PostIssueTestTokenRequestBodyDto } from '🔥apps/server/test/dtos/post-issue-test-token.dto';
-import { ApiQuery, ApiTags } from '@nestjs/swagger';
-import { OpenAiService } from '📚libs/modules/open-ai/open-ai.service';
-import { PromptTestBodyReqDto } from '🔥apps/server/test/dtos/prompt-test-body-req.dto';
-import { testApiSuccMd } from '🔥apps/server/test/docs/test-api.md';
-import { AuthService } from '🔥apps/server/auth/auth.service';
-import { TokenType } from '📚libs/enums/token.enum';
-import { TimeoutTestRequestQueryDto } from '🔥apps/server/test/dtos/timeout-test.dto';
-import { SetRequestTimeout } from '🔥apps/server/common/decorators/timeout.decorator';
-import { SECOND } from '🔥apps/server/common/consts/time.const';
+
+import { AuthService } from '@apps/server/auth/auth.service';
+import { SECOND } from '@apps/server/common/consts/time.const';
+import { Route } from '@apps/server/common/decorators/routers/route.decorator';
+import { SetRequestTimeout } from '@apps/server/common/decorators/timeout.decorator';
+import { testApiSuccMd } from '@apps/server/test/docs/testApi.md';
+import { PostAiResumeRequestDto } from '@apps/server/test/dtos/req/postAiResume.dto';
+import { PostIssueTestTokenBodyRequestDto } from '@apps/server/test/dtos/req/postIssueTestToken.dto';
+import { PromptTestBodyRequestDto } from '@apps/server/test/dtos/req/promptTest.dto';
+import { TimeoutTestQueryRequestDto } from '@apps/server/test/dtos/req/timeoutTest.dto';
+import { Method } from '@libs/enums/method.enum';
+import { TokenType } from '@libs/enums/token.enum';
+import { OpenAiService } from '@libs/modules/open-ai/openAi.service';
+import { ResponseEntity } from '@libs/utils/respone.entity';
+
+import { TestService } from './test.service';
 
 @ApiTags('🧑🏻‍💻 개발용 API')
 @Controller('test')
@@ -37,7 +40,7 @@ export class TestController {
     },
   })
   async issueTestToken(
-    @Body() postIssueTestTokenRequestBodyDto: PostIssueTestTokenRequestBodyDto,
+    @Body() postIssueTestTokenRequestBodyDto: PostIssueTestTokenBodyRequestDto,
     @Res({ passthrough: true }) response: Response,
   ): Promise<ResponseEntity<string>> {
     const { accessToken, refreshToken } = await this.testService.issueTestToken(postIssueTestTokenRequestBodyDto);
@@ -63,7 +66,7 @@ export class TestController {
     description: testApiSuccMd,
     summary: '✅ openai 프롬프트 테스트 API',
   })
-  async test(@Body() body: PromptTestBodyReqDto) {
+  async test(@Body() body: PromptTestBodyRequestDto) {
     return await this.openAiService.promptChatGPT(body.content);
   }
 
@@ -79,7 +82,7 @@ export class TestController {
     description: '# timeout을 테스트합니다.',
     summary: '🛠️ timeout 시간 테스트',
   })
-  async timeout(@Query() timeoutTestRequestQueryDto: TimeoutTestRequestQueryDto) {
+  async timeout(@Query() timeoutTestRequestQueryDto: TimeoutTestQueryRequestDto) {
     function sleep(ms: number) {
       return new Promise((r) => setTimeout(r, ms));
     }
@@ -101,7 +104,7 @@ export class TestController {
     description: 'timeout 테스트',
     summary: '🛠️ timeout 시간 테스트',
   })
-  async timeoutCheck(@Query() timeoutTestRequestQueryDto: TimeoutTestRequestQueryDto) {
+  async timeoutCheck(@Query() timeoutTestRequestQueryDto: TimeoutTestQueryRequestDto) {
     function sleep(ms: number) {
       return new Promise((r) => setTimeout(r, ms));
     }
@@ -125,5 +128,28 @@ export class TestController {
     const randomNickname = this.testService.getRandomNickname();
 
     return ResponseEntity.OK_WITH_DATA(randomNickname);
+  }
+
+  @Route({
+    request: {
+      method: 'POST',
+      path: 'ai-resume-stream',
+    },
+    response: {
+      code: HttpStatus.OK,
+      description: 'AI 자기소개서 추천을 stream 방식으로 응답을 전송합니다.',
+    },
+    summary: 'AI 자기소개서 stream test',
+  })
+  @Header('Content-Type', 'text/event-stream')
+  public async postAiResume(@Body() postAiResumeRequestDto: PostAiResumeRequestDto, @Res() response: Response) {
+    const aiResume = await this.testService.postAiResume(postAiResumeRequestDto);
+    aiResume.data.on('data', (chunk) => {
+      response.write(chunk);
+    });
+
+    aiResume.data.on('end', () => {
+      response.end();
+    });
   }
 }

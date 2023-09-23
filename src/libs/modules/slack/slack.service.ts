@@ -1,20 +1,25 @@
 import { Injectable } from '@nestjs/common';
+import { WebClient } from '@slack/web-api';
+
 import { ExceptionResponse } from 'src/apps/server/common/exceptions/exception.type';
+
+import { SlackBlockType } from './slack.enum';
 import { EnvEnum } from '../env/env.enum';
 import { EnvService } from '../env/env.service';
-import { WebClient } from '@slack/web-api';
-import { SlackBlockType } from './slack.enum';
 
 @Injectable()
 export class SlackService {
-  constructor(private readonly envService: EnvService) {}
+  private readonly slackClient: WebClient;
+
+  constructor(private readonly envService: EnvService) {
+    const token: string = this.envService.get<string>(EnvEnum.SLACK_TOKEN);
+    this.slackClient = new WebClient(token);
+  }
 
   async sendExceptionMessage(exception: ExceptionResponse): Promise<void> {
     const { statusCode, title, message } = exception;
-    const token: string = this.envService.get<string>(EnvEnum.SLACK_TOKEN);
-    const web: WebClient = new WebClient(token);
 
-    await web.chat.postMessage({
+    this.slackClient.chat.postMessage({
       blocks: [
         {
           type: SlackBlockType.SECTION,
@@ -34,6 +39,37 @@ export class SlackService {
       ],
       channel: '4팀-알림',
       text: 'InsightOut exception message',
+    });
+  }
+
+  async sendFeedback(message: string): Promise<void> {
+    this.slackClient.chat.postMessage({
+      blocks: [
+        {
+          type: SlackBlockType.SECTION,
+          text: {
+            type: SlackBlockType.MRKDWN,
+            text: ':loudspeaker: *피드백이 전송되었습니다.*',
+          },
+        },
+        { type: SlackBlockType.DIVIDER },
+        {
+          type: SlackBlockType.SECTION,
+          text: {
+            type: SlackBlockType.MRKDWN,
+            text: `*일시*: ${new Date()}`,
+          },
+        },
+        {
+          type: SlackBlockType.SECTION,
+          text: {
+            type: SlackBlockType.MRKDWN,
+            text: `*내용*\n${message}`,
+          },
+        },
+      ],
+      channel: '피드백',
+      text: 'InsightOut Feedback',
     });
   }
 }
