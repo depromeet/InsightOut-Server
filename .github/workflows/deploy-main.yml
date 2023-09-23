@@ -14,7 +14,6 @@ jobs:
         node-version: [18.16.0]
 
     steps:
-
       - name: Checkout source code.
         uses: actions/checkout@v2
 
@@ -64,10 +63,11 @@ jobs:
         working-directory: ./
         run: |
           yarn
+          yarn prisma generate
           yarn run build
 
       - name: zip file
-        run: zip -qq -r ./${{ env.GITHUB_SHA }}.zip .
+        run: zip --symlinks -r ./${{ env.GITHUB_SHA }}.zip .
 
       - name: AWS configure credentials
         uses: aws-actions/configure-aws-credentials@v1
