@@ -86,4 +86,4 @@ jobs:
           --application-name insightout-prod \
           --deployment-config-name CodeDeployDefault.AllAtOnce \
           --deployment-group-name insight-out-prod-group \
-          --s3-location bucket=insightout-prod-s3,bundleType=zip,key=deploy/$GITHUB_SHA.zip)
+          --s3-location bucket=insightout-prod-s3,bundleType=zip,key=deploy/$GITHUB_SHA.zip
