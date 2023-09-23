@@ -63,6 +63,7 @@ jobs:
         working-directory: ./
         run: |
           yarn
+          yarn prisma generate
           yarn run build
 
       - name: zip file
@@ -76,7 +77,17 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: upload to S3
-        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://insightout-prod-s3/deploy/ --follow-symlinks
+        run: aws s3 cp --region ap-northeast-2 $GITHUB_SHA.zip s3://insightout-prod-s3/deploy/$GITHUB_SHA.zip
 
       - name: deploy with AWS codeDeploy
-        run: aws deploy create-deployment --application-name insightout-prod --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name insight-out-prod-group --s3-location bucket=insightout-prod-s3,bundleType=zip,key=deploy/$GITHUB_SHA.zip
+        id: create-deployment
+        run: aws deploy create-deployment \
+          --application-name insightout-prod \
+          --deployment-config-name CodeDeployDefault.AllAtOnce \
+          --deployment-group-name insight-out-prod-group \
+          --s3-location bucket=insightout-prod-s3,bundleType=zip,key=deploy/$GITHUB_SHA.zip
+
+      - name: Wait for deployment to finish
+        run: |
+          echo ${{ steps.create-deployment.outputs.deploymentId }}
+          aws deploy wait deployment-successful --deployment-id ${{ steps.create-deployment.outputs.deploymentId }}
