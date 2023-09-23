@@ -5,8 +5,8 @@ import { catchError, firstValueFrom } from 'rxjs';
 import { MINUTES } from '@apps/server/common/consts/time.const';
 import { EnvEnum } from '@libs/modules/env/env.enum';
 import { EnvService } from '@libs/modules/env/env.service';
-import { AiResponse } from '@libs/modules/open-ai/interface/aiResponse.interface';
-import { openAIModelEnum } from '@libs/modules/open-ai/openAIModel.enum';
+import { AiResponse } from '@libs/modules/openAi/interface/aiResponse.interface';
+import { openAIModelEnum } from '@libs/modules/openAi/openAIModel.enum';
 import { Configuration, OpenAIApi } from 'openai';
 
 @Injectable()

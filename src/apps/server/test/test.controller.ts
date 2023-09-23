@@ -13,7 +13,7 @@ import { PromptTestBodyRequestDto } from '@apps/server/test/dtos/req/promptTest.
 import { TimeoutTestQueryRequestDto } from '@apps/server/test/dtos/req/timeoutTest.dto';
 import { Method } from '@libs/enums/method.enum';
 import { TokenType } from '@libs/enums/token.enum';
-import { OpenAiService } from '@libs/modules/open-ai/openAi.service';
+import { OpenAiService } from '@libs/modules/openAi/openAi.service';
 import { ResponseEntity } from '@libs/utils/respone.entity';
 
 import { TestService } from './test.service';

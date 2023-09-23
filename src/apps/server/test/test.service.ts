@@ -10,7 +10,7 @@ import { ApiService } from '@libs/modules/api/api.service';
 import { RedisCacheService } from '@libs/modules/cache/redis/redis.service';
 import { EnvEnum } from '@libs/modules/env/env.enum';
 import { EnvService } from '@libs/modules/env/env.service';
-import { OpenAiService } from '@libs/modules/open-ai/openAi.service';
+import { OpenAiService } from '@libs/modules/openAi/openAi.service';
 
 @Injectable()
 export class TestService {

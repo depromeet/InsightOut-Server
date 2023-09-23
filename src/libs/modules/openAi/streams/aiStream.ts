@@ -1,5 +1,5 @@
-import { createParser } from '@libs/modules/open-ai/streams/eventParser/eventParser';
-import { EventSourceParser, ParsedEvent, ReconnectInterval } from '@libs/modules/open-ai/streams/eventParser/types';
+import { createParser } from '@libs/modules/openAi/streams/eventParser/eventParser';
+import { EventSourceParser, ParsedEvent, ReconnectInterval } from '@libs/modules/openAi/streams/eventParser/types';
 
 export interface FunctionCallPayload {
   name: string;
