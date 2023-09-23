@@ -82,14 +82,8 @@ jobs:
       - name: deploy with AWS codeDeploy
         id: create-deployment
         run: |
-          id=$(aws deploy create-deployment \
+          aws deploy create-deployment \
           --application-name insightout-prod \
           --deployment-config-name CodeDeployDefault.AllAtOnce \
           --deployment-group-name insight-out-prod-group \
           --s3-location bucket=insightout-prod-s3,bundleType=zip,key=deploy/$GITHUB_SHA.zip)
-          echo "deploymentId=$id" >> $GITHUB_OUTPUT
-
-      - name: Wait for deployment to finish
-        run: |
-          echo ${{ steps.create-deployment.outputs.deploymentId }}
-          aws deploy wait deployment-successful --deployment-id ${{ steps.create-deployment.outputs.deploymentId }}
