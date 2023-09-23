@@ -65,8 +65,8 @@ jobs:
           yarn
           yarn run build
 
-      # - name: zip file
-      #   run: zip --symlinks -r $GITHUB_SHA.zip .
+      - name: zip file
+        run: zip --symlinks -r $GITHUB_SHA.zip .
 
       - name: AWS configure credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -76,9 +76,7 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: upload to S3
-        run: |
-          zip --symlinks -r $GITHUB_SHA.zip .
-          aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://insightout-prod-s3/deploy/
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://insightout-prod-s3/deploy/ --follow-symlinks
 
       - name: deploy with AWS codeDeploy
         run: aws deploy create-deployment --application-name insightout-prod --deployment-config-name CodeDeployDefault.AllAtOnce --deployment-group-name insight-out-prod-group --s3-location bucket=insightout-prod-s3,bundleType=zip,key=deploy/$GITHUB_SHA.zip
