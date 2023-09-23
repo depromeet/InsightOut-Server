@@ -2,7 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 
-import { NICKNAME_ADJECTIVE, NICKNAME_NOUN } from '@libs/modules/api/data/nickname_word.data';
+import { NICKNAME_ADJECTIVE, NICKNAME_NOUN } from '@libs/modules/api/data/nicknameWord.data';
 
 import { SpellCheckResult } from './api.type';
 import { byLength, parseJSON, parseJSONFromDaum, split } from '../../utils/hanspell.function';
