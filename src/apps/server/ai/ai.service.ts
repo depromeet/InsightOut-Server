@@ -33,12 +33,12 @@ import { GetExperienceCardInfoDto } from '@apps/server/experiences/dto/res/getEx
 import { ExperienceService } from '@apps/server/experiences/services/experience.service';
 import { RedisCacheService } from '@libs/modules/cache/redis/redis.service';
 import { PrismaService } from '@libs/modules/database/prisma.service';
+import { AiResumeRepository } from '@libs/modules/database/repositories/aiResume.repository';
+import { CapabilityRepository } from '@libs/modules/database/repositories/capability.repository';
 import { EnvEnum } from '@libs/modules/env/env.enum';
 import { EnvService } from '@libs/modules/env/env.service';
 import { AiResponse } from '@libs/modules/openAi/interface/aiResponse.interface';
 import { OpenAiService } from '@libs/modules/openAi/openAi.service';
-import { AiResumeRepository } from '@libs/modules/database/repositories/aiResume.repository';
-import { CapabilityRepository } from '@libs/modules/database/repositories/capability.repository';
 import { removeDuplicatesInArr } from '@libs/utils/array.util';
 
 @Injectable()
