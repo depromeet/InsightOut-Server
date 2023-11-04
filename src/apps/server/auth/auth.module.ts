@@ -9,7 +9,8 @@ import { CapabilityRepository } from '@libs/modules/database/repositories/capabi
 import { CapabilityRepositoryImpl } from '@libs/modules/database/repositories/capability/capability.repository';
 import { ResumeRepository } from '@libs/modules/database/repositories/resume/resume.interface';
 import { ResumeRepositoryImpl } from '@libs/modules/database/repositories/resume/resume.repository';
-import { UserRepository } from '@libs/modules/database/repositories/user.repository';
+import { UserRepository } from '@libs/modules/database/repositories/user/user.interface';
+import { UserRepositoryImpl } from '@libs/modules/database/repositories/user/user.repository';
 import { UserInfoRepository } from '@libs/modules/database/repositories/userInfo.repository';
 import { EnvEnum } from '@libs/modules/env/env.enum';
 import { EnvService } from '@libs/modules/env/env.service';
@@ -47,7 +48,10 @@ import { JwtRefreshStrategy } from '../common/guards/strategies/jwtRefresh.strat
     JwtRefreshStrategy,
 
     // Repositories
-    UserRepository,
+    {
+      provide: UserRepository,
+      useClass: UserRepositoryImpl,
+    },
     UserInfoRepository,
     {
       provide: ResumeRepository,

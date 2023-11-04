@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { KeywordType, Provider } from '@prisma/client';
 import { CookieOptions, Request } from 'express';
@@ -12,7 +12,7 @@ import { TokenType } from '@libs/enums/token.enum';
 import { ApiService } from '@libs/modules/api/api.service';
 import { RedisCacheService } from '@libs/modules/cache/redis/redis.service';
 import { PrismaService } from '@libs/modules/database/prisma.service';
-import { UserRepository } from '@libs/modules/database/repositories/user.repository';
+import { UserRepository } from '@libs/modules/database/repositories/user/user.interface';
 import { EnvEnum } from '@libs/modules/env/env.enum';
 import { EnvService } from '@libs/modules/env/env.service';
 import { FirebaseService } from '@libs/modules/firebase/firebase.service';
@@ -26,7 +26,7 @@ export class AuthService {
     private readonly redisService: RedisCacheService,
     private readonly jwtService: JwtService,
     private readonly envService: EnvService,
-    private readonly userRepository: UserRepository,
+    @Inject(UserRepository) private readonly userRepository: UserRepository,
     private readonly apiService: ApiService,
     private readonly firebaseService: FirebaseService,
   ) {}

@@ -4,12 +4,12 @@ import { PatchUserInfoBodyRequestDto } from '@apps/server/users/dtos/req/patchUs
 import { PostSendFeedbackBodyRequestDto } from '@apps/server/users/dtos/req/postFeedback.dto';
 import { GetUserResponseDto } from '@apps/server/users/dtos/res/getUser.dto';
 import { FeedbackRepository } from '@libs/modules/database/repositories/feedback/feedback.interface';
-import { UserRepository } from '@libs/modules/database/repositories/user.repository';
+import { UserRepository } from '@libs/modules/database/repositories/user/user.interface';
 
 @Injectable()
 export class UserService {
   constructor(
-    private readonly userRepository: UserRepository,
+    @Inject(UserRepository) private readonly userRepository: UserRepository,
     @Inject(FeedbackRepository) private readonly feedbackRepository: FeedbackRepository,
   ) {}
 
@@ -23,7 +23,7 @@ export class UserService {
    * @returns nickname, email, imageUrl을 DTO로 변환하여 전달합니다.
    */
   async getOneUser(userId: number): Promise<GetUserResponseDto> {
-    const userInfo = await this.userRepository.getOneUser(userId);
+    const userInfo = await this.userRepository.findById(userId);
 
     // Entity -> DTO
     const getOneUserResponseDto = new GetUserResponseDto(userInfo);
