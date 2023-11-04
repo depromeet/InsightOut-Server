@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { AiRecommendQuestion, AiResume, Experience, ExperienceInfo, ExperienceStatus, Prisma } from '@prisma/client';
 
-import { ExperienceRepositoryInterface } from '@apps/server/experiences/interfaces/experienceRepository.interface';
 import { ExperienceSelect } from '@apps/server/experiences/interfaces/experienceSelect.interface';
+import { ExperienceRepository } from '@libs/modules/database/repositories/experience/experience.interface';
 import { PaginationOptionsDto } from '@libs/pagination/paginationOption.dto';
 
-import { PrismaService } from '../prisma.service';
+import { PrismaService } from '../../prisma.service';
 
 @Injectable()
-export class ExperienceRepository implements ExperienceRepositoryInterface {
+export class ExperienceRepositoryImpl implements ExperienceRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   public async getExperienceById(experienceId: number): Promise<Partial<Experience & { ExperienceInfo; AiResume }>> {

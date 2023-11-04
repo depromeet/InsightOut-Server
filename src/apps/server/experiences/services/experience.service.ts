@@ -25,7 +25,7 @@ import { ExperienceCardType } from '@apps/server/experiences/types/experienceCar
 import { PrismaService } from '@libs/modules/database/prisma.service';
 import { AiResumeRepository } from '@libs/modules/database/repositories/aiResume/aiResume.interface';
 import { CapabilityRepository } from '@libs/modules/database/repositories/capability/capability.interface';
-import { ExperienceRepository } from '@libs/modules/database/repositories/experience.repository';
+import { ExperienceRepository } from '@libs/modules/database/repositories/experience/experience.repository';
 import { PaginationDto } from '@libs/pagination/pagination.dto';
 import { PaginationMetaDto } from '@libs/pagination/paginationMeta.dto';
 
