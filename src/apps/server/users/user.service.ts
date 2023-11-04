@@ -1,14 +1,17 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 
 import { PatchUserInfoBodyRequestDto } from '@apps/server/users/dtos/req/patchUserInfo.dto';
 import { PostSendFeedbackBodyRequestDto } from '@apps/server/users/dtos/req/postFeedback.dto';
 import { GetUserResponseDto } from '@apps/server/users/dtos/res/getUser.dto';
-import { FeedbackRepository } from '@libs/modules/database/repositories/feedback.repository';
+import { FeedbackRepository } from '@libs/modules/database/repositories/feedback/feedback.interface';
 import { UserRepository } from '@libs/modules/database/repositories/user.repository';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository, private readonly feedbackRepository: FeedbackRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    @Inject(FeedbackRepository) private readonly feedbackRepository: FeedbackRepository,
+  ) {}
 
   /**
    * ### 유저 정보를 가져오는 API
