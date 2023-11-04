@@ -24,7 +24,7 @@ import { CountExperienceAndCapability } from '@apps/server/experiences/types/cou
 import { ExperienceCardType } from '@apps/server/experiences/types/experienceCard.type';
 import { PrismaService } from '@libs/modules/database/prisma.service';
 import { AiResumeRepository } from '@libs/modules/database/repositories/aiResume/aiResume.interface';
-import { CapabilityRepositoryImpl } from '@libs/modules/database/repositories/capability/capability.repository';
+import { CapabilityRepository } from '@libs/modules/database/repositories/capability/capability.interface';
 import { ExperienceRepository } from '@libs/modules/database/repositories/experience.repository';
 import { PaginationDto } from '@libs/pagination/pagination.dto';
 import { PaginationMetaDto } from '@libs/pagination/paginationMeta.dto';
@@ -36,7 +36,7 @@ export class ExperienceService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly experienceRepository: ExperienceRepository,
-    private readonly capabilityRepository: CapabilityRepositoryImpl,
+    @Inject(CapabilityRepository) private readonly capabilityRepository: CapabilityRepository,
     @Inject(AiResumeRepository) private readonly aiResumeRepository: AiResumeRepository,
   ) {}
 

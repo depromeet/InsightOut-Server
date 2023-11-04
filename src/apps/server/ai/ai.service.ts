@@ -41,7 +41,7 @@ import { ExperienceService } from '@apps/server/experiences/services/experience.
 import { RedisCacheService } from '@libs/modules/cache/redis/redis.service';
 import { PrismaService } from '@libs/modules/database/prisma.service';
 import { AiResumeRepository } from '@libs/modules/database/repositories/aiResume/aiResume.interface';
-import { CapabilityRepositoryImpl } from '@libs/modules/database/repositories/capability/capability.repository';
+import { CapabilityRepository } from '@libs/modules/database/repositories/capability/capability.interface';
 import { EnvEnum } from '@libs/modules/env/env.enum';
 import { EnvService } from '@libs/modules/env/env.service';
 import { AiResponse } from '@libs/modules/openAi/interface/aiResponse.interface';
@@ -57,7 +57,7 @@ export class AiService {
     private readonly redisCheckService: RedisCacheService,
     private readonly envService: EnvService,
     @Inject(AiResumeRepository) private readonly aiResumeRepository: AiResumeRepository,
-    private readonly capabilityRepository: CapabilityRepositoryImpl,
+    @Inject(CapabilityRepository) private readonly capabilityRepository: CapabilityRepository,
   ) {}
 
   public async postAiKeywordPrompt(body: PromptAiKeywordRequestDto, user: UserJwtToken): Promise<PromptKeywordResponseDto> {

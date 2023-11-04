@@ -5,7 +5,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { OnboardingsModule } from '@apps/server/onboardings/onboarding.module';
 import { ApiModule } from '@libs/modules/api/api.module';
 import { RedisCacheModule } from '@libs/modules/cache/redis/redis.module';
-import { CapabilityRepository } from '@libs/modules/database/repositories/capability.repository';
+import { CapabilityRepository } from '@libs/modules/database/repositories/capability/capability.interface';
+import { CapabilityRepositoryImpl } from '@libs/modules/database/repositories/capability/capability.repository';
 import { ResumeRepository } from '@libs/modules/database/repositories/resume.repository';
 import { UserRepository } from '@libs/modules/database/repositories/user.repository';
 import { UserInfoRepository } from '@libs/modules/database/repositories/userInfo.repository';
@@ -48,7 +49,10 @@ import { JwtRefreshStrategy } from '../common/guards/strategies/jwtRefresh.strat
     UserRepository,
     UserInfoRepository,
     ResumeRepository,
-    CapabilityRepository,
+    {
+      provide: CapabilityRepository,
+      useClass: CapabilityRepositoryImpl,
+    },
   ],
   exports: [AuthService],
 })
