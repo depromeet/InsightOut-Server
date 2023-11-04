@@ -7,7 +7,8 @@ import { ApiModule } from '@libs/modules/api/api.module';
 import { RedisCacheModule } from '@libs/modules/cache/redis/redis.module';
 import { CapabilityRepository } from '@libs/modules/database/repositories/capability/capability.interface';
 import { CapabilityRepositoryImpl } from '@libs/modules/database/repositories/capability/capability.repository';
-import { ResumeRepository } from '@libs/modules/database/repositories/resume.repository';
+import { ResumeRepository } from '@libs/modules/database/repositories/resume/resume.interface';
+import { ResumeRepositoryImpl } from '@libs/modules/database/repositories/resume/resume.repository';
 import { UserRepository } from '@libs/modules/database/repositories/user.repository';
 import { UserInfoRepository } from '@libs/modules/database/repositories/userInfo.repository';
 import { EnvEnum } from '@libs/modules/env/env.enum';
@@ -48,7 +49,10 @@ import { JwtRefreshStrategy } from '../common/guards/strategies/jwtRefresh.strat
     // Repositories
     UserRepository,
     UserInfoRepository,
-    ResumeRepository,
+    {
+      provide: ResumeRepository,
+      useClass: ResumeRepositoryImpl,
+    },
     {
       provide: CapabilityRepository,
       useClass: CapabilityRepositoryImpl,

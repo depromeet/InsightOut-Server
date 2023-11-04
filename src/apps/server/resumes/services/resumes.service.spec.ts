@@ -5,7 +5,7 @@ import { Question, Resume } from '@prisma/client';
 import { GetOneResumeResponseDto, GetOneResumeWithTitleResponseDto } from '@apps/server/resumes/dtos/resumes/req/getResume.dto';
 import { ResumesService } from '@apps/server/resumes/services/resumes.service';
 import { DatabaseModule } from '@libs/modules/database/database.module';
-import { ResumeRepository } from '@libs/modules/database/repositories/resume.repository';
+import { ResumeRepository } from '@libs/modules/database/repositories/resume/resume.repository';
 
 const mockCreatedAt = new Date();
 const mockUpdatedAt = new Date();

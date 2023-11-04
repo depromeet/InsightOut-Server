@@ -6,14 +6,14 @@ import { PostSpellCheckRequestBodyDto } from '@apps/server/resumes/dtos/question
 import { ApiService } from '@libs/modules/api/api.service';
 import { SpellCheckResult } from '@libs/modules/api/api.type';
 import { QuestionRepository } from '@libs/modules/database/repositories/question/question.interface';
-import { ResumeRepository } from '@libs/modules/database/repositories/resume.repository';
+import { ResumeRepository } from '@libs/modules/database/repositories/resume/resume.interface';
 
 import { PostQuestionResponseDto } from '../dtos/questions/req/postQuestion.dto';
 
 @Injectable()
 export class QuestionsService {
   constructor(
-    private readonly resumeRepository: ResumeRepository,
+    @Inject(ResumeRepository) private readonly resumeRepository: ResumeRepository,
     @Inject(QuestionRepository) private readonly questionRepository: QuestionRepository,
     private readonly apiService: ApiService,
   ) {}
