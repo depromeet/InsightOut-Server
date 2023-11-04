@@ -16,12 +16,12 @@ import { ExperienceIdParamReqDto } from '@apps/server/experiences/dto/req/experi
 import { CreateExperienceCapabilitiesResponseDto } from '@apps/server/experiences/dto/res/createExperienceCapabilities.dto';
 import { PrismaService } from '@libs/modules/database/prisma.service';
 import { CapabilityRepository } from '@libs/modules/database/repositories/capability/capability.interface';
-import { ExperienceCapabilityRepository } from '@libs/modules/database/repositories/experienceCapability.repository';
+import { ExperienceCapabilityRepository } from '@libs/modules/database/repositories/experienceCapability/experienceCapability.interface';
 
 @Injectable()
 export class ExperienceCapabilityService {
   constructor(
-    private readonly experienceCapabilityRepository: ExperienceCapabilityRepository,
+    @Inject(ExperienceCapabilityRepository) private readonly experienceCapabilityRepository: ExperienceCapabilityRepository,
     @Inject(CapabilityRepository) private readonly capabilityRepository: CapabilityRepository,
     private readonly prisma: PrismaService,
   ) {}

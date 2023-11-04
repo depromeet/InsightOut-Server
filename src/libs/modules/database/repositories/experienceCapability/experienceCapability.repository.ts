@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { ExperienceCapability, Prisma } from '@prisma/client';
 
-import { ExperienceCapabilityRepositoryInterface } from '@apps/server/experiences/interfaces/experienceRepository.interface';
+import { ExperienceCapabilityRepository } from '@libs/modules/database/repositories/experienceCapability/experienceCapability.interface';
 
-import { PrismaService } from '../prisma.service';
+import { PrismaService } from '../../prisma.service';
 
 @Injectable()
-export class ExperienceCapabilityRepository implements ExperienceCapabilityRepositoryInterface {
+export class ExperienceCapabilityRepositoryImpl implements ExperienceCapabilityRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   public async createMany(createdInfos: { experienceId: number; capabilityId: number }[]): Promise<Prisma.BatchPayload> {
