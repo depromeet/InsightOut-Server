@@ -108,7 +108,7 @@ export class ExperienceRepositoryImpl implements ExperienceRepository {
     });
   }
 
-  public async countExperience(userId: number): Promise<number> {
+  public async countByUserId(userId: number): Promise<number> {
     return await this.prisma.experience.count({
       where: { userId },
     });
@@ -210,7 +210,7 @@ export class ExperienceRepositoryImpl implements ExperienceRepository {
     });
   }
 
-  public async deleteOneById(id: number) {
+  public async deleteById(id: number) {
     return await this.prisma.experience.delete({ where: { id } });
   }
 }

@@ -25,7 +25,7 @@ import { ExperienceCardType } from '@apps/server/experiences/types/experienceCar
 import { PrismaService } from '@libs/modules/database/prisma.service';
 import { AiResumeRepository } from '@libs/modules/database/repositories/aiResume/aiResume.interface';
 import { CapabilityRepository } from '@libs/modules/database/repositories/capability/capability.interface';
-import { ExperienceRepository } from '@libs/modules/database/repositories/experience/experience.repository';
+import { ExperienceRepository } from '@libs/modules/database/repositories/experience/experience.interface';
 import { PaginationDto } from '@libs/pagination/pagination.dto';
 import { PaginationMetaDto } from '@libs/pagination/paginationMeta.dto';
 
@@ -35,7 +35,7 @@ import { UserJwtToken } from '../../auth/types/jwtToken.type';
 export class ExperienceService {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly experienceRepository: ExperienceRepository,
+    @Inject(ExperienceRepository) private readonly experienceRepository: ExperienceRepository,
     @Inject(CapabilityRepository) private readonly capabilityRepository: CapabilityRepository,
     @Inject(AiResumeRepository) private readonly aiResumeRepository: AiResumeRepository,
   ) {}
@@ -256,7 +256,7 @@ export class ExperienceService {
   }
 
   public async getCountOfExperience(userId: number): Promise<GetCountOfExperienceResponseDto> {
-    const countOfExperience = await this.experienceRepository.countExperience(userId);
+    const countOfExperience = await this.experienceRepository.countByUserId(userId);
 
     const getCountOfExperienceResponseDto = new GetCountOfExperienceResponseDto(countOfExperience);
 
@@ -285,7 +285,7 @@ export class ExperienceService {
     if (!experinece) throw new NotFoundException('해당 ID의 경험카드는 존재하지 않습니다.');
 
     // experience가 존재하면 삭제
-    const deletedResult = await this.experienceRepository.deleteOneById(param.experienceId);
+    const deletedResult = await this.experienceRepository.deleteById(param.experienceId);
     // 삭제 시 해당 experience의 값을 반환합니다 해당 id와 삭제하려는 experience id가 같으면 isDeleted를 true를 다르면 false를 반환합니다.
     return deletedResult.id === experinece.id ? new DeleteExperienceResponseDto(true) : new DeleteExperienceResponseDto(false);
   }
