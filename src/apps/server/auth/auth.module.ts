@@ -11,7 +11,8 @@ import { ResumeRepository } from '@libs/modules/database/repositories/resume/res
 import { ResumeRepositoryImpl } from '@libs/modules/database/repositories/resume/resume.repository';
 import { UserRepository } from '@libs/modules/database/repositories/user/user.interface';
 import { UserRepositoryImpl } from '@libs/modules/database/repositories/user/user.repository';
-import { UserInfoRepository } from '@libs/modules/database/repositories/userInfo.repository';
+import { UserInfoRepository } from '@libs/modules/database/repositories/userInfo/userInfo.interface';
+import { UserInfoRepositoryImpl } from '@libs/modules/database/repositories/userInfo/userInfo.repository';
 import { EnvEnum } from '@libs/modules/env/env.enum';
 import { EnvService } from '@libs/modules/env/env.service';
 import { FirebaseModule } from '@libs/modules/firebase/firebase.module';
@@ -52,7 +53,10 @@ import { JwtRefreshStrategy } from '../common/guards/strategies/jwtRefresh.strat
       provide: UserRepository,
       useClass: UserRepositoryImpl,
     },
-    UserInfoRepository,
+    {
+      provide: UserInfoRepository,
+      useClass: UserInfoRepositoryImpl,
+    },
     {
       provide: ResumeRepository,
       useClass: ResumeRepositoryImpl,

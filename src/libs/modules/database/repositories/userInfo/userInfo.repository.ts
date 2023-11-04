@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
-import { PrismaService } from '../prisma.service';
+import { UserInfoRepository } from '@libs/modules/database/repositories/userInfo/userInfo.interface';
+
+import { PrismaService } from '../../prisma.service';
 
 @Injectable()
-export class UserInfoRepository {
+export class UserInfoRepositoryImpl implements UserInfoRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   insertUserInfo(data: Prisma.UserInfoCreateInput) {
