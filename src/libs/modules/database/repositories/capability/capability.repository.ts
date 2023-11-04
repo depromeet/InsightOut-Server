@@ -5,15 +5,15 @@ import { DefaultArgs } from '@prisma/client/runtime/library';
 import { CountExperienceAndCapability } from '@apps/server/experiences/types/countExperienceAndCapability.type';
 import { PrismaService } from '@libs/modules/database/prisma.service';
 import { AbstractRepository, DelegateArgs, DelegateReturnTypes } from '@libs/modules/database/repositories/abstract.repository';
+import { CapabilityRepository } from '@libs/modules/database/repositories/capability/capability.interface';
 
 type CapabilityDelegate = Prisma.CapabilityDelegate<DefaultArgs>;
 
 @Injectable()
-export class CapabilityRepository extends AbstractRepository<
-  CapabilityDelegate,
-  DelegateArgs<CapabilityDelegate>,
-  DelegateReturnTypes<CapabilityDelegate>
-> {
+export class CapabilityRepositoryImpl
+  extends AbstractRepository<CapabilityDelegate, DelegateArgs<CapabilityDelegate>, DelegateReturnTypes<CapabilityDelegate>>
+  implements CapabilityRepository
+{
   constructor(private readonly prisma: PrismaService) {
     super(prisma.capability);
   }
@@ -58,7 +58,7 @@ export class CapabilityRepository extends AbstractRepository<
     })) as unknown as CountExperienceAndCapability[];
   }
 
-  public async findAiResumeCapabilities(userId: number): Promise<Capability[]> {
+  public async findByUserId(userId: number): Promise<Capability[]> {
     return await this.findMany({ where: { userId, keywordType: KeywordType.AI }, select: { keyword: true } });
   }
 }

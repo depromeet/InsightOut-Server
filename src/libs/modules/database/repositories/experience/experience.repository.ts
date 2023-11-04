@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { AiRecommendQuestion, AiResume, Experience, ExperienceInfo, ExperienceStatus, Prisma } from '@prisma/client';
 
-import { ExperienceRepositoryInterface } from '@apps/server/experiences/interfaces/experienceRepository.interface';
 import { ExperienceSelect } from '@apps/server/experiences/interfaces/experienceSelect.interface';
+import { ExperienceRepository } from '@libs/modules/database/repositories/experience/experience.interface';
 import { PaginationOptionsDto } from '@libs/pagination/paginationOption.dto';
 
-import { PrismaService } from '../prisma.service';
+import { PrismaService } from '../../prisma.service';
 
 @Injectable()
-export class ExperienceRepository implements ExperienceRepositoryInterface {
+export class ExperienceRepositoryImpl implements ExperienceRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   public async getExperienceById(experienceId: number): Promise<Partial<Experience & { ExperienceInfo; AiResume }>> {
@@ -108,7 +108,7 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
     });
   }
 
-  public async countExperience(userId: number): Promise<number> {
+  public async countByUserId(userId: number): Promise<number> {
     return await this.prisma.experience.count({
       where: { userId },
     });
@@ -210,7 +210,7 @@ export class ExperienceRepository implements ExperienceRepositoryInterface {
     });
   }
 
-  public async deleteOneById(id: number) {
+  public async deleteById(id: number) {
     return await this.prisma.experience.delete({ where: { id } });
   }
 }

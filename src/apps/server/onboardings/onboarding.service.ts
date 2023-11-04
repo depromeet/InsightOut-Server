@@ -1,13 +1,13 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { Onboarding } from '@prisma/client';
 
 import { PatchOnboardingResponseDto } from '@apps/server/onboardings/dtos/req/patchOnboarding.dto';
 import { GetAllOnboardingsResponseDto } from '@apps/server/onboardings/dtos/res/getOnboarding.dto';
-import { OnboardingRepository } from '@libs/modules/database/repositories/onboarding.repository';
+import { OnboardingRepository } from '@libs/modules/database/repositories/onboarding/onboarding.interface';
 
 @Injectable()
 export class OnboardingsService {
-  constructor(private readonly onboardingRepository: OnboardingRepository) {}
+  constructor(@Inject(OnboardingRepository) private readonly onboardingRepository: OnboardingRepository) {}
 
   async getAllOnboardings(userId: number): Promise<GetAllOnboardingsResponseDto> {
     const onboarding = await this.onboardingRepository.findFirst({

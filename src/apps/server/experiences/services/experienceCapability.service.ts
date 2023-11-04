@@ -1,4 +1,11 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { Capability, ExperienceCapability, KeywordType, Prisma } from '@prisma/client';
 
 import { UserJwtToken } from '@apps/server/auth/types/jwtToken.type';
@@ -8,14 +15,14 @@ import { CreateExperienceCapabilitiesdBodyRequestDto } from '@apps/server/experi
 import { ExperienceIdParamReqDto } from '@apps/server/experiences/dto/req/experienceIdParam.dto';
 import { CreateExperienceCapabilitiesResponseDto } from '@apps/server/experiences/dto/res/createExperienceCapabilities.dto';
 import { PrismaService } from '@libs/modules/database/prisma.service';
-import { CapabilityRepository } from '@libs/modules/database/repositories/capability.repository';
-import { ExperienceCapabilityRepository } from '@libs/modules/database/repositories/experienceCapability.repository';
+import { CapabilityRepository } from '@libs/modules/database/repositories/capability/capability.interface';
+import { ExperienceCapabilityRepository } from '@libs/modules/database/repositories/experienceCapability/experienceCapability.interface';
 
 @Injectable()
 export class ExperienceCapabilityService {
   constructor(
-    private readonly experienceCapabilityRepository: ExperienceCapabilityRepository,
-    private readonly capabilityRepository: CapabilityRepository,
+    @Inject(ExperienceCapabilityRepository) private readonly experienceCapabilityRepository: ExperienceCapabilityRepository,
+    @Inject(CapabilityRepository) private readonly capabilityRepository: CapabilityRepository,
     private readonly prisma: PrismaService,
   ) {}
 

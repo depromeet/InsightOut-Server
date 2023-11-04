@@ -1,17 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { AiResume, Prisma } from '@prisma/client';
 
-import { PrismaService } from '../prisma.service';
+import { AiResumeRepository } from '@libs/modules/database/repositories/aiResume/aiResume.interface';
+
+import { PrismaService } from '../../prisma.service';
 
 @Injectable()
-export class AiResumeRepository {
+export class AiResumeRepositoryImpl implements AiResumeRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  public async findOneByFilter(where: Prisma.AiResumeWhereInput): Promise<AiResume> {
-    return await this.prisma.aiResume.findFirst({ where });
+  public async findOneByUserIdAndExperienceId(userId: number, experienceId: number): Promise<AiResume> {
+    return await this.prisma.aiResume.findFirst({ where: { userId, experienceId } });
   }
 
-  public async getAiResumeByUserId(userId: number, aiKeyword?: string) {
+  public async findByUserId(userId: number, aiKeyword?: string) {
     let where = <Prisma.AiResumeWhereInput>{ userId };
 
     if (aiKeyword) {
@@ -30,7 +32,7 @@ export class AiResumeRepository {
     });
   }
 
-  public async getAiResumeCount(userId: number, aiKeyword?: string): Promise<number> {
+  public async findCountByUserId(userId: number, aiKeyword?: string): Promise<number> {
     let where = <Prisma.AiResumeWhereInput>{ userId };
 
     if (aiKeyword) {
