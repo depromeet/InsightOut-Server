@@ -6,14 +6,18 @@ import { ExperienceRepository } from '@libs/modules/database/repositories/experi
 import { ExperienceRepositoryImpl } from '@libs/modules/database/repositories/experience/experience.repository';
 import { ExperienceCapabilityRepository } from '@libs/modules/database/repositories/experienceCapability/experienceCapability.interface';
 import { ExperienceCapabilityRepositoryImpl } from '@libs/modules/database/repositories/experienceCapability/experienceCapability.repository';
-import { ExperienceInfoRepository } from '@libs/modules/database/repositories/experienceInfo.repository';
+import { ExperienceInfoRepository } from '@libs/modules/database/repositories/experienceInfo/experienceInfo.interface';
+import { ExperienceInfoRepositoryImpl } from '@libs/modules/database/repositories/experienceInfo/experienceInfo.repository';
 
 export const experienceProviders = [
   {
     provide: ExperienceRepository,
     useClass: ExperienceRepositoryImpl,
   },
-  ExperienceInfoRepository,
+  {
+    provide: ExperienceInfoRepository,
+    useClass: ExperienceInfoRepositoryImpl,
+  },
   {
     provide: CapabilityRepository,
     useClass: CapabilityRepositoryImpl,
