@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { AiRecommendQuestion, AiResume, Experience, ExperienceCapability, ExperienceInfo, ExperienceStatus, Prisma } from '@prisma/client';
 
 import {
@@ -23,8 +23,8 @@ import {
 import { CountExperienceAndCapability } from '@apps/server/experiences/types/countExperienceAndCapability.type';
 import { ExperienceCardType } from '@apps/server/experiences/types/experienceCard.type';
 import { PrismaService } from '@libs/modules/database/prisma.service';
-import { AiResumeRepository } from '@libs/modules/database/repositories/aiResume.repository';
-import { CapabilityRepository } from '@libs/modules/database/repositories/capability.repository';
+import { AiResumeRepository } from '@libs/modules/database/repositories/aiResume/aiResume.interface';
+import { CapabilityRepositoryImpl } from '@libs/modules/database/repositories/capability/capability.repository';
 import { ExperienceRepository } from '@libs/modules/database/repositories/experience.repository';
 import { PaginationDto } from '@libs/pagination/pagination.dto';
 import { PaginationMetaDto } from '@libs/pagination/paginationMeta.dto';
@@ -36,8 +36,8 @@ export class ExperienceService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly experienceRepository: ExperienceRepository,
-    private readonly capabilityRepository: CapabilityRepository,
-    private readonly aiResumeRepository: AiResumeRepository,
+    private readonly capabilityRepository: CapabilityRepositoryImpl,
+    @Inject(AiResumeRepository) private readonly aiResumeRepository: AiResumeRepository,
   ) {}
 
   public async getExperienceById(param: ExperienceIdParamReqDto): Promise<GetExperienceByIdDto> {
@@ -107,8 +107,7 @@ export class ExperienceService {
   }
 
   public async getAiResume(param: ExperienceIdParamReqDto, user: UserJwtToken): Promise<GetAiResumeResponseDto> {
-    const where = <Prisma.AiResumeWhereInput>{ userId: user.userId, experienceId: param.experienceId };
-    const aiResume = await this.aiResumeRepository.findOneByFilter(where);
+    const aiResume = await this.aiResumeRepository.findOneByUserIdAndExperienceId(user.userId, param.experienceId);
     if (!aiResume) throw new NotFoundException('해당 experienceId로 추천된 AI Resuem가 없습니다.');
 
     return new GetAiResumeResponseDto({ id: aiResume.id, content: aiResume.content });

@@ -1,5 +1,6 @@
-import { AiResumeRepository } from '@libs/modules/database/repositories/aiResume.repository';
-import { CapabilityRepository } from '@libs/modules/database/repositories/capability.repository';
+import { AiResumeRepository } from '@libs/modules/database/repositories/aiResume/aiResume.interface';
+import { AiResumeRepositoryImpl } from '@libs/modules/database/repositories/aiResume/aiResume.repository';
+import { CapabilityRepositoryImpl } from '@libs/modules/database/repositories/capability/capability.repository';
 import { ExperienceRepository } from '@libs/modules/database/repositories/experience.repository';
 import { ExperienceCapabilityRepository } from '@libs/modules/database/repositories/experienceCapability.repository';
 import { ExperienceInfoRepository } from '@libs/modules/database/repositories/experienceInfo.repository';
@@ -7,7 +8,10 @@ import { ExperienceInfoRepository } from '@libs/modules/database/repositories/ex
 export const experienceProviders = [
   ExperienceRepository,
   ExperienceInfoRepository,
-  CapabilityRepository,
+  CapabilityRepositoryImpl,
   ExperienceCapabilityRepository,
-  AiResumeRepository,
+  {
+    provide: AiResumeRepository,
+    useClass: AiResumeRepositoryImpl,
+  },
 ] as const;
