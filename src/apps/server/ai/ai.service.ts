@@ -220,7 +220,7 @@ export class AiService {
   }
 
   public async getAiResumeCount(user: UserJwtToken, query?: GetAiResumeQueryRequestDto): Promise<GetAiResumeCountResponseDto> {
-    const aiResumeCount = await this.aiResumeRepository.findCountByUserId(user.userId, query.aiKeyword);
+    const aiResumeCount = await this.aiResumeRepository.countByUserId(user.userId, query.aiKeyword);
 
     return new GetAiResumeCountResponseDto(aiResumeCount);
   }

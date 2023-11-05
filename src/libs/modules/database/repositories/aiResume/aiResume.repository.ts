@@ -32,7 +32,7 @@ export class AiResumeRepositoryImpl implements AiResumeRepository {
     });
   }
 
-  public async findCountByUserId(userId: number, aiKeyword?: string): Promise<number> {
+  public async countByUserId(userId: number, aiKeyword?: string): Promise<number> {
     let where = <Prisma.AiResumeWhereInput>{ userId };
 
     if (aiKeyword) {
