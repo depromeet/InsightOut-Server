@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Capability, ExperienceStatus, KeywordType, Prisma } from '@prisma/client';
+import { ExperienceStatus, KeywordType, Prisma } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
 
 import { CountExperienceAndCapability } from '@apps/server/experiences/types/countExperienceAndCapability.type';
+import { Capability } from '@libs/modules/database/entities/capability/capability.entity';
 import { PrismaService } from '@libs/modules/database/prisma.service';
 import { AbstractRepository, DelegateArgs, DelegateReturnTypes } from '@libs/modules/database/repositories/abstract.repository';
 import { CapabilityRepository } from '@libs/modules/database/repositories/capability/capability.interface';
@@ -58,7 +59,19 @@ export class CapabilityRepositoryImpl
     })) as unknown as CountExperienceAndCapability[];
   }
 
-  public async findByUserId(userId: number): Promise<Capability[]> {
+  public async findByUserId(userId: number): Promise<Partial<Capability>[]> {
     return await this.findMany({ where: { userId, keywordType: KeywordType.AI }, select: { keyword: true } });
+  }
+
+  public async findOneByUserIdAndKeyword(userId: number, keyword: string): Promise<Partial<Capability>>;
+  public async findOneByUserIdAndKeyword(userId: number, keyword: string, keywordType?: KeywordType): Promise<Partial<Capability>> {
+    if (keywordType) {
+      return this.findFirst({ where: { userId, keyword, keywordType } });
+    }
+    return this.findFirst({ where: { userId, keyword } });
+  }
+
+  async save(capability: Capability): Promise<Partial<Capability>> {
+    return this.create({ data: capability as Prisma.CapabilityCreateInput });
   }
 }
