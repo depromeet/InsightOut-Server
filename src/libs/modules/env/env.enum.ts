@@ -67,4 +67,8 @@ export enum EnvEnum {
 
   // redis key
   PROMPT_REDIS_KEY,
+
+  // swagger
+  SWAGGER_USER,
+  SWAGGER_PASSWORD,
 }
