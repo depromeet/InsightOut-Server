@@ -1,5 +1,5 @@
 import { Body, Controller, Header, HttpStatus, Query, Res } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiExcludeController, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 
 import { AuthService } from '@apps/server/auth/auth.service';
@@ -20,6 +20,7 @@ import { TestService } from './test.service';
 
 @ApiTags('🧑🏻‍💻 개발용 API')
 @Controller('test')
+@ApiExcludeController()
 export class TestController {
   constructor(
     private readonly testService: TestService,
