@@ -19,12 +19,12 @@ async function bootstrap() {
   const envService = app.get(EnvService);
   const PORT = +envService.get(EnvEnum.PORT) || 3000;
 
-  app.use(
-    basicAuth({
-      users: { [envService.get<string>(EnvEnum.SWAGGER_USER)]: envService.get<string>(EnvEnum.SWAGGER_PASSWORD) },
-      challenge: true,
-    }),
-  );
+  // app.use(
+  //   basicAuth({
+  //     users: { [envService.get<string>(EnvEnum.SWAGGER_USER)]: envService.get<string>(EnvEnum.SWAGGER_PASSWORD) },
+  //     challenge: true,
+  //   }),
+  // );
 
   const config = new DocumentBuilder()
     .setTitle('13기 4팀 서버')
