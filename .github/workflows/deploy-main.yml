@@ -58,6 +58,8 @@ jobs:
           echo NODE_ENV=${{ secrets.NODE_ENV }} >> .env
           echo PROMPT_REDIS_KEY=${{ secrets.PROMPT_REDIS_KEY }} >> .env
           echo MAIN_SERVER=${{ secrets.MAIN_SERVER }} >> .env
+          echo SWAGGER_USER=${{ secrets.SWAGGER_USER }} >> .env
+          echo SWAGGER_PASSWORD=${{ secrets.SWAGGER_PASSWORD }} >> .env
 
       - name: build server files
         working-directory: ./
