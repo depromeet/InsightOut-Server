@@ -5,7 +5,8 @@ import { Question, Resume } from '@prisma/client';
 import { GetOneResumeResponseDto, GetOneResumeWithTitleResponseDto } from '@apps/server/resumes/dtos/resumes/req/getResume.dto';
 import { ResumesService } from '@apps/server/resumes/services/resumes.service';
 import { DatabaseModule } from '@libs/modules/database/database.module';
-import { ResumeRepository } from '@libs/modules/database/repositories/resume.repository';
+import { ResumeRepository } from '@libs/modules/database/repositories/resume/resume.interface';
+import { EnvModule } from '@libs/modules/env/env.module';
 
 const mockCreatedAt = new Date();
 const mockUpdatedAt = new Date();
@@ -71,7 +72,7 @@ describe('Resume Service', () => {
 
     // 테스팅 모듈 생성
     const module: TestingModule = await Test.createTestingModule({
-      imports: [DatabaseModule],
+      imports: [DatabaseModule, EnvModule],
       providers: [
         ResumesService,
         {

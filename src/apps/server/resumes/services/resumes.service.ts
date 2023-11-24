@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Question, Resume } from '@prisma/client';
 
 import {
@@ -10,11 +10,11 @@ import { PatchResumeBodyRequestDto } from '@apps/server/resumes/dtos/resumes/req
 import { PostResumeResponseDto } from '@apps/server/resumes/dtos/resumes/req/postResume.dto';
 import { GetCountOfResumeResponseDto } from '@apps/server/resumes/dtos/resumes/res/getCountOfResume.dto';
 import { PrismaService } from '@libs/modules/database/prisma.service';
-import { ResumeRepository } from '@libs/modules/database/repositories/resume.repository';
+import { ResumeRepository } from '@libs/modules/database/repositories/resume/resume.interface';
 
 @Injectable()
 export class ResumesService {
-  constructor(private readonly resumesRepository: ResumeRepository, private readonly prisma: PrismaService) {}
+  constructor(@Inject(ResumeRepository) private readonly resumesRepository: ResumeRepository, private readonly prisma: PrismaService) {}
 
   /**
    * 유저가 작성한 모든 자기소개서를 가져옵니다. 문항의 답안(answer)은 payload가 크기 때문에 option으로 선택해 가져옵니다.

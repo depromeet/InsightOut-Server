@@ -1,20 +1,20 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 
 import { GetOneQuestionResponseDto } from '@apps/server/resumes/dtos/questions/req/getQuestion.dto';
 import { PatchQuestionRequestBodyDto, PatchQuestionResponseDto } from '@apps/server/resumes/dtos/questions/req/patchQuestion.dto';
 import { PostSpellCheckRequestBodyDto } from '@apps/server/resumes/dtos/questions/req/postSpellCheck.dto';
 import { ApiService } from '@libs/modules/api/api.service';
 import { SpellCheckResult } from '@libs/modules/api/api.type';
-import { QuestionRepository } from '@libs/modules/database/repositories/question.repository';
-import { ResumeRepository } from '@libs/modules/database/repositories/resume.repository';
+import { QuestionRepository } from '@libs/modules/database/repositories/question/question.interface';
+import { ResumeRepository } from '@libs/modules/database/repositories/resume/resume.interface';
 
 import { PostQuestionResponseDto } from '../dtos/questions/req/postQuestion.dto';
 
 @Injectable()
 export class QuestionsService {
   constructor(
-    private readonly resumeRepository: ResumeRepository,
-    private readonly questionRepository: QuestionRepository,
+    @Inject(ResumeRepository) private readonly resumeRepository: ResumeRepository,
+    @Inject(QuestionRepository) private readonly questionRepository: QuestionRepository,
     private readonly apiService: ApiService,
   ) {}
 

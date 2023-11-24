@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
+import basicAuth from 'express-basic-auth';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 import { swaggerDescriptionMd } from '@apps/server/common/docs/swaggerDescription.markdown';
@@ -17,6 +18,13 @@ async function bootstrap() {
   //환경변수 가져오기
   const envService = app.get(EnvService);
   const PORT = +envService.get(EnvEnum.PORT) || 3000;
+
+  app.use(
+    basicAuth({
+      users: { [envService.get<string>(EnvEnum.SWAGGER_USER)]: envService.get<string>(EnvEnum.SWAGGER_PASSWORD) },
+      challenge: true,
+    }),
+  );
 
   const config = new DocumentBuilder()
     .setTitle('13기 4팀 서버')

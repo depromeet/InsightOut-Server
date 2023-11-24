@@ -5,10 +5,14 @@ import { JwtModule } from '@nestjs/jwt';
 import { OnboardingsModule } from '@apps/server/onboardings/onboarding.module';
 import { ApiModule } from '@libs/modules/api/api.module';
 import { RedisCacheModule } from '@libs/modules/cache/redis/redis.module';
-import { CapabilityRepository } from '@libs/modules/database/repositories/capability.repository';
-import { ResumeRepository } from '@libs/modules/database/repositories/resume.repository';
-import { UserRepository } from '@libs/modules/database/repositories/user.repository';
-import { UserInfoRepository } from '@libs/modules/database/repositories/userInfo.repository';
+import { CapabilityRepository } from '@libs/modules/database/repositories/capability/capability.interface';
+import { CapabilityRepositoryImpl } from '@libs/modules/database/repositories/capability/capability.repository';
+import { ResumeRepository } from '@libs/modules/database/repositories/resume/resume.interface';
+import { ResumeRepositoryImpl } from '@libs/modules/database/repositories/resume/resume.repository';
+import { UserRepository } from '@libs/modules/database/repositories/user/user.interface';
+import { UserRepositoryImpl } from '@libs/modules/database/repositories/user/user.repository';
+import { UserInfoRepository } from '@libs/modules/database/repositories/userInfo/userInfo.interface';
+import { UserInfoRepositoryImpl } from '@libs/modules/database/repositories/userInfo/userInfo.repository';
 import { EnvEnum } from '@libs/modules/env/env.enum';
 import { EnvService } from '@libs/modules/env/env.service';
 import { FirebaseModule } from '@libs/modules/firebase/firebase.module';
@@ -45,10 +49,22 @@ import { JwtRefreshStrategy } from '../common/guards/strategies/jwtRefresh.strat
     JwtRefreshStrategy,
 
     // Repositories
-    UserRepository,
-    UserInfoRepository,
-    ResumeRepository,
-    CapabilityRepository,
+    {
+      provide: UserRepository,
+      useClass: UserRepositoryImpl,
+    },
+    {
+      provide: UserInfoRepository,
+      useClass: UserInfoRepositoryImpl,
+    },
+    {
+      provide: ResumeRepository,
+      useClass: ResumeRepositoryImpl,
+    },
+    {
+      provide: CapabilityRepository,
+      useClass: CapabilityRepositoryImpl,
+    },
   ],
   exports: [AuthService],
 })

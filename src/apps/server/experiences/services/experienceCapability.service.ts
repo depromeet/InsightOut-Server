@@ -1,5 +1,12 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
-import { Capability, ExperienceCapability, KeywordType, Prisma } from '@prisma/client';
+import {
+  BadRequestException,
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
+import { ExperienceCapability, KeywordType, Prisma } from '@prisma/client';
 
 import { UserJwtToken } from '@apps/server/auth/types/jwtToken.type';
 import { AddUserCapabilityResponseDto } from '@apps/server/experiences/dto';
@@ -7,20 +14,21 @@ import { AddCapabilitydBodyRequestDto } from '@apps/server/experiences/dto/req/a
 import { CreateExperienceCapabilitiesdBodyRequestDto } from '@apps/server/experiences/dto/req/createExperienceCapabilities.dto';
 import { ExperienceIdParamReqDto } from '@apps/server/experiences/dto/req/experienceIdParam.dto';
 import { CreateExperienceCapabilitiesResponseDto } from '@apps/server/experiences/dto/res/createExperienceCapabilities.dto';
+import { Capability } from '@libs/modules/database/entities/capability/capability.entity';
 import { PrismaService } from '@libs/modules/database/prisma.service';
-import { CapabilityRepository } from '@libs/modules/database/repositories/capability.repository';
-import { ExperienceCapabilityRepository } from '@libs/modules/database/repositories/experienceCapability.repository';
+import { CapabilityRepository } from '@libs/modules/database/repositories/capability/capability.interface';
+import { ExperienceCapabilityRepository } from '@libs/modules/database/repositories/experienceCapability/experienceCapability.interface';
 
 @Injectable()
 export class ExperienceCapabilityService {
   constructor(
-    private readonly experienceCapabilityRepository: ExperienceCapabilityRepository,
-    private readonly capabilityRepository: CapabilityRepository,
+    @Inject(ExperienceCapabilityRepository) private readonly experienceCapabilityRepository: ExperienceCapabilityRepository,
+    @Inject(CapabilityRepository) private readonly capabilityRepository: CapabilityRepository,
     private readonly prisma: PrismaService,
   ) {}
 
   public async getExperienceCapability(user: UserJwtToken, param: ExperienceIdParamReqDto): Promise<{ [key in string] }> {
-    const userCapabilities = await this.capabilityRepository.findMany({ where: { userId: user.userId } });
+    const userCapabilities = await this.capabilityRepository.findByUserId(user.userId);
     const where = { experienceId: param.experienceId };
     const experienceCapabilities = await this.experienceCapabilityRepository.findManyByFilter(where);
 
@@ -30,7 +38,7 @@ export class ExperienceCapabilityService {
     });
 
     experienceCapabilities.forEach((experienceCapability: ExperienceCapability) => {
-      const capability: Capability = userCapabilities.find((capability) => capability.id === experienceCapability.capabilityId);
+      const capability = userCapabilities.find((capability) => capability.id === experienceCapability.capabilityId);
       if (!capability) throw new NotFoundException(`${capability.keyword} 해당 키워드를 찾을 수 없습니다.`);
 
       value[capability.keyword] = true;
@@ -68,7 +76,7 @@ export class ExperienceCapabilityService {
     return await Promise.all(
       keywords.map(async (keyword: string) => {
         if (body.keywords[keyword] === true) {
-          const capability = await this.capabilityRepository.findFirst({ where: { userId: user.userId, keyword } });
+          const capability = await this.capabilityRepository.findOneByUserIdAndKeyword(user.userId, keyword);
           if (!capability) throw new NotFoundException(`${keyword} 해당 키워드가 만들어 있지 않습니다. 확인 부탁드립니다.`);
 
           return { experienceId: body.experienceId, capabilityId: capability.id };
@@ -78,14 +86,15 @@ export class ExperienceCapabilityService {
   }
 
   public async addUserCapability(body: AddCapabilitydBodyRequestDto, user: UserJwtToken): Promise<AddUserCapabilityResponseDto> {
-    const userCapability = await this.capabilityRepository.findFirst({
-      where: { userId: user.userId, keyword: body.keyword, keywordType: KeywordType.USER },
-    });
+    const userCapability = await this.capabilityRepository.findOneByUserIdAndKeyword(user.userId, body.keyword, KeywordType.USER);
     if (userCapability) throw new ConflictException(`${body.keyword} 유저의 해당 역량 키워드가 이미 존재합니다. 확인 부탁드립니다.`);
 
-    const newUserCapability = await this.capabilityRepository.create({
-      data: { userId: user.userId, keyword: body.keyword, keywordType: KeywordType.USER },
-    });
+    const capability = new Capability();
+    capability.userId = user.userId;
+    capability.keyword = body.keyword;
+    capability.keywordType = KeywordType.USER;
+
+    const newUserCapability = await this.capabilityRepository.save(capability);
 
     return new AddUserCapabilityResponseDto(newUserCapability);
   }

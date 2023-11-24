@@ -1,4 +1,11 @@
-import { BadRequestException, ConflictException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   Capability,
   AiRecommendQuestion,
@@ -33,12 +40,12 @@ import { GetExperienceCardInfoDto } from '@apps/server/experiences/dto/res/getEx
 import { ExperienceService } from '@apps/server/experiences/services/experience.service';
 import { RedisCacheService } from '@libs/modules/cache/redis/redis.service';
 import { PrismaService } from '@libs/modules/database/prisma.service';
+import { AiResumeRepository } from '@libs/modules/database/repositories/aiResume/aiResume.interface';
+import { CapabilityRepository } from '@libs/modules/database/repositories/capability/capability.interface';
 import { EnvEnum } from '@libs/modules/env/env.enum';
 import { EnvService } from '@libs/modules/env/env.service';
 import { AiResponse } from '@libs/modules/openAi/interface/aiResponse.interface';
 import { OpenAiService } from '@libs/modules/openAi/openAi.service';
-import { AiResumeRepository } from '@libs/modules/database/repositories/aiResume.repository';
-import { CapabilityRepository } from '@libs/modules/database/repositories/capability.repository';
 import { removeDuplicatesInArr } from '@libs/utils/array.util';
 
 @Injectable()
@@ -49,8 +56,8 @@ export class AiService {
     private readonly experienceService: ExperienceService,
     private readonly redisCheckService: RedisCacheService,
     private readonly envService: EnvService,
-    private readonly aiResumeRepository: AiResumeRepository,
-    private readonly capabilityRepository: CapabilityRepository,
+    @Inject(AiResumeRepository) private readonly aiResumeRepository: AiResumeRepository,
+    @Inject(CapabilityRepository) private readonly capabilityRepository: CapabilityRepository,
   ) {}
 
   public async postAiKeywordPrompt(body: PromptAiKeywordRequestDto, user: UserJwtToken): Promise<PromptKeywordResponseDto> {
@@ -197,7 +204,7 @@ export class AiService {
 
   public async getAiResumes(user: UserJwtToken, query?: GetAiResumeQueryRequestDto): Promise<GetAiResumeDto> {
     // aiResume 가져오기
-    const aiResumeArr = await this.aiResumeRepository.getAiResumeByUserId(user.userId, query.aiKeyword);
+    const aiResumeArr = await this.aiResumeRepository.findByUserId(user.userId, query.aiKeyword);
 
     const aiResumeResDtoArr = aiResumeArr.map(
       (aiResume: AiResume & { AiResumeCapabilities: Partial<AiResumeCapability> & { Capability: Capability }[] }) => {
@@ -206,14 +213,14 @@ export class AiService {
     );
 
     // 내 aiResume 키워드 가져오기
-    const aiResumeCapabilityArr = await this.capabilityRepository.findAiResumeCapabilities(user.userId);
+    const aiResumeCapabilityArr = await this.capabilityRepository.findByUserId(user.userId);
     const availableKeywords = aiResumeCapabilityArr.map((capability) => capability.keyword);
 
     return new GetAiResumeDto(aiResumeResDtoArr, removeDuplicatesInArr<string>(availableKeywords));
   }
 
   public async getAiResumeCount(user: UserJwtToken, query?: GetAiResumeQueryRequestDto): Promise<GetAiResumeCountResponseDto> {
-    const aiResumeCount = await this.aiResumeRepository.getAiResumeCount(user.userId, query.aiKeyword);
+    const aiResumeCount = await this.aiResumeRepository.countByUserId(user.userId, query.aiKeyword);
 
     return new GetAiResumeCountResponseDto(aiResumeCount);
   }
